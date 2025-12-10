@@ -61,62 +61,57 @@ export default function TransactionDetailPage() {
 
   return (
     <AppShell>
-        <div className="max-w-4xl mx-auto space-y-4">
+        <div className="max-w-4xl mx-auto space-y-6">
             <Button variant="ghost" onClick={() => router.back()} className="-ml-4">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Back
             </Button>
             
-            <Card>
-                <CardHeader>
-                    <div className="flex justify-between items-start">
-                        <div>
-                            <CardTitle className="text-2xl">{transaction.title}</CardTitle>
-                            {transaction.description && <CardDescription className="mt-1">{transaction.description}</CardDescription>}
-                        </div>
-                        <div className="text-right">
-                             <p className={cn("text-3xl font-bold tracking-tight", isCredit(transaction.transaction_type) ? 'text-chart-2' : 'text-foreground')}>{formatCurrency(transaction.total_amount, transaction.currency)}</p>
-                             <p className="text-sm text-muted-foreground">{formatDate(transaction.date)}</p>
-                        </div>
-                    </div>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                    <Separator />
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                        <DetailItem label="Status" value={<Badge variant="outline" className="capitalize">{transaction.status.replace('_', ' ')}</Badge>} />
-                        <DetailItem label="Category" value={transaction.category} />
-                        <DetailItem label="Type" value={<span className="capitalize">{transaction.transaction_type}</span>} />
-                        <DetailItem label="Account" value={transaction.accountId} />
-                        <DetailItem label="Recipient" value={transaction.recipient} />
-                        <DetailItem label="Due On" value={formatDate(transaction.due_on)} />
-                    </div>
+            <div className="space-y-6">
+                <div>
+                    <p className="text-sm text-muted-foreground">{formatDate(transaction.date)}</p>
+                    <h1 className="text-3xl font-bold tracking-tight">{transaction.title}</h1>
+                    {transaction.description && <p className="text-muted-foreground mt-1">{transaction.description}</p>}
+                </div>
+                
+                <p className={cn("text-4xl font-bold tracking-tight", isCredit(transaction.transaction_type) ? 'text-chart-2' : 'text-foreground')}>{formatCurrency(transaction.total_amount, transaction.currency)}</p>
 
-                    {(transaction.balance_due > 0) && (
-                        <>
-                            <Separator />
-                             <div className="grid grid-cols-2 md:grid-cols-3 gap-6 items-start">
-                                <DetailItem label="Amount Paid" value={formatCurrency(transaction.total_paid, transaction.currency)} />
-                                <DetailItem label="Balance Due" value={<span className="text-destructive font-semibold">{formatCurrency(transaction.balance_due, transaction.currency)}</span>} />
-                            </div>
-                        </>
-                    )}
+                <Separator />
 
-                    {transaction.reference_document && (
-                        <>
-                            <Separator />
-                            <DetailItem 
-                                label="Attachment" 
-                                value={
-                                    <Link href={typeof transaction.reference_document === 'string' ? transaction.reference_document : '#'} target="_blank" className="flex items-center gap-2 text-primary hover:underline">
-                                        <Paperclip className="h-4 w-4" />
-                                        <span>{typeof transaction.reference_document === 'string' ? transaction.reference_document.split('/').pop() : transaction.reference_document.name}</span>
-                                    </Link>
-                                }
-                            />
-                        </>
-                    )}
-                </CardContent>
-            </Card>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <DetailItem label="Status" value={<Badge variant="outline" className="capitalize">{transaction.status.replace('_', ' ')}</Badge>} />
+                    <DetailItem label="Category" value={transaction.category} />
+                    <DetailItem label="Type" value={<span className="capitalize">{transaction.transaction_type}</span>} />
+                    <DetailItem label="Account" value={transaction.accountId} />
+                    <DetailItem label="Recipient" value={transaction.recipient} />
+                    <DetailItem label="Due On" value={formatDate(transaction.due_on)} />
+                </div>
+
+                {(transaction.balance_due > 0) && (
+                    <>
+                        <Separator />
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-6 items-start">
+                            <DetailItem label="Amount Paid" value={formatCurrency(transaction.total_paid, transaction.currency)} />
+                            <DetailItem label="Balance Due" value={<span className="text-destructive font-semibold">{formatCurrency(transaction.balance_due, transaction.currency)}</span>} />
+                        </div>
+                    </>
+                )}
+
+                {transaction.reference_document && (
+                    <>
+                        <Separator />
+                        <DetailItem 
+                            label="Attachment" 
+                            value={
+                                <Link href={typeof transaction.reference_document === 'string' ? transaction.reference_document : '#'} target="_blank" className="flex items-center gap-2 text-primary hover:underline">
+                                    <Paperclip className="h-4 w-4" />
+                                    <span>{typeof transaction.reference_document === 'string' ? transaction.reference_document.split('/').pop() : transaction.reference_document.name}</span>
+                                </Link>
+                            }
+                        />
+                    </>
+                )}
+            </div>
         </div>
     </AppShell>
   );
