@@ -40,7 +40,7 @@ export function RecentTransactions() {
                 <div className={cn("p-1.5 rounded-full", isCredit(transaction.transaction_type) ? 'bg-chart-2/20' : 'bg-destructive/20' )}>
                     {isCredit(transaction.transaction_type) ? <ArrowUpRight className="h-4 w-4 text-chart-2" /> : <ArrowDownLeft className="h-4 w-4 text-destructive" />}
                 </div>
-                <div className="font-medium">{transaction.description}</div>
+                <div className="font-medium">{transaction.title}</div>
               </div>
             </TableCell>
             <TableCell className="hidden sm:table-cell">

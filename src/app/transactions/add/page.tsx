@@ -58,17 +58,19 @@ const currencies = [
 export default function AddTransactionPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [accountId, setAccountId] = useState('');
-  const [category, setCategory] = useState<TransactionCategory | ''>('');
-  const [transactionType, setTransactionType] = useState<TransactionType | ''>('');
-  const [totalAmount, setTotalAmount] = useState<number | ''>('');
-  const [amountPaid, setAmountPaid] = useState<number | ''>('');
-  const [currency, setCurrency] = useState('');
-  const [date, setDate] = useState('');
-  const [status, setStatus] = useState<TransactionStatus | ''>('');
-  const [dueOn, setDueOn] = useState('');
   const [attachment, setAttachment] = useState<File | null>(null);
+  const [date, setDate] = useState('');
+  const [transactionType, setTransactionType] = useState<TransactionType | ''>('');
+  const [category, setCategory] = useState<TransactionCategory | ''>('');
+  const [currency, setCurrency] = useState('');
+  const [totalAmount, setTotalAmount] = useState<number | ''>('');
+  const [status, setStatus] = useState<TransactionStatus | ''>('');
+  const [accountId, setAccountId] = useState('');
+  const [recipient, setRecipient] = useState('');
+  const [amountPaid, setAmountPaid] = useState<number | ''>('');
+  const [dueOn, setDueOn] = useState('');
 
   const balanceDue = useMemo(() => {
     const total = typeof totalAmount === 'number' ? totalAmount : 0;
@@ -87,13 +89,21 @@ export default function AddTransactionPage() {
 
   const handleAddTransaction = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!accountId || !category || totalAmount === '' || !date || !transactionType || !status || !currency) {
+    if (!title || !date || !transactionType || !category || !currency || totalAmount === '' || !status) {
       toast({
         variant: "destructive",
         title: "Missing Fields",
         description: "Please fill out all required fields.",
       });
       return;
+    }
+    if ((status === 'paid' || status === 'partially_paid') && !accountId) {
+        toast({
+            variant: "destructive",
+            title: "Missing Fields",
+            description: "Please select an account for paid or partially paid transactions.",
+        });
+        return;
     }
     
     let finalAmountPaid = 0;
@@ -105,8 +115,9 @@ export default function AddTransactionPage() {
 
     const newTransaction: Transaction = {
       id: (transactions.length + 1).toString(),
+      title,
       description,
-      accountId,
+      accountId: accountId,
       category: category as TransactionCategory,
       transaction_type: transactionType as TransactionType,
       total_amount: totalAmount,
@@ -115,6 +126,7 @@ export default function AddTransactionPage() {
       status: status as TransactionStatus,
       date,
       currency,
+      recipient,
       due_on: dueOn || undefined,
       reference_document: attachment || undefined,
       created_at: new Date().toISOString(),
@@ -134,31 +146,54 @@ export default function AddTransactionPage() {
 
   return (
     <AppShell>
-      <div className="space-y-6">
+      <div className="mx-auto max-w-2xl space-y-6">
         <div>
             <h1 className="text-3xl font-bold tracking-tight">Add New Transaction</h1>
             <p className="text-muted-foreground">
                 Enter the details of your new transaction below.
             </p>
         </div>
-        <div className="max-w-xl">
+        <div>
             <form onSubmit={handleAddTransaction} className="grid gap-6">
                 <div className="grid gap-2">
-                    <Label htmlFor="account">Account</Label>
-                        <Combobox
-                        options={accounts}
-                        value={accountId}
-                        onChange={setAccountId}
-                        placeholder="Select an account"
-                        searchPlaceholder="Search accounts..."
-                        notFoundMessage="No account found."
-                    />
+                    <Label htmlFor="title">Title</Label>
+                    <Input id="title" value={title} onChange={e => setTitle(e.target.value)} placeholder="e.g., Monthly Salary" required />
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="description">Description (Optional)</Label>
+                    <Textarea id="description" value={description} onChange={e => setDescription(e.target.value)} placeholder="e.g., Invoice #123 details" />
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="attachment">Attach Document/Image (Optional)</Label>
+                    <Input id="attachment" type="file" onChange={e => setAttachment(e.target.files ? e.target.files[0] : null)} />
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="date">Date</Label>
                     <Input id="date" type="date" value={date} onChange={e => setDate(e.target.value)} required className={!date ? 'text-muted-foreground' : ''}/>
                 </div>
-                 <div className="grid gap-2">
+                <div className="grid gap-2">
+                    <Label htmlFor="type">Type</Label>
+                    <Combobox
+                        options={transactionTypes}
+                        value={transactionType}
+                        onChange={(v) => setTransactionType(v as any)}
+                        placeholder="Select transaction type"
+                        searchPlaceholder="Search types..."
+                        notFoundMessage="No type found."
+                    />
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="category">Category</Label>
+                    <Combobox
+                        options={categories}
+                        value={category}
+                        onChange={(v) => setCategory(v as any)}
+                        placeholder="Select a category"
+                        searchPlaceholder="Search categories..."
+                        notFoundMessage="No category found."
+                    />
+                </div>
+                <div className="grid gap-2">
                     <Label htmlFor="currency">Currency</Label>
                     <Combobox
                         options={currencies}
@@ -184,54 +219,47 @@ export default function AddTransactionPage() {
                         notFoundMessage="No status found."
                     />
                 </div>
+
+                {(status === 'paid' || status === 'partially_paid') && (
+                     <div className="grid gap-2">
+                        <Label htmlFor="account">Account</Label>
+                            <Combobox
+                            options={accounts}
+                            value={accountId}
+                            onChange={setAccountId}
+                            placeholder="Select an account"
+                            searchPlaceholder="Search accounts..."
+                            notFoundMessage="No account found."
+                        />
+                    </div>
+                )}
+                
                 {status === 'partially_paid' && (
                     <div className="grid gap-2">
                         <Label htmlFor="amount_paid">Amount Paid</Label>
                         <Input id="amount_paid" type="number" value={amountPaid} onChange={e => setAmountPaid(e.target.value === '' ? '' : parseFloat(e.target.value))} placeholder="0.00" required />
                     </div>
                 )}
+
                 {(status === 'partially_paid' || status === 'unpaid') && (
                     <div className="grid gap-2">
                         <Label>Balance Due</Label>
                         <Input value={balanceDue.toFixed(2)} readOnly className="bg-muted" />
                     </div>
                 )}
-                <div className="grid gap-2">
-                    <Label htmlFor="type">Type</Label>
-                    <Combobox
-                        options={transactionTypes}
-                        value={transactionType}
-                        onChange={(v) => setTransactionType(v as any)}
-                        placeholder="Select transaction type"
-                        searchPlaceholder="Search types..."
-                        notFoundMessage="No type found."
-                    />
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="category">Category</Label>
-                    <Combobox
-                        options={categories}
-                        value={category}
-                        onChange={(v) => setCategory(v as any)}
-                        placeholder="Select a category"
-                        searchPlaceholder="Search categories..."
-                        notFoundMessage="No category found."
-                    />
-                </div>
+
                 {(status === 'unpaid' || status === 'partially_paid') && (
                     <div className="grid gap-2">
                         <Label htmlFor="due_on">Due On (Optional)</Label>
                         <Input id="due_on" type="date" value={dueOn} onChange={e => setDueOn(e.target.value)} className={!dueOn ? 'text-muted-foreground' : ''}/>
                     </div>
                 )}
+
                 <div className="grid gap-2">
-                    <Label htmlFor="description">Description (Optional)</Label>
-                    <Textarea id="description" value={description} onChange={e => setDescription(e.target.value)} placeholder="e.g., Invoice #123 details" />
+                    <Label htmlFor="recipient">Recipient (Optional)</Label>
+                    <Input id="recipient" value={recipient} onChange={e => setRecipient(e.target.value)} placeholder="e.g., John Doe" />
                 </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="attachment">Attach Document/Image (Optional)</Label>
-                    <Input id="attachment" type="file" onChange={e => setAttachment(e.target.files ? e.target.files[0] : null)} />
-                </div>
+
                 <div className="flex justify-start gap-2 mt-4">
                     <Button type="submit">Save Transaction</Button>
                     <Button type="button" variant="outline" onClick={() => router.push('/transactions')}>Cancel</Button>
