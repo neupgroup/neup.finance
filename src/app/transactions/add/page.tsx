@@ -153,7 +153,7 @@ export default function AddTransactionPage() {
                     <Combobox
                         options={transactionStatuses}
                         value={status}
-                        onChange={(v) => setStatus(v.toLowerCase().replace(' ', '_') as any)}
+                        onChange={(v) => setStatus(v as any)}
                         placeholder="Select status"
                         searchPlaceholder="Search statuses..."
                         notFoundMessage="No status found."
@@ -161,7 +161,7 @@ export default function AddTransactionPage() {
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="date">Date</Label>
-                    <Input id="date" type="date" value={date} onChange={e => setDate(e.target.value)} required />
+                    <Input id="date" type="date" value={date} onChange={e => setDate(e.target.value)} required className={!date ? 'text-muted-foreground' : ''}/>
                 </div>
                 <div className="flex justify-end gap-2 mt-4">
                     <Button type="button" variant="outline" onClick={() => router.push('/transactions')}>Cancel</Button>
