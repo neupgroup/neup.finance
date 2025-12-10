@@ -17,8 +17,8 @@ export function SmartProjections() {
   const [timeWarp, setTimeWarp] = useState(0);
 
   const { currentIncome, currentSpending, currentSavings } = useMemo(() => {
-    const income = transactions.filter(t => t.type === 'credit').reduce((sum, t) => sum + t.amount, 0);
-    const spending = transactions.filter(t => t.type === 'debit').reduce((sum, t) => sum + Math.abs(t.amount), 0);
+    const income = transactions.filter(t => t.transaction_type === 'sale' || t.transaction_type === 'refund').reduce((sum, t) => sum + t.total_amount, 0);
+    const spending = transactions.filter(t => t.transaction_type === 'purchase' || t.transaction_type === 'expense').reduce((sum, t) => sum + Math.abs(t.total_amount), 0);
     return { currentIncome: income, currentSpending: spending, currentSavings: income - spending };
   }, []);
 

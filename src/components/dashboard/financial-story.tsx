@@ -13,7 +13,7 @@ export function FinancialStory() {
   useEffect(() => {
     async function getSummary() {
       try {
-        const spendingData = JSON.stringify(transactions.filter(t => t.type === 'debit'));
+        const spendingData = JSON.stringify(transactions.filter(t => t.transaction_type === 'purchase' || t.transaction_type === 'expense'));
         const result = await summarizeSpending({ spendingData });
         setSummary(result.summary);
       } catch (error) {

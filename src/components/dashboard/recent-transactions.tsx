@@ -18,6 +18,8 @@ export function RecentTransactions() {
   const pathname = usePathname();
   const isDashboard = pathname === '/';
   const displayTransactions = isDashboard ? transactions.slice(0, 5) : transactions;
+  
+  const isCredit = (type: Transaction['transaction_type']) => ['sale', 'refund'].includes(type)
 
   return (
     <Table>
@@ -25,7 +27,7 @@ export function RecentTransactions() {
         <TableRow>
           <TableHead>Transaction</TableHead>
           <TableHead className="hidden sm:table-cell">Account</TableHead>
-          <TableHead className="hidden sm:table-cell">Category</TableHead>
+          <TableHead className="hidden sm:table-cell">Status</TableHead>
           <TableHead className="hidden md:table-cell">Date</TableHead>
           <TableHead className="text-right">Amount</TableHead>
         </TableRow>
@@ -35,17 +37,17 @@ export function RecentTransactions() {
           <TableRow key={transaction.id}>
             <TableCell>
               <div className="flex items-center gap-3">
-                <div className={cn("p-1.5 rounded-full", transaction.type === 'credit' ? 'bg-chart-2/20' : 'bg-destructive/20' )}>
-                    {transaction.type === 'credit' ? <ArrowUpRight className="h-4 w-4 text-chart-2" /> : <ArrowDownLeft className="h-4 w-4 text-destructive" />}
+                <div className={cn("p-1.5 rounded-full", isCredit(transaction.transaction_type) ? 'bg-chart-2/20' : 'bg-destructive/20' )}>
+                    {isCredit(transaction.transaction_type) ? <ArrowUpRight className="h-4 w-4 text-chart-2" /> : <ArrowDownLeft className="h-4 w-4 text-destructive" />}
                 </div>
-                <div className="font-medium">{transaction.name}</div>
+                <div className="font-medium">{transaction.description}</div>
               </div>
             </TableCell>
             <TableCell className="hidden sm:table-cell">
               {transaction.accountId}
             </TableCell>
             <TableCell className="hidden sm:table-cell">
-              <Badge variant="outline">{transaction.category}</Badge>
+              <Badge variant="outline">{transaction.status}</Badge>
             </TableCell>
             <TableCell className="hidden md:table-cell">
               {new Date(transaction.date).toLocaleDateString('en-US', {
@@ -56,13 +58,13 @@ export function RecentTransactions() {
             </TableCell>
             <TableCell
               className={`text-right font-semibold ${
-                transaction.type === 'credit'
+                isCredit(transaction.transaction_type)
                   ? 'text-chart-2'
                   : 'text-foreground'
               }`}
             >
-              {transaction.type === 'credit' ? '+' : ''}$
-              {Math.abs(transaction.amount).toLocaleString()}
+              {isCredit(transaction.transaction_type) ? '+' : ''}$
+              {Math.abs(transaction.total_amount).toLocaleString()}
             </TableCell>
           </TableRow>
         ))}

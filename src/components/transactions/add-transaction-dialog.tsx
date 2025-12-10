@@ -21,68 +21,63 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { PlusCircle } from 'lucide-react';
-import { transactions, type Transaction } from '@/lib/mock-data';
+import { transactions, type Transaction, type TransactionCategory, type TransactionStatus, type TransactionType } from '@/lib/mock-data';
 
-// This is a mock of accounts. In a real app, you'd fetch this.
 const accounts = [
   { name: 'Checking Account' },
   { name: 'Savings Account' },
   { name: 'Wallet' },
 ];
 
-const categories = [
-  'Sales',
-  'Purchases',
-  'Discounts',
-  'Payroll',
-  'Utilities',
-  'Vendor payments',
-  'EMIs',
-  'Bank charges',
-  'VAT / Tax',
-  'Transfers',
-  'Refunds',
-  'Other',
+const categories: TransactionCategory[] = [
+  'Sales', 'Purchases', 'Discounts', 'Payroll', 'Utilities', 'Vendor payments',
+  'EMIs', 'Bank charges', 'VAT / Tax', 'Transfers', 'Refunds', 'Other',
 ];
+const transactionTypes: TransactionType[] = ['sale', 'purchase', 'refund', 'expense', 'payroll', 'other'];
+const transactionStatuses: TransactionStatus[] = ['unpaid', 'partially_paid', 'paid', 'canceled'];
+
 
 export function AddTransactionDialog() {
   const [open, setOpen] = useState(false);
-  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
   const [accountId, setAccountId] = useState('');
-  const [category, setCategory] = useState('');
-  const [amount, setAmount] = useState('');
+  const [category, setCategory] = useState<TransactionCategory | ''>('');
+  const [transactionType, setTransactionType] = useState<TransactionType | ''>('');
+  const [totalAmount, setTotalAmount] = useState('');
   const [date, setDate] = useState('');
-  const [type, setType] = useState<'debit' | 'credit' | ''>('');
+  const [status, setStatus] = useState<TransactionStatus | ''>('');
 
   const handleAddTransaction = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !accountId || !category || !amount || !date || !type) {
-      // Basic validation
+    if (!description || !accountId || !category || !totalAmount || !date || !transactionType || !status) {
       return;
     }
+    
+    const amount = parseFloat(totalAmount);
+
     const newTransaction: Transaction = {
       id: (transactions.length + 1).toString(),
-      name,
+      description,
       accountId,
-      category: category as Transaction['category'],
-      amount: type === 'debit' ? -Math.abs(parseFloat(amount)) : Math.abs(parseFloat(amount)),
+      category: category as TransactionCategory,
+      transaction_type: transactionType as TransactionType,
+      total_amount: amount,
+      total_paid: status === 'paid' ? amount : 0,
+      balance_due: status === 'paid' ? 0 : amount,
+      status: status as TransactionStatus,
       date,
-      type,
+      created_at: new Date().toISOString(),
     };
-    // In a real app, you would have a state management solution (like Zustand or Context)
-    // to update the transactions list globally. For now, we'll just log it.
+    
     console.log('New Transaction:', newTransaction);
     
-    // You could potentially add to a local state here if you lift state up.
-    // For now, we just close the dialog.
-
-    // Reset form and close dialog
-    setName('');
+    setDescription('');
     setAccountId('');
     setCategory('');
-    setAmount('');
+    setTransactionType('');
+    setTotalAmount('');
     setDate('');
-    setType('');
+    setStatus('');
     setOpen(false);
   };
 
@@ -104,10 +99,10 @@ export function AddTransactionDialog() {
         <form onSubmit={handleAddTransaction}>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-right">
-                Name
+              <Label htmlFor="description" className="text-right">
+                Description
               </Label>
-              <Input id="name" value={name} onChange={e => setName(e.target.value)} className="col-span-3" placeholder="e.g., Coffee" required />
+              <Input id="description" value={description} onChange={e => setDescription(e.target.value)} className="col-span-3" placeholder="e.g., Coffee" required />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="account" className="text-right">
@@ -126,13 +121,12 @@ export function AddTransactionDialog() {
               <Label htmlFor="type" className="text-right">
                 Type
               </Label>
-              <Select onValueChange={(v) => setType(v as any)} value={type} required>
+              <Select onValueChange={(v) => setTransactionType(v as any)} value={transactionType} required>
                 <SelectTrigger id="type" className="col-span-3">
                   <SelectValue placeholder="Select transaction type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="debit">Debit (Expense)</SelectItem>
-                  <SelectItem value="credit">Credit (Income)</SelectItem>
+                  {transactionTypes.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
@@ -140,7 +134,7 @@ export function AddTransactionDialog() {
               <Label htmlFor="category" className="text-right">
                 Category
               </Label>
-              <Select onValueChange={setCategory} value={category} required>
+              <Select onValueChange={(v) => setCategory(v as any)} value={category} required>
                 <SelectTrigger id="category" className="col-span-3">
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
@@ -153,7 +147,20 @@ export function AddTransactionDialog() {
               <Label htmlFor="amount" className="text-right">
                 Amount
               </Label>
-              <Input id="amount" type="number" value={amount} onChange={e => setAmount(e.target.value)} className="col-span-3" placeholder="0.00" required />
+              <Input id="amount" type="number" value={totalAmount} onChange={e => setTotalAmount(e.target.value)} className="col-span-3" placeholder="0.00" required />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="status" className="text-right">
+                Status
+              </Label>
+              <Select onValueChange={(v) => setStatus(v as any)} value={status} required>
+                <SelectTrigger id="status" className="col-span-3">
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent>
+                  {transactionStatuses.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                </SelectContent>
+              </Select>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="date" className="text-right">
