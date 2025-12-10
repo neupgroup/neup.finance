@@ -130,13 +130,3 @@ export const recipients: Recipient[] = [
     { id: '13', name: 'Spotify', type: 'organization', contact_info: { email: 'office@spotify.com', website: 'spotify.com' }, created_on: '2024-07-25T21:00:00Z' },
     { id: '14', name: 'Client B', type: 'person', contact_info: { email: 'clientb@example.com' }, created_on: '2024-07-30T22:00:00Z' },
 ];
-
-
-export const integrations = [
-    { name: 'Your Bank', icon: 'Landmark', description: 'Sync transactions securely.' },
-    { name: 'Stripe', icon: 'CreditCard', description: 'eCommerce revenue.' },
-    { name: 'PayPal', icon: 'Wallet', description: 'Online payments.' },
-    { name: 'QuickBooks', icon: 'Book', description: 'Accounting data.' },
-    { name: 'Salesforce', icon: 'Cloud', description: 'CRM and sales data.' },
-    { name: 'Gusto', icon: 'Users', description: 'Payroll information.' },
-];

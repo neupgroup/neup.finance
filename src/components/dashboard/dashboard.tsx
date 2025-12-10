@@ -1,5 +1,4 @@
 import { RecentTransactions } from './recent-transactions';
-import { Integrations } from './integrations';
 import { SmartProjections } from './smart-projections';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 
@@ -16,7 +15,6 @@ export function Dashboard() {
                     <RecentTransactions />
                 </CardContent>
             </Card>
-            <Integrations />
         </div>
         <div className="space-y-6 md:space-y-8">
             <SmartProjections />
