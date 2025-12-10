@@ -148,7 +148,7 @@ export default function AccountsPage() {
                 </DialogContent>
             </Dialog>
         </div>
-         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+         <div className="mx-auto max-w-2xl grid grid-cols-1 gap-6">
             {accounts.map((account, index) => (
                 <div key={index} className={`relative p-6 rounded-xl shadow-lg text-white bg-gradient-to-br ${getCardGradient(index)}`}>
                     <div className="flex justify-between items-start mb-4">
