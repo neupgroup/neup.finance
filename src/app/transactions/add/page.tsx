@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AppShell } from '@/components/layout/app-shell';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -83,86 +82,84 @@ export default function AddTransactionPage() {
 
   return (
     <AppShell>
-      <Card className="max-w-2xl mx-auto">
-        <CardHeader>
-          <CardTitle>Add New Transaction</CardTitle>
-          <CardDescription>
-            Enter the details of your new transaction below.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-            <form onSubmit={handleAddTransaction}>
-            <div className="grid gap-6">
+      <div className="max-w-4xl mx-auto space-y-6">
+        <div>
+            <h1 className="text-3xl font-bold tracking-tight">Add New Transaction</h1>
+            <p className="text-muted-foreground">
+                Enter the details of your new transaction below.
+            </p>
+        </div>
+        <form onSubmit={handleAddTransaction}>
+        <div className="grid gap-6">
+            <div className="grid gap-2">
+                <Label htmlFor="description">Description</Label>
+                <Input id="description" value={description} onChange={e => setDescription(e.target.value)} placeholder="e.g., Coffee" required />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="grid gap-2">
-                    <Label htmlFor="description">Description</Label>
-                    <Input id="description" value={description} onChange={e => setDescription(e.target.value)} placeholder="e.g., Coffee" required />
+                    <Label htmlFor="account">Account</Label>
+                    <Select onValueChange={setAccountId} value={accountId} required>
+                        <SelectTrigger id="account">
+                        <SelectValue placeholder="Select an account" />
+                        </SelectTrigger>
+                        <SelectContent>
+                        {accounts.map(acc => <SelectItem key={acc.name} value={acc.name}>{acc.name}</SelectItem>)}
+                        </SelectContent>
+                    </Select>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="grid gap-2">
-                        <Label htmlFor="account">Account</Label>
-                        <Select onValueChange={setAccountId} value={accountId} required>
-                            <SelectTrigger id="account">
-                            <SelectValue placeholder="Select an account" />
-                            </SelectTrigger>
-                            <SelectContent>
-                            {accounts.map(acc => <SelectItem key={acc.name} value={acc.name}>{acc.name}</SelectItem>)}
-                            </SelectContent>
-                        </Select>
-                    </div>
-                     <div className="grid gap-2">
-                        <Label htmlFor="type">Type</Label>
-                        <Select onValueChange={(v) => setTransactionType(v as any)} value={transactionType} required>
-                            <SelectTrigger id="type">
-                            <SelectValue placeholder="Select transaction type" />
-                            </SelectTrigger>
-                            <SelectContent>
-                            {transactionTypes.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
-                            </SelectContent>
-                        </Select>
-                    </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="grid gap-2">
-                        <Label htmlFor="category">Category</Label>
-                        <Select onValueChange={(v) => setCategory(v as any)} value={category} required>
-                            <SelectTrigger id="category">
-                                <SelectValue placeholder="Select a category" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {categories.map(cat => <SelectItem key={cat} value={cat}>{cat}</SelectItem>)}
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <div className="grid gap-2">
-                        <Label htmlFor="amount">Amount</Label>
-                        <Input id="amount" type="number" value={totalAmount} onChange={e => setTotalAmount(e.target.value)} placeholder="0.00" required />
-                    </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="grid gap-2">
-                        <Label htmlFor="status">Status</Label>
-                        <Select onValueChange={(v) => setStatus(v as any)} value={status} required>
-                            <SelectTrigger id="status">
-                                <SelectValue placeholder="Select status" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {transactionStatuses.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <div className="grid gap-2">
-                        <Label htmlFor="date">Date</Label>
-                        <Input id="date" type="date" value={date} onChange={e => setDate(e.target.value)} required />
-                    </div>
-                </div>
-                <div className="flex justify-end gap-2 mt-4">
-                    <Button type="button" variant="outline" onClick={() => router.push('/transactions')}>Cancel</Button>
-                    <Button type="submit">Save Transaction</Button>
+                    <Label htmlFor="type">Type</Label>
+                    <Select onValueChange={(v) => setTransactionType(v as any)} value={transactionType} required>
+                        <SelectTrigger id="type">
+                        <SelectValue placeholder="Select transaction type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                        {transactionTypes.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+                        </SelectContent>
+                    </Select>
                 </div>
             </div>
-            </form>
-        </CardContent>
-    </Card>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid gap-2">
+                    <Label htmlFor="category">Category</Label>
+                    <Select onValueChange={(v) => setCategory(v as any)} value={category} required>
+                        <SelectTrigger id="category">
+                            <SelectValue placeholder="Select a category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {categories.map(cat => <SelectItem key={cat} value={cat}>{cat}</SelectItem>)}
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="amount">Amount</Label>
+                    <Input id="amount" type="number" value={totalAmount} onChange={e => setTotalAmount(e.target.value)} placeholder="0.00" required />
+                </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid gap-2">
+                    <Label htmlFor="status">Status</Label>
+                    <Select onValueChange={(v) => setStatus(v as any)} value={status} required>
+                        <SelectTrigger id="status">
+                            <SelectValue placeholder="Select status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {transactionStatuses.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="date">Date</Label>
+                    <Input id="date" type="date" value={date} onChange={e => setDate(e.target.value)} required />
+                </div>
+            </div>
+            <div className="flex justify-end gap-2 mt-4">
+                <Button type="button" variant="outline" onClick={() => router.push('/transactions')}>Cancel</Button>
+                <Button type="submit">Save Transaction</Button>
+            </div>
+        </div>
+        </form>
+    </div>
     </AppShell>
   );
 }
