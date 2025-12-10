@@ -20,7 +20,7 @@ const menuItems = [
   { href: '/expense', label: 'Expenses', icon: Wallet },
   { href: '/projection', label: 'Projections', icon: BarChart },
   { href: '/report', label: 'Reports', icon: FileText },
-  { href: '/chat', label: 'Command Center', icon: Bot },
+  { href: '/chat', label: 'Chat', icon: Bot },
 ];
 
 export function MainNav() {
