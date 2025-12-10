@@ -54,6 +54,7 @@ const currencies = [
     { value: 'GBP', label: 'GBP - British Pound' },
     { value: 'JPY', label: 'JPY - Japanese Yen' },
     { value: 'INR', label: 'INR - Indian Rupee' },
+    { value: 'NPR', label: 'NPR - Nepali Rupee' },
 ];
 
 

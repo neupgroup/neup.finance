@@ -141,6 +141,7 @@ export default function AccountsPage() {
                             <SelectItem value="GBP">GBP - British Pound</SelectItem>
                             <SelectItem value="JPY">JPY - Japanese Yen</SelectItem>
                             <SelectItem value="INR">INR - Indian Rupee</SelectItem>
+                            <SelectItem value="NPR">NPR - Nepali Rupee</SelectItem>
                             </SelectContent>
                         </Select>
                         </div>
