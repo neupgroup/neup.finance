@@ -4,7 +4,9 @@ import { Dashboard } from '@/components/dashboard/dashboard';
 export default function HomePage() {
   return (
     <AppShell>
-      <Dashboard />
+      <div className="space-y-6 md:space-y-8">
+        <Dashboard />
+      </div>
     </AppShell>
   );
 }
