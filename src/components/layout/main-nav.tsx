@@ -55,8 +55,9 @@ export function MainNav() {
       </SidebarMenu>
        <SidebarMenu className="mt-auto">
          <SidebarMenuItem>
-            <Link href="#">
+            <Link href="/settings">
                 <SidebarMenuButton
+                  isActive={pathname === '/settings'}
                   tooltip={{
                     children: "Settings",
                     className: 'bg-background border-border text-foreground',
