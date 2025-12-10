@@ -25,7 +25,7 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
                             <Skeleton className="h-8 w-8 md:hidden" />
                              <Link href="/" className="flex items-center gap-2 font-semibold">
                                 <Logo className="h-8 w-8" />
-                                <span className="hidden sm:inline">NeupLedger</span>
+                                <span className="hidden sm:inline">Neup.Ledger</span>
                             </Link>
                         </div>
                         <div className="flex items-center gap-2">
@@ -62,7 +62,7 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
                         <SidebarTrigger className="md:hidden"/>
                         <Link href="/" className="items-center gap-2 font-semibold hidden md:flex">
                             <Logo className="h-8 w-8" />
-                            <span>NeupLedger</span>
+                            <span>Neup.Ledger</span>
                         </Link>
                     </div>
                     <Header />

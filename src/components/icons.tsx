@@ -12,7 +12,7 @@ export function Logo(props: SVGProps<SVGSVGElement>) {
       strokeLinejoin="round"
       {...props}
     >
-      <title>NeupLedger Diary Logo</title>
+      <title>Neup.Ledger Diary Logo</title>
       <path d="M4 2v20h16V2H4z" fill="hsl(var(--primary))" stroke="none" />
       <path d="M4 2v20" stroke="hsl(var(--primary-foreground))" strokeOpacity="0.5" />
       <path d="M9 2v20" stroke="hsl(var(--primary-foreground))" strokeOpacity="0.2" />

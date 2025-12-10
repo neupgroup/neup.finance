@@ -32,7 +32,7 @@ export default function OnboardingPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="items-center text-center">
           <Logo className="h-12 w-12 mb-2" />
-          <CardTitle>Welcome to NeupLedger</CardTitle>
+          <CardTitle>Welcome to Neup.Ledger</CardTitle>
           <CardDescription>Let's get your account set up. Tell us a bit about yourself.</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>

@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { ThemeProvider } from '@/components/theme-provider';
 
 export const metadata: Metadata = {
-  title: 'NeupLedger',
+  title: 'Neup.Ledger',
   description: 'The first surreal-AI financial universe that simplifies accounts for everyone.',
 };
 
