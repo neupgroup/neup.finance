@@ -1,11 +1,57 @@
+import React from 'react';
 import { RecentTransactions } from './recent-transactions';
 import { SmartProjections } from './smart-projections';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { SmartEntry } from './smart-entry';
+import { transactions } from '@/lib/mock-data';
+import { ArrowDown, ArrowUp } from 'lucide-react';
+
+function StatCard({ title, value, icon, description, colorClass }: { title: string, value: string, icon: React.ReactNode, description: string, colorClass?: string }) {
+    return (
+        <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">{title}</CardTitle>
+                {icon}
+            </CardHeader>
+            <CardContent>
+                <div className={`text-2xl font-bold ${colorClass}`}>{value}</div>
+                <p className="text-xs text-muted-foreground">{description}</p>
+            </CardContent>
+        </Card>
+    )
+}
+
 
 export function Dashboard() {
+    const { receivables, payables } = React.useMemo(() => {
+        let payables = 0;
+        let receivables = 0;
+
+        transactions.forEach(t => {
+            if (t.status === 'unpaid' || t.status === 'partially_paid') {
+                 if (['sale', 'income'].includes(t.transaction_type)) {
+                    receivables += t.balance_due;
+                } else if (['purchase', 'expense', 'payroll'].includes(t.transaction_type)) {
+                    payables += t.balance_due;
+                }
+            }
+        });
+        
+        return { receivables, payables };
+    }, []);
+
+    const formatCurrency = (amount: number) => {
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+    }
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
         <div className="lg:col-span-2 space-y-6 md:space-y-8">
+            <SmartEntry />
+             <div className="grid md:grid-cols-2 gap-6">
+                <StatCard title="Accounts Receivable" value={formatCurrency(receivables)} icon={<ArrowUp className="h-4 w-4 text-muted-foreground" />} description="Money you expect to receive." colorClass="text-green-500" />
+                <StatCard title="Accounts Payable" value={formatCurrency(payables)} icon={<ArrowDown className="h-4 w-4 text-muted-foreground" />} description="Money you need to pay." colorClass="text-red-500" />
+            </div>
             <Card>
                 <CardHeader>
                     <CardTitle>Recent Transactions</CardTitle>

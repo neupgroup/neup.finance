@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import { useState, useMemo } from 'react';
@@ -34,18 +32,19 @@ const categories: {value: TransactionCategory, label: TransactionCategory}[] = [
   { value: 'Other', label: 'Other' },
 ];
 const transactionTypes: {value: TransactionType, label: TransactionType}[] = [
-    {value: 'sale', label: 'Sale'}, 
-    {value: 'purchase', label: 'Purchase'}, 
-    {value: 'refund', label: 'Refund'}, 
-    {value: 'expense', label: 'Expense'}, 
-    {value: 'payroll', label: 'Payroll'}, 
-    {value: 'other', label: 'Other'}
+    {value: 'sale', label: 'sale'}, 
+    {value: 'purchase', label: 'purchase'}, 
+    {value: 'refund', label: 'refund'}, 
+    {value: 'expense', label: 'expense'}, 
+    {value: 'payroll', label: 'payroll'}, 
+    {value: 'income', label: 'income'},
+    {value: 'other', label: 'other'}
 ];
 const transactionStatuses: {value: TransactionStatus, label: TransactionStatus}[] = [
-    {value: 'unpaid', label: 'Unpaid'},
-    {value: 'partially_paid', label: 'Partially Paid'},
-    {value: 'paid', label: 'Paid'},
-    {value: 'canceled', label: 'Canceled'}
+    {value: 'unpaid', label: 'unpaid'},
+    {value: 'partially_paid', label: 'partially_paid'},
+    {value: 'paid', label: 'paid'},
+    {value: 'canceled', label: 'canceled'}
 ];
 const currencies = [
     { value: 'USD', label: 'USD - US Dollar' },
@@ -136,7 +135,7 @@ export default function AddTransactionPage() {
     // In a real app, you'd send this to a server.
     // For now we just log it, add it to mock data, and show a success toast.
     console.log('New Transaction:', newTransaction);
-    transactions.push(newTransaction);
+    transactions.unshift(newTransaction);
     
     toast({
       title: "Transaction Added",

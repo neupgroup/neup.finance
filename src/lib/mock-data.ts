@@ -1,21 +1,40 @@
 
 
-export type TransactionStatus = 'unpaid' | 'partially_paid' | 'paid' | 'canceled';
-export type TransactionType = 'sale' | 'purchase' | 'refund' | 'expense' | 'payroll' | 'income' | 'other';
-export type TransactionCategory =
-    | 'Sales'
-    | 'Purchases'
-    | 'Discounts'
-    | 'Payroll'
-    | 'Utilities'
-    | 'Vendor payments'
-    | 'EMIs'
-    | 'Bank charges'
-    | 'VAT / Tax'
-    | 'Transfers'
-    | 'Refunds'
-    | 'Income'
-    | 'Other';
+export const TransactionStatus = {
+    UNPAID: 'unpaid',
+    PARTIALLY_PAID: 'partially_paid',
+    PAID: 'paid',
+    CANCELED: 'canceled'
+} as const;
+export type TransactionStatus = typeof TransactionStatus[keyof typeof TransactionStatus];
+
+export const TransactionType = {
+    SALE: 'sale',
+    PURCHASE: 'purchase',
+    REFUND: 'refund',
+    EXPENSE: 'expense',
+    PAYROLL: 'payroll',
+    INCOME: 'income',
+    OTHER: 'other'
+} as const;
+export type TransactionType = typeof TransactionType[keyof typeof TransactionType];
+
+export const TransactionCategory = {
+    SALES: 'Sales',
+    PURCHASES: 'Purchases',
+    DISCOUNTS: 'Discounts',
+    PAYROLL: 'Payroll',
+    UTILITIES: 'Utilities',
+    VENDOR_PAYMENTS: 'Vendor payments',
+    EMIS: 'EMIs',
+    BANK_CHARGES: 'Bank charges',
+    VAT_TAX: 'VAT / Tax',
+    TRANSFERS: 'Transfers',
+    REFUNDS: 'Refunds',
+    INCOME: 'Income',
+    OTHER: 'Other'
+} as const;
+export type TransactionCategory = typeof TransactionCategory[keyof typeof TransactionCategory];
 
 export type Transaction = {
   id: string;
