@@ -19,8 +19,13 @@ import { Badge } from '@/components/ui/badge';
 import { transactions, type Transaction } from '@/lib/mock-data';
 import { ArrowDownLeft, ArrowUpRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { usePathname } from 'next/navigation';
 
 export function RecentTransactions() {
+  const pathname = usePathname();
+  const isDashboard = pathname === '/';
+  const displayTransactions = isDashboard ? transactions.slice(0, 5) : transactions;
+
   return (
     <Card>
       <CardHeader>
@@ -38,7 +43,7 @@ export function RecentTransactions() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {transactions.slice(0, 5).map((transaction) => (
+            {displayTransactions.map((transaction) => (
               <TableRow key={transaction.id}>
                 <TableCell>
                   <div className="flex items-center gap-3">

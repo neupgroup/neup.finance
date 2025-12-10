@@ -3,21 +3,19 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
+  ArrowLeftRight,
   BarChart,
   Bot,
-  CircleDollarSign,
   FileText,
   Home,
   Settings,
-  Wallet,
 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { useSidebar } from '../ui/sidebar';
 
 const menuItems = [
   { href: '/', label: 'Dashboard', icon: Home },
-  { href: '/revenue', label: 'Revenue', icon: CircleDollarSign },
-  { href: '/expense', label: 'Expenses', icon: Wallet },
+  { href: '/transactions', label: 'Transactions', icon: ArrowLeftRight },
   { href: '/projection', label: 'Projections', icon: BarChart },
   { href: '/report', label: 'Reports', icon: FileText },
   { href: '/chat', label: 'Chat', icon: Bot },
