@@ -3,14 +3,15 @@
 import { useState, useEffect } from 'react';
 import { AppShell } from '@/components/layout/app-shell';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { transactions, Transaction } from '@/lib/mock-data';
-import { Loader, BookOpen } from 'lucide-react';
+import { transactions, transactionLines, type Transaction, type TransactionLine } from '@/lib/mock-data';
+import { Loader } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Separator } from '@/components/ui/separator';
 
 type JournalEntry = {
-    date: string;
-    title: string;
-    narrative: string;
+    transaction: Transaction;
+    lines: TransactionLine[];
 };
 
 export default function JournalPage() {
@@ -21,46 +22,32 @@ export default function JournalPage() {
   useEffect(() => {
     function generateJournal() {
       try {
-        const groupedByDate = transactions.reduce((acc, transaction) => {
-            const date = new Date(transaction.date).toDateString();
-            if (!acc[date]) {
-                acc[date] = [];
-            }
-            acc[date].push(transaction);
-            return acc;
-        }, {} as Record<string, Transaction[]>);
-
-        const entries: JournalEntry[] = Object.entries(groupedByDate).map(([dateStr, dailyTransactions]) => {
-            const date = new Date(dateStr);
-            const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-            
-            const totalSpent = dailyTransactions
-                .filter(t => t.transaction_type === 'purchase' || t.transaction_type === 'expense')
-                .reduce((sum, t) => sum + t.total_amount, 0);
-            
-            const totalGained = dailyTransactions
-                .filter(t => t.transaction_type === 'income' || t.transaction_type === 'sale' || t.transaction_type === 'refund')
-                .reduce((sum, t) => sum + t.total_amount, 0);
-
-            let title = `A Day of Transactions`;
-            if (totalGained > 0 && totalSpent > 0) {
-                title = `A Mixed Day of Income and Expenses`;
-            } else if (totalGained > 0) {
-                title = `A Profitable Day`;
-            } else if (totalSpent > 0) {
-                title = `A Day of Spending`;
-            }
-            
-            const narrative = `On this day, you had ${dailyTransactions.length} transaction(s). You spent a total of ${totalSpent.toFixed(2)} and gained ${totalGained.toFixed(2)}. The most notable activities were: ${dailyTransactions.map(t => t.title).slice(0,2).join(', ')}.`;
-
+        const entries: JournalEntry[] = transactions.map(transaction => {
+            const lines = transactionLines.filter(line => line.transaction_id === transaction.id);
             return {
-                date: formattedDate,
-                title,
-                narrative
+                transaction,
+                lines
             };
         });
 
-        setJournal(entries.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
+        // Add pseudo-entries for transactions without explicit lines for clarity
+        entries.forEach(entry => {
+            if (entry.lines.length === 0 && entry.transaction.accountId) {
+                const isCredit = ['sale', 'income', 'refund'].includes(entry.transaction.transaction_type);
+                entry.lines.push({
+                    id: `pseudo-${entry.transaction.id}`,
+                    transaction_id: entry.transaction.id,
+                    line_title: entry.transaction.title,
+                    category: 'sales', // Fallback
+                    account: entry.transaction.accountId,
+                    debit: isCredit ? 0 : entry.transaction.total_amount,
+                    credit: isCredit ? entry.transaction.total_amount : 0,
+                    currency: entry.transaction.currency,
+                });
+            }
+        });
+
+        setJournal(entries.sort((a, b) => new Date(b.transaction.date).getTime() - new Date(a.transaction.date).getTime()));
 
       } catch (error) {
         console.error('Failed to generate journal entries:', error);
@@ -75,6 +62,11 @@ export default function JournalPage() {
     }
     generateJournal();
   }, [toast]);
+  
+  const formatCurrency = (amount: number, currency: string) => {
+    if (amount === 0) return '-';
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency, minimumFractionDigits: 2 }).format(amount);
+  };
 
   return (
     <AppShell>
@@ -82,7 +74,7 @@ export default function JournalPage() {
         <Card>
           <CardHeader>
             <CardTitle>Financial Journal</CardTitle>
-            <CardDescription>Your financial story, automatically generated from your transactions.</CardDescription>
+            <CardDescription>A double-entry view of your transactions.</CardDescription>
           </CardHeader>
           <CardContent>
             {isLoading ? (
@@ -91,17 +83,49 @@ export default function JournalPage() {
                 <p>Generating your journal...</p>
               </div>
             ) : (
-                <div className="relative pl-6 before:absolute before:inset-y-0 before:left-0 before:w-px before:bg-border">
-                    {journal.map((entry, index) => (
-                        <div key={index} className="relative mb-8">
-                             <div className="absolute left-[-2.1rem] top-1 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                                <BookOpen className="h-5 w-5" />
+                <div className="space-y-8">
+                    {journal.map((entry) => (
+                        <div key={entry.transaction.id} className="p-4 border rounded-lg">
+                            <div className="flex justify-between items-baseline mb-2">
+                                <h3 className="text-lg font-semibold">{entry.transaction.title}</h3>
+                                <p className="text-sm text-muted-foreground">{new Date(entry.transaction.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
                             </div>
-                            <div className="ml-4">
-                                <p className="text-sm font-medium text-muted-foreground">{entry.date}</p>
-                                <h3 className="text-xl font-semibold mt-1">{entry.title}</h3>
-                                <p className="mt-2 text-foreground/80">{entry.narrative}</p>
-                            </div>
+                            <p className="text-sm text-muted-foreground mb-4">{entry.transaction.description}</p>
+                            
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Account / Description</TableHead>
+                                        <TableHead className="text-right">Debit</TableHead>
+                                        <TableHead className="text-right">Credit</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {entry.lines.map((line) => (
+                                        <TableRow key={line.id}>
+                                            <TableCell>
+                                                <p className="font-medium">{line.account}</p>
+                                                <p className="text-xs text-muted-foreground">{line.line_title}</p>
+                                            </TableCell>
+                                            <TableCell className="text-right font-mono">{formatCurrency(line.debit, line.currency)}</TableCell>
+                                            <TableCell className="text-right font-mono text-green-500">{formatCurrency(line.credit, line.currency)}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                             {entry.lines.length > 0 && (
+                                <>
+                                 <TableRow className="font-bold">
+                                    <TableCell>Total</TableCell>
+                                    <TableCell className="text-right font-mono">
+                                        {formatCurrency(entry.lines.reduce((sum, l) => sum + l.debit, 0), entry.transaction.currency)}
+                                    </TableCell>
+                                     <TableCell className="text-right font-mono text-green-500">
+                                        {formatCurrency(entry.lines.reduce((sum, l) => sum + l.credit, 0), entry.transaction.currency)}
+                                    </TableCell>
+                                </TableRow>
+                                </>
+                            )}
                         </div>
                     ))}
                 </div>
