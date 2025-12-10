@@ -24,6 +24,7 @@ export function RecentTransactions() {
       <TableHeader>
         <TableRow>
           <TableHead>Transaction</TableHead>
+          <TableHead className="hidden sm:table-cell">Account</TableHead>
           <TableHead className="hidden sm:table-cell">Category</TableHead>
           <TableHead className="hidden md:table-cell">Date</TableHead>
           <TableHead className="text-right">Amount</TableHead>
@@ -39,6 +40,9 @@ export function RecentTransactions() {
                 </div>
                 <div className="font-medium">{transaction.name}</div>
               </div>
+            </TableCell>
+            <TableCell className="hidden sm:table-cell">
+              {transaction.accountId}
             </TableCell>
             <TableCell className="hidden sm:table-cell">
               <Badge variant="outline">{transaction.category}</Badge>
