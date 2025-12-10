@@ -64,6 +64,14 @@ export type Projection = {
     date: string;
 };
 
+export type Recipient = {
+    id: string;
+    name: string;
+    email?: string;
+    website?: string;
+}
+
+
 export const transactions: Transaction[] = [
   { id: '1', title: 'Salary', accountId: 'Checking Account', category: 'Payroll', transaction_type: 'income', total_amount: 5000, total_paid: 5000, balance_due: 0, status: 'paid', date: '2024-07-01', currency: 'USD', created_at: '2024-07-01T10:00:00Z', recipient: 'Company Inc.' },
   { id: '2', title: 'Freelance Project', accountId: 'Checking Account', category: 'Sales', transaction_type: 'sale', total_amount: 1200, total_paid: 1200, balance_due: 0, status: 'paid', date: '2024-07-05', currency: 'USD', created_at: '2024-07-05T11:00:00Z', recipient: 'Client A' },
@@ -92,6 +100,23 @@ export const projections: Projection[] = [
     { id: '2', title: 'Car Insurance Renewal', type: 'Expense', certainty: 'Fixed', amount: 800, currency: 'USD', date: '2025-01-20' },
     { id: '3', title: 'Freelance Project (Client X)', type: 'Income', certainty: 'Possible', amount: 2000, currency: 'USD', date: '2024-11-30' },
     { id: '4', title: 'Vacation to Hawaii', type: 'Expense', certainty: 'Possible', amount: 3000, currency: 'USD', date: '2025-03-10' },
+];
+
+export const recipients: Recipient[] = [
+    { id: '1', name: 'Company Inc.', email: 'contact@companyinc.com', website: 'companyinc.com' },
+    { id: '2', name: 'Client A', email: 'clienta@example.com' },
+    { id: '3', name: 'SuperMart', email: 'support@supermart.com' },
+    { id: '4', name: 'City Power', email: 'billing@citypower.com' },
+    { id: '5', name: 'Netflix', email: 'info@netflix.com', website: 'netflix.com' },
+    { id: '6', name: 'Cineplex', email: 'guestservices@cineplex.com' },
+    { id: '7', name: 'Figma', email: 'support@figma.com', website: 'figma.com' },
+    { id: '8', name: 'Local Market' },
+    { id: '9', name: 'Gas Co.', email: 'support@gasco.com' },
+    { id: '10', name: 'TicketMaster', email: 'help@ticketmaster.com' },
+    { id: '11', name: 'Vanguard' },
+    { id: '12', name: 'Airbnb', email: 'support@airbnb.com', website: 'airbnb.com' },
+    { id: '13', name: 'Spotify', email: 'office@spotify.com', website: 'spotify.com' },
+    { id: '14', name: 'Client B', email: 'clientb@example.com' },
 ];
 
 
