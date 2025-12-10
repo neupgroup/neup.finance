@@ -31,18 +31,18 @@ const categories: {value: TransactionCategory, label: TransactionCategory}[] = [
   { value: 'Other', label: 'Other' },
 ];
 const transactionTypes: {value: TransactionType, label: TransactionType}[] = [
-    {value: 'sale', label: 'sale'}, 
-    {value: 'purchase', label: 'purchase'}, 
-    {value: 'refund', label: 'refund'}, 
-    {value: 'expense', label: 'expense'}, 
-    {value: 'payroll', label: 'payroll'}, 
-    {value: 'other', label: 'other'}
+    {value: 'sale', label: 'Sale'}, 
+    {value: 'purchase', label: 'Purchase'}, 
+    {value: 'refund', label: 'Refund'}, 
+    {value: 'expense', label: 'Expense'}, 
+    {value: 'payroll', label: 'Payroll'}, 
+    {value: 'other', label: 'Other'}
 ];
 const transactionStatuses: {value: TransactionStatus, label: TransactionStatus}[] = [
-    {value: 'unpaid', label: 'unpaid'},
-    {value: 'partially_paid', label: 'partially_paid'},
-    {value: 'paid', label: 'paid'},
-    {value: 'canceled', label: 'canceled'}
+    {value: 'unpaid', label: 'Unpaid'},
+    {value: 'partially_paid', label: 'Partially Paid'},
+    {value: 'paid', label: 'Paid'},
+    {value: 'canceled', label: 'Canceled'}
 ];
 
 
@@ -128,7 +128,7 @@ export default function AddTransactionPage() {
                     <Combobox
                         options={transactionTypes}
                         value={transactionType}
-                        onChange={(v) => setTransactionType(v as any)}
+                        onChange={(v) => setTransactionType(v.toLowerCase() as any)}
                         placeholder="Select transaction type"
                         searchPlaceholder="Search types..."
                         notFoundMessage="No type found."
@@ -158,7 +158,7 @@ export default function AddTransactionPage() {
                     <Combobox
                         options={transactionStatuses}
                         value={status}
-                        onChange={(v) => setStatus(v as any)}
+                        onChange={(v) => setStatus(v.toLowerCase().replace(' ', '_') as any)}
                         placeholder="Select status"
                         searchPlaceholder="Search statuses..."
                         notFoundMessage="No status found."
