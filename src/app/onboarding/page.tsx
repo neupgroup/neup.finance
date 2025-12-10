@@ -24,7 +24,7 @@ export default function OnboardingPage() {
     e.preventDefault();
     // Here you would typically save the user's choice
     console.log('Account type selected:', accountType);
-    router.push('/');
+    router.push('/auth');
   };
 
   return (
