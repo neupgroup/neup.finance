@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useMemo } from 'react';
@@ -133,15 +134,16 @@ export default function AddTransactionPage() {
     };
     
     // In a real app, you'd send this to a server.
-    // For now we just log it and show a success toast.
+    // For now we just log it, add it to mock data, and show a success toast.
     console.log('New Transaction:', newTransaction);
+    transactions.push(newTransaction);
     
     toast({
       title: "Transaction Added",
       description: `A new transaction for ${currency} ${totalAmount} has been successfully added.`,
     });
 
-    router.push('/transactions');
+    router.push(`/transactions/${newTransaction.id}`);
   };
 
   return (

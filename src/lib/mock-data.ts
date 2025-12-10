@@ -1,4 +1,5 @@
 
+
 export type TransactionStatus = 'unpaid' | 'partially_paid' | 'paid' | 'canceled';
 export type TransactionType = 'sale' | 'purchase' | 'refund' | 'expense' | 'payroll' | 'income' | 'other';
 export type TransactionCategory =
@@ -35,6 +36,21 @@ export type Transaction = {
   created_at: string;
 };
 
+export type TransactionLineCategory = 'vat_paid' | 'vat_return' | 'sales' | 'referral_paid' | 'payable' | 'receivable';
+
+export type TransactionLine = {
+    id: string;
+    transaction_id: string;
+    line_title: string;
+    description?: string;
+    attachment?: string | File;
+    category: TransactionLineCategory;
+    account: string;
+    debit: number;
+    credit: number;
+    currency: string;
+}
+
 export type ProjectionType = 'Income' | 'Expense';
 export type ProjectionCertainty = 'Fixed' | 'Probable' | 'Possible';
 
@@ -63,6 +79,12 @@ export const transactions: Transaction[] = [
   { id: '12', title: 'Weekend Trip', accountId: 'Checking Account', category: 'Purchases', transaction_type: 'purchase', total_amount: 450, total_paid: 450, balance_due: 0, status: 'paid', date: '2024-07-22', currency: 'USD', created_at: '2024-07-22T11:00:00Z', recipient: 'Airbnb' },
   { id: '13', title: 'Spotify', accountId: 'Wallet', category: 'Purchases', transaction_type: 'expense', total_amount: 10.99, total_paid: 10.99, balance_due: 0, status: 'paid', date: '2024-07-25', currency: 'EUR', created_at: '2024-07-25T17:00:00Z', recipient: 'Spotify' },
   { id: '14', title: 'Client Refund', accountId: 'Checking Account', category: 'Refunds', transaction_type: 'refund', total_amount: 150, total_paid: 150, balance_due: 0, status: 'paid', date: '2024-07-28', currency: 'USD', created_at: '2024-07-28T16:00:00Z', recipient: 'Client B' },
+];
+
+export const transactionLines: TransactionLine[] = [
+    { id: 'line1', transaction_id: '2', line_title: 'Web Development Services', category: 'sales', account: 'Checking Account', debit: 0, credit: 1000, currency: 'USD' },
+    { id: 'line2', transaction_id: '2', line_title: 'VAT (20%)', category: 'vat_paid', account: 'Checking Account', debit: 0, credit: 200, currency: 'USD' },
+    { id: 'line3', transaction_id: '9', line_title: 'Partial Payment', category: 'payable', account: 'Checking Account', debit: 20, credit: 0, currency: 'USD' },
 ];
 
 export const projections: Projection[] = [
