@@ -64,12 +64,24 @@ export type Projection = {
     date: string;
 };
 
+export type RecipientType = 'person' | 'organization';
+export type RecipientTaxType = 'pan' | 'vat' | 'none';
+
 export type Recipient = {
     id: string;
     name: string;
-    email?: string;
-    website?: string;
-}
+    type: RecipientType;
+    tax_type?: RecipientTaxType;
+    tax_number?: string;
+    contact_info?: {
+        email?: string;
+        phone?: string;
+        website?: string;
+    };
+    bank_information?: string;
+    created_on: string;
+    modified_on?: string;
+};
 
 
 export const transactions: Transaction[] = [
@@ -103,20 +115,20 @@ export const projections: Projection[] = [
 ];
 
 export const recipients: Recipient[] = [
-    { id: '1', name: 'Company Inc.', email: 'contact@companyinc.com', website: 'companyinc.com' },
-    { id: '2', name: 'Client A', email: 'clienta@example.com' },
-    { id: '3', name: 'SuperMart', email: 'support@supermart.com' },
-    { id: '4', name: 'City Power', email: 'billing@citypower.com' },
-    { id: '5', name: 'Netflix', email: 'info@netflix.com', website: 'netflix.com' },
-    { id: '6', name: 'Cineplex', email: 'guestservices@cineplex.com' },
-    { id: '7', name: 'Figma', email: 'support@figma.com', website: 'figma.com' },
-    { id: '8', name: 'Local Market' },
-    { id: '9', name: 'Gas Co.', email: 'support@gasco.com' },
-    { id: '10', name: 'TicketMaster', email: 'help@ticketmaster.com' },
-    { id: '11', name: 'Vanguard' },
-    { id: '12', name: 'Airbnb', email: 'support@airbnb.com', website: 'airbnb.com' },
-    { id: '13', name: 'Spotify', email: 'office@spotify.com', website: 'spotify.com' },
-    { id: '14', name: 'Client B', email: 'clientb@example.com' },
+    { id: '1', name: 'Company Inc.', type: 'organization', tax_type: 'vat', tax_number: 'VAT123456789', contact_info: { email: 'contact@companyinc.com', website: 'companyinc.com' }, created_on: '2024-01-15T09:00:00Z' },
+    { id: '2', name: 'Client A', type: 'person', contact_info: { email: 'clienta@example.com' }, created_on: '2024-02-20T10:00:00Z' },
+    { id: '3', name: 'SuperMart', type: 'organization', created_on: '2024-03-10T11:00:00Z' },
+    { id: '4', name: 'City Power', type: 'organization', contact_info: { email: 'billing@citypower.com' }, created_on: '2024-04-05T12:00:00Z' },
+    { id: '5', name: 'Netflix', type: 'organization', contact_info: { email: 'info@netflix.com', website: 'netflix.com' }, created_on: '2024-05-01T13:00:00Z' },
+    { id: '6', name: 'Cineplex', type: 'organization', contact_info: { email: 'guestservices@cineplex.com' }, created_on: '2024-05-15T14:00:00Z' },
+    { id: '7', name: 'Figma', type: 'organization', tax_type: 'vat', tax_number: 'VAT987654321', contact_info: { email: 'support@figma.com', website: 'figma.com' }, created_on: '2024-06-01T15:00:00Z' },
+    { id: '8', name: 'Local Market', type: 'organization', created_on: '2024-06-20T16:00:00Z' },
+    { id: '9', name: 'Gas Co.', type: 'organization', contact_info: { email: 'support@gasco.com' }, created_on: '2024-07-01T17:00:00Z' },
+    { id: '10', name: 'TicketMaster', type: 'organization', contact_info: { email: 'help@ticketmaster.com' }, created_on: '2024-07-10T18:00:00Z' },
+    { id: '11', name: 'Vanguard', type: 'organization', created_on: '2024-07-15T19:00:00Z' },
+    { id: '12', name: 'Airbnb', type: 'organization', contact_info: { email: 'support@airbnb.com', website: 'airbnb.com' }, created_on: '2024-07-20T20:00:00Z' },
+    { id: '13', name: 'Spotify', type: 'organization', contact_info: { email: 'office@spotify.com', website: 'spotify.com' }, created_on: '2024-07-25T21:00:00Z' },
+    { id: '14', name: 'Client B', type: 'person', contact_info: { email: 'clientb@example.com' }, created_on: '2024-07-30T22:00:00Z' },
 ];
 
 
