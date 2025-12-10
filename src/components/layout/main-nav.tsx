@@ -11,12 +11,8 @@ import {
   Wallet,
   Zap,
 } from 'lucide-react';
-
-import {
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-} from '@/components/ui/sidebar';
+import { Button } from '../ui/button';
+import { useSidebar } from '../ui/sidebar';
 
 const menuItems = [
   { href: '/', label: 'Dashboard', icon: Home },
@@ -29,46 +25,39 @@ const menuItems = [
 
 export function MainNav() {
   const pathname = usePathname();
+  const { setOpenMobile } = useSidebar();
+
+  const handleLinkClick = () => {
+    setOpenMobile(false);
+  }
 
   return (
-    <div className="p-2">
-      <SidebarMenu>
-        {menuItems.map((item) => {
-          const isActive = pathname === item.href;
-          return (
-            <SidebarMenuItem key={item.label}>
-              <Link href={item.href}>
-                <SidebarMenuButton
-                  isActive={isActive}
-                  tooltip={{
-                    children: item.label,
-                    className: 'bg-background border-border text-foreground',
-                  }}
-                >
-                  <item.icon className="h-5 w-5" />
-                  <span>{item.label}</span>
-                </SidebarMenuButton>
-              </Link>
-            </SidebarMenuItem>
-          );
-        })}
-      </SidebarMenu>
-       <SidebarMenu className="mt-auto">
-         <SidebarMenuItem>
-            <Link href="/settings">
-                <SidebarMenuButton
-                  isActive={pathname === '/settings'}
-                  tooltip={{
-                    children: "Settings",
-                    className: 'bg-background border-border text-foreground',
-                  }}
-                >
-                    <Settings className="h-5 w-5" />
-                    <span>Settings</span>
-                </SidebarMenuButton>
-            </Link>
-         </SidebarMenuItem>
-      </SidebarMenu>
-    </div>
+    <nav className="grid items-start gap-2">
+      {menuItems.map((item, index) => {
+        const isActive = pathname === item.href;
+        return (
+          <Link key={index} href={item.href} onClick={handleLinkClick}>
+            <Button
+              variant={isActive ? 'default' : 'ghost'}
+              className="w-full justify-start gap-2"
+            >
+              <item.icon className="h-5 w-5" />
+              {item.label}
+            </Button>
+          </Link>
+        );
+      })}
+       <div className="mt-auto">
+          <Link href="/settings" onClick={handleLinkClick}>
+              <Button
+                variant={pathname === '/settings' ? 'default' : 'ghost'}
+                className="w-full justify-start gap-2"
+              >
+                  <Settings className="h-5 w-5" />
+                  Settings
+              </Button>
+          </Link>
+       </div>
+    </nav>
   );
 }
