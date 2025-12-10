@@ -218,10 +218,12 @@ export default function AddTransactionPage() {
                         notFoundMessage="No category found."
                     />
                 </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="due_on">Due On (Optional)</Label>
-                    <Input id="due_on" type="date" value={dueOn} onChange={e => setDueOn(e.target.value)} className={!dueOn ? 'text-muted-foreground' : ''}/>
-                </div>
+                {(status === 'unpaid' || status === 'partially_paid') && (
+                    <div className="grid gap-2">
+                        <Label htmlFor="due_on">Due On (Optional)</Label>
+                        <Input id="due_on" type="date" value={dueOn} onChange={e => setDueOn(e.target.value)} className={!dueOn ? 'text-muted-foreground' : ''}/>
+                    </div>
+                )}
                 <div className="grid gap-2">
                     <Label htmlFor="description">Description (Optional)</Label>
                     <Textarea id="description" value={description} onChange={e => setDescription(e.target.value)} placeholder="e.g., Invoice #123 details" />
