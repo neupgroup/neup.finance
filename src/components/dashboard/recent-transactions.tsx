@@ -63,8 +63,8 @@ export function RecentTransactions() {
                   : 'text-foreground'
               }`}
             >
-              {isCredit(transaction.transaction_type) ? '+' : ''}$
-              {Math.abs(transaction.total_amount).toLocaleString()}
+              {isCredit(transaction.transaction_type) ? '+' : ''}
+              {new Intl.NumberFormat('en-US', { style: 'currency', currency: transaction.currency }).format(transaction.total_amount)}
             </TableCell>
           </TableRow>
         ))}

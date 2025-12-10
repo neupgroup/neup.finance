@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 import {
   Command,
@@ -37,65 +36,101 @@ export function Combobox({
   notFoundMessage = "Nothing found.",
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
+  const [inputValue, setInputValue] = React.useState(value);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const selectedOption = React.useMemo(
-    () => options.find((option) => option.value === value),
+    () => options.find((option) => option.value.toLowerCase() === value.toLowerCase()),
     [options, value]
   );
-  
+
+  React.useEffect(() => {
+    setInputValue(selectedOption?.label || "");
+  }, [selectedOption]);
+
+  React.useEffect(() => {
+    if (!open) {
+      setInputValue(selectedOption?.label || "");
+    }
+  }, [open, selectedOption]);
+
   const handleSelect = (currentValue: string) => {
-    onChange(currentValue);
+    const newValue = currentValue === value ? "" : currentValue;
+    onChange(newValue);
     setOpen(false);
-    inputRef.current?.focus();
   };
+  
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+    if (!open) {
+      setOpen(true);
+    }
+  }
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <div className="relative w-full">
+      <div className="relative w-full">
+        <PopoverTrigger asChild>
+          <div className="relative w-full">
             <Input
               ref={inputRef}
-              value={selectedOption?.label || ''}
-              readOnly
-              onClick={() => setOpen(true)}
+              value={inputValue}
+              onFocus={() => setOpen(true)}
+              onChange={handleInputChange}
               role="combobox"
               aria-expanded={open}
               placeholder={placeholder}
-              className={cn("w-full pr-8 cursor-pointer", !value && 'text-muted-foreground')}
+              className={cn("w-full pr-8", !value && 'text-muted-foreground')}
             />
-          <ChevronsUpDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 shrink-0 opacity-50" />
-        </div>
-      </PopoverTrigger>
-
-      <PopoverContent
-        className="w-[--radix-popover-trigger-width] p-0"
-        align="start"
-      >
-        <Command>
-            <CommandInput placeholder={searchPlaceholder} />
+            <ChevronsUpDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 shrink-0 opacity-50" />
+          </div>
+        </PopoverTrigger>
+        <PopoverContent
+          className="w-[--radix-popover-trigger-width] p-0"
+          align="start"
+          onOpenAutoFocus={(e) => {
+            // Prevent autofocus on the popover content
+             e.preventDefault();
+          }}
+        >
+          <Command filter={(value, search) => {
+              if (value.toLowerCase().includes(search.toLowerCase())) return 1
+              return 0
+          }}>
+            <CommandInput
+              value={inputValue}
+              onValueChange={setInputValue}
+              placeholder={searchPlaceholder}
+              className="h-9"
+            />
             <CommandList>
-                <CommandEmpty>{notFoundMessage}</CommandEmpty>
-                <CommandGroup>
+              <CommandEmpty>{notFoundMessage}</CommandEmpty>
+              <CommandGroup>
                 {options.map((option) => (
-                    <CommandItem
+                  <CommandItem
                     key={option.value}
                     value={option.label}
-                    onSelect={() => handleSelect(option.value)}
-                    >
+                    onSelect={() => {
+                        onChange(option.value);
+                        setInputValue(option.label);
+                        setOpen(false);
+                        inputRef.current?.focus();
+                    }}
+                  >
                     <Check
-                        className={cn(
+                      className={cn(
                         "mr-2 h-4 w-4",
                         value === option.value ? "opacity-100" : "opacity-0"
-                        )}
+                      )}
                     />
                     {option.label}
-                    </CommandItem>
+                  </CommandItem>
                 ))}
-                </CommandGroup>
+              </CommandGroup>
             </CommandList>
-        </Command>
-      </PopoverContent>
+          </Command>
+        </PopoverContent>
+      </div>
     </Popover>
   );
 }
