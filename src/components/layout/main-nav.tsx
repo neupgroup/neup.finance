@@ -4,12 +4,12 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   BarChart,
+  Bot,
   CircleDollarSign,
   FileText,
   Home,
   Settings,
   Wallet,
-  Zap,
 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { useSidebar } from '../ui/sidebar';
@@ -20,6 +20,7 @@ const menuItems = [
   { href: '/expense', label: 'Expenses', icon: Wallet },
   { href: '/projection', label: 'Projections', icon: BarChart },
   { href: '/report', label: 'Reports', icon: FileText },
+  { href: '/chat', label: 'Command Center', icon: Bot },
 ];
 
 export function MainNav() {

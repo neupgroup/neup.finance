@@ -21,7 +21,6 @@ import {
   DropdownMenuSubContent
 } from '@/components/ui/dropdown-menu';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { CommandCenter } from '../chat/command-center';
 import Link from 'next/link';
 
 export function Header() {
@@ -30,7 +29,6 @@ export function Header() {
 
   return (
     <div className="flex w-full items-center justify-end gap-2 md:gap-4">
-      <CommandCenter />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon" className="rounded-full">
