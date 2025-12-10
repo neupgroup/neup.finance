@@ -1,0 +1,34 @@
+export type Transaction = {
+  id: string;
+  name: string;
+  category: 'Income' | 'Groceries' | 'Utilities' | 'Entertainment' | 'Subscriptions' | 'Software' | 'Travel' | 'Other';
+  amount: number;
+  date: string;
+  type: 'debit' | 'credit';
+};
+
+export const transactions: Transaction[] = [
+  { id: '1', name: 'Salary', category: 'Income', amount: 5000, date: '2024-07-01', type: 'credit' },
+  { id: '2', name: 'Freelance Project', category: 'Income', amount: 1200, date: '2024-07-05', type: 'credit' },
+  { id: '3', name: 'Grocery Store', category: 'Groceries', amount: -150, date: '2024-07-02', type: 'debit' },
+  { id: '4', name: 'Electricity Bill', category: 'Utilities', amount: -75, date: '2024-07-03', type: 'debit' },
+  { id: '5', name: 'Netflix', category: 'Subscriptions', amount: -15.99, date: '2024-07-05', type: 'debit' },
+  { id: '6', name: 'Movie Tickets', category: 'Entertainment', amount: -30, date: '2024-07-08', type: 'debit' },
+  { id: '7', name: 'Figma Subscription', category: 'Software', amount: -25, date: '2024-07-10', type: 'debit' },
+  { id: '8', name: 'Grocery Run', category: 'Groceries', amount: -80, date: '2024-07-12', type: 'debit' },
+  { id: '9', name: 'Gas Bill', category: 'Utilities', amount: -50, date: '2024-07-15', type: 'debit' },
+  { id: '10', name: 'Concert', category: 'Entertainment', amount: -120, date: '2024-07-18', type: 'debit' },
+  { id: '11', name: 'Stock Dividend', category: 'Income', amount: 250, date: '2024-07-20', type: 'credit' },
+  { id: '12', name: 'Weekend Trip', category: 'Travel', amount: -450, date: '2024-07-22', type: 'debit' },
+  { id: '13', name: 'Spotify', category: 'Subscriptions', amount: -10.99, date: '2024-07-25', type: 'debit' },
+  { id: '14', name: 'Farmers Market', category: 'Groceries', amount: -65, date: '2024-07-28', type: 'debit' },
+];
+
+export const integrations = [
+    { name: 'Your Bank', icon: 'Landmark', description: 'Sync transactions securely.' },
+    { name: 'Stripe', icon: 'CreditCard', description: 'eCommerce revenue.' },
+    { name: 'PayPal', icon: 'Wallet', description: 'Online payments.' },
+    { name: 'QuickBooks', icon: 'Book', description: 'Accounting data.' },
+    { name: 'Salesforce', icon: 'Cloud', description: 'CRM and sales data.' },
+    { name: 'Gusto', icon: 'Users', description: 'Payroll information.' },
+];
