@@ -19,7 +19,6 @@ const menuItems = [
   { href: '/revenue', label: 'Revenue', icon: CircleDollarSign },
   { href: '/expense', label: 'Expenses', icon: Wallet },
   { href: '/projection', label: 'Projections', icon: BarChart },
-  { href: '#', label: 'Integrations', icon: Zap },
   { href: '/report', label: 'Reports', icon: FileText },
 ];
 
