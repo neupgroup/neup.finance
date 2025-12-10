@@ -18,7 +18,7 @@ export type TransactionCategory =
 
 export type Transaction = {
   id: string;
-  description: string;
+  description?: string; // Optional
   accountId: string;
   category: TransactionCategory;
   transaction_type: TransactionType;
@@ -28,7 +28,8 @@ export type Transaction = {
   status: TransactionStatus;
   date: string;
   currency: string;
-  reference_document?: string;
+  due_on?: string; // Optional
+  reference_document?: string | File; // Optional
   created_at: string;
 };
 
