@@ -21,8 +21,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { PlusCircle, Landmark, Wallet, Activity } from 'lucide-react';
-import { Logo } from '@/components/icons';
+import { PlusCircle, Landmark, Wallet, Activity, MoreVertical } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
 
 type Account = {
     name: string;
@@ -38,10 +39,10 @@ const initialAccounts: Account[] = [
 ];
 
 const accountTypeIcons = {
-  Bank: <Landmark className="h-6 w-6 text-white/70" />,
-  Cash: <Wallet className="h-6 w-6 text-white/70" />,
-  Investment: <Activity className="h-6 w-6 text-white/70" />,
-  Other: <Activity className="h-6 w-6 text-white/70" />,
+  Bank: <Landmark className="h-5 w-5 text-muted-foreground" />,
+  Cash: <Wallet className="h-5 w-5 text-muted-foreground" />,
+  Investment: <Activity className="h-5 w-5 text-muted-foreground" />,
+  Other: <Activity className="h-5 w-5 text-muted-foreground" />,
 };
 
 
@@ -68,16 +69,6 @@ export default function AccountsPage() {
       setIsDialogOpen(false);
     }
   };
-
-  const getCardGradient = (index: number) => {
-    const gradients = [
-      'from-blue-900 to-blue-700',
-      'from-slate-800 to-slate-600',
-      'from-emerald-800 to-emerald-600',
-      'from-indigo-900 to-indigo-700',
-    ];
-    return gradients[index % gradients.length];
-  }
 
   return (
     <AppShell>
@@ -148,23 +139,29 @@ export default function AccountsPage() {
                 </DialogContent>
             </Dialog>
         </div>
-         <div className="mx-auto max-w-2xl grid grid-cols-1 gap-6">
+         <div className="mx-auto max-w-4xl space-y-4">
             {accounts.map((account, index) => (
-                <div key={index} className={`relative p-6 rounded-xl shadow-lg text-white bg-gradient-to-br ${getCardGradient(index)}`}>
-                    <div className="flex justify-between items-start mb-4">
-                        <div>
-                            <p className="text-sm opacity-70">{account.type} Account</p>
-                            <p className="font-semibold text-lg">{account.name}</p>
+                <div key={index} className="flex items-center justify-between p-4 rounded-lg border bg-card hover:bg-muted/50 transition-colors">
+                    <div className="flex items-center gap-4">
+                        <div className="p-2 rounded-full bg-muted">
+                            {accountTypeIcons[account.type]}
                         </div>
-                        {accountTypeIcons[account.type]}
+                        <div>
+                            <p className="font-semibold">{account.name}</p>
+                            <p className="text-sm text-muted-foreground">{account.type} Account</p>
+                        </div>
                     </div>
-                    <div className="text-right">
-                        <p className="text-sm opacity-70">Balance</p>
-                        <p className="text-3xl font-bold tracking-tight">
-                            {new Intl.NumberFormat('en-US', { style: 'currency', currency: account.currency, minimumFractionDigits: 2 }).format(account.balance)}
-                        </p>
+                    <div className="flex items-center gap-4">
+                        <div className="text-right">
+                             <p className="font-semibold text-lg">
+                                {new Intl.NumberFormat('en-US', { style: 'currency', currency: account.currency, minimumFractionDigits: 2 }).format(account.balance)}
+                            </p>
+                            <p className="text-sm text-muted-foreground">Current Balance</p>
+                        </div>
+                        <Button variant="ghost" size="icon">
+                            <MoreVertical className="h-5 w-5" />
+                        </Button>
                     </div>
-                    <Logo className="absolute bottom-4 left-4 h-8 w-8 text-white/50" />
                 </div>
             ))}
         </div>
