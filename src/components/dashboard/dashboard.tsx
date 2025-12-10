@@ -1,7 +1,6 @@
 import { RecentTransactions } from './recent-transactions';
 import { Integrations } from './integrations';
 import { SmartProjections } from './smart-projections';
-import { ExpenseAutopilot } from './expense-autopilot';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 
 export function Dashboard() {
@@ -17,10 +16,7 @@ export function Dashboard() {
                     <RecentTransactions />
                 </CardContent>
             </Card>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
-                <ExpenseAutopilot />
-                <Integrations />
-            </div>
+            <Integrations />
         </div>
         <div className="space-y-6 md:space-y-8">
             <SmartProjections />
