@@ -1,4 +1,3 @@
-import { FinancialStory } from './financial-story';
 import { RecentTransactions } from './recent-transactions';
 import { Integrations } from './integrations';
 import { SmartProjections } from './smart-projections';
@@ -24,7 +23,6 @@ export function Dashboard() {
             </div>
         </div>
         <div className="space-y-6 md:space-y-8">
-            <FinancialStory />
             <SmartProjections />
         </div>
     </div>
