@@ -8,6 +8,7 @@ import {
   Bot,
   FileText,
   Home,
+  Landmark,
   Settings,
 } from 'lucide-react';
 import { Button } from '../ui/button';
@@ -15,6 +16,7 @@ import { useSidebar } from '../ui/sidebar';
 
 const menuItems = [
   { href: '/', label: 'Dashboard', icon: Home },
+  { href: '/accounts', label: 'Accounts', icon: Landmark },
   { href: '/transactions', label: 'Transactions', icon: ArrowLeftRight },
   { href: '/projection', label: 'Projections', icon: BarChart },
   { href: '/report', label: 'Reports', icon: FileText },
