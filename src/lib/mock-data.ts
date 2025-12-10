@@ -35,6 +35,19 @@ export type Transaction = {
   created_at: string;
 };
 
+export type ProjectionType = 'Income' | 'Expense';
+export type ProjectionCertainty = 'Fixed' | 'Probable' | 'Possible';
+
+export type Projection = {
+    id: string;
+    title: string;
+    type: ProjectionType;
+    certainty: ProjectionCertainty;
+    amount: number;
+    currency: string;
+    date: string;
+};
+
 export const transactions: Transaction[] = [
   { id: '1', title: 'Salary', accountId: 'Checking Account', category: 'Payroll', transaction_type: 'income', total_amount: 5000, total_paid: 5000, balance_due: 0, status: 'paid', date: '2024-07-01', currency: 'USD', created_at: '2024-07-01T10:00:00Z', recipient: 'Company Inc.' },
   { id: '2', title: 'Freelance Project', accountId: 'Checking Account', category: 'Sales', transaction_type: 'sale', total_amount: 1200, total_paid: 1200, balance_due: 0, status: 'paid', date: '2024-07-05', currency: 'USD', created_at: '2024-07-05T11:00:00Z', recipient: 'Client A' },
@@ -51,6 +64,14 @@ export const transactions: Transaction[] = [
   { id: '13', title: 'Spotify', accountId: 'Wallet', category: 'Purchases', transaction_type: 'expense', total_amount: 10.99, total_paid: 10.99, balance_due: 0, status: 'paid', date: '2024-07-25', currency: 'EUR', created_at: '2024-07-25T17:00:00Z', recipient: 'Spotify' },
   { id: '14', title: 'Client Refund', accountId: 'Checking Account', category: 'Refunds', transaction_type: 'refund', total_amount: 150, total_paid: 150, balance_due: 0, status: 'paid', date: '2024-07-28', currency: 'USD', created_at: '2024-07-28T16:00:00Z', recipient: 'Client B' },
 ];
+
+export const projections: Projection[] = [
+    { id: '1', title: 'Yearly Bonus', type: 'Income', certainty: 'Probable', amount: 5000, currency: 'USD', date: '2024-12-15' },
+    { id: '2', title: 'Car Insurance Renewal', type: 'Expense', certainty: 'Fixed', amount: 800, currency: 'USD', date: '2025-01-20' },
+    { id: '3', title: 'Freelance Project (Client X)', type: 'Income', certainty: 'Possible', amount: 2000, currency: 'USD', date: '2024-11-30' },
+    { id: '4', title: 'Vacation to Hawaii', type: 'Expense', certainty: 'Possible', amount: 3000, currency: 'USD', date: '2025-03-10' },
+];
+
 
 export const integrations = [
     { name: 'Your Bank', icon: 'Landmark', description: 'Sync transactions securely.' },

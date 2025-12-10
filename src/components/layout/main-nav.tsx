@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -19,7 +20,7 @@ const menuItems = [
   { href: '/', label: 'Dashboard', icon: Home },
   { href: '/accounts', label: 'Accounts', icon: Landmark },
   { href: '/transactions', label: 'Transactions', icon: ArrowLeftRight },
-  { href: '/projection', label: 'Projections', icon: BarChart },
+  { href: '/projections', label: 'Projections', icon: BarChart },
   { href: '/report', label: 'Reports', icon: FileText },
   { href: '/journal', label: 'Journal', icon: BookText },
   { href: '/chat', label: 'Chat', icon: Bot },
@@ -36,7 +37,7 @@ export function MainNav() {
   return (
     <nav className="grid items-start gap-2">
       {menuItems.map((item, index) => {
-        const isActive = pathname === item.href;
+        const isActive = pathname.startsWith(item.href) && (item.href !== '/' || pathname === '/');
         return (
           <Link key={index} href={item.href} onClick={handleLinkClick}>
             <Button
