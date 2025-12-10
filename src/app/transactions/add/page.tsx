@@ -105,8 +105,8 @@ export default function AddTransactionPage() {
                 Enter the details of your new transaction below.
             </p>
         </div>
-        <form onSubmit={handleAddTransaction}>
-            <div className="grid gap-6">
+        <div className="max-w-xl">
+            <form onSubmit={handleAddTransaction} className="grid gap-6">
                 <div className="grid gap-2">
                     <Label htmlFor="description">Description</Label>
                     <Input id="description" value={description} onChange={e => setDescription(e.target.value)} placeholder="e.g., Coffee" required />
@@ -167,8 +167,8 @@ export default function AddTransactionPage() {
                     <Button type="button" variant="outline" onClick={() => router.push('/transactions')}>Cancel</Button>
                     <Button type="submit">Save Transaction</Button>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
     </AppShell>
   );
