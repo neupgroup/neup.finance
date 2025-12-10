@@ -1,15 +1,14 @@
 import { AppShell } from '@/components/layout/app-shell';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { RecentTransactions } from '@/components/dashboard/recent-transactions';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function TransactionsPage() {
   return (
     <AppShell>
-      <div className="grid gap-6">
+      <div className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>Transactions</CardTitle>
-            <CardDescription>View and manage all your transactions.</CardDescription>
+            <CardTitle>All Transactions</CardTitle>
           </CardHeader>
           <CardContent>
             <RecentTransactions />
