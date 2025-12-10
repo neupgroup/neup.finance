@@ -106,15 +106,14 @@ export default function AddTransactionPage() {
             </p>
         </div>
         <form onSubmit={handleAddTransaction}>
-        <div className="grid gap-6">
-            <div className="grid gap-2">
-                <Label htmlFor="description">Description</Label>
-                <Input id="description" value={description} onChange={e => setDescription(e.target.value)} placeholder="e.g., Coffee" required />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid gap-6">
+                <div className="grid gap-2">
+                    <Label htmlFor="description">Description</Label>
+                    <Input id="description" value={description} onChange={e => setDescription(e.target.value)} placeholder="e.g., Coffee" required />
+                </div>
                 <div className="grid gap-2">
                     <Label htmlFor="account">Account</Label>
-                     <Combobox
+                        <Combobox
                         options={accounts}
                         value={accountId}
                         onChange={setAccountId}
@@ -123,7 +122,7 @@ export default function AddTransactionPage() {
                         notFoundMessage="No account found."
                     />
                 </div>
-                    <div className="grid gap-2">
+                <div className="grid gap-2">
                     <Label htmlFor="type">Type</Label>
                     <Combobox
                         options={transactionTypes}
@@ -134,8 +133,6 @@ export default function AddTransactionPage() {
                         notFoundMessage="No type found."
                     />
                 </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="grid gap-2">
                     <Label htmlFor="category">Category</Label>
                     <Combobox
@@ -151,8 +148,6 @@ export default function AddTransactionPage() {
                     <Label htmlFor="amount">Amount</Label>
                     <Input id="amount" type="number" value={totalAmount} onChange={e => setTotalAmount(e.target.value)} placeholder="0.00" required />
                 </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="grid gap-2">
                     <Label htmlFor="status">Status</Label>
                     <Combobox
@@ -168,12 +163,11 @@ export default function AddTransactionPage() {
                     <Label htmlFor="date">Date</Label>
                     <Input id="date" type="date" value={date} onChange={e => setDate(e.target.value)} required />
                 </div>
+                <div className="flex justify-end gap-2 mt-4">
+                    <Button type="button" variant="outline" onClick={() => router.push('/transactions')}>Cancel</Button>
+                    <Button type="submit">Save Transaction</Button>
+                </div>
             </div>
-            <div className="flex justify-end gap-2 mt-4">
-                <Button type="button" variant="outline" onClick={() => router.push('/transactions')}>Cancel</Button>
-                <Button type="submit">Save Transaction</Button>
-            </div>
-        </div>
         </form>
     </div>
     </AppShell>
