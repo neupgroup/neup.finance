@@ -56,9 +56,9 @@ export default function TransactionDetailPage() {
 
   return (
     <AppShell>
-        <div className="max-w-4xl mx-auto space-y-6">
+        <div className="max-w-4xl mx-auto space-y-8">
             <div>
-                <Button variant="ghost" onClick={() => router.back()} className="mb-4">
+                <Button variant="ghost" onClick={() => router.back()} className="mb-4 -ml-4">
                     <ArrowLeft className="mr-2 h-4 w-4" />
                     Back
                 </Button>
@@ -66,42 +66,41 @@ export default function TransactionDetailPage() {
                 {transaction.description && <p className="text-lg text-muted-foreground mt-1">{transaction.description}</p>}
             </div>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle>Transaction Details</CardTitle>
-                    <CardDescription>Complete information about this transaction.</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-8">
-                        <DetailItem label="Status" value={<Badge variant="outline" className="capitalize">{transaction.status.replace('_', ' ')}</Badge>} />
-                        <DetailItem label="Date" value={formatDate(transaction.date)} />
-                        <DetailItem label="Category" value={transaction.category} />
-                        <DetailItem label="Type" value={<span className="capitalize">{transaction.transaction_type}</span>} />
-                        <DetailItem label="Account" value={transaction.accountId} />
-                        {transaction.recipient && <DetailItem label="Recipient" value={transaction.recipient} />}
-                        {transaction.due_on && <DetailItem label="Due On" value={formatDate(transaction.due_on)} />}
-                    </div>
-                    <Separator />
-                     <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                        <DetailItem label="Total Amount" value={<span className="font-bold text-lg">{formatCurrency(transaction.total_amount, transaction.currency)}</span>} />
-                        <DetailItem label="Amount Paid" value={formatCurrency(transaction.total_paid, transaction.currency)} />
-                        <DetailItem label="Balance Due" value={<span className="text-destructive font-semibold">{formatCurrency(transaction.balance_due, transaction.currency)}</span>} />
-                    </div>
-                    {transaction.reference_document && (
-                        <>
-                            <Separator />
-                            <DetailItem 
-                                label="Attachment" 
-                                value={
-                                    typeof transaction.reference_document === 'string' ? 
-                                    <Link href={transaction.reference_document} target="_blank" className="text-primary hover:underline">{transaction.reference_document}</Link> :
-                                    (transaction.reference_document as File).name
-                                }
-                             />
-                        </>
-                    )}
-                </CardContent>
-            </Card>
+            <Separator />
+
+            <div className="space-y-6">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-8">
+                    <DetailItem label="Status" value={<Badge variant="outline" className="capitalize">{transaction.status.replace('_', ' ')}</Badge>} />
+                    <DetailItem label="Date" value={formatDate(transaction.date)} />
+                    <DetailItem label="Category" value={transaction.category} />
+                    <DetailItem label="Type" value={<span className="capitalize">{transaction.transaction_type}</span>} />
+                    <DetailItem label="Account" value={transaction.accountId} />
+                    {transaction.recipient && <DetailItem label="Recipient" value={transaction.recipient} />}
+                    {transaction.due_on && <DetailItem label="Due On" value={formatDate(transaction.due_on)} />}
+                </div>
+                
+                <Separator />
+
+                 <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                    <DetailItem label="Total Amount" value={<span className="font-bold text-lg">{formatCurrency(transaction.total_amount, transaction.currency)}</span>} />
+                    <DetailItem label="Amount Paid" value={formatCurrency(transaction.total_paid, transaction.currency)} />
+                    <DetailItem label="Balance Due" value={<span className="text-destructive font-semibold">{formatCurrency(transaction.balance_due, transaction.currency)}</span>} />
+                </div>
+
+                {transaction.reference_document && (
+                    <>
+                        <Separator />
+                        <DetailItem 
+                            label="Attachment" 
+                            value={
+                                typeof transaction.reference_document === 'string' ? 
+                                <Link href={transaction.reference_document} target="_blank" className="text-primary hover:underline">{transaction.reference_document}</Link> :
+                                (transaction.reference_document as File).name
+                            }
+                         />
+                    </>
+                )}
+            </div>
         </div>
     </AppShell>
   );
