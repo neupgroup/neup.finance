@@ -3,22 +3,65 @@
 import { useState, useEffect } from 'react';
 import { AppShell } from '@/components/layout/app-shell';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { transactions } from '@/lib/mock-data';
-import { generateJournalEntries, type GenerateJournalEntriesOutput } from '@/ai/flows/generate-journal-entries';
+import { transactions, Transaction } from '@/lib/mock-data';
 import { Loader, BookOpen } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
+type JournalEntry = {
+    date: string;
+    title: string;
+    narrative: string;
+};
+
 export default function JournalPage() {
-  const [journal, setJournal] = useState<GenerateJournalEntriesOutput['entries']>([]);
+  const [journal, setJournal] = useState<JournalEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
   useEffect(() => {
-    async function fetchJournal() {
+    function generateJournal() {
       try {
-        const transactionData = JSON.stringify(transactions);
-        const result = await generateJournalEntries({ transactions: transactionData });
-        setJournal(result.entries.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
+        const groupedByDate = transactions.reduce((acc, transaction) => {
+            const date = new Date(transaction.date).toDateString();
+            if (!acc[date]) {
+                acc[date] = [];
+            }
+            acc[date].push(transaction);
+            return acc;
+        }, {} as Record<string, Transaction[]>);
+
+        const entries: JournalEntry[] = Object.entries(groupedByDate).map(([dateStr, dailyTransactions]) => {
+            const date = new Date(dateStr);
+            const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            
+            const totalSpent = dailyTransactions
+                .filter(t => t.transaction_type === 'purchase' || t.transaction_type === 'expense')
+                .reduce((sum, t) => sum + t.total_amount, 0);
+            
+            const totalGained = dailyTransactions
+                .filter(t => t.transaction_type === 'income' || t.transaction_type === 'sale' || t.transaction_type === 'refund')
+                .reduce((sum, t) => sum + t.total_amount, 0);
+
+            let title = `A Day of Transactions`;
+            if (totalGained > 0 && totalSpent > 0) {
+                title = `A Mixed Day of Income and Expenses`;
+            } else if (totalGained > 0) {
+                title = `A Profitable Day`;
+            } else if (totalSpent > 0) {
+                title = `A Day of Spending`;
+            }
+            
+            const narrative = `On this day, you had ${dailyTransactions.length} transaction(s). You spent a total of ${totalSpent.toFixed(2)} and gained ${totalGained.toFixed(2)}. The most notable activities were: ${dailyTransactions.map(t => t.title).slice(0,2).join(', ')}.`;
+
+            return {
+                date: formattedDate,
+                title,
+                narrative
+            };
+        });
+
+        setJournal(entries.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
+
       } catch (error) {
         console.error('Failed to generate journal entries:', error);
         toast({
@@ -30,7 +73,7 @@ export default function JournalPage() {
         setIsLoading(false);
       }
     }
-    fetchJournal();
+    generateJournal();
   }, [toast]);
 
   return (
