@@ -4,18 +4,23 @@ export function Logo(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 100 100"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       {...props}
     >
-      <defs>
-        <radialGradient id="logo-gradient" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="hsl(var(--accent))" />
-          <stop offset="100%" stopColor="hsl(var(--primary))" />
-        </radialGradient>
-      </defs>
-      <circle cx="50" cy="50" r="45" fill="none" stroke="url(#logo-gradient)" strokeWidth="5" />
-      <circle cx="50" cy="50" r="25" fill="url(#logo-gradient)" />
-      <path d="M50 5 L50 95 M5 50 L95 50" stroke="hsl(var(--foreground))" strokeWidth="1" strokeOpacity="0.2" />
+      <title>NeupLedger Diary Logo</title>
+      <path d="M4 2v20h16V2H4z" fill="hsl(var(--primary))" stroke="none" />
+      <path d="M4 2v20" stroke="hsl(var(--primary-foreground))" strokeOpacity="0.5" />
+      <path d="M9 2v20" stroke="hsl(var(--primary-foreground))" strokeOpacity="0.2" />
+      <rect x="4" y="2" width="16" height="20" rx="2" ry="2" fill="none" stroke="hsl(var(--border))" />
+      <line x1="12" y1="6" x2="18" y2="6" stroke="hsl(var(--primary-foreground))" strokeOpacity="0.5" />
+      <line x1="12" y1="10" x2="18" y2="10" stroke="hsl(var(--primary-foreground))" strokeOpacity="0.5" />
+      <line x1="12" y1="14" x2="18" y2="14" stroke="hsl(var(--primary-foreground))" strokeOpacity="0.5" />
+      <line x1="12" y1="18" x2="18" y2="18" stroke="hsl(var(--primary-foreground))" strokeOpacity="0.5" />
     </svg>
   );
 }
