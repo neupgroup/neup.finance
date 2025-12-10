@@ -1,7 +1,7 @@
+
 'use client';
 
 import { useTheme } from 'next-themes';
-import { AppShell } from '@/components/layout/app-shell';
 import {
   Card,
   CardHeader,
@@ -13,12 +13,11 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Sun, Moon, Laptop } from 'lucide-react';
 
-export default function SettingsPage() {
+export default function AppearanceSettingsPage() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <AppShell>
-      <div className="grid gap-6 md:grid-cols-2">
+    <div className="space-y-6">
         <Card>
           <CardHeader>
             <CardTitle>Appearance</CardTitle>
@@ -81,6 +80,5 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
       </div>
-    </AppShell>
   );
 }

@@ -130,3 +130,21 @@ export const recipients: Recipient[] = [
     { id: '13', name: 'Spotify', type: 'organization', contact_info: { email: 'office@spotify.com', website: 'spotify.com' }, created_on: '2024-07-25T21:00:00Z' },
     { id: '14', name: 'Client B', type: 'person', contact_info: { email: 'clientb@example.com' }, created_on: '2024-07-30T22:00:00Z' },
 ];
+
+export const currencies = [
+    { value: 'USD', label: 'USD - US Dollar' },
+    { value: 'EUR', label: 'EUR - Euro' },
+    { value: 'GBP', label: 'GBP - British Pound' },
+    { value: 'JPY', label: 'JPY - Japanese Yen' },
+    { value: 'INR', label: 'INR - Indian Rupee' },
+];
+
+export const transactionTypes: {value: TransactionType, label: TransactionType}[] = [
+    {value: 'sale', label: 'sale'}, 
+    {value: 'purchase', label: 'purchase'}, 
+    {value: 'refund', label: 'refund'}, 
+    {value: 'expense', label: 'expense'}, 
+    {value: 'payroll', label: 'payroll'}, 
+    {value: 'income', label: 'income'},
+    {value: 'other', label: 'other'}
+];

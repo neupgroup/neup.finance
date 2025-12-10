@@ -53,9 +53,9 @@ export function MainNav() {
         );
       })}
        <div className="mt-auto">
-          <Link href="/settings" onClick={handleLinkClick}>
+          <Link href="/settings/appearance" onClick={handleLinkClick}>
               <Button
-                variant={pathname === '/settings' ? 'default' : 'ghost'}
+                variant={pathname.startsWith('/settings') ? 'default' : 'ghost'}
                 className="w-full justify-start gap-2"
               >
                   <Settings className="h-5 w-5" />
