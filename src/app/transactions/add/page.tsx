@@ -6,28 +6,44 @@ import { AppShell } from '@/components/layout/app-shell';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Combobox } from '@/components/ui/combobox';
 import { transactions, type Transaction, type TransactionCategory, type TransactionStatus, type TransactionType } from '@/lib/mock-data';
 import { useToast } from '@/hooks/use-toast';
 
 const accounts = [
-  { name: 'Checking Account' },
-  { name: 'Savings Account' },
-  { name: 'Wallet' },
+  { value: 'Checking Account', label: 'Checking Account' },
+  { value: 'Savings Account', label: 'Savings Account' },
+  { value: 'Wallet', label: 'Wallet' },
 ];
 
-const categories: TransactionCategory[] = [
-  'Sales', 'Purchases', 'Discounts', 'Payroll', 'Utilities', 'Vendor payments',
-  'EMIs', 'Bank charges', 'VAT / Tax', 'Transfers', 'Refunds', 'Other',
+const categories: {value: TransactionCategory, label: TransactionCategory}[] = [
+  { value: 'Sales', label: 'Sales' },
+  { value: 'Purchases', label: 'Purchases' },
+  { value: 'Discounts', label: 'Discounts' },
+  { value: 'Payroll', label: 'Payroll' },
+  { value: 'Utilities', label: 'Utilities' },
+  { value: 'Vendor payments', label: 'Vendor payments' },
+  { value: 'EMIs', label: 'EMIs' },
+  { value: 'Bank charges', label: 'Bank charges' },
+  { value: 'VAT / Tax', label: 'VAT / Tax' },
+  { value: 'Transfers', label: 'Transfers' },
+  { value: 'Refunds', label: 'Refunds' },
+  { value: 'Other', label: 'Other' },
 ];
-const transactionTypes: TransactionType[] = ['sale', 'purchase', 'refund', 'expense', 'payroll', 'other'];
-const transactionStatuses: TransactionStatus[] = ['unpaid', 'partially_paid', 'paid', 'canceled'];
+const transactionTypes: {value: TransactionType, label: TransactionType}[] = [
+    {value: 'sale', label: 'sale'}, 
+    {value: 'purchase', label: 'purchase'}, 
+    {value: 'refund', label: 'refund'}, 
+    {value: 'expense', label: 'expense'}, 
+    {value: 'payroll', label: 'payroll'}, 
+    {value: 'other', label: 'other'}
+];
+const transactionStatuses: {value: TransactionStatus, label: TransactionStatus}[] = [
+    {value: 'unpaid', label: 'unpaid'},
+    {value: 'partially_paid', label: 'partially_paid'},
+    {value: 'paid', label: 'paid'},
+    {value: 'canceled', label: 'canceled'}
+];
 
 
 export default function AddTransactionPage() {
@@ -98,38 +114,38 @@ export default function AddTransactionPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="grid gap-2">
                     <Label htmlFor="account">Account</Label>
-                    <Select onValueChange={setAccountId} value={accountId} required>
-                        <SelectTrigger id="account">
-                        <SelectValue placeholder="Select an account" />
-                        </SelectTrigger>
-                        <SelectContent>
-                        {accounts.map(acc => <SelectItem key={acc.name} value={acc.name}>{acc.name}</SelectItem>)}
-                        </SelectContent>
-                    </Select>
+                     <Combobox
+                        options={accounts}
+                        value={accountId}
+                        onChange={setAccountId}
+                        placeholder="Select an account"
+                        searchPlaceholder="Search accounts..."
+                        notFoundMessage="No account found."
+                    />
                 </div>
                     <div className="grid gap-2">
                     <Label htmlFor="type">Type</Label>
-                    <Select onValueChange={(v) => setTransactionType(v as any)} value={transactionType} required>
-                        <SelectTrigger id="type">
-                        <SelectValue placeholder="Select transaction type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                        {transactionTypes.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
-                        </SelectContent>
-                    </Select>
+                    <Combobox
+                        options={transactionTypes}
+                        value={transactionType}
+                        onChange={(v) => setTransactionType(v as any)}
+                        placeholder="Select transaction type"
+                        searchPlaceholder="Search types..."
+                        notFoundMessage="No type found."
+                    />
                 </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="grid gap-2">
                     <Label htmlFor="category">Category</Label>
-                    <Select onValueChange={(v) => setCategory(v as any)} value={category} required>
-                        <SelectTrigger id="category">
-                            <SelectValue placeholder="Select a category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {categories.map(cat => <SelectItem key={cat} value={cat}>{cat}</SelectItem>)}
-                        </SelectContent>
-                    </Select>
+                    <Combobox
+                        options={categories}
+                        value={category}
+                        onChange={(v) => setCategory(v as any)}
+                        placeholder="Select a category"
+                        searchPlaceholder="Search categories..."
+                        notFoundMessage="No category found."
+                    />
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="amount">Amount</Label>
@@ -139,14 +155,14 @@ export default function AddTransactionPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="grid gap-2">
                     <Label htmlFor="status">Status</Label>
-                    <Select onValueChange={(v) => setStatus(v as any)} value={status} required>
-                        <SelectTrigger id="status">
-                            <SelectValue placeholder="Select status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {transactionStatuses.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
-                        </SelectContent>
-                    </Select>
+                    <Combobox
+                        options={transactionStatuses}
+                        value={status}
+                        onChange={(v) => setStatus(v as any)}
+                        placeholder="Select status"
+                        searchPlaceholder="Search statuses..."
+                        notFoundMessage="No status found."
+                    />
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="date">Date</Label>
