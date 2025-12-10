@@ -61,7 +61,7 @@ export default function TransactionDetailPage() {
 
   return (
     <AppShell>
-        <div className="max-w-4xl mx-auto space-y-6">
+        <div className="mx-auto space-y-6">
             <Button variant="ghost" onClick={() => router.back()} className="-ml-4">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Back
