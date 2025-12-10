@@ -128,7 +128,7 @@ export default function AddTransactionPage() {
                     <Combobox
                         options={transactionTypes}
                         value={transactionType}
-                        onChange={(v) => setTransactionType(v.toLowerCase() as any)}
+                        onChange={(v) => setTransactionType(v as any)}
                         placeholder="Select transaction type"
                         searchPlaceholder="Search types..."
                         notFoundMessage="No type found."
