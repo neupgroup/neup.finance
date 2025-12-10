@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { AppShell } from '@/components/layout/app-shell';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { transactions, transactionLines, type Transaction, type TransactionLine } from '@/lib/mock-data';
 import { Loader } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -71,27 +70,27 @@ export default function JournalPage() {
   return (
     <AppShell>
       <div className="space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Financial Journal</CardTitle>
-            <CardDescription>A double-entry view of your transactions.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <div className="flex items-center justify-center py-12 text-muted-foreground">
-                <Loader className="mr-3 h-6 w-6 animate-spin" />
-                <p>Generating your journal...</p>
-              </div>
-            ) : (
-                <div className="space-y-8">
-                    {journal.map((entry) => (
-                        <div key={entry.transaction.id} className="p-4 border rounded-lg">
-                            <div className="flex justify-between items-baseline mb-2">
-                                <h3 className="text-lg font-semibold">{entry.transaction.title}</h3>
-                                <p className="text-sm text-muted-foreground">{new Date(entry.transaction.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                            </div>
-                            <p className="text-sm text-muted-foreground mb-4">{entry.transaction.description}</p>
-                            
+        <div>
+            <h1 className="text-3xl font-bold tracking-tight">Financial Journal</h1>
+            <p className="text-muted-foreground">A double-entry view of your transactions.</p>
+        </div>
+
+        {isLoading ? (
+            <div className="flex items-center justify-center py-12 text-muted-foreground">
+            <Loader className="mr-3 h-6 w-6 animate-spin" />
+            <p>Generating your journal...</p>
+            </div>
+        ) : (
+            <div className="space-y-12">
+                {journal.map((entry, index) => (
+                    <div key={entry.transaction.id}>
+                        <div className="flex justify-between items-baseline mb-2">
+                            <h3 className="text-xl font-semibold">{entry.transaction.title}</h3>
+                            <p className="text-sm text-muted-foreground">{new Date(entry.transaction.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                        </div>
+                        <p className="text-sm text-muted-foreground mb-4">{entry.transaction.description}</p>
+                        
+                        <div className="border rounded-lg overflow-hidden">
                             <Table>
                                 <TableHeader>
                                     <TableRow>
@@ -108,30 +107,28 @@ export default function JournalPage() {
                                                 <p className="text-xs text-muted-foreground">{line.line_title}</p>
                                             </TableCell>
                                             <TableCell className="text-right font-mono">{formatCurrency(line.debit, line.currency)}</TableCell>
-                                            <TableCell className="text-right font-mono text-green-500">{formatCurrency(line.credit, line.currency)}</TableCell>
+                                            <TableCell className="text-right font-mono">{formatCurrency(line.credit, line.currency)}</TableCell>
                                         </TableRow>
                                     ))}
+                                    {entry.lines.length > 0 && (
+                                    <TableRow className="font-bold bg-muted/50">
+                                        <TableCell>Total</TableCell>
+                                        <TableCell className="text-right font-mono">
+                                            {formatCurrency(entry.lines.reduce((sum, l) => sum + l.debit, 0), entry.transaction.currency)}
+                                        </TableCell>
+                                        <TableCell className="text-right font-mono">
+                                            {formatCurrency(entry.lines.reduce((sum, l) => sum + l.credit, 0), entry.transaction.currency)}
+                                        </TableCell>
+                                    </TableRow>
+                                    )}
                                 </TableBody>
                             </Table>
-                             {entry.lines.length > 0 && (
-                                <>
-                                 <TableRow className="font-bold">
-                                    <TableCell>Total</TableCell>
-                                    <TableCell className="text-right font-mono">
-                                        {formatCurrency(entry.lines.reduce((sum, l) => sum + l.debit, 0), entry.transaction.currency)}
-                                    </TableCell>
-                                     <TableCell className="text-right font-mono text-green-500">
-                                        {formatCurrency(entry.lines.reduce((sum, l) => sum + l.credit, 0), entry.transaction.currency)}
-                                    </TableCell>
-                                </TableRow>
-                                </>
-                            )}
                         </div>
-                    ))}
-                </div>
-            )}
-          </CardContent>
-        </Card>
+                        {index < journal.length - 1 && <Separator className="mt-12"/>}
+                    </div>
+                ))}
+            </div>
+        )}
       </div>
     </AppShell>
   );
