@@ -163,9 +163,9 @@ export default function AddTransactionPage() {
                     <Label htmlFor="date">Date</Label>
                     <Input id="date" type="date" value={date} onChange={e => setDate(e.target.value)} required className={!date ? 'text-muted-foreground' : ''}/>
                 </div>
-                <div className="flex justify-end gap-2 mt-4">
-                    <Button type="button" variant="outline" onClick={() => router.push('/transactions')}>Cancel</Button>
+                <div className="flex justify-start gap-2 mt-4">
                     <Button type="submit">Save Transaction</Button>
+                    <Button type="button" variant="outline" onClick={() => router.push('/transactions')}>Cancel</Button>
                 </div>
             </form>
         </div>
