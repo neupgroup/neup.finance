@@ -33,30 +33,34 @@ type Account = {
     name: string;
     type: 'Bank' | 'Cash' | 'Investment' | 'Other';
     balance: number;
+    currency: string;
 };
 
 const initialAccounts: Account[] = [
-    { name: 'Checking Account', type: 'Bank', balance: 12500.75 },
-    { name: 'Savings Account', type: 'Bank', balance: 42000.00 },
-    { name: 'Wallet', type: 'Cash', balance: 350.50 },
+    { name: 'Checking Account', type: 'Bank', balance: 12500.75, currency: 'USD' },
+    { name: 'Savings Account', type: 'Bank', balance: 42000.00, currency: 'USD' },
+    { name: 'Wallet', type: 'Cash', balance: 350.50, currency: 'EUR' },
 ];
 
 export default function AccountsPage() {
   const [accounts, setAccounts] = useState<Account[]>(initialAccounts);
   const [accountName, setAccountName] = useState('');
   const [accountType, setAccountType] = useState<'Bank' | 'Cash' | 'Investment' | 'Other' | ''>('');
+  const [currency, setCurrency] = useState('');
 
   const handleAddAccount = (e: React.FormEvent) => {
     e.preventDefault();
-    if (accountName && accountType) {
+    if (accountName && accountType && currency) {
       const newAccount: Account = {
         name: accountName,
         type: accountType as 'Bank' | 'Cash' | 'Investment' | 'Other',
         balance: 0, // Initial balance is 0
+        currency: currency,
       };
       setAccounts([...accounts, newAccount]);
       setAccountName('');
       setAccountType('');
+      setCurrency('');
     }
   };
 
@@ -86,7 +90,7 @@ export default function AccountsPage() {
                             <TableCell className="font-medium">{account.name}</TableCell>
                             <TableCell>{account.type}</TableCell>
                             <TableCell className="text-right">
-                            ${account.balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            {new Intl.NumberFormat('en-US', { style: 'currency', currency: account.currency }).format(account.balance)}
                             </TableCell>
                         </TableRow>
                         ))}
@@ -126,6 +130,21 @@ export default function AccountsPage() {
                       <SelectItem value="Cash">Cash</SelectItem>
                       <SelectItem value="Investment">Investment</SelectItem>
                       <SelectItem value="Other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="currency">Currency</Label>
+                  <Select onValueChange={setCurrency} value={currency} required>
+                    <SelectTrigger id="currency">
+                      <SelectValue placeholder="Select a currency" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="USD">USD - US Dollar</SelectItem>
+                      <SelectItem value="EUR">EUR - Euro</SelectItem>
+                      <SelectItem value="GBP">GBP - British Pound</SelectItem>
+                      <SelectItem value="JPY">JPY - Japanese Yen</SelectItem>
+                      <SelectItem value="INR">INR - Indian Rupee</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
