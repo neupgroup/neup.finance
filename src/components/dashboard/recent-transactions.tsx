@@ -13,13 +13,14 @@ import { transactions, type Transaction } from '@/lib/mock-data';
 import { ArrowDownLeft, ArrowUpRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 
 export function RecentTransactions() {
   const pathname = usePathname();
   const isDashboard = pathname === '/';
   const displayTransactions = isDashboard ? transactions.slice(0, 5) : transactions;
   
-  const isCredit = (type: Transaction['transaction_type']) => ['sale', 'refund'].includes(type)
+  const isCredit = (type: Transaction['transaction_type']) => ['sale', 'refund', 'income'].includes(type)
 
   return (
     <Table>
@@ -40,7 +41,7 @@ export function RecentTransactions() {
                 <div className={cn("p-1.5 rounded-full", isCredit(transaction.transaction_type) ? 'bg-chart-2/20' : 'bg-destructive/20' )}>
                     {isCredit(transaction.transaction_type) ? <ArrowUpRight className="h-4 w-4 text-chart-2" /> : <ArrowDownLeft className="h-4 w-4 text-destructive" />}
                 </div>
-                <div className="font-medium">{transaction.title}</div>
+                <Link href={`/transactions/${transaction.id}`} className="font-medium hover:underline">{transaction.title}</Link>
               </div>
             </TableCell>
             <TableCell className="hidden sm:table-cell">

@@ -5,13 +5,14 @@ import { RecentTransactions } from '@/components/dashboard/recent-transactions';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { PlusCircle } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function TransactionsPage() {
   return (
     <AppShell>
-      <div className="space-y-4">
+      <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-semibold tracking-tight">All Transactions</h1>
+          <h1 className="text-3xl font-bold tracking-tight">All Transactions</h1>
           <Link href="/transactions/add">
             <Button>
               <PlusCircle className="mr-2" />
@@ -19,7 +20,15 @@ export default function TransactionsPage() {
             </Button>
           </Link>
         </div>
-        <RecentTransactions />
+        <Card>
+            <CardHeader>
+                <CardTitle>Transactions</CardTitle>
+                <CardDescription>A list of all your transactions.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                 <RecentTransactions />
+            </CardContent>
+        </Card>
       </div>
     </AppShell>
   );
