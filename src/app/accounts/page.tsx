@@ -19,15 +19,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
-import { PlusCircle } from 'lucide-react';
+import { PlusCircle, Landmark, Wallet, Activity } from 'lucide-react';
+import { Logo } from '@/components/icons';
 
 type Account = {
     name: string;
@@ -41,6 +34,14 @@ const initialAccounts: Account[] = [
     { name: 'Savings Account', type: 'Bank', balance: 42000.00, currency: 'USD' },
     { name: 'Wallet', type: 'Cash', balance: 350.50, currency: 'EUR' },
 ];
+
+const accountTypeIcons = {
+  Bank: <Landmark className="h-6 w-6 text-white/70" />,
+  Cash: <Wallet className="h-6 w-6 text-white/70" />,
+  Investment: <Activity className="h-6 w-6 text-white/70" />,
+  Other: <Activity className="h-6 w-6 text-white/70" />,
+};
+
 
 export default function AccountsPage() {
   const [accounts, setAccounts] = useState<Account[]>(initialAccounts);
@@ -64,43 +65,44 @@ export default function AccountsPage() {
     }
   };
 
+  const getCardGradient = (index: number) => {
+    const gradients = [
+      'from-blue-900 to-blue-700',
+      'from-slate-800 to-slate-600',
+      'from-emerald-800 to-emerald-600',
+      'from-indigo-900 to-indigo-700',
+    ];
+    return gradients[index % gradients.length];
+  }
+
   return (
     <AppShell>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-2">
-             <Card>
-                <CardHeader>
-                    <CardTitle>Accounts</CardTitle>
-                    <CardDescription>
-                    A list of all your financial accounts.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <Table>
-                    <TableHeader>
-                        <TableRow>
-                        <TableHead>Account Name</TableHead>
-                        <TableHead>Type</TableHead>
-                        <TableHead className="text-right">Balance</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {accounts.map((account, index) => (
-                        <TableRow key={index}>
-                            <TableCell className="font-medium">{account.name}</TableCell>
-                            <TableCell>{account.type}</TableCell>
-                            <TableCell className="text-right">
-                            {new Intl.NumberFormat('en-US', { style: 'currency', currency: account.currency }).format(account.balance)}
-                            </TableCell>
-                        </TableRow>
-                        ))}
-                    </TableBody>
-                    </Table>
-                </CardContent>
-            </Card>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2">
+            <h1 className="text-3xl font-bold tracking-tight mb-6">Your Accounts</h1>
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {accounts.map((account, index) => (
+                    <div key={index} className={`relative p-6 rounded-xl shadow-lg text-white bg-gradient-to-br ${getCardGradient(index)}`}>
+                        <div className="flex justify-between items-start mb-4">
+                            <div>
+                                <p className="text-sm opacity-70">{account.type} Account</p>
+                                <p className="font-semibold text-lg">{account.name}</p>
+                            </div>
+                            {accountTypeIcons[account.type]}
+                        </div>
+                        <div className="text-right">
+                            <p className="text-sm opacity-70">Balance</p>
+                            <p className="text-3xl font-bold tracking-tight">
+                                {new Intl.NumberFormat('en-US', { style: 'currency', currency: account.currency, minimumFractionDigits: 2 }).format(account.balance)}
+                            </p>
+                        </div>
+                        <Logo className="absolute bottom-4 left-4 h-8 w-8 text-white/50" />
+                    </div>
+                ))}
+            </div>
         </div>
         <div>
-          <Card>
+          <Card className="sticky top-20">
             <CardHeader>
               <CardTitle>Create New Account</CardTitle>
               <CardDescription>
