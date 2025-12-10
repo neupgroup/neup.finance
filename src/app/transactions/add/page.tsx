@@ -190,10 +190,12 @@ export default function AddTransactionPage() {
                         <Input id="amount_paid" type="number" value={amountPaid} onChange={e => setAmountPaid(e.target.value === '' ? '' : parseFloat(e.target.value))} placeholder="0.00" required />
                     </div>
                 )}
-                <div className="grid gap-2">
-                    <Label>Balance Due</Label>
-                    <Input value={balanceDue.toFixed(2)} readOnly className="bg-muted" />
-                </div>
+                {(status === 'partially_paid' || status === 'unpaid') && (
+                    <div className="grid gap-2">
+                        <Label>Balance Due</Label>
+                        <Input value={balanceDue.toFixed(2)} readOnly className="bg-muted" />
+                    </div>
+                )}
                 <div className="grid gap-2">
                     <Label htmlFor="type">Type</Label>
                     <Combobox
