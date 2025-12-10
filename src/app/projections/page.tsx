@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useState } from 'react';
 import { AppShell } from '@/components/layout/app-shell';
 import { SmartProjections } from '@/components/dashboard/smart-projections';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
@@ -10,6 +11,8 @@ import Link from 'next/link';
 import { projections, type Projection } from '@/lib/mock-data';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationLink } from '@/components/ui/pagination';
+
 
 const certaintyColors = {
     Fixed: 'bg-blue-500/20 text-blue-500',
@@ -22,7 +25,23 @@ const typeIcons = {
     Expense: <ArrowDownLeft className="h-4 w-4 text-red-500" />,
 }
 
+const ITEMS_PER_PAGE = 10;
+
 export default function ProjectionsPage() {
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const totalPages = Math.ceil(projections.length / ITEMS_PER_PAGE);
+    const paginatedProjections = projections.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+    );
+
+    const handlePageChange = (page: number) => {
+        if (page >= 1 && page <= totalPages) {
+        setCurrentPage(page);
+        }
+    };
+
   return (
     <AppShell>
         <div className="grid gap-6">
@@ -43,7 +62,7 @@ export default function ProjectionsPage() {
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-4">
-                                {projections.map((item) => (
+                                {paginatedProjections.map((item) => (
                                     <div key={item.id} className="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors">
                                         <div className="flex items-center gap-4">
                                             <div className="p-2 rounded-full bg-muted">
@@ -63,6 +82,31 @@ export default function ProjectionsPage() {
                                     </div>
                                 ))}
                             </div>
+                             {totalPages > 1 && (
+                                <Pagination className="mt-6">
+                                    <PaginationContent>
+                                        <PaginationItem>
+                                            <PaginationPrevious onClick={() => handlePageChange(currentPage - 1)}
+                                            className={cn({
+                                                'cursor-not-allowed text-muted-foreground': currentPage === 1,
+                                            })}
+                                            />
+                                        </PaginationItem>
+                                        {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                                            <PaginationItem key={page}>
+                                                <PaginationLink onClick={() => handlePageChange(page)} isActive={currentPage === page}>{page}</PaginationLink>
+                                            </PaginationItem>
+                                        ))}
+                                        <PaginationItem>
+                                            <PaginationNext onClick={() => handlePageChange(currentPage + 1)} 
+                                                className={cn({
+                                                    'cursor-not-allowed text-muted-foreground': currentPage === totalPages,
+                                                })}
+                                            />
+                                        </PaginationItem>
+                                    </PaginationContent>
+                                </Pagination>
+                            )}
                         </CardContent>
                     </Card>
                 </div>

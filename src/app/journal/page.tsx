@@ -7,16 +7,22 @@ import { Loader } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Separator } from '@/components/ui/separator';
+import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationLink } from '@/components/ui/pagination';
+import { cn } from '@/lib/utils';
 
 type JournalEntry = {
     transaction: Transaction;
     lines: TransactionLine[];
 };
 
+const ITEMS_PER_PAGE = 10;
+
+
 export default function JournalPage() {
   const [journal, setJournal] = useState<JournalEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     function generateJournal() {
@@ -62,6 +68,18 @@ export default function JournalPage() {
     generateJournal();
   }, [toast]);
   
+  const totalPages = Math.ceil(journal.length / ITEMS_PER_PAGE);
+  const paginatedJournal = journal.slice(
+      (currentPage - 1) * ITEMS_PER_PAGE,
+      currentPage * ITEMS_PER_PAGE
+  );
+
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
   const formatCurrency = (amount: number, currency: string) => {
     if (amount === 0) return '-';
     return new Intl.NumberFormat('en-US', { style: 'currency', currency, minimumFractionDigits: 2 }).format(amount);
@@ -82,7 +100,7 @@ export default function JournalPage() {
             </div>
         ) : (
             <div className="space-y-12">
-                {journal.map((entry, index) => (
+                {paginatedJournal.map((entry, index) => (
                     <div key={entry.transaction.id}>
                         <div className="flex justify-between items-baseline mb-2">
                             <h3 className="text-xl font-semibold">{entry.transaction.title}</h3>
@@ -124,9 +142,34 @@ export default function JournalPage() {
                                 </TableBody>
                             </Table>
                         </div>
-                        {index < journal.length - 1 && <Separator className="mt-12"/>}
+                        {index < paginatedJournal.length - 1 && <Separator className="mt-12"/>}
                     </div>
                 ))}
+                 {totalPages > 1 && (
+                    <Pagination className="mt-12">
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious onClick={() => handlePageChange(currentPage - 1)}
+                                className={cn({
+                                    'cursor-not-allowed text-muted-foreground': currentPage === 1,
+                                })}
+                                />
+                            </PaginationItem>
+                            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                                <PaginationItem key={page}>
+                                    <PaginationLink onClick={() => handlePageChange(page)} isActive={currentPage === page}>{page}</PaginationLink>
+                                </PaginationItem>
+                            ))}
+                            <PaginationItem>
+                                <PaginationNext onClick={() => handlePageChange(currentPage + 1)} 
+                                    className={cn({
+                                        'cursor-not-allowed text-muted-foreground': currentPage === totalPages,
+                                    })}
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                )}
             </div>
         )}
       </div>

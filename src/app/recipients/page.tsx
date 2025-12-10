@@ -9,9 +9,27 @@ import { recipients as initialRecipients, type Recipient } from '@/lib/mock-data
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationLink } from '@/components/ui/pagination';
+
+
+const ITEMS_PER_PAGE = 10;
 
 export default function RecipientsPage() {
   const [recipients, setRecipients] = useState<Recipient[]>(initialRecipients);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.ceil(recipients.length / ITEMS_PER_PAGE);
+  const paginatedRecipients = recipients.slice(
+      (currentPage - 1) * ITEMS_PER_PAGE,
+      currentPage * ITEMS_PER_PAGE
+  );
+
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
 
   return (
     <AppShell>
@@ -26,7 +44,7 @@ export default function RecipientsPage() {
             </Link>
         </div>
         <div className="mx-auto max-w-4xl space-y-4">
-          {recipients.map((recipient) => (
+          {paginatedRecipients.map((recipient) => (
             <div key={recipient.id} className="flex items-start justify-between p-4 rounded-lg border bg-card hover:bg-muted/50 transition-colors">
               <div className="flex items-start gap-4">
                 <div className="p-2 rounded-full bg-muted mt-1">
@@ -78,6 +96,31 @@ export default function RecipientsPage() {
             </div>
           ))}
         </div>
+        {totalPages > 1 && (
+            <Pagination>
+                <PaginationContent>
+                    <PaginationItem>
+                        <PaginationPrevious onClick={() => handlePageChange(currentPage - 1)}
+                         className={cn({
+                            'cursor-not-allowed text-muted-foreground': currentPage === 1,
+                        })}
+                        />
+                    </PaginationItem>
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                        <PaginationItem key={page}>
+                            <PaginationLink onClick={() => handlePageChange(page)} isActive={currentPage === page}>{page}</PaginationLink>
+                        </PaginationItem>
+                    ))}
+                    <PaginationItem>
+                        <PaginationNext onClick={() => handlePageChange(currentPage + 1)} 
+                            className={cn({
+                                'cursor-not-allowed text-muted-foreground': currentPage === totalPages,
+                            })}
+                        />
+                    </PaginationItem>
+                </PaginationContent>
+            </Pagination>
+        )}
       </div>
     </AppShell>
   );

@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/select';
 import { PlusCircle, Landmark, Wallet, Activity, MoreVertical } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationLink } from '@/components/ui/pagination';
 
 
 type Account = {
@@ -45,6 +46,7 @@ const accountTypeIcons = {
   Other: <Activity className="h-5 w-5 text-muted-foreground" />,
 };
 
+const ITEMS_PER_PAGE = 10;
 
 export default function AccountsPage() {
   const [accounts, setAccounts] = useState<Account[]>(initialAccounts);
@@ -52,6 +54,19 @@ export default function AccountsPage() {
   const [accountType, setAccountType] = useState<'Bank' | 'Cash' | 'Investment' | 'Other' | ''>('');
   const [currency, setCurrency] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.ceil(accounts.length / ITEMS_PER_PAGE);
+  const paginatedAccounts = accounts.slice(
+      (currentPage - 1) * ITEMS_PER_PAGE,
+      currentPage * ITEMS_PER_PAGE
+  );
+
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
 
   const handleAddAccount = (e: React.FormEvent) => {
     e.preventDefault();
@@ -140,7 +155,7 @@ export default function AccountsPage() {
             </Dialog>
         </div>
          <div className="mx-auto max-w-4xl space-y-4">
-            {accounts.map((account, index) => (
+            {paginatedAccounts.map((account, index) => (
                 <div key={index} className="flex items-center justify-between p-4 rounded-lg border bg-card hover:bg-muted/50 transition-colors">
                     <div className="flex items-center gap-4">
                         <div className="p-2 rounded-full bg-muted">
@@ -165,6 +180,31 @@ export default function AccountsPage() {
                 </div>
             ))}
         </div>
+        {totalPages > 1 && (
+            <Pagination>
+                <PaginationContent>
+                    <PaginationItem>
+                        <PaginationPrevious onClick={() => handlePageChange(currentPage - 1)}
+                         className={cn({
+                            'cursor-not-allowed text-muted-foreground': currentPage === 1,
+                        })}
+                        />
+                    </PaginationItem>
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                        <PaginationItem key={page}>
+                            <PaginationLink onClick={() => handlePageChange(page)} isActive={currentPage === page}>{page}</PaginationLink>
+                        </PaginationItem>
+                    ))}
+                    <PaginationItem>
+                        <PaginationNext onClick={() => handlePageChange(currentPage + 1)} 
+                            className={cn({
+                                'cursor-not-allowed text-muted-foreground': currentPage === totalPages,
+                            })}
+                        />
+                    </PaginationItem>
+                </PaginationContent>
+            </Pagination>
+        )}
       </div>
     </AppShell>
   );
