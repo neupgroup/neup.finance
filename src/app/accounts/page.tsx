@@ -4,12 +4,14 @@ import { useState } from 'react';
 import { AppShell } from '@/components/layout/app-shell';
 import { Button } from '@/components/ui/button';
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -48,6 +50,7 @@ export default function AccountsPage() {
   const [accountName, setAccountName] = useState('');
   const [accountType, setAccountType] = useState<'Bank' | 'Cash' | 'Investment' | 'Other' | ''>('');
   const [currency, setCurrency] = useState('');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleAddAccount = (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,6 +65,7 @@ export default function AccountsPage() {
       setAccountName('');
       setAccountType('');
       setCurrency('');
+      setIsDialogOpen(false);
     }
   };
 
@@ -77,86 +81,92 @@ export default function AccountsPage() {
 
   return (
     <AppShell>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2">
-            <h1 className="text-3xl font-bold tracking-tight mb-6">Your Accounts</h1>
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {accounts.map((account, index) => (
-                    <div key={index} className={`relative p-6 rounded-xl shadow-lg text-white bg-gradient-to-br ${getCardGradient(index)}`}>
-                        <div className="flex justify-between items-start mb-4">
-                            <div>
-                                <p className="text-sm opacity-70">{account.type} Account</p>
-                                <p className="font-semibold text-lg">{account.name}</p>
-                            </div>
-                            {accountTypeIcons[account.type]}
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+            <h1 className="text-3xl font-bold tracking-tight">Your Accounts</h1>
+             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogTrigger asChild>
+                    <Button>
+                        <PlusCircle className="mr-2 h-4 w-4" />
+                        Create Account
+                    </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                    <DialogTitle>Create New Account</DialogTitle>
+                    <DialogDescription>
+                        Add a new cash, bank, or investment account.
+                    </DialogDescription>
+                    </DialogHeader>
+                    <form onSubmit={handleAddAccount} className="space-y-4 py-4">
+                        <div className="space-y-2">
+                        <Label htmlFor="accountName">Account Name</Label>
+                        <Input
+                            id="accountName"
+                            value={accountName}
+                            onChange={(e) => setAccountName(e.target.value)}
+                            placeholder="e.g., My Savings"
+                            required
+                        />
                         </div>
-                        <div className="text-right">
-                            <p className="text-sm opacity-70">Balance</p>
-                            <p className="text-3xl font-bold tracking-tight">
-                                {new Intl.NumberFormat('en-US', { style: 'currency', currency: account.currency, minimumFractionDigits: 2 }).format(account.balance)}
-                            </p>
+                        <div className="space-y-2">
+                        <Label htmlFor="accountType">Account Type</Label>
+                        <Select onValueChange={(value) => setAccountType(value as any)} value={accountType} required>
+                            <SelectTrigger id="accountType">
+                            <SelectValue placeholder="Select a type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                            <SelectItem value="Bank">Bank</SelectItem>
+                            <SelectItem value="Cash">Cash</SelectItem>
+                            <SelectItem value="Investment">Investment</SelectItem>
+                            <SelectItem value="Other">Other</SelectItem>
+                            </SelectContent>
+                        </Select>
                         </div>
-                        <Logo className="absolute bottom-4 left-4 h-8 w-8 text-white/50" />
-                    </div>
-                ))}
-            </div>
+                        <div className="space-y-2">
+                        <Label htmlFor="currency">Currency</Label>
+                        <Select onValueChange={setCurrency} value={currency} required>
+                            <SelectTrigger id="currency">
+                            <SelectValue placeholder="Select a currency" />
+                            </SelectTrigger>
+                            <SelectContent>
+                            <SelectItem value="USD">USD - US Dollar</SelectItem>
+                            <SelectItem value="EUR">EUR - Euro</SelectItem>
+                            <SelectItem value="GBP">GBP - British Pound</SelectItem>
+                            <SelectItem value="JPY">JPY - Japanese Yen</SelectItem>
+                            <SelectItem value="INR">INR - Indian Rupee</SelectItem>
+                            </SelectContent>
+                        </Select>
+                        </div>
+                        <DialogFooter>
+                            <Button type="submit">
+                                <PlusCircle className="mr-2 h-4 w-4" />
+                                Add Account
+                            </Button>
+                        </DialogFooter>
+                    </form>
+                </DialogContent>
+            </Dialog>
         </div>
-        <div>
-          <Card className="sticky top-20">
-            <CardHeader>
-              <CardTitle>Create New Account</CardTitle>
-              <CardDescription>
-                Add a new cash, bank, or investment account.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleAddAccount} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="accountName">Account Name</Label>
-                  <Input
-                    id="accountName"
-                    value={accountName}
-                    onChange={(e) => setAccountName(e.target.value)}
-                    placeholder="e.g., My Savings"
-                    required
-                  />
+         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {accounts.map((account, index) => (
+                <div key={index} className={`relative p-6 rounded-xl shadow-lg text-white bg-gradient-to-br ${getCardGradient(index)}`}>
+                    <div className="flex justify-between items-start mb-4">
+                        <div>
+                            <p className="text-sm opacity-70">{account.type} Account</p>
+                            <p className="font-semibold text-lg">{account.name}</p>
+                        </div>
+                        {accountTypeIcons[account.type]}
+                    </div>
+                    <div className="text-right">
+                        <p className="text-sm opacity-70">Balance</p>
+                        <p className="text-3xl font-bold tracking-tight">
+                            {new Intl.NumberFormat('en-US', { style: 'currency', currency: account.currency, minimumFractionDigits: 2 }).format(account.balance)}
+                        </p>
+                    </div>
+                    <Logo className="absolute bottom-4 left-4 h-8 w-8 text-white/50" />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="accountType">Account Type</Label>
-                  <Select onValueChange={(value) => setAccountType(value as any)} value={accountType} required>
-                    <SelectTrigger id="accountType">
-                      <SelectValue placeholder="Select a type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Bank">Bank</SelectItem>
-                      <SelectItem value="Cash">Cash</SelectItem>
-                      <SelectItem value="Investment">Investment</SelectItem>
-                      <SelectItem value="Other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="currency">Currency</Label>
-                  <Select onValueChange={setCurrency} value={currency} required>
-                    <SelectTrigger id="currency">
-                      <SelectValue placeholder="Select a currency" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="USD">USD - US Dollar</SelectItem>
-                      <SelectItem value="EUR">EUR - Euro</SelectItem>
-                      <SelectItem value="GBP">GBP - British Pound</SelectItem>
-                      <SelectItem value="JPY">JPY - Japanese Yen</SelectItem>
-                      <SelectItem value="INR">INR - Indian Rupee</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <Button type="submit" className="w-full">
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  Add Account
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+            ))}
         </div>
       </div>
     </AppShell>
