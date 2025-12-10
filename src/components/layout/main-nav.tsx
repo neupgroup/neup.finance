@@ -20,11 +20,11 @@ import {
 
 const menuItems = [
   { href: '/', label: 'Dashboard', icon: Home },
-  { href: '#', label: 'Revenue', icon: CircleDollarSign },
-  { href: '#', label: 'Expenses', icon: Wallet },
-  { href: '#', label: 'Projections', icon: BarChart },
+  { href: '/revenue', label: 'Revenue', icon: CircleDollarSign },
+  { href: '/expense', label: 'Expenses', icon: Wallet },
+  { href: '/projection', label: 'Projections', icon: BarChart },
   { href: '#', label: 'Integrations', icon: Zap },
-  { href: '#', label: 'Reports', icon: FileText },
+  { href: '/report', label: 'Reports', icon: FileText },
 ];
 
 export function MainNav() {
