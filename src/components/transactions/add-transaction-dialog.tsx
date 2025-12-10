@@ -31,13 +31,17 @@ const accounts = [
 ];
 
 const categories = [
-  'Income',
-  'Groceries',
+  'Sales',
+  'Purchases',
+  'Discounts',
+  'Payroll',
   'Utilities',
-  'Entertainment',
-  'Subscriptions',
-  'Software',
-  'Travel',
+  'Vendor payments',
+  'EMIs',
+  'Bank charges',
+  'VAT / Tax',
+  'Transfers',
+  'Refunds',
   'Other',
 ];
 
