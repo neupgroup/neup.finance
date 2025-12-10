@@ -10,6 +10,7 @@ import {
   Home,
   Landmark,
   Settings,
+  BookText,
 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { useSidebar } from '../ui/sidebar';
@@ -20,6 +21,7 @@ const menuItems = [
   { href: '/transactions', label: 'Transactions', icon: ArrowLeftRight },
   { href: '/projection', label: 'Projections', icon: BarChart },
   { href: '/report', label: 'Reports', icon: FileText },
+  { href: '/journal', label: 'Journal', icon: BookText },
   { href: '/chat', label: 'Chat', icon: Bot },
 ];
 
@@ -29,7 +31,7 @@ export function MainNav() {
 
   const handleLinkClick = () => {
     setOpenMobile(false);
-  }
+  };
 
   return (
     <nav className="grid items-start gap-2">
