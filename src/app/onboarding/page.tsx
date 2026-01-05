@@ -11,25 +11,12 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Logo } from '@/components/icons';
 import { ArrowRight, Loader } from 'lucide-react';
 import { useAuth, useUser } from '@/firebase';
 import { signInAnonymously } from 'firebase/auth';
 
-function setCookie(name: string, value: string, days: number) {
-    let expires = "";
-    if (days) {
-        const date = new Date();
-        date.setTime(date.getTime() + (days*24*60*60*1000));
-        expires = "; expires=" + date.toUTCString();
-    }
-    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
-}
-
 export default function OnboardingPage() {
-  const [accountType, setAccountType] = useState('individual');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const auth = useAuth();
@@ -44,7 +31,6 @@ export default function OnboardingPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setCookie('account_type', accountType, 7);
 
     try {
         if (!user) {
@@ -71,36 +57,11 @@ export default function OnboardingPage() {
         <CardHeader className="items-center text-center">
           <Logo className="h-12 w-12 mb-2" />
           <CardTitle>Welcome to Neup.Ledger</CardTitle>
-          <CardDescription>Let's get your account set up. Tell us a bit about yourself.</CardDescription>
+          <CardDescription>Let's get your account set up.</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-6">
-            <RadioGroup
-              value={accountType}
-              onValueChange={setAccountType}
-              className="grid grid-cols-2 gap-4"
-            >
-              <div>
-                <RadioGroupItem value="individual" id="individual" className="peer sr-only" />
-                <Label
-                  htmlFor="individual"
-                  className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                >
-                  Individual
-                  <span className="text-xs text-muted-foreground mt-1">For personal finance.</span>
-                </Label>
-              </div>
-              <div>
-                <RadioGroupItem value="business" id="business" className="peer sr-only" />
-                <Label
-                  htmlFor="business"
-                  className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                >
-                  Business
-                  <span className="text-xs text-muted-foreground mt-1">For your company.</span>
-                </Label>
-              </div>
-            </RadioGroup>
+          <CardContent className="text-center text-muted-foreground">
+            <p>Click continue to create your profile.</p>
           </CardContent>
           <CardFooter>
             <Button type="submit" className="w-full" disabled={isLoading}>

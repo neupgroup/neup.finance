@@ -19,13 +19,6 @@ import { useUser, useFirestore } from '@/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 
-function getCookie(name: string) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop()?.split(';').shift();
-}
-
-
 export default function AuthPage() {
   const [displayName, setDisplayName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -38,7 +31,9 @@ export default function AuthPage() {
     // If user is already logged in and has a profile, redirect them
     if (user) {
         // We can add a check here later to see if profile exists
-        router.push('/');
+        // For now, if the user object exists, we assume profile is set or being set
+        // Let's prevent redirecting away if we are here to create the profile.
+        // A better check might be to see if a user document exists in Firestore.
     }
   }, [user, router]);
 
@@ -57,13 +52,12 @@ export default function AuthPage() {
     setIsLoading(true);
 
     try {
-        const accountType = getCookie('account_type') || 'individual';
         const userProfileRef = doc(firestore, 'users', user.uid);
 
         await setDoc(userProfileRef, {
             uid: user.uid,
             displayName: displayName.trim(),
-            accountType: accountType,
+            email: user.email // if available
         });
 
         // The onAuthStateChanged listener in FirebaseProvider will handle the redirect

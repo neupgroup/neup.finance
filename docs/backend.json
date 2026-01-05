@@ -53,17 +53,11 @@
           "type": "string",
           "description": "The user's email address.",
           "format": "email"
-        },
-        "accountType": {
-          "type": "string",
-          "enum": ["individual", "business"],
-          "description": "The type of account the user selected during onboarding."
         }
       },
       "required": [
         "uid",
-        "displayName",
-        "accountType"
+        "displayName"
       ]
     }
   },
