@@ -16,6 +16,7 @@ import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebas
 import { collection, doc, updateDoc, query, where } from 'firebase/firestore';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
+import { YearlyProjectionChart } from '@/components/charts/yearly-projection-chart';
 
 
 const certaintyColors = {
@@ -201,6 +202,15 @@ export default function ProjectionsPage() {
                     </Card>
                 </div>
                 <div className="space-y-6">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Yearly Financial Projection</CardTitle>
+                            <CardDescription>Estimated balance over the next 12 months.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <YearlyProjectionChart />
+                        </CardContent>
+                    </Card>
                     <SmartProjections />
                 </div>
             </div>
