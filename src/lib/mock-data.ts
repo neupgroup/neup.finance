@@ -73,6 +73,7 @@ export type TransactionLine = {
 export type ProjectionType = 'Income' | 'Expense';
 export type ProjectionCertainty = 'Fixed' | 'Probable' | 'Possible';
 export type ProjectionStatus = 'Active' | 'Canceled';
+export type ProjectionRecurrence = 'Once' | 'Daily' | 'Weekly' | 'Monthly' | 'Yearly' | 'Custom';
 
 
 export type Projection = {
@@ -82,9 +83,13 @@ export type Projection = {
     certainty: ProjectionCertainty;
     amount: number;
     currency: string;
-    date: string;
+    date: string; // Start date
     userId: string;
     status: ProjectionStatus;
+    recipient?: string;
+    isRecurring: boolean;
+    recurrence: ProjectionRecurrence;
+    endsOn?: string; // Optional end date
 };
 
 export type RecipientType = 'person' | 'organization';

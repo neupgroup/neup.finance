@@ -6,9 +6,9 @@ import { AppShell } from '@/components/layout/app-shell';
 import { SmartProjections } from '@/components/dashboard/smart-projections';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { PlusCircle, ArrowUpRight, ArrowDownLeft, Loader, XCircle } from 'lucide-react';
+import { PlusCircle, ArrowUpRight, ArrowDownLeft, Loader, XCircle, Repeat } from 'lucide-react';
 import Link from 'next/link';
-import { type Projection, ProjectionStatus } from '@/lib/mock-data';
+import { type Projection } from '@/lib/mock-data';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationLink } from '@/components/ui/pagination';
@@ -119,7 +119,16 @@ export default function ProjectionsPage() {
                                                 </div>
                                                 <div>
                                                     <p className={cn("font-semibold", item.status === 'Canceled' && 'line-through')}>{item.title}</p>
-                                                    <p className="text-sm text-muted-foreground">{new Date(item.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric'})}</p>
+                                                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                                        <span>{new Date(item.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric'})}</span>
+                                                        {item.isRecurring && (
+                                                            <div className="flex items-center gap-1">
+                                                                <Repeat className="h-3 w-3" />
+                                                                <span>{item.recurrence}</span>
+                                                                {item.endsOn && <span>until {new Date(item.endsOn).toLocaleDateString('en-US', { month: 'short', day: 'numeric'})}</span>}
+                                                            </div>
+                                                        )}
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-2">

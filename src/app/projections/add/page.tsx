@@ -13,6 +13,7 @@ import { type Projection, type ProjectionType, type ProjectionCertainty, Project
 import { useUser, useFirestore, useMemoFirebase } from '@/firebase';
 import { addDoc, collection } from 'firebase/firestore';
 import { Loader } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
 
 
 const projectionTypes: {value: ProjectionType, label: ProjectionType}[] = [
@@ -33,6 +34,15 @@ const currencies = [
     { value: 'NPR', label: 'NPR - Nepali Rupee' },
 ];
 
+const recurrenceTypes = [
+    { value: 'Once', label: 'Once' },
+    { value: 'Daily', label: 'Daily' },
+    { value: 'Weekly', label: 'Weekly' },
+    { value: 'Monthly', label: 'Monthly' },
+    { value: 'Yearly', label: 'Yearly' },
+    { value: 'Custom', label: 'Custom' },
+]
+
 
 export default function AddProjectionPage() {
   const router = useRouter();
@@ -47,6 +57,10 @@ export default function AddProjectionPage() {
   const [currency, setCurrency] = useState('');
   const [amount, setAmount] = useState<number | ''>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [recipient, setRecipient] = useState('');
+  const [isRecurring, setIsRecurring] = useState(false);
+  const [recurrence, setRecurrence] = useState('Once');
+  const [endsOn, setEndsOn] = useState('');
 
   const projectionsCollection = useMemoFirebase(() => {
     if (!firestore) return null;
@@ -77,6 +91,10 @@ export default function AddProjectionPage() {
             currency,
             userId: user.uid,
             status: 'Active',
+            recipient,
+            isRecurring,
+            recurrence,
+            endsOn: isRecurring ? endsOn : '',
         };
         
         await addDoc(projectionsCollection, newProjection);
@@ -114,47 +132,72 @@ export default function AddProjectionPage() {
                     <Label htmlFor="title">Title</Label>
                     <Input id="title" value={title} onChange={e => setTitle(e.target.value)} placeholder="e.g., Yearly Bonus" required />
                 </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="date">Date</Label>
-                    <Input id="date" type="date" value={date} onChange={e => setDate(e.target.value)} required className={!date ? 'text-muted-foreground' : ''}/>
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="type">Type</Label>
-                    <Combobox
-                        options={projectionTypes}
-                        value={type}
-                        onChange={(v) => setType(v as any)}
-                        placeholder="Select projection type"
-                        searchPlaceholder="Search types..."
-                        notFoundMessage="No type found."
-                    />
-                </div>
                  <div className="grid gap-2">
-                    <Label htmlFor="certainty">Certainty Level</Label>
-                    <Combobox
-                        options={projectionCertainties}
-                        value={certainty}
-                        onChange={(v) => setCertainty(v as any)}
-                        placeholder="Select certainty level"
-                        searchPlaceholder="Search levels..."
-                        notFoundMessage="No level found."
-                    />
+                    <Label htmlFor="recipient">Recipient (Optional)</Label>
+                    <Input id="recipient" value={recipient} onChange={e => setRecipient(e.target.value)} placeholder="e.g., Client Name, Utility Company" />
                 </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="currency">Currency</Label>
-                    <Combobox
-                        options={currencies}
-                        value={currency}
-                        onChange={setCurrency}
-                        placeholder="Select a currency"
-                        searchPlaceholder="Search currencies..."
-                        notFoundMessage="No currency found."
-                    />
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="grid gap-2">
+                        <Label htmlFor="date">Start Date</Label>
+                        <Input id="date" type="date" value={date} onChange={e => setDate(e.target.value)} required className={!date ? 'text-muted-foreground' : ''}/>
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="type">Type</Label>
+                        <Combobox
+                            options={projectionTypes}
+                            value={type}
+                            onChange={(v) => setType(v as any)}
+                            placeholder="Select type"
+                        />
+                    </div>
                 </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="amount">Amount</Label>
-                    <Input id="amount" type="number" value={amount} onChange={e => setAmount(e.target.value === '' ? '' : parseFloat(e.target.value))} placeholder="0.00" required />
+                 <div className="grid grid-cols-2 gap-4">
+                    <div className="grid gap-2">
+                        <Label htmlFor="certainty">Certainty Level</Label>
+                        <Combobox
+                            options={projectionCertainties}
+                            value={certainty}
+                            onChange={(v) => setCertainty(v as any)}
+                            placeholder="Select certainty"
+                        />
+                    </div>
+                     <div className="grid gap-2">
+                        <Label htmlFor="recurrence">Recurrence</Label>
+                        <Combobox
+                            options={recurrenceTypes}
+                            value={recurrence}
+                            onChange={v => setRecurrence(v)}
+                            placeholder="Select recurrence"
+                        />
+                    </div>
                 </div>
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="grid gap-2">
+                        <Label htmlFor="currency">Currency</Label>
+                        <Combobox
+                            options={currencies}
+                            value={currency}
+                            onChange={setCurrency}
+                            placeholder="Select a currency"
+                        />
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="amount">Amount</Label>
+                        <Input id="amount" type="number" value={amount} onChange={e => setAmount(e.target.value === '' ? '' : parseFloat(e.target.value))} placeholder="0.00" required />
+                    </div>
+                </div>
+                 <div className="flex items-center space-x-2">
+                    <Switch id="is-recurring" checked={isRecurring} onCheckedChange={setIsRecurring} />
+                    <Label htmlFor="is-recurring">Is this a recurring transaction?</Label>
+                </div>
+
+                {isRecurring && (
+                     <div className="grid gap-2">
+                        <Label htmlFor="endsOn">Ends On (Optional)</Label>
+                        <Input id="endsOn" type="date" value={endsOn} onChange={e => setEndsOn(e.target.value)} className={!endsOn ? 'text-muted-foreground' : ''}/>
+                        <p className="text-xs text-muted-foreground">Leave empty for a projection that repeats forever.</p>
+                    </div>
+                )}
                 
                 <div className="flex justify-start gap-2 mt-4">
                     <Button type="submit" disabled={isSubmitting}>
