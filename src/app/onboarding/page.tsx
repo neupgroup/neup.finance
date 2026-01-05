@@ -22,20 +22,16 @@ export default function OnboardingPage() {
   const auth = useAuth();
   const { user, isUserLoading } = useUser();
 
-  useEffect(() => {
-    if (!isUserLoading && user) {
-        router.push('/');
-    }
-  }, [user, isUserLoading, router]);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-        if (!user) {
+        if (!user && auth) {
             await signInAnonymously(auth);
         }
+        // After sign-in, the onAuthStateChanged listener in the provider will update the user state,
+        // and we can then navigate to the auth page to complete the profile.
         router.push('/auth');
     } catch (error) {
         console.error("Anonymous sign-in failed", error);
@@ -43,13 +39,9 @@ export default function OnboardingPage() {
     }
   };
 
-  if (isUserLoading || user) {
-      return (
-          <div className="flex min-h-screen items-center justify-center">
-              <Loader className="h-8 w-8 animate-spin" />
-          </div>
-      )
-  }
+  // While checking for the user, show a loading state on the button
+  // but render the page structure.
+  const pageIsLoading = isUserLoading || isLoading;
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
@@ -64,8 +56,8 @@ export default function OnboardingPage() {
             <p>Click continue to create your profile.</p>
           </CardContent>
           <CardFooter>
-            <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? <Loader className="mr-2 h-4 w-4 animate-spin" /> : <ArrowRight className="mr-2 h-4 w-4" />}
+            <Button type="submit" className="w-full" disabled={pageIsLoading}>
+                {pageIsLoading ? <Loader className="mr-2 h-4 w-4 animate-spin" /> : <ArrowRight className="mr-2 h-4 w-4" />}
                 Continue
             </Button>
           </CardFooter>
