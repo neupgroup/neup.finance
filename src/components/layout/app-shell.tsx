@@ -30,15 +30,14 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
     const { data: userProfile, isLoading: isProfileLoading } = useDoc<UserProfile>(userProfileRef);
 
     useEffect(() => {
+        // The middleware now handles the primary redirection logic.
+        // This effect can be simplified or used for other client-side-only checks if needed.
         if (!isUserLoading && !user) {
             router.push('/onboarding');
-        } else if (!isUserLoading && user && !isProfileLoading && !userProfile) {
-            // If user exists but profile doesn't, send them to create it
-            router.push('/auth');
         }
-    }, [user, isUserLoading, userProfile, isProfileLoading, router]);
+    }, [user, isUserLoading, router]);
 
-    if (isUserLoading || isProfileLoading || !user || !userProfile) {
+    if (isUserLoading || (user && isProfileLoading) || !userProfile) {
         return (
             <div className="flex min-h-screen w-full items-center justify-center bg-background">
                 <Loader className="h-10 w-10 animate-spin" />
@@ -56,7 +55,7 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
                             <Logo className="h-8 w-8" />
                             <div className="flex flex-col">
                                 <span>Neup.Ledger</span>
-                                <span className="text-xs font-normal text-muted-foreground">{userProfile.accountId}</span>
+                                {userProfile?.accountId && <span className="text-xs font-normal text-muted-foreground">{userProfile.accountId}</span>}
                             </div>
                         </Link>
                     </div>
