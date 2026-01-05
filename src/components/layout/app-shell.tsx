@@ -34,11 +34,14 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
          <div className="min-h-screen w-full bg-background text-foreground">
             <header className="sticky top-0 z-10 flex h-16 items-center border-b bg-background shadow">
                 <div className="mx-auto flex w-full max-w-[1440px] items-center justify-between px-4 lg:px-6">
-                    <div className='flex items-center gap-2'>
+                    <div className='flex items-center gap-4'>
                         <SidebarTrigger className="md:hidden"/>
                         <Link href="/" className="items-center gap-2 font-semibold hidden md:flex">
                             <Logo className="h-8 w-8" />
-                            <span>Neup.Ledger</span>
+                            <div className="flex flex-col">
+                                <span>Neup.Ledger</span>
+                                <span className="text-xs font-normal text-muted-foreground">on the account of {user.displayName}</span>
+                            </div>
                         </Link>
                     </div>
                     <Header />
@@ -46,17 +49,6 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
             </header>
             <div className="mx-auto grid w-full max-w-[1440px] lg:grid-cols-[280px_1fr] xl:grid-cols-[320px_1fr]">
                 <Sidebar className="hidden h-[calc(100vh-4rem)] flex-col border-r bg-background lg:sticky lg:top-16 lg:flex p-2">
-                    <SidebarHeader>
-                        <div className="flex items-center gap-2 p-2">
-                            <div className="p-1.5 rounded-full bg-primary/20">
-                                <User className="h-5 w-5 text-primary"/>
-                            </div>
-                            <div className="flex flex-col">
-                                <span className="text-sm font-semibold text-foreground">{user.displayName}</span>
-                                <span className="text-xs text-muted-foreground">Account</span>
-                            </div>
-                        </div>
-                    </SidebarHeader>
                     <SidebarContent>
                         <MainNav />
                     </SidebarContent>
