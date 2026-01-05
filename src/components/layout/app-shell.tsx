@@ -40,7 +40,7 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
                             <Logo className="h-8 w-8" />
                             <div className="flex flex-col">
                                 <span>Neup.Ledger</span>
-                                <span className="text-xs font-normal text-muted-foreground">on the account of {user.displayName}</span>
+                                <span className="text-xs font-normal text-muted-foreground">{user.displayName}</span>
                             </div>
                         </Link>
                     </div>
