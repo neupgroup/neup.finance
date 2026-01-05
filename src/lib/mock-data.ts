@@ -74,13 +74,14 @@ export type ProjectionType = 'Income' | 'Expense';
 export type ProjectionCertainty = 'Fixed' | 'Probable' | 'Possible';
 
 export type Projection = {
-    id: string;
+    id?: string;
     title: string;
     type: ProjectionType;
     certainty: ProjectionCertainty;
     amount: number;
     currency: string;
     date: string;
+    userId: string;
 };
 
 export type RecipientType = 'person' | 'organization';

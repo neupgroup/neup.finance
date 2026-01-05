@@ -9,7 +9,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Combobox } from '@/components/ui/combobox';
 import { useToast } from '@/hooks/use-toast';
-import { projections, type Projection, type ProjectionType, type ProjectionCertainty } from '@/lib/mock-data';
+import { type Projection, type ProjectionType, type ProjectionCertainty } from '@/lib/mock-data';
+import { useUser, useFirestore, useMemoFirebase } from '@/firebase';
+import { addDoc, collection } from 'firebase/firestore';
+import { Loader } from 'lucide-react';
+
 
 const projectionTypes: {value: ProjectionType, label: ProjectionType}[] = [
     {value: 'Income', label: 'Income'},
@@ -33,17 +37,26 @@ const currencies = [
 export default function AddProjectionPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const { user } = useUser();
+  const firestore = useFirestore();
+
   const [title, setTitle] = useState('');
   const [date, setDate] = useState('');
   const [type, setType] = useState<ProjectionType | ''>('');
   const [certainty, setCertainty] = useState<ProjectionCertainty | ''>('');
   const [currency, setCurrency] = useState('');
   const [amount, setAmount] = useState<number | ''>('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const projectionsCollection = useMemoFirebase(() => {
+    if (!firestore || !user?.uid) return null;
+    return collection(firestore, 'users', user.uid, 'projections');
+  }, [firestore, user?.uid]);
 
 
-  const handleAddProjection = (e: React.FormEvent) => {
+  const handleAddProjection = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !date || !type || !certainty || !currency || amount === '') {
+    if (!title || !date || !type || !certainty || !currency || amount === '' || !user || !projectionsCollection) {
       toast({
         variant: "destructive",
         title: "Missing Fields",
@@ -52,26 +65,37 @@ export default function AddProjectionPage() {
       return;
     }
     
-    const newProjection: Projection = {
-      id: (projections.length + 1).toString(),
-      title,
-      type: type as ProjectionType,
-      certainty: certainty as ProjectionCertainty,
-      amount: amount,
-      date,
-      currency,
-    };
-    
-    // In a real app, you'd send this to a server.
-    // For now we just log it and show a success toast.
-    console.log('New Projection:', newProjection);
-    
-    toast({
-      title: "Projection Added",
-      description: `A new projection for ${currency} ${amount} has been successfully added.`,
-    });
+    setIsSubmitting(true);
 
-    router.push('/projections');
+    try {
+        const newProjection: Projection = {
+            title,
+            type: type as ProjectionType,
+            certainty: certainty as ProjectionCertainty,
+            amount: amount as number,
+            date,
+            currency,
+            userId: user.uid,
+        };
+        
+        await addDoc(projectionsCollection, newProjection);
+        
+        toast({
+            title: "Projection Added",
+            description: `A new projection for ${currency} ${amount} has been successfully added.`,
+        });
+
+        router.push('/projections');
+    } catch (error) {
+        console.error("Error creating projection:", error);
+        toast({
+            variant: "destructive",
+            title: "Error",
+            description: "Could not create projection. Please try again."
+        });
+    } finally {
+        setIsSubmitting(false);
+    }
   };
 
   return (
@@ -132,7 +156,10 @@ export default function AddProjectionPage() {
                 </div>
                 
                 <div className="flex justify-start gap-2 mt-4">
-                    <Button type="submit">Save Projection</Button>
+                    <Button type="submit" disabled={isSubmitting}>
+                        {isSubmitting ? <Loader className="mr-2 h-4 w-4 animate-spin" /> : null}
+                        Save Projection
+                    </Button>
                     <Button type="button" variant="outline" onClick={() => router.push('/projections')}>Cancel</Button>
                 </div>
             </form>

@@ -6,12 +6,14 @@ import { AppShell } from '@/components/layout/app-shell';
 import { SmartProjections } from '@/components/dashboard/smart-projections';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { PlusCircle, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
+import { PlusCircle, ArrowUpRight, ArrowDownLeft, Loader } from 'lucide-react';
 import Link from 'next/link';
-import { projections, type Projection } from '@/lib/mock-data';
+import { type Projection } from '@/lib/mock-data';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationLink } from '@/components/ui/pagination';
+import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { collection } from 'firebase/firestore';
 
 
 const certaintyColors = {
@@ -28,19 +30,31 @@ const typeIcons = {
 const ITEMS_PER_PAGE = 10;
 
 export default function ProjectionsPage() {
+    const { user, isUserLoading } = useUser();
+    const firestore = useFirestore();
+    
+    const projectionsCollection = useMemoFirebase(() => {
+        if (!firestore || !user?.uid) return null;
+        return collection(firestore, 'users', user.uid, 'projections');
+    }, [firestore, user?.uid]);
+
+    const { data: projections, isLoading: areProjectionsLoading } = useCollection<Projection>(projectionsCollection);
+
     const [currentPage, setCurrentPage] = useState(1);
 
-    const totalPages = Math.ceil(projections.length / ITEMS_PER_PAGE);
-    const paginatedProjections = projections.slice(
+    const totalPages = Math.ceil((projections?.length || 0) / ITEMS_PER_PAGE);
+    const paginatedProjections = projections?.slice(
         (currentPage - 1) * ITEMS_PER_PAGE,
         currentPage * ITEMS_PER_PAGE
-    );
+    ) || [];
 
     const handlePageChange = (page: number) => {
         if (page >= 1 && page <= totalPages) {
         setCurrentPage(page);
         }
     };
+    
+    const isLoading = isUserLoading || areProjectionsLoading;
 
   return (
     <AppShell>
@@ -54,38 +68,45 @@ export default function ProjectionsPage() {
                                 <CardDescription>A list of your projected income and expenses.</CardDescription>
                             </div>
                             <Link href="/projections/add">
-                                <Button>
+                                <Button disabled={isLoading}>
                                     <PlusCircle className="mr-2 h-4 w-4" />
                                     Add Projection
                                 </Button>
                             </Link>
                         </CardHeader>
                         <CardContent>
-                            <div className="space-y-4">
-                                {paginatedProjections.length > 0 ? paginatedProjections.map((item) => (
-                                    <div key={item.id} className="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors">
-                                        <div className="flex items-center gap-4">
-                                            <div className="p-2 rounded-full bg-muted">
-                                                {typeIcons[item.type]}
+                             {isLoading ? (
+                                <div className="flex items-center justify-center py-12 text-muted-foreground">
+                                    <Loader className="mr-3 h-6 w-6 animate-spin" />
+                                    <p>Loading your projections...</p>
+                                </div>
+                            ) : (
+                                <div className="space-y-4">
+                                    {paginatedProjections.length > 0 ? paginatedProjections.map((item) => (
+                                        <div key={item.id} className="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors">
+                                            <div className="flex items-center gap-4">
+                                                <div className="p-2 rounded-full bg-muted">
+                                                    {typeIcons[item.type]}
+                                                </div>
+                                                <div>
+                                                    <p className="font-semibold">{item.title}</p>
+                                                    <p className="text-sm text-muted-foreground">{new Date(item.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric'})}</p>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <p className="font-semibold">{item.title}</p>
-                                                <p className="text-sm text-muted-foreground">{new Date(item.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric'})}</p>
+                                            <div className="text-right">
+                                                <p className={cn("font-semibold", item.type === 'Income' ? 'text-green-500' : 'text-red-500')}>
+                                                    {new Intl.NumberFormat('en-US', { style: 'currency', currency: item.currency }).format(item.amount)}
+                                                </p>
+                                                <Badge variant="outline" className={cn("mt-1", certaintyColors[item.certainty])}>{item.certainty}</Badge>
                                             </div>
                                         </div>
-                                        <div className="text-right">
-                                            <p className={cn("font-semibold", item.type === 'Income' ? 'text-green-500' : 'text-red-500')}>
-                                                {new Intl.NumberFormat('en-US', { style: 'currency', currency: item.currency }).format(item.amount)}
-                                            </p>
-                                            <Badge variant="outline" className={cn("mt-1", certaintyColors[item.certainty])}>{item.certainty}</Badge>
-                                        </div>
+                                    )) : (
+                                    <div className="text-center py-12 text-muted-foreground">
+                                        <p>No projections found. Add your first one!</p>
                                     </div>
-                                )) : (
-                                  <div className="text-center py-12 text-muted-foreground">
-                                    <p>No projections found. Add your first one!</p>
-                                  </div>
-                                )}
-                            </div>
+                                    )}
+                                </div>
+                            )}
                              {totalPages > 1 && (
                                 <Pagination className="mt-6">
                                     <PaginationContent>

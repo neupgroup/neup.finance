@@ -64,6 +64,54 @@
         "displayName",
         "accountId"
       ]
+    },
+    "Projection": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Projection",
+      "type": "object",
+      "description": "Represents a future income or expense projection.",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "Income",
+            "Expense"
+          ]
+        },
+        "certainty": {
+          "type": "string",
+          "enum": [
+            "Fixed",
+            "Probable",
+            "Possible"
+          ]
+        },
+        "amount": {
+          "type": "number"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string",
+          "format": "date"
+        },
+        "userId": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "type",
+        "certainty",
+        "amount",
+        "currency",
+        "date",
+        "userId"
+      ]
     }
   },
   "auth": {
@@ -83,6 +131,12 @@
         "$ref": "#/entities/Account"
       },
       "description": "Stores financial accounts for each user, ensuring data isolation."
+    },
+    "/users/{userId}/projections/{projectionId}": {
+      "schema": {
+        "$ref": "#/entities/Projection"
+      },
+      "description": "Stores financial projections for each user."
     }
   }
 }
