@@ -28,5 +28,11 @@ service cloud.firestore {
     match /users/{userId}/accounts/{accountId} {
       allow read, list, create, update, delete: if isOwner(userId);
     }
+
+    // Rules for projections
+    match /users/{userId}/projections/{projectionId} {
+      allow read, list, create, update: if isOwner(userId);
+      allow delete: if false; // Deleting projections is not allowed
+    }
   }
 }

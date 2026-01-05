@@ -101,6 +101,10 @@
         },
         "userId": {
           "type": "string"
+        },
+        "status": {
+            "type": "string",
+            "enum": ["Active", "Canceled"]
         }
       },
       "required": [
@@ -110,7 +114,8 @@
         "amount",
         "currency",
         "date",
-        "userId"
+        "userId",
+        "status"
       ]
     }
   },

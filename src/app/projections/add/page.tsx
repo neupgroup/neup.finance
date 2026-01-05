@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Combobox } from '@/components/ui/combobox';
 import { useToast } from '@/hooks/use-toast';
-import { type Projection, type ProjectionType, type ProjectionCertainty } from '@/lib/mock-data';
+import { type Projection, type ProjectionType, type ProjectionCertainty, ProjectionStatus } from '@/lib/mock-data';
 import { useUser, useFirestore, useMemoFirebase } from '@/firebase';
 import { addDoc, collection } from 'firebase/firestore';
 import { Loader } from 'lucide-react';
@@ -76,6 +76,7 @@ export default function AddProjectionPage() {
             date,
             currency,
             userId: user.uid,
+            status: 'Active',
         };
         
         await addDoc(projectionsCollection, newProjection);

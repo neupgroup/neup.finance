@@ -6,14 +6,16 @@ import { AppShell } from '@/components/layout/app-shell';
 import { SmartProjections } from '@/components/dashboard/smart-projections';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { PlusCircle, ArrowUpRight, ArrowDownLeft, Loader } from 'lucide-react';
+import { PlusCircle, ArrowUpRight, ArrowDownLeft, Loader, XCircle } from 'lucide-react';
 import Link from 'next/link';
-import { type Projection } from '@/lib/mock-data';
+import { type Projection, ProjectionStatus } from '@/lib/mock-data';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationLink } from '@/components/ui/pagination';
 import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { collection } from 'firebase/firestore';
+import { collection, doc, updateDoc } from 'firebase/firestore';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { useToast } from '@/hooks/use-toast';
 
 
 const certaintyColors = {
@@ -32,6 +34,7 @@ const ITEMS_PER_PAGE = 10;
 export default function ProjectionsPage() {
     const { user, isUserLoading } = useUser();
     const firestore = useFirestore();
+    const { toast } = useToast();
     
     const projectionsCollection = useMemoFirebase(() => {
         if (!firestore || !user?.uid) return null;
@@ -42,15 +45,41 @@ export default function ProjectionsPage() {
 
     const [currentPage, setCurrentPage] = useState(1);
 
-    const totalPages = Math.ceil((projections?.length || 0) / ITEMS_PER_PAGE);
-    const paginatedProjections = projections?.slice(
+    const sortedProjections = projections?.sort((a, b) => {
+        if (a.status === 'Canceled' && b.status !== 'Canceled') return 1;
+        if (a.status !== 'Canceled' && b.status === 'Canceled') return -1;
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+      }) || [];
+
+
+    const totalPages = Math.ceil((sortedProjections.length || 0) / ITEMS_PER_PAGE);
+    const paginatedProjections = sortedProjections.slice(
         (currentPage - 1) * ITEMS_PER_PAGE,
         currentPage * ITEMS_PER_PAGE
-    ) || [];
+    );
 
     const handlePageChange = (page: number) => {
         if (page >= 1 && page <= totalPages) {
         setCurrentPage(page);
+        }
+    };
+
+    const handleCancelProjection = async (projectionId: string) => {
+        if (!firestore || !user?.uid) return;
+        const projectionRef = doc(firestore, 'users', user.uid, 'projections', projectionId);
+        try {
+            await updateDoc(projectionRef, { status: 'Canceled' });
+            toast({
+                title: "Projection Canceled",
+                description: "The projection has been successfully canceled.",
+            })
+        } catch (error) {
+            console.error("Error canceling projection:", error);
+            toast({
+                variant: 'destructive',
+                title: "Error",
+                description: "Could not cancel the projection.",
+            })
         }
     };
     
@@ -83,21 +112,48 @@ export default function ProjectionsPage() {
                             ) : (
                                 <div className="space-y-4">
                                     {paginatedProjections.length > 0 ? paginatedProjections.map((item) => (
-                                        <div key={item.id} className="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors">
+                                        <div key={item.id} className={cn("flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors", item.status === 'Canceled' && 'opacity-50 bg-muted/50')}>
                                             <div className="flex items-center gap-4">
                                                 <div className="p-2 rounded-full bg-muted">
                                                     {typeIcons[item.type]}
                                                 </div>
                                                 <div>
-                                                    <p className="font-semibold">{item.title}</p>
+                                                    <p className={cn("font-semibold", item.status === 'Canceled' && 'line-through')}>{item.title}</p>
                                                     <p className="text-sm text-muted-foreground">{new Date(item.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric'})}</p>
                                                 </div>
                                             </div>
-                                            <div className="text-right">
-                                                <p className={cn("font-semibold", item.type === 'Income' ? 'text-green-500' : 'text-red-500')}>
-                                                    {new Intl.NumberFormat('en-US', { style: 'currency', currency: item.currency }).format(item.amount)}
-                                                </p>
-                                                <Badge variant="outline" className={cn("mt-1", certaintyColors[item.certainty])}>{item.certainty}</Badge>
+                                            <div className="flex items-center gap-2">
+                                                <div className="text-right">
+                                                    <p className={cn("font-semibold", item.type === 'Income' ? 'text-green-500' : 'text-red-500', item.status === 'Canceled' && 'line-through')}>
+                                                        {new Intl.NumberFormat('en-US', { style: 'currency', currency: item.currency }).format(item.amount)}
+                                                    </p>
+                                                    {item.status === 'Canceled' ? (
+                                                        <Badge variant="destructive" className="mt-1">Canceled</Badge>
+                                                    ) : (
+                                                        <Badge variant="outline" className={cn("mt-1", certaintyColors[item.certainty])}>{item.certainty}</Badge>
+                                                    )}
+                                                </div>
+                                                {item.status !== 'Canceled' && (
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger asChild>
+                                                        <Button variant="ghost" size="icon">
+                                                            <XCircle className="h-4 w-4 text-muted-foreground hover:text-destructive" />
+                                                        </Button>
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent>
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                                            <AlertDialogDescription>
+                                                                This action will mark the projection as canceled. You cannot undo this action.
+                                                            </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel>Back</AlertDialogCancel>
+                                                            <AlertDialogAction onClick={() => handleCancelProjection(item.id!)}>Cancel Projection</AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
+                                                )}
                                             </div>
                                         </div>
                                     )) : (

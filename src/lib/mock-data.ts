@@ -72,6 +72,8 @@ export type TransactionLine = {
 
 export type ProjectionType = 'Income' | 'Expense';
 export type ProjectionCertainty = 'Fixed' | 'Probable' | 'Possible';
+export type ProjectionStatus = 'Active' | 'Canceled';
+
 
 export type Projection = {
     id?: string;
@@ -82,6 +84,7 @@ export type Projection = {
     currency: string;
     date: string;
     userId: string;
+    status: ProjectionStatus;
 };
 
 export type RecipientType = 'person' | 'organization';
