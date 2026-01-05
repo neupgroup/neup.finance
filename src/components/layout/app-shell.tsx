@@ -9,7 +9,7 @@ import { Logo } from '../icons';
 import { Header } from './header';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useUser } from '@/firebase';
-import { Loader } from 'lucide-react';
+import { Loader, User } from 'lucide-react';
 
 
 function AppShellContent({ children }: { children: React.ReactNode }) {
@@ -46,6 +46,17 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
             </header>
             <div className="mx-auto grid w-full max-w-[1440px] lg:grid-cols-[280px_1fr] xl:grid-cols-[320px_1fr]">
                 <Sidebar className="hidden h-[calc(100vh-4rem)] flex-col border-r bg-background lg:sticky lg:top-16 lg:flex p-2">
+                    <SidebarHeader>
+                        <div className="flex items-center gap-2 p-2">
+                            <div className="p-1.5 rounded-full bg-primary/20">
+                                <User className="h-5 w-5 text-primary"/>
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-sm font-semibold text-foreground">{user.displayName}</span>
+                                <span className="text-xs text-muted-foreground">Account</span>
+                            </div>
+                        </div>
+                    </SidebarHeader>
                     <SidebarContent>
                         <MainNav />
                     </SidebarContent>
