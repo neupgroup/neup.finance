@@ -13,7 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationLink } from '@/components/ui/pagination';
 import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, doc, updateDoc } from 'firebase/firestore';
+import { collection, doc, updateDoc, query, where } from 'firebase/firestore';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
 
@@ -36,12 +36,12 @@ export default function ProjectionsPage() {
     const firestore = useFirestore();
     const { toast } = useToast();
     
-    const projectionsCollection = useMemoFirebase(() => {
+    const projectionsQuery = useMemoFirebase(() => {
         if (!firestore || !user?.uid) return null;
-        return collection(firestore, 'users', user.uid, 'projections');
+        return query(collection(firestore, 'projections'), where('userId', '==', user.uid));
     }, [firestore, user?.uid]);
 
-    const { data: projections, isLoading: areProjectionsLoading } = useCollection<Projection>(projectionsCollection);
+    const { data: projections, isLoading: areProjectionsLoading } = useCollection<Projection>(projectionsQuery);
 
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -66,7 +66,7 @@ export default function ProjectionsPage() {
 
     const handleCancelProjection = async (projectionId: string) => {
         if (!firestore || !user?.uid) return;
-        const projectionRef = doc(firestore, 'users', user.uid, 'projections', projectionId);
+        const projectionRef = doc(firestore, 'projections', projectionId);
         try {
             await updateDoc(projectionRef, { status: 'Canceled' });
             toast({

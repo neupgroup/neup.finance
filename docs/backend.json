@@ -137,11 +137,11 @@
       },
       "description": "Stores financial accounts for each user, ensuring data isolation."
     },
-    "/users/{userId}/projections/{projectionId}": {
+    "/projections/{projectionId}": {
       "schema": {
         "$ref": "#/entities/Projection"
       },
-      "description": "Stores financial projections for each user."
+      "description": "Stores all financial projections in a single collection. The 'userId' field links a projection to a user."
     }
   }
 }

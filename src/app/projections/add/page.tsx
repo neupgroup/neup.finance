@@ -49,9 +49,9 @@ export default function AddProjectionPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const projectionsCollection = useMemoFirebase(() => {
-    if (!firestore || !user?.uid) return null;
-    return collection(firestore, 'users', user.uid, 'projections');
-  }, [firestore, user?.uid]);
+    if (!firestore) return null;
+    return collection(firestore, 'projections');
+  }, [firestore]);
 
 
   const handleAddProjection = async (e: React.FormEvent) => {

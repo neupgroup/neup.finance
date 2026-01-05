@@ -30,9 +30,15 @@ service cloud.firestore {
     }
 
     // Rules for projections
-    match /users/{userId}/projections/{projectionId} {
-      allow read, list, create, update: if isOwner(userId);
-      allow delete: if false; // Deleting projections is not allowed
+    match /projections/{projectionId} {
+      // User can read their own projections.
+      allow read, list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      // User can create a projection if they are the owner.
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      // User can update their own projection (e.g., to cancel it).
+      allow update: if isSignedIn() && resource.data.userId == request.auth.uid;
+      // Deleting projections is not allowed to maintain history.
+      allow delete: if false;
     }
   }
 }
