@@ -88,132 +88,128 @@ export default function ProjectionsPage() {
 
   return (
     <AppShell>
-        <div className="grid gap-6">
-            <div className="grid lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2 space-y-6">
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between">
-                            <div>
-                                <CardTitle>Future Projections</CardTitle>
-                                <CardDescription>A list of your projected income and expenses.</CardDescription>
-                            </div>
-                            <Link href="/projections/add">
-                                <Button disabled={isLoading}>
-                                    <PlusCircle className="mr-2 h-4 w-4" />
-                                    Add Projection
-                                </Button>
-                            </Link>
-                        </CardHeader>
-                        <CardContent>
-                             {isLoading ? (
-                                <div className="flex items-center justify-center py-12 text-muted-foreground">
-                                    <Loader className="mr-3 h-6 w-6 animate-spin" />
-                                    <p>Loading your projections...</p>
-                                </div>
-                            ) : (
-                                <div className="space-y-4">
-                                    {paginatedProjections.length > 0 ? paginatedProjections.map((item) => (
-                                        <div key={item.id} className={cn("flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors", item.status === 'Canceled' && 'opacity-50 bg-muted/50')}>
-                                            <div className="flex items-center gap-4">
-                                                <div className="p-2 rounded-full bg-muted">
-                                                    {typeIcons[item.type]}
-                                                </div>
-                                                <div>
-                                                    <p className={cn("font-semibold", item.status === 'Canceled' && 'line-through')}>{item.title}</p>
-                                                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                                        <span>{new Date(item.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric'})}</span>
-                                                        {item.isRecurring && (
-                                                            <div className="flex items-center gap-1">
-                                                                <Repeat className="h-3 w-3" />
-                                                                <span>{item.recurrence}</span>
-                                                                {item.endsOn && <span>until {new Date(item.endsOn).toLocaleDateString('en-US', { month: 'short', day: 'numeric'})}</span>}
-                                                            </div>
-                                                        )}
+        <div className="space-y-6">
+            <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                    <div>
+                        <CardTitle>Future Projections</CardTitle>
+                        <CardDescription>A list of your projected income and expenses.</CardDescription>
+                    </div>
+                    <Link href="/projections/add">
+                        <Button disabled={isLoading}>
+                            <PlusCircle className="mr-2 h-4 w-4" />
+                            Add Projection
+                        </Button>
+                    </Link>
+                </CardHeader>
+                <CardContent>
+                        {isLoading ? (
+                        <div className="flex items-center justify-center py-12 text-muted-foreground">
+                            <Loader className="mr-3 h-6 w-6 animate-spin" />
+                            <p>Loading your projections...</p>
+                        </div>
+                    ) : (
+                        <div className="space-y-4">
+                            {paginatedProjections.length > 0 ? paginatedProjections.map((item) => (
+                                <div key={item.id} className={cn("flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors", item.status === 'Canceled' && 'opacity-50 bg-muted/50')}>
+                                    <div className="flex items-center gap-4">
+                                        <div className="p-2 rounded-full bg-muted">
+                                            {typeIcons[item.type]}
+                                        </div>
+                                        <div>
+                                            <p className={cn("font-semibold", item.status === 'Canceled' && 'line-through')}>{item.title}</p>
+                                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                                <span>{new Date(item.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric'})}</span>
+                                                {item.isRecurring && (
+                                                    <div className="flex items-center gap-1">
+                                                        <Repeat className="h-3 w-3" />
+                                                        <span>{item.recurrence}</span>
+                                                        {item.endsOn && <span>until {new Date(item.endsOn).toLocaleDateString('en-US', { month: 'short', day: 'numeric'})}</span>}
                                                     </div>
-                                                </div>
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                <div className="text-right">
-                                                    <p className={cn("font-semibold", item.type === 'Income' ? 'text-green-500' : 'text-red-500', item.status === 'Canceled' && 'line-through')}>
-                                                        {new Intl.NumberFormat('en-US', { style: 'currency', currency: item.currency }).format(item.amount)}
-                                                    </p>
-                                                    {item.status === 'Canceled' ? (
-                                                        <Badge variant="destructive" className="mt-1">Canceled</Badge>
-                                                    ) : (
-                                                        <Badge variant="outline" className={cn("mt-1", certaintyColors[item.certainty])}>{item.certainty}</Badge>
-                                                    )}
-                                                </div>
-                                                {item.status !== 'Canceled' && (
-                                                <AlertDialog>
-                                                    <AlertDialogTrigger asChild>
-                                                        <Button variant="ghost" size="icon">
-                                                            <XCircle className="h-4 w-4 text-muted-foreground hover:text-destructive" />
-                                                        </Button>
-                                                    </AlertDialogTrigger>
-                                                    <AlertDialogContent>
-                                                        <AlertDialogHeader>
-                                                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                                                            <AlertDialogDescription>
-                                                                This action will mark the projection as canceled. You cannot undo this action.
-                                                            </AlertDialogDescription>
-                                                        </AlertDialogHeader>
-                                                        <AlertDialogFooter>
-                                                            <AlertDialogCancel>Back</AlertDialogCancel>
-                                                            <AlertDialogAction onClick={() => handleCancelProjection(item.id!)}>Cancel Projection</AlertDialogAction>
-                                                        </AlertDialogFooter>
-                                                    </AlertDialogContent>
-                                                </AlertDialog>
                                                 )}
                                             </div>
                                         </div>
-                                    )) : (
-                                    <div className="text-center py-12 text-muted-foreground">
-                                        <p>No projections found. Add your first one!</p>
                                     </div>
-                                    )}
+                                    <div className="flex items-center gap-2">
+                                        <div className="text-right">
+                                            <p className={cn("font-semibold", item.type === 'Income' ? 'text-green-500' : 'text-red-500', item.status === 'Canceled' && 'line-through')}>
+                                                {new Intl.NumberFormat('en-US', { style: 'currency', currency: item.currency }).format(item.amount)}
+                                            </p>
+                                            {item.status === 'Canceled' ? (
+                                                <Badge variant="destructive" className="mt-1">Canceled</Badge>
+                                            ) : (
+                                                <Badge variant="outline" className={cn("mt-1", certaintyColors[item.certainty])}>{item.certainty}</Badge>
+                                            )}
+                                        </div>
+                                        {item.status !== 'Canceled' && (
+                                        <AlertDialog>
+                                            <AlertDialogTrigger asChild>
+                                                <Button variant="ghost" size="icon">
+                                                    <XCircle className="h-4 w-4 text-muted-foreground hover:text-destructive" />
+                                                </Button>
+                                            </AlertDialogTrigger>
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                        This action will mark the projection as canceled. You cannot undo this action.
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel>Back</AlertDialogCancel>
+                                                    <AlertDialogAction onClick={() => handleCancelProjection(item.id!)}>Cancel Projection</AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialog>
+                                        )}
+                                    </div>
                                 </div>
+                            )) : (
+                            <div className="text-center py-12 text-muted-foreground">
+                                <p>No projections found. Add your first one!</p>
+                            </div>
                             )}
-                             {totalPages > 1 && (
-                                <Pagination className="mt-6">
-                                    <PaginationContent>
-                                        <PaginationItem>
-                                            <PaginationPrevious onClick={() => handlePageChange(currentPage - 1)}
-                                            className={cn({
-                                                'cursor-not-allowed text-muted-foreground': currentPage === 1,
-                                            })}
-                                            />
-                                        </PaginationItem>
-                                        {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                                            <PaginationItem key={page}>
-                                                <PaginationLink onClick={() => handlePageChange(page)} isActive={currentPage === page}>{page}</PaginationLink>
-                                            </PaginationItem>
-                                        ))}
-                                        <PaginationItem>
-                                            <PaginationNext onClick={() => handlePageChange(currentPage + 1)} 
-                                                className={cn({
-                                                    'cursor-not-allowed text-muted-foreground': currentPage === totalPages,
-                                                })}
-                                            />
-                                        </PaginationItem>
-                                    </PaginationContent>
-                                </Pagination>
-                            )}
-                        </CardContent>
-                    </Card>
-                </div>
-                <div className="space-y-6">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Yearly Financial Projection</CardTitle>
-                            <CardDescription>Estimated balance over the next 12 months.</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <YearlyProjectionChart />
-                        </CardContent>
-                    </Card>
-                    <SmartProjections />
-                </div>
-            </div>
+                        </div>
+                    )}
+                        {totalPages > 1 && (
+                        <Pagination className="mt-6">
+                            <PaginationContent>
+                                <PaginationItem>
+                                    <PaginationPrevious onClick={() => handlePageChange(currentPage - 1)}
+                                    className={cn({
+                                        'cursor-not-allowed text-muted-foreground': currentPage === 1,
+                                    })}
+                                    />
+                                </PaginationItem>
+                                {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                                    <PaginationItem key={page}>
+                                        <PaginationLink onClick={() => handlePageChange(page)} isActive={currentPage === page}>{page}</PaginationLink>
+                                    </PaginationItem>
+                                ))}
+                                <PaginationItem>
+                                    <PaginationNext onClick={() => handlePageChange(currentPage + 1)} 
+                                        className={cn({
+                                            'cursor-not-allowed text-muted-foreground': currentPage === totalPages,
+                                        })}
+                                    />
+                                </PaginationItem>
+                            </PaginationContent>
+                        </Pagination>
+                    )}
+                </CardContent>
+            </Card>
+
+            <Card>
+                <CardHeader>
+                    <CardTitle>Yearly Financial Projection</CardTitle>
+                    <CardDescription>Estimated balance over the next 12 months.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <YearlyProjectionChart />
+                </CardContent>
+            </Card>
+
+            <SmartProjections />
         </div>
     </AppShell>
   );
