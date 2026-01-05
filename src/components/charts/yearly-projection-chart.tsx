@@ -196,7 +196,7 @@ export function YearlyProjectionChart() {
                         borderRadius: 'var(--radius)'
                     }}
                     formatter={(value: number, name: string) => {
-                        const currency = name.split('-')[1];
+                        const currency = name.split('-')[1] || 'USD'; // Default to USD if currency is undefined
                         return [new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(value), name.split('-')[0]];
                     }}
                     cursor={{ fill: 'hsl(var(--muted))' }}
