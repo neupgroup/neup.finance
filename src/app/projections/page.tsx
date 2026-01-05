@@ -62,7 +62,7 @@ export default function ProjectionsPage() {
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-4">
-                                {paginatedProjections.map((item) => (
+                                {paginatedProjections.length > 0 ? paginatedProjections.map((item) => (
                                     <div key={item.id} className="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors">
                                         <div className="flex items-center gap-4">
                                             <div className="p-2 rounded-full bg-muted">
@@ -80,7 +80,11 @@ export default function ProjectionsPage() {
                                             <Badge variant="outline" className={cn("mt-1", certaintyColors[item.certainty])}>{item.certainty}</Badge>
                                         </div>
                                     </div>
-                                ))}
+                                )) : (
+                                  <div className="text-center py-12 text-muted-foreground">
+                                    <p>No projections found. Add your first one!</p>
+                                  </div>
+                                )}
                             </div>
                              {totalPages > 1 && (
                                 <Pagination className="mt-6">

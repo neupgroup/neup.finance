@@ -44,7 +44,7 @@ export default function RecipientsPage() {
             </Link>
         </div>
         <div className="mx-auto max-w-4xl space-y-4">
-          {paginatedRecipients.map((recipient) => (
+          {paginatedRecipients.length > 0 ? paginatedRecipients.map((recipient) => (
             <div key={recipient.id} className="flex items-start justify-between p-4 rounded-lg border bg-card hover:bg-muted/50 transition-colors">
               <div className="flex items-start gap-4">
                 <div className="p-2 rounded-full bg-muted mt-1">
@@ -94,7 +94,11 @@ export default function RecipientsPage() {
                 </Button>
               </div>
             </div>
-          ))}
+          )) : (
+            <div className="text-center py-12 text-muted-foreground">
+              <p>No recipients found. Add your first one!</p>
+            </div>
+          )}
         </div>
         {totalPages > 1 && (
             <Pagination>

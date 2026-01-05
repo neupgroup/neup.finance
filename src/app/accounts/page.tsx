@@ -33,11 +33,7 @@ type Account = {
     currency: string;
 };
 
-const initialAccounts: Account[] = [
-    { name: 'Checking Account', type: 'Bank', balance: 12500.75, currency: 'USD' },
-    { name: 'Savings Account', type: 'Bank', balance: 42000.00, currency: 'USD' },
-    { name: 'Wallet', type: 'Cash', balance: 350.50, currency: 'EUR' },
-];
+const initialAccounts: Account[] = [];
 
 const accountTypeIcons = {
   Bank: <Landmark className="h-5 w-5 text-muted-foreground" />,
@@ -156,7 +152,7 @@ export default function AccountsPage() {
             </Dialog>
         </div>
          <div className="mx-auto max-w-4xl space-y-4">
-            {paginatedAccounts.map((account, index) => (
+            {paginatedAccounts.length > 0 ? paginatedAccounts.map((account, index) => (
                 <div key={index} className="flex items-center justify-between p-4 rounded-lg border bg-card hover:bg-muted/50 transition-colors">
                     <div className="flex items-center gap-4">
                         <div className="p-2 rounded-full bg-muted">
@@ -179,7 +175,11 @@ export default function AccountsPage() {
                         </Button>
                     </div>
                 </div>
-            ))}
+            )) : (
+              <div className="text-center py-12 text-muted-foreground">
+                <p>No accounts found. Create your first one!</p>
+              </div>
+            )}
         </div>
         {totalPages > 1 && (
             <Pagination>
