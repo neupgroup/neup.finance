@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { AppShell } from '@/components/layout/app-shell';
 import { Button } from '@/components/ui/button';
 import {
@@ -21,19 +21,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { PlusCircle, Landmark, Wallet, Activity, MoreVertical } from 'lucide-react';
+import { PlusCircle, Landmark, Wallet, Activity, MoreVertical, Loader } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationLink } from '@/components/ui/pagination';
-
+import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { collection, addDoc } from 'firebase/firestore';
+import { useToast } from '@/hooks/use-toast';
 
 type Account = {
+    id?: string;
     name: string;
     type: 'Bank' | 'Cash' | 'Investment' | 'Other';
     balance: number;
     currency: string;
+    userId: string;
 };
-
-const initialAccounts: Account[] = [];
 
 const accountTypeIcons = {
   Bank: <Landmark className="h-5 w-5 text-muted-foreground" />,
@@ -45,18 +47,29 @@ const accountTypeIcons = {
 const ITEMS_PER_PAGE = 10;
 
 export default function AccountsPage() {
-  const [accounts, setAccounts] = useState<Account[]>(initialAccounts);
+  const { user, isUserLoading } = useUser();
+  const firestore = useFirestore();
+  const { toast } = useToast();
+
+  const accountsCollection = useMemoFirebase(() => {
+    if (!firestore || !user?.uid) return null;
+    return collection(firestore, 'users', user.uid, 'accounts');
+  }, [firestore, user?.uid]);
+
+  const { data: accounts, isLoading: areAccountsLoading } = useCollection<Account>(accountsCollection);
+
   const [accountName, setAccountName] = useState('');
   const [accountType, setAccountType] = useState<'Bank' | 'Cash' | 'Investment' | 'Other' | ''>('');
   const [currency, setCurrency] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const totalPages = Math.ceil(accounts.length / ITEMS_PER_PAGE);
-  const paginatedAccounts = accounts.slice(
+  const totalPages = Math.ceil((accounts?.length || 0) / ITEMS_PER_PAGE);
+  const paginatedAccounts = accounts?.slice(
       (currentPage - 1) * ITEMS_PER_PAGE,
       currentPage * ITEMS_PER_PAGE
-  );
+  ) || [];
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -64,22 +77,47 @@ export default function AccountsPage() {
     }
   };
 
-  const handleAddAccount = (e: React.FormEvent) => {
+  const handleAddAccount = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (accountName && accountType && currency) {
+    if (!accountName || !accountType || !currency || !user || !firestore) return;
+    
+    setIsSubmitting(true);
+
+    try {
       const newAccount: Account = {
         name: accountName,
         type: accountType as 'Bank' | 'Cash' | 'Investment' | 'Other',
-        balance: 0, // Initial balance is 0
+        balance: 0,
         currency: currency,
+        userId: user.uid,
       };
-      setAccounts([...accounts, newAccount]);
+
+      if (!accountsCollection) throw new Error("Accounts collection not available");
+
+      await addDoc(accountsCollection, newAccount);
+      
+      toast({
+        title: "Account Created",
+        description: `Your ${accountName} account has been created.`
+      })
+
       setAccountName('');
       setAccountType('');
       setCurrency('');
       setIsDialogOpen(false);
+    } catch (error) {
+        console.error("Error creating account:", error);
+        toast({
+            variant: "destructive",
+            title: "Error",
+            description: "Could not create account. Please try again."
+        })
+    } finally {
+        setIsSubmitting(false);
     }
   };
+
+  const isLoading = isUserLoading || areAccountsLoading;
 
   return (
     <AppShell>
@@ -88,7 +126,7 @@ export default function AccountsPage() {
             <h1 className="text-3xl font-bold tracking-tight">Your Accounts</h1>
              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
-                    <Button>
+                    <Button disabled={isLoading}>
                         <PlusCircle className="mr-2 h-4 w-4" />
                         Create Account
                     </Button>
@@ -142,8 +180,8 @@ export default function AccountsPage() {
                         </Select>
                         </div>
                         <DialogFooter>
-                            <Button type="submit">
-                                <PlusCircle className="mr-2 h-4 w-4" />
+                            <Button type="submit" disabled={isSubmitting}>
+                                {isSubmitting ? <Loader className="mr-2 h-4 w-4 animate-spin" /> : <PlusCircle className="mr-2 h-4 w-4" />}
                                 Add Account
                             </Button>
                         </DialogFooter>
@@ -152,8 +190,13 @@ export default function AccountsPage() {
             </Dialog>
         </div>
          <div className="mx-auto max-w-4xl space-y-4">
-            {paginatedAccounts.length > 0 ? paginatedAccounts.map((account, index) => (
-                <div key={index} className="flex items-center justify-between p-4 rounded-lg border bg-card hover:bg-muted/50 transition-colors">
+            {isLoading ? (
+                 <div className="flex items-center justify-center py-12 text-muted-foreground">
+                    <Loader className="mr-3 h-6 w-6 animate-spin" />
+                    <p>Loading your accounts...</p>
+                </div>
+            ) : paginatedAccounts.length > 0 ? paginatedAccounts.map((account) => (
+                <div key={account.id} className="flex items-center justify-between p-4 rounded-lg border bg-card hover:bg-muted/50 transition-colors">
                     <div className="flex items-center gap-4">
                         <div className="p-2 rounded-full bg-muted">
                             {accountTypeIcons[account.type]}

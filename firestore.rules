@@ -1,140 +1,26 @@
-/**
- * This ruleset enforces a strict user-ownership security model for the NeupLedger application.
- *
- * Core Philosophy:
- * The fundamental principle is that users have exclusive control over their own data.
- * All user-specific information, including their profile and financial accounts, is stored
- * within a private data tree accessible only to them. This prevents any user from viewing
- * or modifying another user's data.
- *
- * Data Structure:
- * Data is hierarchically organized under the top-level `/users` collection. Each user's
- * data is located at `/users/{userId}`, with subcollections like `/accounts` nested
- * underneath. This path-based structure is the primary mechanism for enforcing security.
- *
- * Key Security Decisions:
- * - User Enumeration is Disabled: Listing the top-level `/users` collection is explicitly
- *   disallowed to protect user privacy.
- * - Strict Ownership: All access to a document or subcollection under `/users/{userId}`
- *   is granted only if the authenticated user's UID matches the `{userId}` in the path.
- * - Self-Service Profile: Users are permitted to create and manage their own profile
- *   document at `/users/{userId}`.
- *
- * Denormalization for Authorization:
- * The security model relies on path-based authorization. The user's ID (`userId`) is part
- * of the document path (e.g., `/users/{userId}/accounts/{accountId}`), which makes it
- * directly available to the rules engine. This design avoids the need for slow and costly
- * `get()` calls to other documents for authorization checks, resulting in simpler and
- * more performant rules.
- *
- * Structural Segregation:
- * The data structure inherently segregates private user data. By nesting all personal
- * information within a user-specific path `/users/{userId}/...`, we ensure a strong
- * security boundary between users without needing extra fields or collections.
- */
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // ------------------------------------------------------------------------
-    // Helper Functions
-    // ------------------------------------------------------------------------
-
-    /**
-     * Returns true if the user is authenticated.
-     */
+    // Helper functions
     function isSignedIn() {
       return request.auth != null;
     }
 
-    /**
-     * Returns true if the authenticated user's UID matches the provided userId.
-     * This is the primary function for enforcing data ownership.
-     */
     function isOwner(userId) {
       return isSignedIn() && request.auth.uid == userId;
     }
 
-    /**
-     * Returns true if the document being accessed already exists.
-     * Used to protect against modification or deletion of non-existent data.
-     */
-    function isExistingDocument() {
-      return resource != null;
-    }
-
-    /**
-     * A composite check for update/delete operations, ensuring the user is the
-     * owner and the document actually exists.
-     */
-    function isExistingOwner(userId) {
-      return isOwner(userId) && isExistingDocument();
-    }
-
-    /**
-     * On user profile creation, validates that the document's internal `id` field
-     * matches the user's auth UID. Enforces relational integrity.
-     */
-    function isValidUserCreate(userId) {
-      return request.resource.data.id == userId;
-    }
-
-    /**
-     * On user profile update, ensures the `id` field cannot be changed.
-     * This makes the ownership link immutable.
-     */
-    function isImmutableUserId() {
-      return request.resource.data.id == resource.data.id;
-    }
-
-    /**
-     * On account creation, validates that the document's internal `userId` field
-     * matches the user's auth UID from the path. Enforces relational integrity.
-     */
-    function isValidAccountCreate(userId) {
-      return request.resource.data.userId == userId;
-    }
-
-    /**
-     * On account update, ensures the `userId` field cannot be changed.
-     * This makes the ownership link to the user immutable.
-     */
-    function isImmutableAccountOwner() {
-      return request.resource.data.userId == resource.data.userId;
-    }
-
-    // ------------------------------------------------------------------------
-    // Collection Rules
-    // ------------------------------------------------------------------------
-
-    /**
-     * @description Manages user profile documents.
-     * @path /users/{userId}
-     * @allow (create) An authenticated user can create their own profile document.
-     * @deny (get) A user trying to read another user's profile document.
-     * @principle Restricts access to a user's own data tree and allows self-creation of a profile.
-     */
+    // Rules for user profiles
     match /users/{userId} {
-      allow get: if isOwner(userId);
-      allow list: if false; // Explicitly deny listing users to prevent enumeration.
-      allow create: if isOwner(userId) && isValidUserCreate(userId);
-      allow update: if isExistingOwner(userId) && isImmutableUserId();
-      allow delete: if isExistingOwner(userId);
+      allow read, update, delete: if isOwner(userId);
+      allow create: if isSignedIn() && request.resource.data.uid == request.auth.uid;
     }
 
-    /**
-     * @description Manages a user's financial accounts.
-     * @path /users/{userId}/accounts/{accountId}
-     * @allow (list) An authenticated user can list their own financial accounts.
-     * @deny (update) A user trying to update an account owned by another user.
-     * @principle Enforces strict document ownership within a user's private subcollection.
-     */
+    // Rules for user accounts
     match /users/{userId}/accounts/{accountId} {
-      allow get: if isOwner(userId);
-      allow list: if isOwner(userId);
-      allow create: if isOwner(userId) && isValidAccountCreate(userId);
-      allow update: if isExistingOwner(userId) && isImmutableAccountOwner();
-      allow delete: if isExistingOwner(userId);
+      allow read, list, create, update, delete: if isOwner(userId) && request.resource.data.userId == userId;
     }
   }
 }

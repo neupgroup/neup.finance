@@ -3,8 +3,11 @@
 import Image from 'next/image';
 import {
   CircleUser,
+  LogOut,
   Moon,
+  Settings,
   Sun,
+  User,
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { Button } from '@/components/ui/button';
@@ -20,25 +23,34 @@ import {
   DropdownMenuPortal,
   DropdownMenuSubContent
 } from '@/components/ui/dropdown-menu';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { useAuth, useUser } from '@/firebase';
 import Link from 'next/link';
+import { signOut } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
 
 export function Header() {
-  const { setTheme } = useTheme()
-  const userAvatar = PlaceHolderImages.find(p => p.id === 'user-avatar');
+  const { setTheme } = useTheme();
+  const auth = useAuth();
+  const { user } = useUser();
+  const router = useRouter();
+
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    router.push('/onboarding');
+  }
 
   return (
     <div className="flex w-full items-center justify-end gap-2 md:gap-4">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon" className="rounded-full">
-            {userAvatar ? (
+            {user && user.photoURL ? (
                 <Image
-                    src={userAvatar.imageUrl}
+                    src={user.photoURL}
                     width={36}
                     height={36}
-                    alt={userAvatar.description}
-                    data-ai-hint={userAvatar.imageHint}
+                    alt="User avatar"
                     className="rounded-full"
                 />
             ) : (
@@ -48,12 +60,14 @@ export function Header() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuLabel>{user?.displayName || 'My Account'}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <Link href="/settings/appearance">
-            <DropdownMenuItem>Settings</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Settings className="mr-2 h-4 w-4"/>
+              <span>Settings</span>
+            </DropdownMenuItem>
           </Link>
-          <DropdownMenuItem>Support</DropdownMenuItem>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
               <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
@@ -69,7 +83,10 @@ export function Header() {
             </DropdownMenuPortal>
           </DropdownMenuSub>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Logout</DropdownMenuItem>
+          <DropdownMenuItem onClick={handleLogout}>
+            <LogOut className="mr-2 h-4 w-4" />
+            <span>Logout</span>
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

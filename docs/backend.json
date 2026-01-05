@@ -6,15 +6,11 @@
       "type": "object",
       "description": "Represents a financial account for a user or entity.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the Account entity."
-        },
-        "accountName": {
+        "name": {
           "type": "string",
           "description": "The name of the account."
         },
-        "accountType": {
+        "type": {
           "type": "string",
           "description": "The type of the account (e.g., checking, savings, investment)."
         },
@@ -28,17 +24,12 @@
         },
         "userId": {
           "type": "string",
-          "description": "Reference to User. (Relationship: User 1:N Account)"
-        },
-        "institution": {
-          "type": "string",
-          "description": "The financial institution which is associated with the account."
+          "description": "The ID of the user who owns this account."
         }
       },
       "required": [
-        "id",
-        "accountName",
-        "accountType",
+        "name",
+        "type",
         "balance",
         "currency",
         "userId"
@@ -50,77 +41,49 @@
       "type": "object",
       "description": "Represents a user of the NeupLedger application.",
       "properties": {
-        "id": {
+        "uid": {
           "type": "string",
-          "description": "Unique identifier for the User entity."
+          "description": "Unique identifier for the User, matching Firebase Auth UID."
+        },
+        "displayName": {
+          "type": "string",
+          "description": "The user's chosen display name."
         },
         "email": {
           "type": "string",
           "description": "The user's email address.",
           "format": "email"
         },
-        "firstName": {
+        "accountType": {
           "type": "string",
-          "description": "The user's first name."
-        },
-        "lastName": {
-          "type": "string",
-          "description": "The user's last name."
+          "enum": ["individual", "business"],
+          "description": "The type of account the user selected during onboarding."
         }
       },
       "required": [
-        "id",
-        "email",
-        "firstName",
-        "lastName"
+        "uid",
+        "displayName",
+        "accountType"
       ]
     }
   },
   "auth": {
     "providers": [
-      "password",
       "anonymous"
     ]
   },
   "firestore": {
-    "structure": [
-      {
-        "path": "/users/{userId}/accounts/{accountId}",
-        "definition": {
-          "entityName": "Account",
-          "schema": {
-            "$ref": "#/backend/entities/Account"
-          },
-          "description": "Stores financial accounts for each user. The 'userId' path segment enforces ownership, ensuring only the authenticated user can access their accounts. The 'accountId' allows direct access to specific account documents. No denormalization is required as authorization is path-based.",
-          "params": [
-            {
-              "name": "userId",
-              "description": "The unique identifier of the user who owns the account."
-            },
-            {
-              "name": "accountId",
-              "description": "The unique identifier of the account."
-            }
-          ]
-        }
+    "/users/{userId}": {
+      "schema": {
+        "$ref": "#/entities/User"
       },
-      {
-        "path": "/users/{userId}",
-        "definition": {
-          "entityName": "User",
-          "schema": {
-            "$ref": "#/backend/entities/User"
-          },
-          "description": "Stores user profiles.  The 'userId' parameter ensures data is scoped to individual users.",
-          "params": [
-            {
-              "name": "userId",
-              "description": "The unique identifier of the user."
-            }
-          ]
-        }
-      }
-    ],
-    "reasoning": "The Firestore structure is designed to manage user accounts in the NeupLedger application. It leverages path-based ownership for managing user-specific accounts, which provides a clear and secure method for access control. This design emphasizes authorization independence by avoiding `get()` calls in security rules, which supports atomic operations. Each account is directly associated with a user via the path `/users/{userId}/accounts/{accountId}`, ensuring that access control can be implemented efficiently using `request.auth.uid`. This structure facilitates secure `list` operations because access control is based solely on the user ID in the path. The `accountId` is included in the path to enable direct access to specific account documents. Denormalization isn't explicitly required in this simple user-account relationship, as authorization is already path-based."
+      "description": "Stores user profile information, keyed by their Firebase Auth UID."
+    },
+    "/users/{userId}/accounts/{accountId}": {
+      "schema": {
+        "$ref": "#/entities/Account"
+      },
+      "description": "Stores financial accounts for each user, ensuring data isolation."
+    }
   }
 }
