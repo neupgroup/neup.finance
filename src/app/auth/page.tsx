@@ -21,6 +21,7 @@ import { useToast } from '@/hooks/use-toast';
 
 export default function AuthPage() {
   const [displayName, setDisplayName] = useState('');
+  const [accountId, setAccountId] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { user } = useUser();
@@ -40,11 +41,11 @@ export default function AuthPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!displayName.trim() || !user || !firestore) {
+    if (!displayName.trim() || !accountId.trim() || !user || !firestore) {
         toast({
             variant: "destructive",
             title: "Error",
-            description: "Display name is required and you must be authenticated.",
+            description: "Display name and account name are required.",
         });
         return;
     }
@@ -57,8 +58,9 @@ export default function AuthPage() {
         await setDoc(userProfileRef, {
             uid: user.uid,
             displayName: displayName.trim(),
+            accountId: accountId.trim(),
             email: user.email // if available
-        });
+        }, { merge: true });
 
         // The onAuthStateChanged listener in FirebaseProvider will handle the redirect
         router.push('/');
@@ -80,17 +82,27 @@ export default function AuthPage() {
         <CardHeader className="items-center text-center">
           <Logo className="h-12 w-12 mb-2" />
           <CardTitle>Create Your Profile</CardTitle>
-          <CardDescription>Choose a display name to get started.</CardDescription>
+          <CardDescription>Choose a display name and account name to get started.</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-                <Label htmlFor="displayName">Display Name</Label>
+                <Label htmlFor="displayName">Your Display Name</Label>
                 <Input
                     id="displayName"
                     placeholder="e.g., Jane Doe"
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
+                    required
+                />
+            </div>
+            <div className="space-y-2">
+                <Label htmlFor="accountId">Account Name</Label>
+                <Input
+                    id="accountId"
+                    placeholder="e.g., Personal Finances or Acme Inc."
+                    value={accountId}
+                    onChange={(e) => setAccountId(e.target.value)}
                     required
                 />
             </div>

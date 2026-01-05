@@ -53,11 +53,16 @@
           "type": "string",
           "description": "The user's email address.",
           "format": "email"
+        },
+        "accountId": {
+          "type": "string",
+          "description": "The name of the account/ledger the user is currently operating."
         }
       },
       "required": [
         "uid",
-        "displayName"
+        "displayName",
+        "accountId"
       ]
     }
   },

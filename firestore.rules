@@ -14,13 +14,19 @@ service cloud.firestore {
 
     // Rules for user profiles
     match /users/{userId} {
-      allow read, update, delete: if isOwner(userId);
+      // Users can read their own profile
+      allow read: if isOwner(userId);
+      // Users can create their own profile, ensuring the UID matches
       allow create: if isSignedIn() && request.resource.data.uid == request.auth.uid;
+      // Users can update their own profile
+      allow update: if isOwner(userId);
+      // Users can delete their own profile (consider if this is desired)
+      allow delete: if isOwner(userId);
     }
 
     // Rules for user accounts
     match /users/{userId}/accounts/{accountId} {
-      allow read, list, create, update, delete: if isOwner(userId) && request.resource.data.userId == userId;
+      allow read, list, create, update, delete: if isOwner(userId);
     }
   }
 }

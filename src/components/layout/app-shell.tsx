@@ -3,26 +3,42 @@
 import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger } from '@/components/ui/sidebar';
 import { MainNav } from './main-nav';
 import { Logo } from '../icons';
 import { Header } from './header';
-import { Skeleton } from '@/components/ui/skeleton';
-import { useUser } from '@/firebase';
-import { Loader, User } from 'lucide-react';
+import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
+import { Loader } from 'lucide-react';
+import { doc } from 'firebase/firestore';
 
+// Define a type for the user profile data
+type UserProfile = {
+    displayName: string;
+    accountId: string;
+}
 
 function AppShellContent({ children }: { children: React.ReactNode }) {
     const { user, isUserLoading } = useUser();
+    const firestore = useFirestore();
     const router = useRouter();
+
+    const userProfileRef = useMemoFirebase(() => {
+        if (!firestore || !user?.uid) return null;
+        return doc(firestore, 'users', user.uid);
+    }, [firestore, user?.uid]);
+
+    const { data: userProfile, isLoading: isProfileLoading } = useDoc<UserProfile>(userProfileRef);
 
     useEffect(() => {
         if (!isUserLoading && !user) {
             router.push('/onboarding');
+        } else if (!isUserLoading && user && !isProfileLoading && !userProfile) {
+            // If user exists but profile doesn't, send them to create it
+            router.push('/auth');
         }
-    }, [user, isUserLoading, router])
+    }, [user, isUserLoading, userProfile, isProfileLoading, router]);
 
-    if (isUserLoading || !user) {
+    if (isUserLoading || isProfileLoading || !user || !userProfile) {
         return (
             <div className="flex min-h-screen w-full items-center justify-center bg-background">
                 <Loader className="h-10 w-10 animate-spin" />
@@ -40,7 +56,7 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
                             <Logo className="h-8 w-8" />
                             <div className="flex flex-col">
                                 <span>Neup.Ledger</span>
-                                <span className="text-xs font-normal text-muted-foreground">{user.displayName}</span>
+                                <span className="text-xs font-normal text-muted-foreground">{userProfile.accountId}</span>
                             </div>
                         </Link>
                     </div>
