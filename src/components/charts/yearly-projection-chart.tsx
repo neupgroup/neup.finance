@@ -2,11 +2,11 @@
 'use client';
 
 import { useMemo } from 'react';
-import { AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, where } from 'firebase/firestore';
 import { type Projection } from '@/lib/mock-data';
-import { addMonths, format, startOfMonth, eachDayOfInterval, endOfMonth, isWithinInterval, isAfter, isBefore } from 'date-fns';
+import { addMonths, format, startOfMonth, endOfMonth, isWithinInterval, isAfter, isBefore, eachDayOfInterval } from 'date-fns';
 import { Loader } from 'lucide-react';
 
 type Account = {
@@ -17,6 +17,17 @@ type Account = {
     currency: string;
     userId: string;
 };
+
+// Helper to generate shades for colors
+const generateShades = (color: string, count: number) => {
+    const [h, s, l] = color.match(/\d+/g)!.map(Number);
+    const shades = [];
+    for (let i = 0; i < count; i++) {
+        const newL = Math.max(10, l - i * 10);
+        shades.push(`hsl(${h}, ${s}%, ${newL}%)`);
+    }
+    return shades;
+}
 
 export function YearlyProjectionChart() {
     const { user, isUserLoading } = useUser();
@@ -34,13 +45,14 @@ export function YearlyProjectionChart() {
     }, [firestore, user?.uid]);
     const { data: projections, isLoading: areProjectionsLoading } = useCollection<Projection>(projectionsQuery);
 
-    const projectionData = useMemo(() => {
-        if (!accounts || !projections) return [];
+    const { data, currencies } = useMemo(() => {
+        if (!accounts || !projections) return { data: [], currencies: [] };
 
-        const startingBalance = accounts.reduce((acc, account) => acc + account.balance, 0);
+        const allCurrencies = [...new Set(projections.map(p => p.currency))];
+        const incomeColors = generateShades('216 70% 50%', allCurrencies.length);
+        const expenseColors = generateShades('0 84% 60%', allCurrencies.length);
 
-        const data = [];
-        let currentBalance = startingBalance;
+        const chartData = [];
 
         for (let i = 0; i < 12; i++) {
             const date = addMonths(new Date(), i);
@@ -48,20 +60,24 @@ export function YearlyProjectionChart() {
             const monthEnd = endOfMonth(date);
             const monthName = format(date, 'MMM');
             
-            let monthIncome = 0;
-            let monthExpense = 0;
+            const monthTotals: { [key: string]: number } = { name: monthName as any };
+
+            allCurrencies.forEach(currency => {
+                monthTotals[`income-${currency}`] = 0;
+                monthTotals[`expense-${currency}`] = 0;
+            });
 
             projections.forEach(proj => {
                 const projStartDate = new Date(proj.date);
                 const projEndDate = proj.endsOn ? new Date(proj.endsOn) : null;
                 
+                let occurrences = 0;
+
                 if (proj.isRecurring) {
-                    let occurrences = 0;
                     const interval = { start: monthStart, end: monthEnd };
 
-                    // Skip if projection starts after the month ends or ends before the month starts
                     if (isAfter(projStartDate, monthEnd) || (projEndDate && isBefore(projEndDate, monthStart))) {
-                        // no-op
+                        // Skips projections not in the current month
                     } else {
                         switch(proj.recurrence) {
                             case 'Daily':
@@ -91,22 +107,48 @@ export function YearlyProjectionChart() {
                         }
                     }
 
-                    if (proj.type === 'Income') monthIncome += proj.amount * occurrences;
-                    else monthExpense += proj.amount * occurrences;
-                    
                 } else { // One-time projection
                     if (isWithinInterval(projStartDate, { start: monthStart, end: monthEnd })) {
-                        if (proj.type === 'Income') monthIncome += proj.amount;
-                        else monthExpense += proj.amount;
+                       occurrences = 1;
+                    }
+                }
+                
+                if (occurrences > 0) {
+                     if (proj.type === 'Income') {
+                        monthTotals[`income-${proj.currency}`] += proj.amount * occurrences;
+                    } else {
+                        monthTotals[`expense-${proj.currency}`] += proj.amount * occurrences;
                     }
                 }
             });
+            
+            // Add current balance to first month's income
+            if (i === 0) {
+                accounts.forEach(account => {
+                    if (monthTotals[`income-${account.currency}`] !== undefined) {
+                        monthTotals[`income-${account.currency}`] += account.balance;
+                    } else {
+                        // If currency from account wasn't in projections, initialize it.
+                        if (!allCurrencies.includes(account.currency)) {
+                            allCurrencies.push(account.currency);
+                            monthTotals[`income-${account.currency}`] = account.balance;
+                            monthTotals[`expense-${account.currency}`] = 0;
+                        }
+                    }
+                });
+            }
 
-            currentBalance += (monthIncome - monthExpense);
-            data.push({ name: monthName, balance: currentBalance });
+
+            chartData.push(monthTotals);
         }
 
-        return data;
+        const currencyDetails = allCurrencies.map((c, i) => ({
+            currency: c,
+            incomeColor: incomeColors[i] || incomeColors[0],
+            expenseColor: expenseColors[i] || expenseColors[0],
+        }));
+
+        return { data: chartData, currencies: currencyDetails };
 
     }, [accounts, projections]);
 
@@ -121,15 +163,17 @@ export function YearlyProjectionChart() {
         )
     }
 
+    if (data.length === 0 || currencies.length === 0) {
+         return (
+            <div className="flex h-[350px] items-center justify-center text-muted-foreground">
+                <p>No projection data to display. Add some projections to get started.</p>
+            </div>
+        )
+    }
+
     return (
-        <ResponsiveContainer width="100%" height={350}>
-            <AreaChart data={projectionData}>
-                <defs>
-                    <linearGradient id="colorBalance" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="hsl(var(--chart-1))" stopOpacity={0.8}/>
-                        <stop offset="95%" stopColor="hsl(var(--chart-1))" stopOpacity={0}/>
-                    </linearGradient>
-                </defs>
+        <ResponsiveContainer width="100%" height={400}>
+            <AreaChart data={data}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                 <XAxis 
                     dataKey="name" 
@@ -151,9 +195,45 @@ export function YearlyProjectionChart() {
                         border: '1px solid hsl(var(--border))',
                         borderRadius: 'var(--radius)'
                     }}
-                    formatter={(value: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value)}
+                    formatter={(value: number, name: string) => {
+                        const currency = name.split('-')[1];
+                        return [new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(value), name.split('-')[0]];
+                    }}
+                    cursor={{ fill: 'hsl(var(--muted))' }}
                 />
-                <Area type="monotone" dataKey="balance" stroke="hsl(var(--chart-1))" fill="url(#colorBalance)" />
+                <Legend />
+                {currencies.map(({ currency, incomeColor, expenseColor }) => (
+                    <defs key={`defs-${currency}`}>
+                        <linearGradient id={`colorIncome-${currency}`} x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor={incomeColor} stopOpacity={0.8}/>
+                            <stop offset="95%" stopColor={incomeColor} stopOpacity={0}/>
+                        </linearGradient>
+                        <linearGradient id={`colorExpense-${currency}`} x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor={expenseColor} stopOpacity={0.8}/>
+                            <stop offset="95%" stopColor={expenseColor} stopOpacity={0}/>
+                        </linearGradient>
+                    </defs>
+                ))}
+                 {currencies.map(({ currency, incomeColor }) => (
+                     <Area 
+                        key={`income-${currency}`}
+                        type="monotone" 
+                        dataKey={`income-${currency}`}
+                        name={`Income (${currency})`}
+                        stroke={incomeColor} 
+                        fill={`url(#colorIncome-${currency})`}
+                    />
+                 ))}
+                {currencies.map(({ currency, expenseColor }) => (
+                     <Area 
+                        key={`expense-${currency}`}
+                        type="monotone" 
+                        dataKey={`expense-${currency}`}
+                        name={`Expense (${currency})`}
+                        stroke={expenseColor} 
+                        fill={`url(#colorExpense-${currency})`}
+                    />
+                ))}
             </AreaChart>
         </ResponsiveContainer>
     );
