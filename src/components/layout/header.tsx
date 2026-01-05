@@ -50,7 +50,7 @@ export function Header() {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <Link href="/settings">
+          <Link href="/settings/appearance">
             <DropdownMenuItem>Settings</DropdownMenuItem>
           </Link>
           <DropdownMenuItem>Support</DropdownMenuItem>

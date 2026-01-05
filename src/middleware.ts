@@ -10,10 +10,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Redirect to /auth if the cookie is not set and the user is trying to access other pages
+  // Redirect to /onboarding if the cookie is not set and the user is trying to access other pages
   if (!activeAccountCookie) {
     const url = request.nextUrl.clone();
-    url.pathname = '/auth';
+    url.pathname = '/onboarding';
     return NextResponse.redirect(url);
   }
 
