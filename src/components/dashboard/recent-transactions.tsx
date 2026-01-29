@@ -86,7 +86,7 @@ export function RecentTransactions() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {paginatedTransactions.length > 0 ? paginatedTransactions.map((transaction) => (
+          {paginatedTransactions && paginatedTransactions.length > 0 ? paginatedTransactions.map((transaction) => (
             <TableRow key={transaction.id}>
               <TableCell>
                 <div className="flex items-center gap-3">
