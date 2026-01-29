@@ -1,11 +1,12 @@
+
 'use client';
 
 import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { AppShell } from '@/components/layout/app-shell';
-import { transactions, transactionLines, type TransactionLine, type TransactionLineCategory } from '@/lib/mock-data';
+import { type Transaction, type TransactionLine, type TransactionLineCategory } from '@/lib/mock-data';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Paperclip, PlusCircle, Printer } from 'lucide-react';
+import { ArrowLeft, Paperclip, PlusCircle, Printer, Loader } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -17,6 +18,9 @@ import { Combobox } from '@/components/ui/combobox';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useToast } from '@/hooks/use-toast';
 import { Card } from '@/components/ui/card';
+import { useUser, useFirestore, useDoc, useCollection, useMemoFirebase } from '@/firebase';
+import { doc, collection, addDoc } from 'firebase/firestore';
+
 
 const lineItemCategories: {value: TransactionLineCategory, label: string}[] = [
     {value: 'vat_paid', label: 'VAT Paid'},
@@ -45,17 +49,18 @@ function DetailItem({ label, value, className }: { label: string; value?: React.
 
 function AddLineItemForm({ transactionId, currency, onAddLine }: { transactionId: string, currency: string, onAddLine: (line: TransactionLine) => void }) {
     const { toast } = useToast();
+    const firestore = useFirestore();
     const [lineTitle, setLineTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [attachment, setAttachment] = useState<File | null>(null);
     const [category, setCategory] = useState<TransactionLineCategory | ''>('');
     const [account, setAccount] = useState('');
     const [debit, setDebit] = useState<number | ''>('');
     const [credit, setCredit] = useState<number | ''>('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!lineTitle || !category || !account || (debit === '' && credit === '')) {
+        if (!lineTitle || !category || !account || (debit === '' && credit === '') || !firestore) {
             toast({
                 variant: 'destructive',
                 title: 'Missing Fields',
@@ -64,35 +69,48 @@ function AddLineItemForm({ transactionId, currency, onAddLine }: { transactionId
             return;
         }
 
-        const newLine: TransactionLine = {
-            id: `line${Date.now()}`,
-            transaction_id: transactionId,
-            line_title: lineTitle,
-            description,
-            attachment: attachment || undefined,
-            category: category as TransactionLineCategory,
-            account,
-            debit: typeof debit === 'number' ? debit : 0,
-            credit: typeof credit === 'number' ? credit : 0,
-            currency
-        };
+        setIsSubmitting(true);
 
-        console.log('New Line Item:', newLine);
-        onAddLine(newLine);
-        
-        // Reset form
-        setLineTitle('');
-        setDescription('');
-        setAttachment(null);
-        setCategory('');
-        setAccount('');
-        setDebit('');
-        setCredit('');
+        try {
+            const newLine: Omit<TransactionLine, 'id'> = {
+                transaction_id: transactionId,
+                line_title: lineTitle,
+                description,
+                category: category as TransactionLineCategory,
+                account,
+                debit: typeof debit === 'number' ? debit : 0,
+                credit: typeof credit === 'number' ? credit : 0,
+                currency
+            };
+    
+            const linesCollection = collection(firestore, 'transactions', transactionId, 'lines');
+            const docRef = await addDoc(linesCollection, newLine);
+            
+            onAddLine({ ...newLine, id: docRef.id });
+            
+            // Reset form
+            setLineTitle('');
+            setDescription('');
+            setCategory('');
+            setAccount('');
+            setDebit('');
+            setCredit('');
 
-        toast({
-            title: 'Line Item Added',
-            description: `${lineTitle} has been added to the transaction.`
-        })
+            toast({
+                title: 'Line Item Added',
+                description: `${lineTitle} has been added to the transaction.`
+            })
+
+        } catch (error) {
+            console.error("Error adding line item:", error);
+             toast({
+                variant: 'destructive',
+                title: 'Error',
+                description: 'Could not add line item. Please try again.'
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
     }
     
     return (
@@ -127,14 +145,13 @@ function AddLineItemForm({ transactionId, currency, onAddLine }: { transactionId
                     <Label htmlFor="line_account">Account</Label>
                     <Combobox options={accounts} value={account} onChange={setAccount} placeholder="Select account..." />
                 </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="line_attachment">Attachment (Optional)</Label>
-                    <Input id="line_attachment" type="file" onChange={e => setAttachment(e.target.files ? e.target.files[0] : null)} />
-                </div>
             </div>
 
             <div className="flex justify-start">
-                <Button type="submit">Add Line</Button>
+                <Button type="submit" disabled={isSubmitting}>
+                    {isSubmitting ? <Loader className="mr-2 h-4 w-4 animate-spin"/> : null }
+                    Add Line
+                </Button>
             </div>
         </form>
     );
@@ -144,14 +161,25 @@ function AddLineItemForm({ transactionId, currency, onAddLine }: { transactionId
 export default function TransactionDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const { id } = params;
+  const id = params.id as string;
+  const firestore = useFirestore();
 
-  const transaction = transactions.find((t) => t.id === id);
-  const [lines, setLines] = useState<TransactionLine[]>(transactionLines.filter(l => l.transaction_id === id));
+  const transactionRef = useMemoFirebase(() => {
+    if (!firestore || !id) return null;
+    return doc(firestore, 'transactions', id);
+  }, [firestore, id]);
+  const { data: transaction, isLoading: isTransactionLoading } = useDoc<Transaction>(transactionRef);
+  
+  const linesRef = useMemoFirebase(() => {
+    if (!firestore || !id) return null;
+    return collection(firestore, 'transactions', id, 'lines');
+  }, [firestore, id]);
+  const { data: lines, isLoading: areLinesLoading } = useCollection<TransactionLine>(linesRef);
+
   const [showAddLineForm, setShowAddLineForm] = useState(false);
 
-  const handleAddLine = (line: TransactionLine) => {
-      setLines(prev => [...prev, line]);
+  const handleAddLine = () => {
+      // The useCollection hook will update automatically
       setShowAddLineForm(false);
   }
 
@@ -164,7 +192,19 @@ export default function TransactionDetailPage() {
     return new Date(dateString).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   }
 
-  const isCredit = (type: string) => ['sale', 'refund', 'income'].includes(type)
+  const isCredit = (type: string) => ['sale', 'refund', 'income'].includes(type);
+  
+  const isLoading = isTransactionLoading || areLinesLoading;
+
+  if (isLoading) {
+      return (
+          <AppShell>
+              <div className="flex justify-center items-center h-full">
+                  <Loader className="h-8 w-8 animate-spin" />
+              </div>
+          </AppShell>
+      )
+  }
 
   if (!transaction) {
     return (
@@ -239,7 +279,7 @@ export default function TransactionDetailPage() {
                             value={
                                 <Link href={typeof transaction.reference_document === 'string' ? transaction.reference_document : '#'} target="_blank" className="flex items-center gap-2 text-primary hover:underline">
                                     <Paperclip className="h-4 w-4" />
-                                    <span>{typeof transaction.reference_document === 'string' ? transaction.reference_document.split('/').pop() : transaction.reference_document.name}</span>
+                                    <span>Attachment</span>
                                 </Link>
                             }
                         />
@@ -269,7 +309,7 @@ export default function TransactionDetailPage() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {lines.length > 0 ? lines.map(line => (
+                                {lines && lines.length > 0 ? lines.map(line => (
                                     <TableRow key={line.id}>
                                         <TableCell className="font-medium">{line.line_title}</TableCell>
                                         <TableCell className="capitalize">{line.category.replace('_', ' ')}</TableCell>

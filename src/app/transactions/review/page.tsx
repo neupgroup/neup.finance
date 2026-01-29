@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo, useEffect, Suspense } from 'react';
@@ -7,11 +8,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Combobox } from '@/components/ui/combobox';
-import { transactions, type Transaction, type TransactionCategory, type TransactionStatus, type TransactionType } from '@/lib/mock-data';
+import { type Transaction, type TransactionCategory, type TransactionStatus, type TransactionType } from '@/lib/mock-data';
 import { useToast } from '@/hooks/use-toast';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { ArrowLeft, Loader } from 'lucide-react';
+import { useUser, useFirestore } from '@/firebase';
+import { collection, addDoc } from 'firebase/firestore';
 
 const accounts = [
   { value: 'Checking Account', label: 'Checking Account' },
@@ -62,6 +65,8 @@ function ReviewTransactionForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { toast } = useToast();
+    const { user } = useUser();
+    const firestore = useFirestore();
 
     const [hydrated, setHydrated] = useState(false);
     
@@ -78,6 +83,7 @@ function ReviewTransactionForm() {
     const [recipient, setRecipient] = useState('');
     const [amountPaid, setAmountPaid] = useState<number | ''>('');
     const [dueOn, setDueOn] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
     
     useEffect(() => {
         const transactionData = searchParams.get('data');
@@ -131,9 +137,9 @@ function ReviewTransactionForm() {
         return total - paid;
     }, [totalAmount, amountPaid, status]);
 
-    const handleCommitTransaction = (e: React.FormEvent) => {
+    const handleCommitTransaction = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!title || !date || !transactionType || !category || !currency || totalAmount === '' || !status) {
+        if (!title || !date || !transactionType || !category || !currency || totalAmount === '' || !status || !user || !firestore) {
             toast({
                 variant: "destructive",
                 title: "Missing Fields",
@@ -142,40 +148,51 @@ function ReviewTransactionForm() {
             return;
         }
         
+        setIsSubmitting(true);
         let finalAmountPaid = 0;
-        if (status === 'paid') {
+        if (status === 'paid' && totalAmount) {
             finalAmountPaid = totalAmount;
         } else if (status === 'partially_paid') {
             finalAmountPaid = typeof amountPaid === 'number' ? amountPaid : 0;
         }
 
-        const newTransaction: Transaction = {
-            id: (transactions.length + 1).toString(),
-            title,
-            description,
-            accountId: accountId,
-            category: category as TransactionCategory,
-            transaction_type: transactionType as TransactionType,
-            total_amount: totalAmount,
-            total_paid: finalAmountPaid,
-            balance_due: totalAmount - finalAmountPaid,
-            status: status as TransactionStatus,
-            date,
-            currency,
-            recipient,
-            due_on: dueOn || undefined,
-            created_at: new Date().toISOString(),
-        };
-        
-        console.log('Committing New Transaction:', newTransaction);
-        transactions.push(newTransaction);
-        
-        toast({
-            title: "Transaction Committed",
-            description: `A new transaction for ${currency} ${totalAmount} has been successfully created.`,
-        });
+        try {
+            const newTransaction: Transaction = {
+                title,
+                description,
+                accountId: accountId,
+                category: category as TransactionCategory,
+                transaction_type: transactionType as TransactionType,
+                total_amount: totalAmount as number,
+                total_paid: finalAmountPaid,
+                balance_due: (totalAmount as number) - finalAmountPaid,
+                status: status as TransactionStatus,
+                date,
+                currency,
+                recipient,
+                due_on: dueOn || undefined,
+                created_at: new Date().toISOString(),
+                userId: user.uid,
+            };
+            
+            const docRef = await addDoc(collection(firestore, 'transactions'), newTransaction);
+            
+            toast({
+                title: "Transaction Committed",
+                description: `A new transaction for ${currency} ${totalAmount} has been successfully created.`,
+            });
 
-        router.push(`/transactions/${newTransaction.id}`);
+            router.push(`/transactions/${docRef.id}`);
+        } catch (error) {
+            console.error("Error committing transaction: ", error);
+            toast({
+                variant: "destructive",
+                title: "Error",
+                description: "Could not save the transaction. Please try again.",
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     if (!hydrated) {
@@ -283,7 +300,10 @@ function ReviewTransactionForm() {
             )}
 
             <div className="flex justify-start gap-2 mt-4">
-                <Button type="submit">Commit Transaction</Button>
+                <Button type="submit" disabled={isSubmitting}>
+                    {isSubmitting ? <Loader className="mr-2 h-4 w-4 animate-spin"/> : null}
+                    Commit Transaction
+                </Button>
                 <Button type="button" variant="outline" onClick={() => router.push('/')}>Cancel</Button>
             </div>
         </form>

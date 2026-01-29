@@ -1,3 +1,4 @@
+
 'use client';
 
 import React from 'react';
@@ -10,29 +11,51 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { transactions, type Transaction } from '@/lib/mock-data';
-import { ArrowDownLeft, ArrowUpRight } from 'lucide-react';
+import { type Transaction } from '@/lib/mock-data';
+import { ArrowDownLeft, ArrowUpRight, Loader } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationLink } from '@/components/ui/pagination';
+import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { collection, query, where, orderBy, limit } from 'firebase/firestore';
+
 
 const ITEMS_PER_PAGE = 10;
 
 export function RecentTransactions() {
   const pathname = usePathname();
   const isDashboard = pathname === '/';
-  const allTransactions = React.useMemo(() => transactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()), []);
+  
+  const { user } = useUser();
+  const firestore = useFirestore();
 
+  const transactionsQuery = useMemoFirebase(() => {
+    if (!firestore || !user?.uid) return null;
+    
+    const baseQuery = [
+        collection(firestore, 'transactions'),
+        where('userId', '==', user.uid),
+        orderBy('date', 'desc')
+    ];
+
+    if (isDashboard) {
+        baseQuery.push(limit(5));
+    }
+
+    return query.apply(null, baseQuery as any);
+
+  }, [firestore, user?.uid, isDashboard]);
+
+  const { data: transactions, isLoading } = useCollection<Transaction>(transactionsQuery);
+  
   const [currentPage, setCurrentPage] = React.useState(1);
 
-  const displayTransactions = isDashboard ? allTransactions.slice(0, 5) : allTransactions;
-  
-  const totalPages = Math.ceil(displayTransactions.length / ITEMS_PER_PAGE);
-  const paginatedTransactions = displayTransactions.slice(
+  const totalPages = Math.ceil((transactions?.length || 0) / ITEMS_PER_PAGE);
+  const paginatedTransactions = isDashboard ? transactions : transactions?.slice(
       (currentPage - 1) * ITEMS_PER_PAGE,
       currentPage * ITEMS_PER_PAGE
-  );
+  ) || [];
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -41,6 +64,14 @@ export function RecentTransactions() {
   };
 
   const isCredit = (type: Transaction['transaction_type']) => ['sale', 'refund', 'income'].includes(type)
+
+  if (isLoading) {
+      return (
+          <div className="flex items-center justify-center py-12">
+              <Loader className="h-6 w-6 animate-spin" />
+          </div>
+      )
+  }
 
   return (
     <div className="space-y-4">
@@ -55,7 +86,7 @@ export function RecentTransactions() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {paginatedTransactions.map((transaction) => (
+          {paginatedTransactions.length > 0 ? paginatedTransactions.map((transaction) => (
             <TableRow key={transaction.id}>
               <TableCell>
                 <div className="flex items-center gap-3">
@@ -89,7 +120,11 @@ export function RecentTransactions() {
                 {new Intl.NumberFormat('en-US', { style: 'currency', currency: transaction.currency }).format(transaction.total_amount)}
               </TableCell>
             </TableRow>
-          ))}
+          )) : (
+            <TableRow>
+              <TableCell colSpan={5} className="text-center h-24">No transactions found.</TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
       {!isDashboard && totalPages > 1 && (

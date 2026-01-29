@@ -1,11 +1,12 @@
+
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { transactions, transactionLines, type Transaction } from '@/lib/mock-data';
-import { useUser, useDoc, useFirestore, useMemoFirebase } from '@/firebase';
-import { doc } from 'firebase/firestore';
+import { type Transaction, type TransactionLine } from '@/lib/mock-data';
+import { useUser, useDoc, useFirestore, useMemoFirebase, useCollection } from '@/firebase';
+import { doc, collection } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Printer } from 'lucide-react';
+import { ArrowLeft, Printer, Loader } from 'lucide-react';
 import { Logo } from '@/components/icons';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFooter } from '@/components/ui/table';
@@ -21,25 +22,42 @@ type UserProfile = {
 const InvoicePage = () => {
     const params = useParams();
     const router = useRouter();
-    const { id } = params;
+    const id = params.id as string;
 
     const { user } = useUser();
     const firestore = useFirestore();
 
-    // The user profile data is needed for the "From" section of the invoice
     const userProfileRef = useMemoFirebase(() => {
         if (!firestore || !user?.uid) return null;
         return doc(firestore, 'users', user.uid);
     }, [firestore, user?.uid]);
     const { data: userProfile } = useDoc<UserProfile>(userProfileRef);
 
-    // Mock data for now, will need to be replaced with Firestore data later
-    const transaction = transactions.find((t) => t.id === id);
-    const lines = transactionLines.filter(l => l.transaction_id === id);
+    const transactionRef = useMemoFirebase(() => {
+        if (!firestore || !id) return null;
+        return doc(firestore, 'transactions', id);
+    }, [firestore, id]);
+    const { data: transaction, isLoading: isTransactionLoading } = useDoc<Transaction>(transactionRef);
+    
+    const linesRef = useMemoFirebase(() => {
+        if (!firestore || !id) return null;
+        return collection(firestore, 'transactions', id, 'lines');
+    }, [firestore, id]);
+    const { data: lines, isLoading: areLinesLoading } = useCollection<TransactionLine>(linesRef);
 
     const handlePrint = () => {
         window.print();
     };
+    
+    const isLoading = isTransactionLoading || areLinesLoading;
+
+    if (isLoading) {
+        return (
+            <div className="flex min-h-screen items-center justify-center bg-background p-4">
+                <Loader className="h-8 w-8 animate-spin" />
+            </div>
+        )
+    }
 
     if (!transaction) {
         return (
@@ -57,8 +75,7 @@ const InvoicePage = () => {
     }
     
     const isCredit = (type: string) => ['sale', 'refund', 'income'].includes(type)
-    const subtotal = lines.reduce((acc, line) => acc + (isCredit(transaction.transaction_type) ? line.credit : line.debit), 0);
-    // Assuming total_amount includes tax if any. For simplicity, showing subtotal and total.
+    const subtotal = lines ? lines.reduce((acc, line) => acc + (isCredit(transaction.transaction_type) ? line.credit : line.debit), 0) : transaction.total_amount;
     const taxAmount = transaction.total_amount - subtotal;
 
 
@@ -119,7 +136,7 @@ const InvoicePage = () => {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {lines.map(line => (
+                                {lines && lines.map(line => (
                                     <TableRow key={line.id}>
                                         <TableCell>
                                             <p className="font-medium">{line.line_title}</p>
@@ -128,7 +145,7 @@ const InvoicePage = () => {
                                         <TableCell className="text-right">{new Intl.NumberFormat('en-US', { style: 'currency', currency: line.currency }).format(isCredit(transaction.transaction_type) ? line.credit : line.debit)}</TableCell>
                                     </TableRow>
                                 ))}
-                                {lines.length === 0 && (
+                                {(!lines || lines.length === 0) && (
                                      <TableRow>
                                         <TableCell>
                                             <p className="font-medium">{transaction.title}</p>

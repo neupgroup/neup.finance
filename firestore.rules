@@ -1,3 +1,4 @@
+
 rules_version = '2';
 
 service cloud.firestore {
@@ -39,6 +40,16 @@ service cloud.firestore {
       allow update: if isSignedIn() && resource.data.userId == request.auth.uid;
       // Deleting projections is not allowed to maintain history.
       allow delete: if false;
+    }
+
+    // Rules for transactions
+    match /transactions/{transactionId} {
+      allow read, list, create, update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+      
+      // Rules for transaction lines subcollection
+      match /lines/{lineId} {
+        allow read, list, create, update, delete: if isSignedIn() && get(/databases/$(database)/documents/transactions/$(transactionId)).data.userId == request.auth.uid;
+      }
     }
   }
 }

@@ -37,9 +37,9 @@ export const TransactionCategory = {
 export type TransactionCategory = typeof TransactionCategory[keyof typeof TransactionCategory];
 
 export type Transaction = {
-  id: string;
+  id?: string;
   title: string;
-  description?: string; // Optional
+  description?: string;
   accountId: string;
   category: TransactionCategory;
   transaction_type: TransactionType;
@@ -49,16 +49,17 @@ export type Transaction = {
   status: TransactionStatus;
   date: string;
   currency: string;
-  recipient?: string; // Optional
-  due_on?: string; // Optional
-  reference_document?: string | File; // Optional
+  recipient?: string;
+  due_on?: string;
+  reference_document?: string | File;
   created_at: string;
+  userId: string;
 };
 
 export type TransactionLineCategory = 'vat_paid' | 'vat_return' | 'sales' | 'referral_paid' | 'payable' | 'receivable';
 
 export type TransactionLine = {
-    id: string;
+    id?: string;
     transaction_id: string;
     line_title: string;
     description?: string;

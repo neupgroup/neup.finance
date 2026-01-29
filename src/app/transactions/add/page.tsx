@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo } from 'react';
@@ -7,9 +8,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Combobox } from '@/components/ui/combobox';
-import { transactions, type Transaction, type TransactionCategory, type TransactionStatus, type TransactionType } from '@/lib/mock-data';
+import { type Transaction, type TransactionCategory, type TransactionStatus, type TransactionType } from '@/lib/mock-data';
 import { useToast } from '@/hooks/use-toast';
 import { Textarea } from '@/components/ui/textarea';
+import { useUser, useFirestore } from '@/firebase';
+import { collection, addDoc } from 'firebase/firestore';
+import { Loader } from 'lucide-react';
 
 const accounts = [
   { value: 'Checking Account', label: 'Checking Account' },
@@ -59,6 +63,9 @@ const currencies = [
 export default function AddTransactionPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const { user } = useUser();
+  const firestore = useFirestore();
+
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [attachment, setAttachment] = useState<File | null>(null);
@@ -72,6 +79,7 @@ export default function AddTransactionPage() {
   const [recipient, setRecipient] = useState('');
   const [amountPaid, setAmountPaid] = useState<number | ''>('');
   const [dueOn, setDueOn] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const balanceDue = useMemo(() => {
     const total = typeof totalAmount === 'number' ? totalAmount : 0;
@@ -88,9 +96,9 @@ export default function AddTransactionPage() {
     return total - paid;
   }, [totalAmount, amountPaid, status]);
 
-  const handleAddTransaction = (e: React.FormEvent) => {
+  const handleAddTransaction = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !date || !transactionType || !category || !currency || totalAmount === '' || !status) {
+    if (!title || !date || !transactionType || !category || !currency || totalAmount === '' || !status || !user || !firestore) {
       toast({
         variant: "destructive",
         title: "Missing Fields",
@@ -107,43 +115,53 @@ export default function AddTransactionPage() {
         return;
     }
     
+    setIsSubmitting(true);
     let finalAmountPaid = 0;
-    if (status === 'paid') {
+    if (status === 'paid' && totalAmount) {
         finalAmountPaid = totalAmount;
     } else if (status === 'partially_paid') {
         finalAmountPaid = typeof amountPaid === 'number' ? amountPaid : 0;
     }
 
-    const newTransaction: Transaction = {
-      id: (transactions.length + 1).toString(),
-      title,
-      description,
-      accountId: accountId,
-      category: category as TransactionCategory,
-      transaction_type: transactionType as TransactionType,
-      total_amount: totalAmount,
-      total_paid: finalAmountPaid,
-      balance_due: totalAmount - finalAmountPaid,
-      status: status as TransactionStatus,
-      date,
-      currency,
-      recipient,
-      due_on: dueOn || undefined,
-      reference_document: attachment || undefined,
-      created_at: new Date().toISOString(),
-    };
-    
-    // In a real app, you'd send this to a server.
-    // For now we just log it, add it to mock data, and show a success toast.
-    console.log('New Transaction:', newTransaction);
-    transactions.unshift(newTransaction);
-    
-    toast({
-      title: "Transaction Added",
-      description: `A new transaction for ${currency} ${totalAmount} has been successfully added.`,
-    });
+    try {
+        const newTransaction: Transaction = {
+            title,
+            description,
+            accountId: accountId,
+            category: category as TransactionCategory,
+            transaction_type: transactionType as TransactionType,
+            total_amount: totalAmount as number,
+            total_paid: finalAmountPaid,
+            balance_due: (totalAmount as number) - finalAmountPaid,
+            status: status as TransactionStatus,
+            date,
+            currency,
+            recipient,
+            due_on: dueOn || undefined,
+            // reference_document: attachment || undefined, // Not storing files yet
+            created_at: new Date().toISOString(),
+            userId: user.uid,
+        };
+        
+        const docRef = await addDoc(collection(firestore, 'transactions'), newTransaction);
+        
+        toast({
+            title: "Transaction Added",
+            description: `A new transaction for ${currency} ${totalAmount} has been successfully added.`,
+        });
 
-    router.push(`/transactions/${newTransaction.id}`);
+        router.push(`/transactions/${docRef.id}`);
+
+    } catch (error) {
+        console.error("Error adding transaction: ", error);
+        toast({
+            variant: "destructive",
+            title: "Error",
+            description: "Could not save the transaction. Please try again.",
+        });
+    } finally {
+        setIsSubmitting(false);
+    }
   };
 
   return (
@@ -167,7 +185,7 @@ export default function AddTransactionPage() {
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="attachment">Attach Document/Image (Optional)</Label>
-                    <Input id="attachment" type="file" onChange={e => setAttachment(e.target.files ? e.target.files[0] : null)} />
+                    <Input id="attachment" type="file" onChange={e => setAttachment(e.target.files ? e.target.files[0] : null)} disabled />
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="date">Date</Label>
@@ -263,7 +281,10 @@ export default function AddTransactionPage() {
                 </div>
 
                 <div className="flex justify-start gap-2 mt-4">
-                    <Button type="submit">Save Transaction</Button>
+                    <Button type="submit" disabled={isSubmitting}>
+                        {isSubmitting ? <Loader className="mr-2 h-4 w-4 animate-spin"/> : null }
+                        Save Transaction
+                    </Button>
                     <Button type="button" variant="outline" onClick={() => router.push('/transactions')}>Cancel</Button>
                 </div>
             </form>

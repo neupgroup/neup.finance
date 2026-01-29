@@ -134,6 +134,52 @@
         "isRecurring",
         "recurrence"
       ]
+    },
+    "Transaction": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Transaction",
+      "type": "object",
+      "description": "Represents a single financial transaction.",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "accountId": { "type": "string" },
+        "category": { "type": "string" },
+        "transaction_type": { "type": "string" },
+        "total_amount": { "type": "number" },
+        "total_paid": { "type": "number" },
+        "balance_due": { "type": "number" },
+        "status": { "type": "string" },
+        "date": { "type": "string", "format": "date-time" },
+        "currency": { "type": "string" },
+        "recipient": { "type": "string" },
+        "due_on": { "type": "string", "format": "date-time" },
+        "created_at": { "type": "string", "format": "date-time" },
+        "userId": { "type": "string" }
+      },
+      "required": [
+        "title", "accountId", "category", "transaction_type", "total_amount",
+        "total_paid", "balance_due", "status", "date", "currency", "created_at", "userId"
+      ]
+    },
+    "TransactionLine": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Transaction Line",
+      "type": "object",
+      "description": "Represents a line item within a transaction for double-entry accounting.",
+      "properties": {
+        "transaction_id": { "type": "string" },
+        "line_title": { "type": "string" },
+        "description": { "type": "string" },
+        "category": { "type": "string" },
+        "account": { "type": "string" },
+        "debit": { "type": "number" },
+        "credit": { "type": "number" },
+        "currency": { "type": "string" }
+      },
+      "required": [
+        "transaction_id", "line_title", "category", "account", "debit", "credit", "currency"
+      ]
     }
   },
   "auth": {
@@ -159,6 +205,18 @@
         "$ref": "#/entities/Projection"
       },
       "description": "Stores all financial projections in a single collection. The 'userId' field links a projection to a user."
+    },
+    "/transactions/{transactionId}": {
+      "schema": {
+        "$ref": "#/entities/Transaction"
+      },
+      "description": "Stores all financial transactions in a single collection."
+    },
+    "/transactions/{transactionId}/lines/{lineId}": {
+      "schema": {
+        "$ref": "#/entities/TransactionLine"
+      },
+      "description": "Stores the line items for a specific transaction."
     }
   }
 }
