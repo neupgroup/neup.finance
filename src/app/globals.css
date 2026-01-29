@@ -83,3 +83,21 @@
     @apply bg-background text-foreground;
   }
 }
+
+@media print {
+  body {
+    background: white;
+  }
+  .print\:hidden {
+    display: none;
+  }
+  .print\:p-0 {
+    padding: 0;
+  }
+  .print\:border-none {
+    border: none;
+  }
+  .print\:shadow-none {
+    box-shadow: none;
+  }
+}

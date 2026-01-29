@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { AppShell } from '@/components/layout/app-shell';
 import { transactions, transactionLines, type TransactionLine, type TransactionLineCategory } from '@/lib/mock-data';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Paperclip, PlusCircle } from 'lucide-react';
+import { ArrowLeft, Paperclip, PlusCircle, Printer } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -16,6 +16,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Combobox } from '@/components/ui/combobox';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useToast } from '@/hooks/use-toast';
+import { Card } from '@/components/ui/card';
 
 const lineItemCategories: {value: TransactionLineCategory, label: string}[] = [
     {value: 'vat_paid', label: 'VAT Paid'},
@@ -68,7 +69,7 @@ function AddLineItemForm({ transactionId, currency, onAddLine }: { transactionId
             transaction_id: transactionId,
             line_title: lineTitle,
             description,
-            attachment,
+            attachment: attachment || undefined,
             category: category as TransactionLineCategory,
             account,
             debit: typeof debit === 'number' ? debit : 0,
@@ -187,10 +188,18 @@ export default function TransactionDetailPage() {
   return (
     <AppShell>
         <div className="mx-auto space-y-6">
-            <Button variant="ghost" onClick={() => router.back()} className="-ml-4">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Back
-            </Button>
+             <div className="flex justify-between items-center">
+                <Button variant="ghost" onClick={() => router.back()} className="-ml-4">
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Back
+                </Button>
+                <Link href={`/transactions/${id}/invoice`}>
+                    <Button variant="outline">
+                        <Printer className="mr-2 h-4 w-4" />
+                        View Invoice
+                    </Button>
+                </Link>
+            </div>
             
             <div className="space-y-6">
                 <div>
