@@ -11,8 +11,8 @@ import { Combobox } from '@/components/ui/combobox';
 import { type Transaction, type TransactionCategory, type TransactionStatus, type TransactionType } from '@/lib/mock-data';
 import { useToast } from '@/hooks/use-toast';
 import { Textarea } from '@/components/ui/textarea';
-import { useUser, useFirestore } from '@/firebase';
-import { collection, addDoc } from 'firebase/firestore';
+import { useUser } from '@/auth/provider';
+import { createTransaction } from '@/hooks/api';
 import { Loader } from 'lucide-react';
 
 const accounts = [
@@ -64,7 +64,6 @@ export default function AddTransactionPage() {
   const router = useRouter();
   const { toast } = useToast();
   const { user } = useUser();
-  const firestore = useFirestore();
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -98,7 +97,7 @@ export default function AddTransactionPage() {
 
   const handleAddTransaction = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !date || !transactionType || !category || !currency || totalAmount === '' || !status || !user || !firestore) {
+    if (!title || !date || !transactionType || !category || !currency || totalAmount === '' || !status || !user) {
       toast({
         variant: "destructive",
         title: "Missing Fields",
@@ -124,7 +123,7 @@ export default function AddTransactionPage() {
     }
 
     try {
-        const newTransaction: Transaction = {
+        const newTransaction: Omit<Transaction, 'id' | 'created_at'> = {
             title,
             description,
             accountId: accountId,
@@ -139,18 +138,16 @@ export default function AddTransactionPage() {
             recipient,
             due_on: dueOn || undefined,
             // reference_document: attachment || undefined, // Not storing files yet
-            created_at: new Date().toISOString(),
             userId: user.uid,
         };
-        
-        const docRef = await addDoc(collection(firestore, 'transactions'), newTransaction);
+        const saved = await createTransaction(newTransaction);
         
         toast({
             title: "Transaction Added",
             description: `A new transaction for ${currency} ${totalAmount} has been successfully added.`,
         });
 
-        router.push(`/transactions/${docRef.id}`);
+        router.push(`/transactions/${saved.id}`);
 
     } catch (error) {
         console.error("Error adding transaction: ", error);

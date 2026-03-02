@@ -15,8 +15,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Logo } from '@/components/icons';
 import { ArrowRight, Loader } from 'lucide-react';
-import { useUser, useFirestore } from '@/firebase';
-import { doc, setDoc } from 'firebase/firestore';
+import { useUser } from '@/auth/provider';
+import { upsertUserProfile } from '@/hooks/api';
 import { useToast } from '@/hooks/use-toast';
 
 // A simple utility to set a cookie
@@ -36,12 +36,11 @@ export default function AuthPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { user } = useUser();
-  const firestore = useFirestore();
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!displayName.trim() || !accountId.trim() || !user || !firestore) {
+    if (!displayName.trim() || !accountId.trim() || !user) {
         toast({
             variant: "destructive",
             title: "Error",
@@ -53,14 +52,11 @@ export default function AuthPage() {
     setIsLoading(true);
 
     try {
-        const userProfileRef = doc(firestore, 'users', user.uid);
-
-        await setDoc(userProfileRef, {
-            uid: user.uid,
-            displayName: displayName.trim(),
-            accountId: accountId.trim(),
-            email: user.email // if available
-        }, { merge: true });
+        await upsertUserProfile(user.uid, {
+          displayName: displayName.trim(),
+          accountId: accountId.trim(),
+          email: user.email ?? undefined
+        });
 
         // Set the accountId in a cookie to manage session
         setCookie('accountId', accountId.trim(), 7);

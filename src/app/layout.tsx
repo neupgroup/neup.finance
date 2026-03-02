@@ -3,7 +3,7 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
 import { ThemeProvider } from '@/components/theme-provider';
-import { FirebaseClientProvider } from '@/firebase';
+import { AuthProvider } from '@/auth/provider';
 
 export const metadata: Metadata = {
   title: 'Neup.Ledger',
@@ -29,9 +29,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <FirebaseClientProvider>
+          <AuthProvider>
             {children}
-          </FirebaseClientProvider>
+          </AuthProvider>
           <Toaster />
         </ThemeProvider>
       </body>

@@ -13,23 +13,20 @@ import {
 } from '@/components/ui/card';
 import { Logo } from '@/components/icons';
 import { ArrowRight, Loader } from 'lucide-react';
-import { useAuth, useUser } from '@/firebase';
-import { signInAnonymously } from 'firebase/auth';
+import { useUser, useAuthActions } from '@/auth/provider';
 
 export default function OnboardingPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const auth = useAuth();
   const { user, isUserLoading } = useUser();
+  const { signInAnonymous } = useAuthActions();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-        if (!user && auth) {
-            await signInAnonymously(auth);
-        }
+        if (!user) signInAnonymous();
         // After sign-in, the onAuthStateChanged listener in the provider will update the user state,
         // and we can then navigate to the auth page to complete the profile.
         router.push('/auth');

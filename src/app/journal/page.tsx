@@ -40,8 +40,8 @@ export default function JournalPage() {
             if (entry.lines.length === 0 && entry.transaction.accountId) {
                 const isCredit = ['sale', 'income', 'refund'].includes(entry.transaction.transaction_type);
                 entry.lines.push({
-                    id: `pseudo-${entry.transaction.id}`,
-                    transaction_id: entry.transaction.id,
+                    id: `pseudo-${entry.transaction.id ?? 'unknown'}`,
+                    transaction_id: entry.transaction.id ?? 'unknown',
                     line_title: entry.transaction.title,
                     category: 'sales', // Fallback
                     account: entry.transaction.accountId,

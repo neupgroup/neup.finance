@@ -18,8 +18,7 @@ import { Combobox } from '@/components/ui/combobox';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useToast } from '@/hooks/use-toast';
 import { Card } from '@/components/ui/card';
-import { useUser, useFirestore, useDoc, useCollection, useMemoFirebase } from '@/firebase';
-import { doc, collection, addDoc } from 'firebase/firestore';
+import { addTransactionLine, useTransactionById, useTransactionLines } from '@/hooks/api';
 
 
 const lineItemCategories: {value: TransactionLineCategory, label: string}[] = [
@@ -49,7 +48,6 @@ function DetailItem({ label, value, className }: { label: string; value?: React.
 
 function AddLineItemForm({ transactionId, currency, onAddLine }: { transactionId: string, currency: string, onAddLine: (line: TransactionLine) => void }) {
     const { toast } = useToast();
-    const firestore = useFirestore();
     const [lineTitle, setLineTitle] = useState('');
     const [description, setDescription] = useState('');
     const [category, setCategory] = useState<TransactionLineCategory | ''>('');
@@ -60,7 +58,7 @@ function AddLineItemForm({ transactionId, currency, onAddLine }: { transactionId
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!lineTitle || !category || !account || (debit === '' && credit === '') || !firestore) {
+        if (!lineTitle || !category || !account || (debit === '' && credit === '')) {
             toast({
                 variant: 'destructive',
                 title: 'Missing Fields',
@@ -83,10 +81,8 @@ function AddLineItemForm({ transactionId, currency, onAddLine }: { transactionId
                 currency
             };
     
-            const linesCollection = collection(firestore, 'transactions', transactionId, 'lines');
-            const docRef = await addDoc(linesCollection, newLine);
-            
-            onAddLine({ ...newLine, id: docRef.id });
+            const saved = await addTransactionLine(transactionId, newLine);
+            onAddLine({ ...newLine, id: saved.id });
             
             // Reset form
             setLineTitle('');
@@ -162,19 +158,8 @@ export default function TransactionDetailPage() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
-  const firestore = useFirestore();
-
-  const transactionRef = useMemoFirebase(() => {
-    if (!firestore || !id) return null;
-    return doc(firestore, 'transactions', id);
-  }, [firestore, id]);
-  const { data: transaction, isLoading: isTransactionLoading } = useDoc<Transaction>(transactionRef);
-  
-  const linesRef = useMemoFirebase(() => {
-    if (!firestore || !id) return null;
-    return collection(firestore, 'transactions', id, 'lines');
-  }, [firestore, id]);
-  const { data: lines, isLoading: areLinesLoading } = useCollection<TransactionLine>(linesRef);
+  const { data: transaction, isLoading: isTransactionLoading } = useTransactionById(id);
+  const { data: lines, isLoading: areLinesLoading } = useTransactionLines(id);
 
   const [showAddLineForm, setShowAddLineForm] = useState(false);
 
@@ -296,7 +281,7 @@ export default function TransactionDetailPage() {
                         </Button>
                     </div>
 
-                    {showAddLineForm && <AddLineItemForm transactionId={transaction.id} currency={transaction.currency} onAddLine={handleAddLine} />}
+                    {showAddLineForm && <AddLineItemForm transactionId={id} currency={transaction.currency} onAddLine={handleAddLine} />}
                     
                     <div className="mt-4 border rounded-lg">
                         <Table>

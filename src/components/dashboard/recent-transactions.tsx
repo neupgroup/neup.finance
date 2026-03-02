@@ -17,8 +17,8 @@ import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationLink } from '@/components/ui/pagination';
-import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, query, where, orderBy, limit } from 'firebase/firestore';
+import { useUser } from '@/auth/provider';
+import { useTransactionsList } from '@/hooks/api';
 
 
 const ITEMS_PER_PAGE = 10;
@@ -28,26 +28,7 @@ export function RecentTransactions() {
   const isDashboard = pathname === '/';
   
   const { user } = useUser();
-  const firestore = useFirestore();
-
-  const transactionsQuery = useMemoFirebase(() => {
-    if (!firestore || !user?.uid) return null;
-    
-    const baseQuery = [
-        collection(firestore, 'transactions'),
-        where('userId', '==', user.uid),
-        orderBy('date', 'desc')
-    ];
-
-    if (isDashboard) {
-        baseQuery.push(limit(5));
-    }
-
-    return query.apply(null, baseQuery as any);
-
-  }, [firestore, user?.uid, isDashboard]);
-
-  const { data: transactions, isLoading } = useCollection<Transaction>(transactionsQuery);
+  const { data: transactions, isLoading } = useTransactionsList(user?.uid, isDashboard ? 5 : undefined, [isDashboard]);
   
   const [currentPage, setCurrentPage] = React.useState(1);
 

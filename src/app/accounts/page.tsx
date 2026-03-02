@@ -24,18 +24,11 @@ import {
 import { PlusCircle, Landmark, Wallet, Activity, MoreVertical, Loader } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationLink } from '@/components/ui/pagination';
-import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, addDoc } from 'firebase/firestore';
+import { useUser } from '@/auth/provider';
+import { useUserAccounts, createAccount, type Account } from '@/hooks/api';
 import { useToast } from '@/hooks/use-toast';
 
-type Account = {
-    id?: string;
-    name: string;
-    type: 'Bank' | 'Cash' | 'Investment' | 'Other';
-    balance: number;
-    currency: string;
-    userId: string;
-};
+type AccountType = Account['type'];
 
 const accountTypeIcons = {
   Bank: <Landmark className="h-5 w-5 text-muted-foreground" />,
@@ -48,18 +41,12 @@ const ITEMS_PER_PAGE = 10;
 
 export default function AccountsPage() {
   const { user, isUserLoading } = useUser();
-  const firestore = useFirestore();
   const { toast } = useToast();
 
-  const accountsCollection = useMemoFirebase(() => {
-    if (!firestore || !user?.uid) return null;
-    return collection(firestore, 'users', user.uid, 'accounts');
-  }, [firestore, user?.uid]);
-
-  const { data: accounts, isLoading: areAccountsLoading } = useCollection<Account>(accountsCollection);
+  const { data: accounts, isLoading: areAccountsLoading } = useUserAccounts(user?.uid);
 
   const [accountName, setAccountName] = useState('');
-  const [accountType, setAccountType] = useState<'Bank' | 'Cash' | 'Investment' | 'Other' | ''>('');
+  const [accountType, setAccountType] = useState<AccountType | ''>('');
   const [currency, setCurrency] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -79,22 +66,16 @@ export default function AccountsPage() {
 
   const handleAddAccount = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!accountName || !accountType || !currency || !user || !firestore) return;
+    if (!accountName || !accountType || !currency || !user) return;
     
     setIsSubmitting(true);
 
     try {
-      const newAccount: Account = {
+      await createAccount(user.uid, {
         name: accountName,
-        type: accountType as 'Bank' | 'Cash' | 'Investment' | 'Other',
-        balance: 0,
-        currency: currency,
-        userId: user.uid,
-      };
-
-      if (!accountsCollection) throw new Error("Accounts collection not available");
-
-      await addDoc(accountsCollection, newAccount);
+        type: accountType as AccountType,
+        currency
+      });
       
       toast({
         title: "Account Created",

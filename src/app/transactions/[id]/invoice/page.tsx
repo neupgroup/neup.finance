@@ -3,8 +3,8 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { type Transaction, type TransactionLine } from '@/lib/mock-data';
-import { useUser, useDoc, useFirestore, useMemoFirebase, useCollection } from '@/firebase';
-import { doc, collection } from 'firebase/firestore';
+import { useUser } from '@/auth/provider';
+import { useUserProfile, useTransactionById, useTransactionLines } from '@/hooks/api';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Printer, Loader } from 'lucide-react';
 import { Logo } from '@/components/icons';
@@ -25,25 +25,12 @@ const InvoicePage = () => {
     const id = params.id as string;
 
     const { user } = useUser();
-    const firestore = useFirestore();
 
-    const userProfileRef = useMemoFirebase(() => {
-        if (!firestore || !user?.uid) return null;
-        return doc(firestore, 'users', user.uid);
-    }, [firestore, user?.uid]);
-    const { data: userProfile } = useDoc<UserProfile>(userProfileRef);
+    const { data: userProfile } = useUserProfile(user?.uid);
 
-    const transactionRef = useMemoFirebase(() => {
-        if (!firestore || !id) return null;
-        return doc(firestore, 'transactions', id);
-    }, [firestore, id]);
-    const { data: transaction, isLoading: isTransactionLoading } = useDoc<Transaction>(transactionRef);
+    const { data: transaction, isLoading: isTransactionLoading } = useTransactionById(id);
     
-    const linesRef = useMemoFirebase(() => {
-        if (!firestore || !id) return null;
-        return collection(firestore, 'transactions', id, 'lines');
-    }, [firestore, id]);
-    const { data: lines, isLoading: areLinesLoading } = useCollection<TransactionLine>(linesRef);
+    const { data: lines, isLoading: areLinesLoading } = useTransactionLines(id);
 
     const handlePrint = () => {
         window.print();

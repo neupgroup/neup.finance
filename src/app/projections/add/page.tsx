@@ -9,9 +9,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Combobox } from '@/components/ui/combobox';
 import { useToast } from '@/hooks/use-toast';
-import { type Projection, type ProjectionType, type ProjectionCertainty, ProjectionStatus } from '@/lib/mock-data';
-import { useUser, useFirestore, useMemoFirebase } from '@/firebase';
-import { addDoc, collection } from 'firebase/firestore';
+import { type Projection, type ProjectionType, type ProjectionCertainty, type ProjectionRecurrence } from '@/lib/mock-data';
+import { useUser } from '@/auth/provider';
+import { createProjection } from '@/hooks/api';
 import { Loader } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 
@@ -48,7 +48,6 @@ export default function AddProjectionPage() {
   const router = useRouter();
   const { toast } = useToast();
   const { user } = useUser();
-  const firestore = useFirestore();
 
   const [title, setTitle] = useState('');
   const [date, setDate] = useState('');
@@ -59,18 +58,12 @@ export default function AddProjectionPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [recipient, setRecipient] = useState('');
   const [isRecurring, setIsRecurring] = useState(false);
-  const [recurrence, setRecurrence] = useState('Once');
+  const [recurrence, setRecurrence] = useState<ProjectionRecurrence>('Once');
   const [endsOn, setEndsOn] = useState('');
-
-  const projectionsCollection = useMemoFirebase(() => {
-    if (!firestore) return null;
-    return collection(firestore, 'projections');
-  }, [firestore]);
-
 
   const handleAddProjection = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !date || !type || !certainty || !currency || amount === '' || !user || !projectionsCollection) {
+    if (!title || !date || !type || !certainty || !currency || amount === '' || !user) {
       toast({
         variant: "destructive",
         title: "Missing Fields",
@@ -82,7 +75,7 @@ export default function AddProjectionPage() {
     setIsSubmitting(true);
 
     try {
-        const newProjection: Projection = {
+        const newProjection: Omit<Projection, 'id'> = {
             title,
             type: type as ProjectionType,
             certainty: certainty as ProjectionCertainty,
@@ -97,7 +90,7 @@ export default function AddProjectionPage() {
             endsOn: isRecurring ? endsOn : '',
         };
         
-        await addDoc(projectionsCollection, newProjection);
+        await createProjection(newProjection);
         
         toast({
             title: "Projection Added",
@@ -166,7 +159,7 @@ export default function AddProjectionPage() {
                         <Combobox
                             options={recurrenceTypes}
                             value={recurrence}
-                            onChange={v => setRecurrence(v)}
+                            onChange={v => setRecurrence(v as ProjectionRecurrence)}
                             placeholder="Select recurrence"
                         />
                     </div>

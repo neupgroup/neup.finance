@@ -23,20 +23,19 @@ import {
   DropdownMenuPortal,
   DropdownMenuSubContent
 } from '@/components/ui/dropdown-menu';
-import { useAuth, useUser } from '@/firebase';
+import { useUser, useAuthActions } from '@/auth/provider';
 import Link from 'next/link';
-import { signOut } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 
 export function Header() {
   const { setTheme } = useTheme();
-  const auth = useAuth();
   const { user } = useUser();
+  const { signOut } = useAuthActions();
   const router = useRouter();
 
 
   const handleLogout = async () => {
-    await signOut(auth);
+    await signOut();
     router.push('/onboarding');
   }
 

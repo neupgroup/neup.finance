@@ -13,8 +13,8 @@ import { useToast } from '@/hooks/use-toast';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { ArrowLeft, Loader } from 'lucide-react';
-import { useUser, useFirestore } from '@/firebase';
-import { collection, addDoc } from 'firebase/firestore';
+import { useUser } from '@/auth/provider';
+import { createTransaction } from '@/hooks/api';
 
 const accounts = [
   { value: 'Checking Account', label: 'Checking Account' },
@@ -66,7 +66,6 @@ function ReviewTransactionForm() {
     const searchParams = useSearchParams();
     const { toast } = useToast();
     const { user } = useUser();
-    const firestore = useFirestore();
 
     const [hydrated, setHydrated] = useState(false);
     
@@ -139,7 +138,7 @@ function ReviewTransactionForm() {
 
     const handleCommitTransaction = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!title || !date || !transactionType || !category || !currency || totalAmount === '' || !status || !user || !firestore) {
+        if (!title || !date || !transactionType || !category || !currency || totalAmount === '' || !status || !user) {
             toast({
                 variant: "destructive",
                 title: "Missing Fields",
@@ -157,7 +156,7 @@ function ReviewTransactionForm() {
         }
 
         try {
-            const newTransaction: Transaction = {
+            const newTransaction: Omit<Transaction, 'id' | 'created_at'> = {
                 title,
                 description,
                 accountId: accountId,
@@ -171,18 +170,16 @@ function ReviewTransactionForm() {
                 currency,
                 recipient,
                 due_on: dueOn || undefined,
-                created_at: new Date().toISOString(),
                 userId: user.uid,
             };
-            
-            const docRef = await addDoc(collection(firestore, 'transactions'), newTransaction);
+            const saved = await createTransaction(newTransaction);
             
             toast({
                 title: "Transaction Committed",
                 description: `A new transaction for ${currency} ${totalAmount} has been successfully created.`,
             });
 
-            router.push(`/transactions/${docRef.id}`);
+            router.push(`/transactions/${saved.id}`);
         } catch (error) {
             console.error("Error committing transaction: ", error);
             toast({

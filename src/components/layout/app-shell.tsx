@@ -7,9 +7,9 @@ import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger } from '@/comp
 import { MainNav } from './main-nav';
 import { Logo } from '../icons';
 import { Header } from './header';
-import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
+import { useUser } from '@/auth/provider';
+import { useUserProfile } from '@/hooks/api';
 import { Loader } from 'lucide-react';
-import { doc } from 'firebase/firestore';
 
 // Define a type for the user profile data
 type UserProfile = {
@@ -19,15 +19,9 @@ type UserProfile = {
 
 function AppShellContent({ children }: { children: React.ReactNode }) {
     const { user, isUserLoading } = useUser();
-    const firestore = useFirestore();
     const router = useRouter();
 
-    const userProfileRef = useMemoFirebase(() => {
-        if (!firestore || !user?.uid) return null;
-        return doc(firestore, 'users', user.uid);
-    }, [firestore, user?.uid]);
-
-    const { data: userProfile, isLoading: isProfileLoading } = useDoc<UserProfile>(userProfileRef);
+    const { data: userProfile, isLoading: isProfileLoading } = useUserProfile(user?.uid);
 
     useEffect(() => {
         // The middleware now handles the primary redirection logic.

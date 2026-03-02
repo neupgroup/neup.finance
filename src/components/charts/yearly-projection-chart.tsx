@@ -3,8 +3,8 @@
 
 import { useMemo } from 'react';
 import { AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, query, where } from 'firebase/firestore';
+import { useUser } from '@/auth/provider';
+import { useUserAccounts, useProjections } from '@/hooks/api';
 import { type Projection } from '@/lib/mock-data';
 import { addMonths, format, startOfMonth, endOfMonth, isWithinInterval, isAfter, isBefore, eachDayOfInterval } from 'date-fns';
 import { Loader } from 'lucide-react';
@@ -31,19 +31,10 @@ const generateShades = (color: string, count: number) => {
 
 export function YearlyProjectionChart() {
     const { user, isUserLoading } = useUser();
-    const firestore = useFirestore();
 
-    const accountsCollection = useMemoFirebase(() => {
-        if (!firestore || !user?.uid) return null;
-        return collection(firestore, 'users', user.uid, 'accounts');
-    }, [firestore, user?.uid]);
-    const { data: accounts, isLoading: areAccountsLoading } = useCollection<Account>(accountsCollection);
+    const { data: accounts, isLoading: areAccountsLoading } = useUserAccounts(user?.uid);
 
-    const projectionsQuery = useMemoFirebase(() => {
-        if (!firestore || !user?.uid) return null;
-        return query(collection(firestore, 'projections'), where('userId', '==', user.uid), where('status', '==', 'Active'));
-    }, [firestore, user?.uid]);
-    const { data: projections, isLoading: areProjectionsLoading } = useCollection<Projection>(projectionsQuery);
+    const { data: projections, isLoading: areProjectionsLoading } = useProjections(user?.uid, 'Active');
 
     const { data, currencies } = useMemo(() => {
         if (!accounts || !projections) return { data: [], currencies: [] };
