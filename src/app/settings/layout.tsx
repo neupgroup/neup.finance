@@ -10,6 +10,7 @@ import { usePathname } from 'next/navigation';
 const settingsNav = [
     { name: 'Appearance', href: '/settings/appearance' },
     { name: 'Defaults', href: '/settings/defaults' },
+  { name: 'Payment Profiles', href: '/settings/payprofiles' },
 ];
 
 export default function SettingsLayout({
