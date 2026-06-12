@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Combobox } from '@/components/ui/combobox';
+import { CurrencyAmountInput } from '@/components/ui/currency-amount-input';
 import { type Transaction, type TransactionCategory, type TransactionStatus, type TransactionType } from '@/lib/mock-data';
 import { useToast } from '@/hooks/use-toast';
 import { Textarea } from '@/components/ui/textarea';
@@ -50,14 +51,6 @@ const transactionStatuses: {value: TransactionStatus, label: TransactionStatus}[
     {value: 'partially_paid', label: 'partially_paid'},
     {value: 'paid', label: 'paid'},
     {value: 'canceled', label: 'canceled'}
-];
-const currencies = [
-    { value: 'USD', label: 'USD - US Dollar' },
-    { value: 'EUR', label: 'EUR - Euro' },
-    { value: 'GBP', label: 'GBP - British Pound' },
-    { value: 'JPY', label: 'JPY - Japanese Yen' },
-    { value: 'INR', label: 'INR - Indian Rupee' },
-    { value: 'NPR', label: 'NPR - Nepali Rupee' },
 ];
 
 
@@ -240,20 +233,19 @@ function ReviewTransactionForm() {
                     />
                 </div>
             </div>
-             <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-2">
-                    <Label htmlFor="currency">Currency</Label>
-                    <Combobox
-                        options={currencies}
-                        value={currency}
-                        onChange={setCurrency}
-                        placeholder="Select a currency"
-                    />
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="amount">Total Amount</Label>
-                    <Input id="amount" type="number" value={totalAmount} onChange={e => setTotalAmount(e.target.value === '' ? '' : parseFloat(e.target.value))} placeholder="0.00" required />
-                </div>
+            <div className="grid gap-2">
+                <Label htmlFor="amount">Total Amount</Label>
+                <CurrencyAmountInput
+                    id="amount"
+                    currency={currency}
+                    amount={totalAmount}
+                    onCurrencyChange={setCurrency}
+                    onAmountChange={setTotalAmount}
+                    currencyPlaceholder="Type a country name, then press space"
+                    amountPlaceholder="0.00"
+                    placeholder="0.00"
+                    required
+                />
             </div>
             <div className="grid gap-2">
                 <Label htmlFor="status">Status</Label>
@@ -278,7 +270,17 @@ function ReviewTransactionForm() {
              {status === 'partially_paid' && (
                 <div className="grid gap-2">
                     <Label htmlFor="amount_paid">Amount Paid</Label>
-                    <Input id="amount_paid" type="number" value={amountPaid} onChange={e => setAmountPaid(e.target.value === '' ? '' : parseFloat(e.target.value))} placeholder="0.00" required />
+                    <CurrencyAmountInput
+                        id="amount_paid"
+                        currency={currency}
+                        amount={amountPaid}
+                        onCurrencyChange={setCurrency}
+                        onAmountChange={setAmountPaid}
+                        currencyPlaceholder="Type a country name, then press space"
+                        amountPlaceholder="0.00"
+                        placeholder="0.00"
+                        required
+                    />
                 </div>
             )}
 
