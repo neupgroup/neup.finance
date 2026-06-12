@@ -119,8 +119,10 @@ model ActivityStock {
   assetGroupId   String             @map("asset_group_id")
   stockName     String             @map("stock_name")
   activityType  ActivityStockType  @map("activity_type")
+  cost          Decimal
   balance       Decimal
   recordedOn    DateTime           @map("recorded_on")
+  transactionOn DateTime           @map("transaction_on")
   assetGroup    AssetGroup         @relation(fields: [assetGroupId], references: [id], onDelete: Cascade)
 
   @@index([assetGroupId])
