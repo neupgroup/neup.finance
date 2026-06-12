@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 import { useParties } from '@/hooks/api';
 import { Building, Mail, MapPin, MoreVertical, Phone, PlusCircle, User, Wallet } from 'lucide-react';
 
-export default function RecipientsPage() {
+export default function PartyPage() {
   const { data: parties } = useParties();
   const recipients = parties ?? [];
 
@@ -17,7 +17,7 @@ export default function RecipientsPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold tracking-tight">Your Parties</h1>
-          <Link href="/recipients/add">
+          <Link href="/party/add">
             <Button>
               <PlusCircle className="mr-2 h-4 w-4" />
               Add Party

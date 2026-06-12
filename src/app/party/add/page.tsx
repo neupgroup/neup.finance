@@ -12,7 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { PlusCircle } from 'lucide-react';
 import { createParty } from '@/hooks/api';
 
-export default function AddRecipientPage() {
+export default function AddPartyPage() {
   const router = useRouter();
   const { toast } = useToast();
 
@@ -54,7 +54,7 @@ export default function AddRecipientPage() {
         description: `${name} has been successfully added.`,
       });
 
-      router.push('/recipients');
+      router.push('/party');
     } catch (error) {
       console.error('Failed to create party', error);
       toast({
@@ -136,7 +136,7 @@ export default function AddRecipientPage() {
               <PlusCircle className="mr-2 h-4 w-4" />
               Save Party
             </Button>
-            <Button type="button" variant="outline" onClick={() => router.push('/recipients')}>
+            <Button type="button" variant="outline" onClick={() => router.push('/party')}>
               Cancel
             </Button>
           </div>

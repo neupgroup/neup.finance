@@ -15,7 +15,7 @@ import { type Transaction, type TransactionCategory, type TransactionStatus, typ
 import { useToast } from '@/hooks/use-toast';
 import { Textarea } from '@/components/ui/textarea';
 import { useUser } from '@/auth/provider';
-import { createTransaction, useParties } from '@/hooks/api';
+import { createTransaction, useParties, useTransactionsList } from '@/hooks/api';
 import { ArrowLeft, Check, Loader } from 'lucide-react';
 
 const accounts = [
@@ -59,6 +59,7 @@ export default function AddTransactionPage() {
   const { toast } = useToast();
   const { user } = useUser();
   const { data: parties } = useParties();
+  const { data: transactions } = useTransactionsList(user?.uid);
   const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
 
   const [title, setTitle] = useState('');
@@ -75,6 +76,32 @@ export default function AddTransactionPage() {
   const [amountPaid, setAmountPaid] = useState<number | ''>('');
   const [dueOn, setDueOn] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const recommendedParties = useMemo(() => {
+    const counts = new Map<string, { id: string; name: string; type: string; count: number }>();
+
+    (transactions ?? []).forEach((transaction) => {
+      const party = transaction.party;
+      if (!party) return;
+
+      const existing = counts.get(party.id);
+      if (existing) {
+        existing.count += 1;
+        return;
+      }
+
+      counts.set(party.id, {
+        id: party.id,
+        name: party.name,
+        type: party.type,
+        count: 1,
+      });
+    });
+
+    return Array.from(counts.values())
+      .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
+      .slice(0, 3);
+  }, [transactions]);
 
     const finalAmountPaid = useMemo(() => {
     const total = typeof totalAmount === 'number' ? totalAmount : 0;
@@ -229,8 +256,25 @@ export default function AddTransactionPage() {
                 onChange={setPartyId}
                 placeholder="Select party"
                 searchPlaceholder="Search parties..."
-                notFoundMessage="No parties found. Add one in Recipients."
+                notFoundMessage="No parties found. Add one in Party."
               />
+              {recommendedParties.length > 0 ? (
+                <div className="flex flex-wrap gap-2 pt-1">
+                  <span className="text-xs text-muted-foreground">Recommended:</span>
+                  {recommendedParties.map((party) => (
+                    <Button
+                      key={party.id}
+                      type="button"
+                      variant={partyId === party.id ? 'default' : 'outline'}
+                      size="sm"
+                      className="h-7 rounded-full px-3 text-xs"
+                      onClick={() => setPartyId(party.id)}
+                    >
+                      {party.name}
+                    </Button>
+                  ))}
+                </div>
+              ) : null}
             </div>
             <div className="space-y-2">
               <Label htmlFor="date">Date</Label>

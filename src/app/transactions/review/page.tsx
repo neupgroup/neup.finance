@@ -242,7 +242,7 @@ function ReviewTransactionForm() {
                     onChange={setPartyId}
                     placeholder="Select party"
                     searchPlaceholder="Search parties..."
-                    notFoundMessage="No parties found. Add one in Recipients."
+                    notFoundMessage="No parties found. Add one in Party."
                 />
             </div>
             <div className="grid gap-2">
