@@ -95,7 +95,6 @@ export async function POST(req: NextRequest) {
     data: {
       name: ledgerName,
       type: AccountType.Other,
-      balance: new Prisma.Decimal(0),
       currency,
       accountId: owner.id,
     },

@@ -1,6 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/server/db'
-import { Prisma } from '@prisma/client'
+
+const CREDIT_TYPES = new Set(['sale', 'refund', 'income'])
+
+function calculateBalance(transactions: Array<{ transaction_type: string; total_amount: unknown; status: string }>) {
+  return transactions.reduce((sum, transaction) => {
+    if (transaction.status === 'canceled') return sum
+    const amount = Number(transaction.total_amount)
+    if (Number.isNaN(amount)) return sum
+    return sum + (CREDIT_TYPES.has(transaction.transaction_type) ? amount : -amount)
+  }, 0)
+}
 
 export async function GET(
   _req: NextRequest,
@@ -10,13 +20,22 @@ export async function GET(
   const accounts = await prisma.assetGroup.findMany({
     where: { accountId: id },
     orderBy: { createdAt: 'desc' },
+    include: {
+      transactions: {
+        select: {
+          transaction_type: true,
+          total_amount: true,
+          status: true,
+        },
+      },
+    },
   })
   return NextResponse.json(
     accounts.map((a) => ({
       id: a.id,
       name: a.name,
       type: a.type,
-      balance: Number(a.balance),
+      balance: calculateBalance(a.transactions),
       currency: a.currency,
       userId: a.accountId,
     }))
@@ -38,7 +57,6 @@ export async function POST(
       name,
       type,
       currency,
-      balance: new Prisma.Decimal(0),
       accountId: id,
     },
   })
@@ -46,7 +64,7 @@ export async function POST(
     id: created.id,
     name: created.name,
     type: created.type,
-    balance: Number(created.balance),
+    balance: 0,
     currency: created.currency,
     userId: created.accountId,
   })
