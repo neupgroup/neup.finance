@@ -19,7 +19,7 @@ export async function GET(
     title: t.title,
     description: t.description ?? undefined,
     accountId: t.accountId,
-    ledgerId: t.ledgerId,
+    assetGroupId: t.assetGroupId,
     category: t.category,
     transaction_type: t.transaction_type,
     total_amount: Number(t.total_amount),

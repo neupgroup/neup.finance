@@ -7,7 +7,7 @@ export async function GET(
   context: { params: Promise<{ id: string }> }
 ) {
   const { id } = await context.params
-  const accounts = await prisma.ledger.findMany({
+  const accounts = await prisma.assetGroup.findMany({
     where: { accountId: id },
     orderBy: { createdAt: 'desc' },
   })
@@ -33,7 +33,7 @@ export async function POST(
   if (!name || !type || !currency) {
     return NextResponse.json({ error: 'Invalid payload' }, { status: 400 })
   }
-  const created = await prisma.ledger.create({
+  const created = await prisma.assetGroup.create({
     data: {
       name,
       type,

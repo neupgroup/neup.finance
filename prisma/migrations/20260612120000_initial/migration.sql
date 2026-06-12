@@ -45,7 +45,7 @@ CREATE TABLE "accounts" (
 );
 
 -- CreateTable
-CREATE TABLE "ledgers" (
+CREATE TABLE "asset_group" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "type" "AccountType" NOT NULL,
@@ -54,7 +54,7 @@ CREATE TABLE "ledgers" (
     "accountId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "ledgers_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "asset_group_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -63,7 +63,7 @@ CREATE TABLE "Transaction" (
     "title" TEXT NOT NULL,
     "description" TEXT,
     "accountId" TEXT NOT NULL,
-    "ledgerId" TEXT NOT NULL,
+    "assetGroupId" TEXT NOT NULL,
     "category" TEXT NOT NULL,
     "transaction_type" "TransactionType" NOT NULL,
     "total_amount" DECIMAL(65,30) NOT NULL,
@@ -123,13 +123,13 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 CREATE UNIQUE INDEX "accounts_connection_id_key" ON "accounts"("connection_id");
 
 -- CreateIndex
-CREATE INDEX "ledgers_accountId_idx" ON "ledgers"("accountId");
+CREATE INDEX "asset_group_accountId_idx" ON "asset_group"("accountId");
 
 -- CreateIndex
 CREATE INDEX "Transaction_userId_idx" ON "Transaction"("userId");
 
 -- CreateIndex
-CREATE INDEX "Transaction_ledgerId_idx" ON "Transaction"("ledgerId");
+CREATE INDEX "Transaction_assetGroupId_idx" ON "Transaction"("assetGroupId");
 
 -- CreateIndex
 CREATE INDEX "Transaction_date_idx" ON "Transaction"("date");
@@ -141,13 +141,13 @@ CREATE INDEX "TransactionLine_transactionId_idx" ON "TransactionLine"("transacti
 CREATE INDEX "Projection_userId_idx" ON "Projection"("userId");
 
 -- AddForeignKey
-ALTER TABLE "ledgers" ADD CONSTRAINT "ledgers_accountId_fkey" FOREIGN KEY ("accountId") REFERENCES "accounts"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "asset_group" ADD CONSTRAINT "asset_group_accountId_fkey" FOREIGN KEY ("accountId") REFERENCES "accounts"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Transaction" ADD CONSTRAINT "Transaction_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Transaction" ADD CONSTRAINT "Transaction_ledgerId_fkey" FOREIGN KEY ("ledgerId") REFERENCES "ledgers"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Transaction" ADD CONSTRAINT "Transaction_assetGroupId_fkey" FOREIGN KEY ("assetGroupId") REFERENCES "asset_group"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "TransactionLine" ADD CONSTRAINT "TransactionLine_transactionId_fkey" FOREIGN KEY ("transactionId") REFERENCES "Transaction"("id") ON DELETE CASCADE ON UPDATE CASCADE;

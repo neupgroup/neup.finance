@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
       title: t.title,
       description: t.description ?? undefined,
       accountId: t.accountId,
-      ledgerId: t.ledgerId,
+      assetGroupId: t.assetGroupId,
       category: t.category,
       transaction_type: t.transaction_type,
       total_amount: Number(t.total_amount),
@@ -87,11 +87,11 @@ export async function POST(req: NextRequest) {
     ? selectedLedgerName.trim()
     : 'Default Ledger'
 
-  const ledger = await prisma.ledger.findFirst({
+  const ledger = await prisma.assetGroup.findFirst({
     where: { accountId: owner.id, name: ledgerName },
     select: { id: true },
   })
-  const activeLedger = ledger ?? await prisma.ledger.create({
+  const activeLedger = ledger ?? await prisma.assetGroup.create({
     data: {
       name: ledgerName,
       type: AccountType.Other,
@@ -107,7 +107,7 @@ export async function POST(req: NextRequest) {
       title,
       description: description ?? null,
       accountId: connectionId,
-      ledgerId: activeLedger.id,
+      assetGroupId: activeLedger.id,
       category,
       transaction_type,
       total_amount: new Prisma.Decimal(total_amount),
@@ -127,7 +127,7 @@ export async function POST(req: NextRequest) {
     title: created.title,
     description: created.description ?? undefined,
     accountId: created.accountId,
-    ledgerId: created.ledgerId,
+    assetGroupId: created.assetGroupId,
     category: created.category,
     transaction_type: created.transaction_type,
     total_amount: Number(created.total_amount),

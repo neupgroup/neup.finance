@@ -23,12 +23,12 @@ model Account {
   displayName    String   @default("")
   neupid         String   @default("")
   displayImage   String   @default("")
-  ledgers        Ledger[]
+  assetGroups    AssetGroup[]
 
   @@map("accounts")
 }
 
-model Ledger {
+model AssetGroup {
   id        String      @id @default(uuid())
   name      String
   type      AccountType
@@ -40,7 +40,7 @@ model Ledger {
   transactions Transaction[]
 
   @@index([accountId])
-  @@map("ledgers")
+  @@map("asset_group")
 }
 
 model Transaction {
@@ -48,7 +48,7 @@ model Transaction {
   title              String
   description        String?
   accountId          String
-  ledgerId           String
+  assetGroupId       String
   category           String
   transaction_type   TransactionType
   total_amount       Decimal
@@ -63,11 +63,11 @@ model Transaction {
   created_at         DateTime          @default(now())
   userId             String
   user               User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  ledger             Ledger            @relation(fields: [ledgerId], references: [id], onDelete: Cascade)
+  assetGroup         AssetGroup        @relation(fields: [assetGroupId], references: [id], onDelete: Cascade)
   lines              TransactionLine[]
 
   @@index([userId])
-  @@index([ledgerId])
+  @@index([assetGroupId])
   @@index([date])
 }
 
