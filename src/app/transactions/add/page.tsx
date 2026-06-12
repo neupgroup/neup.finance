@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Combobox } from '@/components/ui/combobox';
 import { CurrencyAmountInput } from '@/components/ui/currency-amount-input';
+import { DateChoiceInput } from '@/components/ui/date-choice-input';
 import { type Transaction, type TransactionCategory, type TransactionStatus, type TransactionType } from '@/lib/mock-data';
 import { useToast } from '@/hooks/use-toast';
 import { Textarea } from '@/components/ui/textarea';
@@ -220,7 +221,7 @@ export default function AddTransactionPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="date">Date</Label>
-              <Input id="date" type="date" value={date} onChange={(e) => setDate(e.target.value)} required className={!date ? 'text-muted-foreground' : ''} />
+              <DateChoiceInput value={date} onChange={setDate} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="type">Type</Label>

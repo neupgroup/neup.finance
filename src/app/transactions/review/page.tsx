@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Combobox } from '@/components/ui/combobox';
 import { CurrencyAmountInput } from '@/components/ui/currency-amount-input';
+import { DateChoiceInput } from '@/components/ui/date-choice-input';
 import { type Transaction, type TransactionCategory, type TransactionStatus, type TransactionType } from '@/lib/mock-data';
 import { useToast } from '@/hooks/use-toast';
 import { Textarea } from '@/components/ui/textarea';
@@ -203,15 +204,13 @@ function ReviewTransactionForm() {
                 <Label htmlFor="description">Description (Optional)</Label>
                 <Textarea id="description" value={description} onChange={e => setDescription(e.target.value)} placeholder="e.g., Invoice #123 details" />
             </div>
-            <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-2">
-                    <Label htmlFor="date">Date</Label>
-                    <Input id="date" type="date" value={date} onChange={e => setDate(e.target.value)} required className={!date ? 'text-muted-foreground' : ''}/>
-                </div>
-                 <div className="grid gap-2">
-                    <Label htmlFor="recipient">Recipient (Optional)</Label>
-                    <Input id="recipient" value={recipient} onChange={e => setRecipient(e.target.value)} placeholder="e.g., John Doe" />
-                </div>
+            <div className="grid gap-2">
+                <Label htmlFor="recipient">Recipient (Optional)</Label>
+                <Input id="recipient" value={recipient} onChange={e => setRecipient(e.target.value)} placeholder="e.g., John Doe" />
+            </div>
+            <div className="grid gap-2">
+                <Label htmlFor="date">Date</Label>
+                <DateChoiceInput value={date} onChange={setDate} />
             </div>
             <div className="grid grid-cols-2 gap-4">
                 <div className="grid gap-2">
