@@ -24,8 +24,49 @@ model Account {
   neupid         String   @default("")
   displayImage   String   @default("")
   assetGroups    AssetGroup[]
+  parties        Party[]
 
   @@map("accounts")
+}
+
+model Party {
+  id        String           @id @default(uuid())
+  accountId String           @map("account_id")
+  name      String
+  type      String
+  taxinfo   Json?
+  account   Account          @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  contacts  PartyContact[]
+  paymentMethods PartyPaymentMethod[]
+
+  @@index([accountId])
+  @@map("party")
+}
+
+model PartyContact {
+  id       String   @id @default(uuid())
+  partyId  String   @map("party_id")
+  type     String
+  value    String
+  addedOn  DateTime @default(now()) @map("added_on")
+  details  Json?
+  party    Party    @relation(fields: [partyId], references: [id], onDelete: Cascade)
+
+  @@index([partyId])
+  @@map("party_contact")
+}
+
+model PartyPaymentMethod {
+  id       String   @id @default(uuid())
+  partyId  String   @map("party_id")
+  type     String
+  value    String
+  addedOn  DateTime @default(now()) @map("added_on")
+  details  Json?
+  party    Party    @relation(fields: [partyId], references: [id], onDelete: Cascade)
+
+  @@index([partyId])
+  @@map("party_payment_method")
 }
 
 model AssetGroup {
