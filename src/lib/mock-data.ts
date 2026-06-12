@@ -41,6 +41,7 @@ export type Transaction = {
   title: string;
   description?: string;
   accountId: string;
+  partyId?: string;
   category: TransactionCategory;
   transaction_type: TransactionType;
   total_amount: number;
@@ -54,6 +55,11 @@ export type Transaction = {
   reference_document?: string | File;
   created_at: string;
   userId: string;
+  party?: {
+    id: string;
+    name: string;
+    type: string;
+  } | null;
 };
 
 export type TransactionLineCategory = 'vat_paid' | 'vat_return' | 'sales' | 'referral_paid' | 'payable' | 'receivable';
@@ -110,6 +116,32 @@ export type Recipient = {
     bank_information?: string;
     created_on: string;
     modified_on?: string;
+};
+
+export type PartyContactType = 'email' | 'address' | 'phone';
+
+export type Party = {
+    id: string;
+    account_id: string;
+    name: string;
+    type: string;
+    taxinfo?: unknown;
+    contacts?: Array<{
+        id: string;
+        party_id: string;
+        type: PartyContactType;
+        value: string;
+        added_on: string;
+        details?: unknown;
+    }>;
+    paymentMethods?: Array<{
+        id: string;
+        party_id: string;
+        type: string;
+        value: string;
+        added_on: string;
+        details?: unknown;
+    }>;
 };
 
 

@@ -12,7 +12,10 @@ export async function GET(
   }
 
   const { id } = await context.params
-  const t = await prisma.transaction.findFirst({ where: { id, accountId: connectionId } })
+  const t = await prisma.transaction.findFirst({
+    where: { id, accountId: connectionId },
+    include: { party: true },
+  })
   if (!t) return NextResponse.json({ error: 'Not found' }, { status: 404 })
   return NextResponse.json({
     id: t.id,
@@ -29,6 +32,8 @@ export async function GET(
     date: t.date.toISOString(),
     currency: t.currency,
     recipient: t.recipient ?? undefined,
+    partyId: t.partyId ?? undefined,
+    party: t.party ? { id: t.party.id, name: t.party.name, type: t.party.type } : undefined,
     due_on: t.due_on ? t.due_on.toISOString() : undefined,
     reference_document: t.reference_document ?? undefined,
     created_at: t.created_at.toISOString(),

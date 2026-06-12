@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { Transaction, TransactionLine, Projection } from '@/lib/mock-data';
+import type { Transaction, TransactionLine, Projection, Party } from '@/lib/mock-data';
 
 export type Account = {
   id?: string;
@@ -85,6 +85,10 @@ export function useProjections(userId?: string | null, status?: 'Active' | 'Canc
   return useFetchJson<Projection[]>(url, [userId, status]);
 }
 
+export function useParties() {
+  return useFetchJson<Party[]>('/api/parties', []);
+}
+
 export async function upsertUserProfile(userId: string, payload: { connection_id: string; displayName?: string; neupid?: string; displayImage?: string }) {
   const res = await fetch(`/api/users/${userId}`, {
     method: 'PUT',
@@ -132,5 +136,21 @@ export async function createProjection(payload: Omit<Projection, 'id'>) {
     body: JSON.stringify(payload),
   });
   if (!res.ok) throw new Error('Failed to create projection');
+  return res.json();
+}
+
+export async function createParty(payload: {
+  name: string;
+  type: string;
+  taxinfo?: unknown;
+  contacts?: Array<{ type: string; value: string; details?: unknown }>;
+  paymentMethods?: Array<{ type: string; value: string; details?: unknown }>;
+}) {
+  const res = await fetch('/api/parties', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) throw new Error('Failed to create party');
   return res.json();
 }

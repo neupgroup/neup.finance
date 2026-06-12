@@ -38,6 +38,7 @@ model Party {
   account   Account          @relation(fields: [accountId], references: [id], onDelete: Cascade)
   contacts  PartyContact[]
   paymentMethods PartyPaymentMethod[]
+  transactions Transaction[]
 
   @@index([accountId])
   @@map("party")
@@ -89,6 +90,7 @@ model Transaction {
   title              String
   description        String?
   accountId          String
+  partyId            String?           @map("party_id")
   assetGroupId       String
   category           String
   transaction_type   TransactionType
@@ -105,11 +107,13 @@ model Transaction {
   userId             String
   user               User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   assetGroup         AssetGroup        @relation(fields: [assetGroupId], references: [id], onDelete: Cascade)
+  party              Party?            @relation(fields: [partyId], references: [id], onDelete: SetNull)
   lines              TransactionLine[]
 
   @@index([userId])
   @@index([assetGroupId])
   @@index([date])
+  @@index([partyId])
 }
 
 model TransactionLine {

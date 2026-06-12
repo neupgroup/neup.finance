@@ -26,6 +26,9 @@ export async function GET(req: NextRequest) {
       ...(assetGroupId ? { assetGroupId } : {}),
     },
     orderBy: { date: 'desc' },
+    include: {
+      party: true,
+    },
     take: limit ? Number(limit) : undefined,
   })
   return NextResponse.json(
@@ -44,6 +47,8 @@ export async function GET(req: NextRequest) {
       date: t.date.toISOString(),
       currency: t.currency,
       recipient: t.recipient ?? undefined,
+      partyId: t.partyId ?? undefined,
+      party: t.party ? { id: t.party.id, name: t.party.name, type: t.party.type } : undefined,
       due_on: t.due_on ? t.due_on.toISOString() : undefined,
       reference_document: t.reference_document ?? undefined,
       created_at: t.created_at.toISOString(),
@@ -71,6 +76,7 @@ export async function POST(req: NextRequest) {
     date,
     currency,
     recipient,
+    partyId,
     due_on,
     reference_document,
     assetGroupId,
@@ -120,6 +126,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'asset group not found' }, { status: 404 })
   }
 
+  let resolvedParty = null as { id: string; name: string; type: string } | null
+  if (typeof partyId === 'string' && partyId.trim()) {
+    const party = await prisma.party.findFirst({
+      where: { id: partyId.trim(), accountId: owner.id },
+      select: { id: true, name: true, type: true },
+    })
+    if (!party) {
+      return NextResponse.json({ error: 'party not found' }, { status: 404 })
+    }
+    resolvedParty = party
+  }
+
   const created = await prisma.transaction.create({
     data: {
       title,
@@ -134,10 +152,14 @@ export async function POST(req: NextRequest) {
       status,
       date: new Date(date),
       currency,
-      recipient: recipient ?? null,
+      recipient: recipient ?? resolvedParty?.name ?? null,
+      partyId: resolvedParty?.id ?? null,
       due_on: due_on ? new Date(due_on) : null,
       reference_document: reference_document ?? null,
       userId,
+    },
+    include: {
+      party: true,
     },
   })
   return NextResponse.json({
@@ -155,6 +177,8 @@ export async function POST(req: NextRequest) {
     date: created.date.toISOString(),
     currency: created.currency,
     recipient: created.recipient ?? undefined,
+    partyId: created.partyId ?? undefined,
+    party: created.party ? { id: created.party.id, name: created.party.name, type: created.party.type } : undefined,
     due_on: created.due_on ? created.due_on.toISOString() : undefined,
     reference_document: created.reference_document ?? undefined,
     created_at: created.created_at.toISOString(),

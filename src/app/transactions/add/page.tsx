@@ -15,7 +15,7 @@ import { type Transaction, type TransactionCategory, type TransactionStatus, typ
 import { useToast } from '@/hooks/use-toast';
 import { Textarea } from '@/components/ui/textarea';
 import { useUser } from '@/auth/provider';
-import { createTransaction } from '@/hooks/api';
+import { createTransaction, useParties } from '@/hooks/api';
 import { ArrowLeft, Check, Loader } from 'lucide-react';
 
 const accounts = [
@@ -58,6 +58,7 @@ export default function AddTransactionPage() {
   const router = useRouter();
   const { toast } = useToast();
   const { user } = useUser();
+  const { data: parties } = useParties();
   const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
 
   const [title, setTitle] = useState('');
@@ -70,7 +71,7 @@ export default function AddTransactionPage() {
   const [totalAmount, setTotalAmount] = useState<number | ''>('');
   const [status, setStatus] = useState<TransactionStatus | ''>('');
   const [accountId, setAccountId] = useState('');
-  const [recipient, setRecipient] = useState('');
+  const [partyId, setPartyId] = useState('');
   const [amountPaid, setAmountPaid] = useState<number | ''>('');
   const [dueOn, setDueOn] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -115,6 +116,7 @@ export default function AddTransactionPage() {
         });
         return;
     }
+    const selectedParty = parties?.find((item) => item.id === partyId);
     
     setIsSubmitting(true);
     let finalAmountPaid = 0;
@@ -129,6 +131,7 @@ export default function AddTransactionPage() {
             title,
             description,
             accountId: accountId,
+            partyId: partyId || undefined,
             category: category as TransactionCategory,
             transaction_type: transactionType as TransactionType,
             total_amount: totalAmount as number,
@@ -137,7 +140,7 @@ export default function AddTransactionPage() {
             status: status as TransactionStatus,
             date,
             currency: totalAmountCurrency,
-            recipient,
+            recipient: selectedParty?.name,
             due_on: dueOn || undefined,
             // reference_document: attachment || undefined, // Not storing files yet
             userId: user.uid,
@@ -216,8 +219,18 @@ export default function AddTransactionPage() {
               </div>
             )}
             <div className="space-y-2">
-              <Label htmlFor="recipient">Recipient <span className="text-muted-foreground">(Optional)</span></Label>
-              <Input id="recipient" value={recipient} onChange={(e) => setRecipient(e.target.value)} placeholder="e.g., Acme Ltd., John Doe" />
+              <Label htmlFor="party">Party <span className="text-muted-foreground">(Optional)</span></Label>
+              <Combobox
+                options={(parties ?? []).map((party) => ({
+                  value: party.id,
+                  label: `${party.name} (${party.type})`,
+                }))}
+                value={partyId}
+                onChange={setPartyId}
+                placeholder="Select party"
+                searchPlaceholder="Search parties..."
+                notFoundMessage="No parties found. Add one in Recipients."
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="date">Date</Label>

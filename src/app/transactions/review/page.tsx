@@ -16,7 +16,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { ArrowLeft, Loader } from 'lucide-react';
 import { useUser } from '@/auth/provider';
-import { createTransaction } from '@/hooks/api';
+import { createTransaction, useParties } from '@/hooks/api';
 
 const accounts = [
   { value: 'Checking Account', label: 'Checking Account' },
@@ -60,6 +60,7 @@ function ReviewTransactionForm() {
     const searchParams = useSearchParams();
     const { toast } = useToast();
     const { user } = useUser();
+    const { data: parties } = useParties();
 
     const [hydrated, setHydrated] = useState(false);
     
@@ -73,7 +74,7 @@ function ReviewTransactionForm() {
     const [totalAmount, setTotalAmount] = useState<number | ''>('');
     const [status, setStatus] = useState<TransactionStatus | ''>('');
     const [accountId, setAccountId] = useState('');
-    const [recipient, setRecipient] = useState('');
+    const [partyId, setPartyId] = useState('');
     const [amountPaid, setAmountPaid] = useState<number | ''>('');
     const [dueOn, setDueOn] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -91,7 +92,6 @@ function ReviewTransactionForm() {
                 setCurrency(parsedData.currency?.toUpperCase() || 'USD');
                 setTotalAmount(parsedData.total_amount || '');
                 setStatus(parsedData.status || '');
-                setRecipient(parsedData.recipient || '');
                 setAmountPaid(parsedData.total_paid || '');
                 setDueOn(parsedData.due_on || '');
 
@@ -114,6 +114,32 @@ function ReviewTransactionForm() {
         }
         setHydrated(true);
     }, [searchParams, toast]);
+
+    useEffect(() => {
+        if (!parties?.length || partyId) {
+            return;
+        }
+
+        const transactionData = searchParams.get('data');
+        if (!transactionData) {
+            return;
+        }
+
+        try {
+            const parsedData = JSON.parse(transactionData);
+            const parsedRecipient = typeof parsedData.recipient === 'string' ? parsedData.recipient.trim() : '';
+            if (!parsedRecipient) {
+                return;
+            }
+
+            const matchedParty = parties.find((party) => party.name.toLowerCase() === parsedRecipient.toLowerCase());
+            if (matchedParty) {
+                setPartyId(matchedParty.id);
+            }
+        } catch (error) {
+            console.error("Failed to map recipient to party", error);
+        }
+    }, [parties, partyId, searchParams]);
 
     const balanceDue = useMemo(() => {
         const total = typeof totalAmount === 'number' ? totalAmount : 0;
@@ -154,6 +180,7 @@ function ReviewTransactionForm() {
                 title,
                 description,
                 accountId: accountId,
+                partyId: partyId || undefined,
                 category: category as TransactionCategory,
                 transaction_type: transactionType as TransactionType,
                 total_amount: totalAmount as number,
@@ -162,7 +189,7 @@ function ReviewTransactionForm() {
                 status: status as TransactionStatus,
                 date,
                 currency,
-                recipient,
+                recipient: parties?.find((party) => party.id === partyId)?.name,
                 due_on: dueOn || undefined,
                 userId: user.uid,
             };
@@ -205,8 +232,18 @@ function ReviewTransactionForm() {
                 <Textarea id="description" value={description} onChange={e => setDescription(e.target.value)} placeholder="e.g., Invoice #123 details" />
             </div>
             <div className="grid gap-2">
-                <Label htmlFor="recipient">Recipient (Optional)</Label>
-                <Input id="recipient" value={recipient} onChange={e => setRecipient(e.target.value)} placeholder="e.g., John Doe" />
+                <Label htmlFor="party">Party (Optional)</Label>
+                <Combobox
+                    options={(parties ?? []).map((party) => ({
+                        value: party.id,
+                        label: `${party.name} (${party.type})`,
+                    }))}
+                    value={partyId}
+                    onChange={setPartyId}
+                    placeholder="Select party"
+                    searchPlaceholder="Search parties..."
+                    notFoundMessage="No parties found. Add one in Recipients."
+                />
             </div>
             <div className="grid gap-2">
                 <Label htmlFor="date">Date</Label>

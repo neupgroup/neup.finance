@@ -109,7 +109,7 @@ export default function ReportPage() {
                     </div>
                      <ul className="text-sm text-muted-foreground space-y-2">
                         {transactions.filter(t => t.balance_due > 0 && ['sale', 'income'].includes(t.transaction_type)).map(t => (
-                            <li key={t.id} className="flex justify-between"><span>{t.title} (from {t.recipient})</span> <span>{formatCurrency(t.balance_due)}</span></li>
+                            <li key={t.id} className="flex justify-between"><span>{t.title} (from {t.party?.name || t.recipient})</span> <span>{formatCurrency(t.balance_due)}</span></li>
                         ))}
                     </ul>
                 </CardContent>
@@ -126,7 +126,7 @@ export default function ReportPage() {
                     </div>
                      <ul className="text-sm text-muted-foreground space-y-2">
                         {transactions.filter(t => t.balance_due > 0 && ['purchase', 'expense'].includes(t.transaction_type)).map(t => (
-                            <li key={t.id} className="flex justify-between"><span>{t.title} (to {t.recipient})</span> <span>{formatCurrency(t.balance_due)}</span></li>
+                            <li key={t.id} className="flex justify-between"><span>{t.title} (to {t.party?.name || t.recipient})</span> <span>{formatCurrency(t.balance_due)}</span></li>
                         ))}
                     </ul>
                 </CardContent>

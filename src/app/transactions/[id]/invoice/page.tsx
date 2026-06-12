@@ -100,7 +100,7 @@ const InvoicePage = () => {
                     <section className="grid grid-cols-2 gap-8 mb-10">
                         <div>
                             <h3 className="font-semibold mb-2">Bill To:</h3>
-                            <p className="font-medium">{transaction.recipient || 'N/A'}</p>
+                            <p className="font-medium">{transaction.party?.name || transaction.recipient || 'N/A'}</p>
                             {/* Add more recipient details here if available */}
                         </div>
                         <div className="text-right">

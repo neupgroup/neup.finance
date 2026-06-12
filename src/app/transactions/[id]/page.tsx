@@ -162,6 +162,7 @@ export default function TransactionDetailPage() {
   const { data: lines, isLoading: areLinesLoading } = useTransactionLines(id);
 
   const [showAddLineForm, setShowAddLineForm] = useState(false);
+  const partyLabel = transaction?.party?.name || transaction?.recipient || 'N/A';
 
   const handleAddLine = () => {
       // The useCollection hook will update automatically
@@ -242,7 +243,7 @@ export default function TransactionDetailPage() {
                     <DetailItem label="Category" value={transaction.category} />
                     <DetailItem label="Type" value={<span className="capitalize">{transaction.transaction_type}</span>} />
                     <DetailItem label="Account" value={transaction.accountId} />
-                    <DetailItem label="Recipient" value={transaction.recipient} />
+                    <DetailItem label="Party" value={partyLabel} />
                     <DetailItem label="Due On" value={formatDate(transaction.due_on)} />
                 </div>
 
