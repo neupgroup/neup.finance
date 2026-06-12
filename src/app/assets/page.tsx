@@ -34,6 +34,7 @@ const accountTypeIcons = {
   Bank: <Landmark className="h-5 w-5 text-muted-foreground" />,
   Cash: <Wallet className="h-5 w-5 text-muted-foreground" />,
   Investment: <Activity className="h-5 w-5 text-muted-foreground" />,
+  Stock: <Activity className="h-5 w-5 text-muted-foreground" />,
   Other: <Activity className="h-5 w-5 text-muted-foreground" />,
 };
 
@@ -140,6 +141,7 @@ export default function AssetsPage() {
                             <SelectItem value="Bank">Bank</SelectItem>
                             <SelectItem value="Cash">Cash</SelectItem>
                             <SelectItem value="Investment">Investment</SelectItem>
+                            <SelectItem value="Stock">Stock</SelectItem>
                             <SelectItem value="Other">Other</SelectItem>
                             </SelectContent>
                         </Select>

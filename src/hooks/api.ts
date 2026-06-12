@@ -6,7 +6,7 @@ import type { Transaction, TransactionLine, Projection } from '@/lib/mock-data';
 export type Account = {
   id?: string;
   name: string;
-  type: 'Bank' | 'Cash' | 'Investment' | 'Other';
+  type: 'Bank' | 'Cash' | 'Investment' | 'Stock' | 'Other';
   balance: number;
   currency: string;
   userId: string;

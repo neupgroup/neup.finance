@@ -36,6 +36,7 @@ model AssetGroup {
   accountId String
   createdAt DateTime    @default(now())
   account   Account     @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  activityStock ActivityStock[]
   transactions Transaction[]
 
   @@index([accountId])
@@ -109,7 +110,22 @@ enum AccountType {
   Bank
   Cash
   Investment
+  Stock
   Other
+}
+
+model ActivityStock {
+  id            String             @id @default(uuid())
+  assetGroupId   String             @map("asset_group_id")
+  stockName     String             @map("stock_name")
+  activityType  ActivityStockType  @map("activity_type")
+  balance       Decimal
+  recordedOn    DateTime           @map("recorded_on")
+  assetGroup    AssetGroup         @relation(fields: [assetGroupId], references: [id], onDelete: Cascade)
+
+  @@index([assetGroupId])
+  @@index([recordedOn])
+  @@map("activity_stock")
 }
 
 enum TransactionStatus {
@@ -161,4 +177,13 @@ enum TransactionLineCategory {
   referral_paid
   payable
   receivable
+}
+
+enum ActivityStockType {
+  purchase_in
+  sale_out
+  transfer_in
+  transfer_out
+  dividend_in
+  calculation
 }

@@ -12,6 +12,12 @@ function calculateBalance(transactions: Array<{ transaction_type: string; total_
   }, 0)
 }
 
+function calculateLatestStockBalance(activityStock: Array<{ balance: unknown }>) {
+  if (activityStock.length === 0) return 0
+  const latestBalance = Number(activityStock[0]?.balance)
+  return Number.isNaN(latestBalance) ? 0 : latestBalance
+}
+
 export async function GET(
   _req: NextRequest,
   context: { params: Promise<{ id: string }> }
@@ -21,6 +27,13 @@ export async function GET(
     where: { accountId: id },
     orderBy: { createdAt: 'desc' },
     include: {
+      activityStock: {
+        orderBy: { recordedOn: 'desc' },
+        take: 1,
+        select: {
+          balance: true,
+        },
+      },
       transactions: {
         select: {
           transaction_type: true,
@@ -35,7 +48,7 @@ export async function GET(
       id: a.id,
       name: a.name,
       type: a.type,
-      balance: calculateBalance(a.transactions),
+      balance: a.type === 'Stock' ? calculateLatestStockBalance(a.activityStock) : calculateBalance(a.transactions),
       currency: a.currency,
       userId: a.accountId,
     }))
