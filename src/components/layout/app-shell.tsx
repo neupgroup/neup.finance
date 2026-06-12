@@ -14,7 +14,7 @@ import { Loader } from 'lucide-react';
 // Define a type for the user profile data
 type UserProfile = {
     displayName: string;
-    accountId: string;
+    connection_id: string;
 }
 
 function AppShellContent({ children }: { children: React.ReactNode }) {
@@ -49,7 +49,7 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
                             <Logo className="h-8 w-8" />
                             <div className="flex flex-col">
                                 <span>Neup.Ledger</span>
-                                {userProfile?.accountId && <span className="text-xs font-normal text-muted-foreground">{userProfile.accountId}</span>}
+                                {userProfile?.connection_id && <span className="text-xs font-normal text-muted-foreground">{userProfile.connection_id}</span>}
                             </div>
                         </Link>
                     </div>

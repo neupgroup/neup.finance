@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
@@ -31,8 +31,7 @@ function setCookie(name: string, value: string, days: number) {
 }
 
 export default function AuthPage() {
-  const [displayName, setDisplayName] = useState('');
-  const [accountId, setAccountId] = useState('');
+  const [connectionId, setConnectionId] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { user } = useUser();
@@ -40,11 +39,11 @@ export default function AuthPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!displayName.trim() || !accountId.trim() || !user) {
+    if (!connectionId.trim() || !user) {
         toast({
             variant: "destructive",
             title: "Error",
-            description: "Display name and account name are required.",
+            description: "Connection ID is required.",
         });
         return;
     }
@@ -53,15 +52,12 @@ export default function AuthPage() {
 
     try {
         await upsertUserProfile(user.uid, {
-          displayName: displayName.trim(),
-          accountId: accountId.trim(),
-          email: user.email ?? undefined
+          connection_id: connectionId.trim(),
         });
 
-        // Set the accountId in a cookie to manage session
-        setCookie('accountId', accountId.trim(), 7);
+        // Set the connection_id in a cookie to manage session
+        setCookie('connection_id', connectionId.trim(), 7);
 
-        // The onAuthStateChanged listener in FirebaseProvider will handle the redirect
         router.push('/');
 
     } catch (error) {
@@ -80,28 +76,18 @@ export default function AuthPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="items-center text-center">
           <Logo className="h-12 w-12 mb-2" />
-          <CardTitle>Create Your Profile</CardTitle>
-          <CardDescription>Choose a display name and account name to get started.</CardDescription>
+          <CardTitle>Connection Setup</CardTitle>
+          <CardDescription>Enter your connection ID to continue.</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-                <Label htmlFor="displayName">Your Display Name</Label>
+                <Label htmlFor="connectionId">Connection ID</Label>
                 <Input
-                    id="displayName"
-                    placeholder="e.g., Jane Doe"
-                    value={displayName}
-                    onChange={(e) => setDisplayName(e.target.value)}
-                    required
-                />
-            </div>
-            <div className="space-y-2">
-                <Label htmlFor="accountId">Account Name</Label>
-                <Input
-                    id="accountId"
-                    placeholder="e.g., Personal Finances or Acme Inc."
-                    value={accountId}
-                    onChange={(e) => setAccountId(e.target.value)}
+                    id="connectionId"
+                    placeholder="e.g., conn_12345"
+                    value={connectionId}
+                    onChange={(e) => setConnectionId(e.target.value)}
                     required
                 />
             </div>

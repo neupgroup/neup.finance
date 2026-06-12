@@ -2,17 +2,24 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/server/db'
 
 export async function GET(
-  _req: NextRequest,
+  req: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
+  const connectionId = req.cookies.get('connection_id')?.value?.trim()
+    || req.cookies.get('accountId')?.value?.trim()
+  if (!connectionId) {
+    return NextResponse.json({ error: 'connection_id cookie required' }, { status: 401 })
+  }
+
   const { id } = await context.params
-  const t = await prisma.transaction.findUnique({ where: { id } })
+  const t = await prisma.transaction.findFirst({ where: { id, accountId: connectionId } })
   if (!t) return NextResponse.json({ error: 'Not found' }, { status: 404 })
   return NextResponse.json({
     id: t.id,
     title: t.title,
     description: t.description ?? undefined,
     accountId: t.accountId,
+    ledgerId: t.ledgerId,
     category: t.category,
     transaction_type: t.transaction_type,
     total_amount: Number(t.total_amount),

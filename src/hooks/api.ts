@@ -50,7 +50,7 @@ export function useFetchJson<T>(url: string | null, deps: any[] = []) {
 
 export function useUserProfile(userId?: string | null) {
   const url = userId ? `/api/users/${userId}` : null;
-  return useFetchJson<{ id: string; displayName: string; accountId: string; email?: string }>(url, [userId]);
+  return useFetchJson<{ id: string; connection_id: string; displayName: string; neupid: string; displayImage: string }>(url, [userId]);
 }
 
 export function useUserAccounts(userId?: string | null) {
@@ -84,7 +84,7 @@ export function useProjections(userId?: string | null, status?: 'Active' | 'Canc
   return useFetchJson<Projection[]>(url, [userId, status]);
 }
 
-export async function upsertUserProfile(userId: string, payload: { displayName: string; accountId: string; email?: string | null }) {
+export async function upsertUserProfile(userId: string, payload: { connection_id: string; displayName?: string; neupid?: string; displayImage?: string }) {
   const res = await fetch(`/api/users/${userId}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },

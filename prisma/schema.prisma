@@ -13,22 +13,34 @@ model User {
   accountId    String
   email        String?       @unique
   createdAt    DateTime      @default(now())
-  accounts     Account[]
   projections  Projection[]
   transactions Transaction[]
 }
 
 model Account {
+  id             String   @id
+  connection_id  String   @unique
+  displayName    String   @default("")
+  neupid         String   @default("")
+  displayImage   String   @default("")
+  ledgers        Ledger[]
+
+  @@map("accounts")
+}
+
+model Ledger {
   id        String      @id @default(uuid())
   name      String
   type      AccountType
   balance   Decimal     @default(0)
   currency  String
-  userId    String
+  accountId String
   createdAt DateTime    @default(now())
-  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account   Account     @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
 
-  @@index([userId])
+  @@index([accountId])
+  @@map("ledgers")
 }
 
 model Transaction {
@@ -36,6 +48,7 @@ model Transaction {
   title              String
   description        String?
   accountId          String
+  ledgerId           String
   category           String
   transaction_type   TransactionType
   total_amount       Decimal
@@ -50,9 +63,11 @@ model Transaction {
   created_at         DateTime          @default(now())
   userId             String
   user               User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ledger             Ledger            @relation(fields: [ledgerId], references: [id], onDelete: Cascade)
   lines              TransactionLine[]
 
   @@index([userId])
+  @@index([ledgerId])
   @@index([date])
 }
 

@@ -49,6 +49,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signOut = () => {
     localStorage.removeItem('local_user');
     setUser(null);
+    document.cookie = 'connection_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
     document.cookie = 'accountId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
   };
 
@@ -78,4 +79,3 @@ export function useAuthActions() {
   if (!ctx) throw new Error('useAuthActions must be used within AuthProvider');
   return { signInAnonymous: ctx.signInAnonymous, signOut: ctx.signOut };
 }
-

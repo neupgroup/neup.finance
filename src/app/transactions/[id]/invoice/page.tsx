@@ -15,8 +15,7 @@ import React from 'react';
 
 type UserProfile = {
     displayName: string;
-    accountId: string;
-    email?: string;
+    connection_id: string;
 }
 
 const InvoicePage = () => {
@@ -83,7 +82,7 @@ const InvoicePage = () => {
                         <div>
                             <Logo className="h-12 w-12 mb-4" />
                             <h2 className="text-xl font-semibold">{userProfile?.displayName || 'Your Company'}</h2>
-                            <p className="text-sm text-muted-foreground">{userProfile?.email || ''}</p>
+                            <p className="text-sm text-muted-foreground">{userProfile?.connection_id || ''}</p>
                         </div>
                         <div className="text-right">
                             <h1 className="text-3xl font-bold uppercase tracking-wider text-primary">Invoice</h1>

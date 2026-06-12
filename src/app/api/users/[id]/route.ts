@@ -6,12 +6,18 @@ export async function GET(
   context: { params: Promise<{ id: string }> }
 ) {
   const { id } = await context.params
-  const user = await prisma.user.findUnique({
+  const account = await prisma.account.findUnique({
     where: { id },
-    select: { id: true, displayName: true, accountId: true, email: true },
+    select: {
+      id: true,
+      connection_id: true,
+      displayName: true,
+      neupid: true,
+      displayImage: true,
+    },
   })
-  if (!user) return NextResponse.json({ error: 'Not found' }, { status: 404 })
-  return NextResponse.json(user)
+  if (!account) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+  return NextResponse.json(account)
 }
 
 export async function PUT(
@@ -20,15 +26,40 @@ export async function PUT(
 ) {
   const { id } = await context.params
   const body = await req.json()
-  const { displayName, accountId, email } = body || {}
-  if (!displayName || !accountId) {
+  const { connection_id, displayName, neupid, displayImage } = body || {}
+  if (!connection_id) {
     return NextResponse.json({ error: 'Invalid payload' }, { status: 400 })
   }
-  const user = await prisma.user.upsert({
+  const existing = await prisma.account.findUnique({
     where: { id },
-    create: { id, displayName, accountId, email: email ?? null },
-    update: { displayName, accountId, email: email ?? null },
-    select: { id: true, displayName: true, accountId: true, email: true },
+    select: {
+      displayName: true,
+      neupid: true,
+      displayImage: true,
+    },
   })
-  return NextResponse.json(user)
+  const account = await prisma.account.upsert({
+    where: { id },
+    create: {
+      id,
+      connection_id,
+      displayName: displayName ?? existing?.displayName ?? '',
+      neupid: neupid ?? existing?.neupid ?? '',
+      displayImage: displayImage ?? existing?.displayImage ?? '',
+    },
+    update: {
+      connection_id,
+      displayName: displayName ?? existing?.displayName ?? '',
+      neupid: neupid ?? existing?.neupid ?? '',
+      displayImage: displayImage ?? existing?.displayImage ?? '',
+    },
+    select: {
+      id: true,
+      connection_id: true,
+      displayName: true,
+      neupid: true,
+      displayImage: true,
+    },
+  })
+  return NextResponse.json(account)
 }

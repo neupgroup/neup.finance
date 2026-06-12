@@ -7,8 +7,8 @@ export async function GET(
   context: { params: Promise<{ id: string }> }
 ) {
   const { id } = await context.params
-  const accounts = await prisma.account.findMany({
-    where: { userId: id },
+  const accounts = await prisma.ledger.findMany({
+    where: { accountId: id },
     orderBy: { createdAt: 'desc' },
   })
   return NextResponse.json(
@@ -18,7 +18,7 @@ export async function GET(
       type: a.type,
       balance: Number(a.balance),
       currency: a.currency,
-      userId: a.userId,
+      userId: a.accountId,
     }))
   )
 }
@@ -33,13 +33,13 @@ export async function POST(
   if (!name || !type || !currency) {
     return NextResponse.json({ error: 'Invalid payload' }, { status: 400 })
   }
-  const created = await prisma.account.create({
+  const created = await prisma.ledger.create({
     data: {
       name,
       type,
       currency,
       balance: new Prisma.Decimal(0),
-      userId: id,
+      accountId: id,
     },
   })
   return NextResponse.json({
@@ -48,6 +48,6 @@ export async function POST(
     type: created.type,
     balance: Number(created.balance),
     currency: created.currency,
-    userId: created.userId,
+    userId: created.accountId,
   })
 }
