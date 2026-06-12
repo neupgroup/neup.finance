@@ -58,12 +58,13 @@ export function useUserAccounts(userId?: string | null) {
   return useFetchJson<Account[]>(url, [userId]);
 }
 
-export function useTransactionsList(userId?: string | null, limit?: number, deps: any[] = []) {
+export function useTransactionsList(userId?: string | null, limit?: number, deps: any[] = [], assetGroupId?: string | null) {
   const qs = new URLSearchParams();
   if (userId) qs.set('userId', userId);
   if (limit) qs.set('limit', String(limit));
+  if (assetGroupId) qs.set('assetGroupId', assetGroupId);
   const url = userId ? `/api/transactions?${qs.toString()}` : null;
-  return useFetchJson<Transaction[]>(url, [userId, limit, ...deps]);
+  return useFetchJson<Transaction[]>(url, [userId, limit, assetGroupId, ...deps]);
 }
 
 export function useTransactionById(id?: string | null) {
@@ -104,7 +105,7 @@ export async function createAccount(userId: string, payload: { name: string; typ
   return res.json();
 }
 
-export async function createTransaction(payload: Omit<Transaction, 'id' | 'created_at'>) {
+export async function createTransaction(payload: Omit<Transaction, 'id' | 'created_at'> & { assetGroupId?: string }) {
   const res = await fetch(`/api/transactions`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

@@ -27,6 +27,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, Pagi
 import { useUser } from '@/auth/provider';
 import { useUserAccounts, createAccount, type Account } from '@/hooks/api';
 import { useToast } from '@/hooks/use-toast';
+import Link from 'next/link';
 
 type AccountType = Account['type'];
 
@@ -179,7 +180,8 @@ export default function AssetsPage() {
                     <p>Loading your assets...</p>
                 </div>
             ) : paginatedAccounts.length > 0 ? paginatedAccounts.map((account) => (
-                <div key={account.id} className="flex items-center justify-between p-4 rounded-lg border bg-card hover:bg-muted/50 transition-colors">
+                <Link key={account.id} href={`/assets/${account.id}`} className="block">
+                  <div className="flex items-center justify-between p-4 rounded-lg border bg-card hover:bg-muted/50 transition-colors">
                     <div className="flex items-center gap-4">
                         <div className="p-2 rounded-full bg-muted">
                             {accountTypeIcons[account.type]}
@@ -200,7 +202,8 @@ export default function AssetsPage() {
                             <MoreVertical className="h-5 w-5" />
                         </Button>
                     </div>
-                </div>
+                  </div>
+                </Link>
             )) : (
               <div className="text-center py-12 text-muted-foreground">
                 <p>No assets found. Create your first one!</p>

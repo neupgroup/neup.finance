@@ -16,10 +16,15 @@ export async function GET(req: NextRequest) {
 
   const { searchParams } = new URL(req.url)
   const userId = searchParams.get('userId')
+  const assetGroupId = searchParams.get('assetGroupId')
   const limit = searchParams.get('limit')
   if (!userId) return NextResponse.json({ error: 'userId required' }, { status: 400 })
   const items = await prisma.transaction.findMany({
-    where: { userId, accountId: connectionId },
+    where: {
+      userId,
+      accountId: connectionId,
+      ...(assetGroupId ? { assetGroupId } : {}),
+    },
     orderBy: { date: 'desc' },
     take: limit ? Number(limit) : undefined,
   })
@@ -68,6 +73,7 @@ export async function POST(req: NextRequest) {
     recipient,
     due_on,
     reference_document,
+    assetGroupId,
     accountId: selectedLedgerName,
     userId,
   } = body || {}
@@ -83,23 +89,36 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'connection_id not registered' }, { status: 404 })
   }
 
-  const ledgerName = typeof selectedLedgerName === 'string' && selectedLedgerName.trim()
-    ? selectedLedgerName.trim()
-    : 'Default Ledger'
+  let activeLedger = null as { id: string } | null
 
-  const ledger = await prisma.assetGroup.findFirst({
-    where: { accountId: owner.id, name: ledgerName },
-    select: { id: true },
-  })
-  const activeLedger = ledger ?? await prisma.assetGroup.create({
-    data: {
-      name: ledgerName,
-      type: AccountType.Other,
-      currency,
-      accountId: owner.id,
-    },
-    select: { id: true },
-  })
+  if (typeof assetGroupId === 'string' && assetGroupId.trim()) {
+    activeLedger = await prisma.assetGroup.findFirst({
+      where: { id: assetGroupId.trim(), accountId: owner.id },
+      select: { id: true },
+    })
+  } else {
+    const ledgerName = typeof selectedLedgerName === 'string' && selectedLedgerName.trim()
+      ? selectedLedgerName.trim()
+      : 'Default Ledger'
+
+    const ledger = await prisma.assetGroup.findFirst({
+      where: { accountId: owner.id, name: ledgerName },
+      select: { id: true },
+    })
+    activeLedger = ledger ?? await prisma.assetGroup.create({
+      data: {
+        name: ledgerName,
+        type: AccountType.Other,
+        currency,
+        accountId: owner.id,
+      },
+      select: { id: true },
+    })
+  }
+
+  if (!activeLedger) {
+    return NextResponse.json({ error: 'asset group not found' }, { status: 404 })
+  }
 
   const created = await prisma.transaction.create({
     data: {
