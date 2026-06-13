@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger } from '@/components/ui/sidebar';
@@ -9,20 +9,68 @@ import { Logo } from '../icons';
 import { Header } from './header';
 import { useUser } from '@/auth/provider';
 import { useUserProfile } from '@/hooks/api';
-import { Skeleton } from '@/components/ui/skeleton';
 
-// Define a type for the user profile data
-type UserProfile = {
-    displayName: string;
-    connection_id: string;
+type ShellIdentity = {
+    label: string;
+    avatarSrc: string | null;
+    connectionId: string | null;
+};
+
+function getShellIdentityKey(userId?: string | null) {
+    return userId ? `shell_identity_${userId}` : null;
+}
+
+function readShellIdentity(userId?: string | null): ShellIdentity {
+    if (typeof window === 'undefined') {
+        return { label: '...', avatarSrc: null, connectionId: null };
+    }
+
+    const key = getShellIdentityKey(userId);
+    if (!key) return { label: '...', avatarSrc: null, connectionId: null };
+
+    try {
+        const raw = window.localStorage.getItem(key);
+        if (!raw) return { label: '...', avatarSrc: null, connectionId: null };
+        const parsed = JSON.parse(raw) as Partial<ShellIdentity>;
+        return {
+            label: typeof parsed.label === 'string' && parsed.label.trim() ? parsed.label : '...',
+            avatarSrc: typeof parsed.avatarSrc === 'string' && parsed.avatarSrc.trim() ? parsed.avatarSrc : null,
+            connectionId: typeof parsed.connectionId === 'string' && parsed.connectionId.trim() ? parsed.connectionId : null,
+        };
+    } catch {
+        return { label: '...', avatarSrc: null, connectionId: null };
+    }
 }
 
 function AppShellContent({ children }: { children: React.ReactNode }) {
     const { user, isUserLoading } = useUser();
     const router = useRouter();
 
-    const { data: userProfile, isLoading: isProfileLoading } = useUserProfile(user?.uid);
-    const isShellLoading = isUserLoading || (user && isProfileLoading) || !userProfile;
+    const { data: userProfile } = useUserProfile(user?.uid);
+    const [shellIdentity, setShellIdentity] = useState<ShellIdentity>(() => readShellIdentity(user?.uid));
+
+    useEffect(() => {
+        setShellIdentity(readShellIdentity(user?.uid));
+    }, [user?.uid]);
+
+    useEffect(() => {
+        if (!user?.uid || !userProfile) return;
+
+        const resolvedLabel = userProfile.connection_id || userProfile.displayName || user.displayName || 'My Account';
+        const resolvedAvatarSrc = userProfile.displayImage || user.photoURL || null;
+        const nextIdentity: ShellIdentity = {
+            label: resolvedLabel,
+            avatarSrc: resolvedAvatarSrc,
+            connectionId: userProfile.connection_id || null,
+        };
+
+        setShellIdentity(nextIdentity);
+
+        const key = getShellIdentityKey(user.uid);
+        if (key) {
+            window.localStorage.setItem(key, JSON.stringify(nextIdentity));
+        }
+    }, [user?.uid, user?.displayName, user?.photoURL, userProfile]);
 
     useEffect(() => {
         // The middleware now handles the primary redirection logic.
@@ -42,19 +90,14 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
                             <Logo className="h-8 w-8" />
                             <div className="flex flex-col">
                                 <span>Neup.Ledger</span>
-                                {isShellLoading ? (
-                                    <Skeleton className="mt-1 h-3 w-20" />
-                                ) : userProfile?.connection_id ? (
-                                    <span className="text-xs font-normal text-muted-foreground">{userProfile.connection_id}</span>
-                                ) : null}
+                                <span className="text-xs font-normal text-muted-foreground">{shellIdentity.label}</span>
                             </div>
                         </Link>
                     </div>
-                    {isShellLoading ? (
-                        <Skeleton className="h-9 w-9 rounded-full" />
-                    ) : (
-                        <Header />
-                    )}
+                    <Header
+                        displayLabel={shellIdentity.label}
+                        avatarSrc={shellIdentity.avatarSrc}
+                    />
                 </div>
             </header>
             <div className="mx-auto grid w-full max-w-[1440px] lg:grid-cols-[280px_1fr] xl:grid-cols-[320px_1fr]">

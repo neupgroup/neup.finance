@@ -1,13 +1,10 @@
 'use client';
 
-import Image from 'next/image';
 import {
-  CircleUser,
   LogOut,
   Moon,
   Settings,
   Sun,
-  User,
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { Button } from '@/components/ui/button';
@@ -23,13 +20,25 @@ import {
   DropdownMenuPortal,
   DropdownMenuSubContent
 } from '@/components/ui/dropdown-menu';
-import { useUser, useAuthActions } from '@/auth/provider';
+import { useAuthActions } from '@/auth/provider';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-export function Header() {
+type HeaderProps = {
+  displayLabel: string;
+  avatarSrc: string | null;
+};
+
+function getInitials(value?: string | null) {
+  if (!value) return 'A';
+  const parts = value.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return 'A';
+  return parts.slice(0, 2).map((part) => part[0]?.toUpperCase()).join('');
+}
+
+export function Header({ displayLabel, avatarSrc }: HeaderProps) {
   const { setTheme } = useTheme();
-  const { user } = useUser();
   const { signOut } = useAuthActions();
   const router = useRouter();
 
@@ -44,22 +53,17 @@ export function Header() {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon" className="rounded-full">
-            {user && user.photoURL ? (
-                <Image
-                    src={user.photoURL}
-                    width={36}
-                    height={36}
-                    alt="User avatar"
-                    className="rounded-full"
-                />
-            ) : (
-                <CircleUser className="h-6 w-6" />
-            )}
+            <Avatar className="h-9 w-9">
+              <AvatarImage src={avatarSrc || undefined} alt="User avatar" />
+              <AvatarFallback>
+                {getInitials(displayLabel)}
+              </AvatarFallback>
+            </Avatar>
             <span className="sr-only">Toggle user menu</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>{user?.displayName || 'My Account'}</DropdownMenuLabel>
+          <DropdownMenuLabel>{displayLabel}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <Link href="/settings/appearance">
             <DropdownMenuItem>

@@ -4,12 +4,14 @@ import { useState } from 'react';
 import { AppShell } from '@/components/layout/app-shell';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { PlusCircle, Landmark, Wallet, Activity, MoreVertical } from 'lucide-react';
+import { PlusCircle, Landmark, Wallet, Activity, MoreVertical, Inbox } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationLink } from '@/components/ui/pagination';
 import { useUser } from '@/auth/provider';
-import { useUserAccounts, type Account } from '@/hooks/api';
+import { useUserAccounts } from '@/hooks/api';
 import Link from 'next/link';
+import { stackedCardClassName } from '@/components/ui/stacked-card';
+import { StackedEmptyStateRow } from '@/components/ui/stacked-empty-state';
 
 const accountTypeIcons = {
   Bank: <Landmark className="h-5 w-5 text-muted-foreground" />,
@@ -42,17 +44,6 @@ function AssetCardSkeleton({ className = '' }: { className?: string }) {
   );
 }
 
-function getStackItemClasses(index: number, total: number) {
-  const isFirst = index === 0;
-  const isLast = index === total - 1;
-
-  return cn(
-    'flex items-center justify-between border-b border-border bg-card p-4 transition-colors hover:bg-muted/50',
-    isFirst && 'rounded-t-lg',
-    isLast && 'rounded-b-lg border-b-0'
-  );
-}
-
 export default function AssetsPage() {
   const { user } = useUser();
 
@@ -61,7 +52,7 @@ export default function AssetsPage() {
 
   const totalPages = Math.ceil((accounts?.length || 0) / ITEMS_PER_PAGE);
   const paginatedAccounts = accounts?.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE) || [];
-  const stackedTotal = paginatedAccounts.length + 1;
+  const stackedTotal = paginatedAccounts.length > 0 ? paginatedAccounts.length + 1 : 2;
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -73,14 +64,17 @@ export default function AssetsPage() {
     <AppShell>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold tracking-tight">Your Assets</h1>
+            <div className="space-y-1">
+              <h1 className="text-3xl font-bold tracking-tight">Your Assets</h1>
+              <p className="text-sm text-muted-foreground">Manage asset groups and jump straight into creating a new one.</p>
+            </div>
         </div>
-         <div className="mx-auto max-w-4xl">
+         <div className="w-full">
             <div className="overflow-hidden rounded-lg border">
               {areAccountsLoading ? (
                 <div className="divide-y">
                   <Link href="/assets/add" className="block">
-                    <div className={getStackItemClasses(0, 4)}>
+                    <div className={stackedCardClassName(0, 4, 'flex items-center justify-between p-4')}>
                       <div className="flex items-center gap-4">
                         <div className="rounded-full bg-muted p-2">
                           <PlusCircle className="h-5 w-5 text-muted-foreground" />
@@ -102,7 +96,7 @@ export default function AssetsPage() {
               ) : (
                 <div className="divide-y">
                   <Link href="/assets/add" className="block">
-                    <div className={getStackItemClasses(0, stackedTotal)}>
+                    <div className={stackedCardClassName(0, stackedTotal, 'flex items-center justify-between p-4')}>
                       <div className="flex items-center gap-4">
                         <div className="rounded-full bg-muted p-2">
                           <PlusCircle className="h-5 w-5 text-muted-foreground" />
@@ -117,10 +111,10 @@ export default function AssetsPage() {
                       </Button>
                     </div>
                   </Link>
-                  {paginatedAccounts.map((account, index) => {
+                  {paginatedAccounts.length > 0 ? paginatedAccounts.map((account, index) => {
                     return (
                       <Link key={account.id} href={`/assets/${account.id}`} className="block">
-                        <div className={getStackItemClasses(index + 1, stackedTotal)}>
+                        <div className={stackedCardClassName(index + 1, stackedTotal, 'flex items-center justify-between p-4')}>
                           <div className="flex items-center gap-4">
                             <div className="rounded-full bg-muted p-2">
                               {accountTypeIcons[account.type]}
@@ -144,15 +138,17 @@ export default function AssetsPage() {
                         </div>
                       </Link>
                     );
-                  })}
+                  }) : (
+                    <StackedEmptyStateRow
+                      icon={Inbox}
+                      title="No assets found"
+                      description="Create your first asset group from the card above."
+                      className={stackedCardClassName(1, 2, 'bg-card')}
+                    />
+                  )}
                 </div>
               )}
             </div>
-            {!areAccountsLoading && paginatedAccounts.length === 0 && (
-              <div className="text-center py-12 text-muted-foreground">
-                <p>No assets found. Create your first one!</p>
-              </div>
-            )}
         </div>
         {!areAccountsLoading && totalPages > 1 && (
             <Pagination>

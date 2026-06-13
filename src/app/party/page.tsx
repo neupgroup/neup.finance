@@ -4,92 +4,171 @@ import Link from 'next/link';
 import { AppShell } from '@/components/layout/app-shell';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { useParties } from '@/hooks/api';
-import { Building, Mail, MapPin, MoreVertical, Phone, PlusCircle, User, Wallet } from 'lucide-react';
+import { Building, Inbox, Mail, MapPin, MoreVertical, Phone, PlusCircle, User, Wallet } from 'lucide-react';
+import { stackedCardClassName } from '@/components/ui/stacked-card';
+import { StackedEmptyStateRow } from '@/components/ui/stacked-empty-state';
 
 export default function PartyPage() {
-  const { data: parties } = useParties();
+  const { data: parties, isLoading } = useParties();
   const recipients = parties ?? [];
+  const stackedTotal = recipients.length > 0 ? recipients.length + 1 : 2;
 
   return (
     <AppShell>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold tracking-tight">Your Parties</h1>
-          <Link href="/party/add">
-            <Button>
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Add Party
-            </Button>
-          </Link>
+          <div className="space-y-1">
+            <h1 className="text-3xl font-bold tracking-tight">Your Parties</h1>
+            <p className="text-sm text-muted-foreground">Organize the people and organizations you transact with.</p>
+          </div>
         </div>
 
-        <div className="mx-auto max-w-4xl space-y-4">
-          {recipients.length > 0 ? recipients.map((party) => (
-            <div key={party.id} className="flex items-start justify-between rounded-lg border bg-card p-4 transition-colors hover:bg-muted/50">
-              <div className="flex items-start gap-4">
-                <div className="mt-1 rounded-full bg-muted p-2">
-                  {party.type === 'person' ? <User className="h-5 w-5 text-muted-foreground" /> : <Building className="h-5 w-5 text-muted-foreground" />}
+        <div className="w-full">
+          <div className="overflow-hidden rounded-lg border">
+            {isLoading ? (
+              <div className="divide-y">
+                <Link href="/party/add" className="block">
+                  <div className={stackedCardClassName(0, 4, 'flex items-start justify-between p-4')}>
+                    <div className="flex items-start gap-4">
+                      <div className="mt-1 rounded-full bg-muted p-2">
+                        <PlusCircle className="h-5 w-5 text-muted-foreground" />
+                      </div>
+                      <div>
+                        <p className="font-semibold">Add Party</p>
+                        <p className="text-sm text-muted-foreground">Create a person or organization record.</p>
+                      </div>
+                    </div>
+                    <Button variant="ghost" size="icon">
+                      <PlusCircle className="h-5 w-5" />
+                    </Button>
+                  </div>
+                </Link>
+                <div className="flex items-start justify-between border-b border-border bg-card p-4">
+                  <div className="flex items-start gap-4">
+                    <Skeleton className="mt-1 h-9 w-9 rounded-full" />
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-32" />
+                      <Skeleton className="h-3 w-48" />
+                      <Skeleton className="h-3 w-40" />
+                    </div>
+                  </div>
+                  <Skeleton className="h-9 w-9 rounded-md" />
                 </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <p className="font-semibold">{party.name}</p>
-                    <Badge variant="secondary" className="capitalize">{party.type}</Badge>
-                  </div>
-                  <div className="mt-2 flex flex-col gap-1 text-sm text-muted-foreground">
-                    {party.contacts?.find((contact) => contact.type === 'email')?.value ? (
-                      <div className="flex items-center gap-1.5">
-                        <Mail className="h-3.5 w-3.5" />
-                        <a
-                          href={`mailto:${party.contacts?.find((contact) => contact.type === 'email')?.value}`}
-                          className="hover:underline"
-                        >
-                          {party.contacts?.find((contact) => contact.type === 'email')?.value}
-                        </a>
-                      </div>
-                    ) : null}
-                    {party.contacts?.find((contact) => contact.type === 'phone')?.value ? (
-                      <div className="flex items-center gap-1.5">
-                        <Phone className="h-3.5 w-3.5" />
-                        <span>{party.contacts?.find((contact) => contact.type === 'phone')?.value}</span>
-                      </div>
-                    ) : null}
-                    {party.contacts?.find((contact) => contact.type === 'address')?.value ? (
-                      <div className="flex items-center gap-1.5">
-                        <MapPin className="h-3.5 w-3.5" />
-                        <span>{party.contacts?.find((contact) => contact.type === 'address')?.value}</span>
-                      </div>
-                    ) : null}
-                  </div>
-                  {party.taxinfo ? (
-                    <div className="mt-2">
-                      <Badge variant="outline" className={cn('border-dashed')}>
-                        {String((party.taxinfo as any)?.taxType ?? 'tax').toUpperCase()}: {(party.taxinfo as any)?.taxNumber ?? 'N/A'}
-                      </Badge>
+                <div className="flex items-start justify-between border-b border-border bg-card p-4">
+                  <div className="flex items-start gap-4">
+                    <Skeleton className="mt-1 h-9 w-9 rounded-full" />
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-40" />
+                      <Skeleton className="h-3 w-52" />
+                      <Skeleton className="h-3 w-36" />
                     </div>
-                  ) : null}
-                  {party.paymentMethods?.length ? (
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      {party.paymentMethods.map((method) => (
-                        <Badge key={method.id} variant="secondary" className="gap-1">
-                          <Wallet className="h-3 w-3" />
-                          {method.type}: {method.value}
-                        </Badge>
-                      ))}
+                  </div>
+                  <Skeleton className="h-9 w-9 rounded-md" />
+                </div>
+                <div className="flex items-start justify-between rounded-b-lg border-b-0 bg-card p-4">
+                  <div className="flex items-start gap-4">
+                    <Skeleton className="mt-1 h-9 w-9 rounded-full" />
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-28" />
+                      <Skeleton className="h-3 w-44" />
+                      <Skeleton className="h-3 w-32" />
                     </div>
-                  ) : null}
+                  </div>
+                  <Skeleton className="h-9 w-9 rounded-md" />
                 </div>
               </div>
-              <Button variant="ghost" size="icon">
-                <MoreVertical className="h-5 w-5" />
-              </Button>
-            </div>
-          )) : (
-            <div className="py-12 text-center text-muted-foreground">
-              <p>No parties found. Add your first one!</p>
-            </div>
-          )}
+            ) : (
+              <>
+                <Link href="/party/add" className="block">
+                  <div className={stackedCardClassName(0, stackedTotal, 'flex items-start justify-between p-4')}>
+                    <div className="flex items-start gap-4">
+                      <div className="mt-1 rounded-full bg-muted p-2">
+                        <PlusCircle className="h-5 w-5 text-muted-foreground" />
+                      </div>
+                      <div>
+                        <p className="font-semibold">Add Party</p>
+                        <p className="text-sm text-muted-foreground">Create a person or organization record.</p>
+                      </div>
+                    </div>
+                    <Button variant="ghost" size="icon">
+                      <PlusCircle className="h-5 w-5" />
+                    </Button>
+                  </div>
+                </Link>
+
+                {recipients.length > 0 ? recipients.map((party, index) => (
+                  <div key={party.id} className={stackedCardClassName(index + 1, stackedTotal, 'flex items-start justify-between p-4')}>
+                    <div className="flex items-start gap-4">
+                      <div className="mt-1 rounded-full bg-muted p-2">
+                        {party.type === 'person' ? <User className="h-5 w-5 text-muted-foreground" /> : <Building className="h-5 w-5 text-muted-foreground" />}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <p className="font-semibold">{party.name}</p>
+                          <Badge variant="secondary" className="capitalize">{party.type}</Badge>
+                        </div>
+                        <div className="mt-2 flex flex-col gap-1 text-sm text-muted-foreground">
+                          {party.contacts?.find((contact) => contact.type === 'email')?.value ? (
+                            <div className="flex items-center gap-1.5">
+                              <Mail className="h-3.5 w-3.5" />
+                              <a
+                                href={`mailto:${party.contacts?.find((contact) => contact.type === 'email')?.value}`}
+                                className="hover:underline"
+                              >
+                                {party.contacts?.find((contact) => contact.type === 'email')?.value}
+                              </a>
+                            </div>
+                          ) : null}
+                          {party.contacts?.find((contact) => contact.type === 'phone')?.value ? (
+                            <div className="flex items-center gap-1.5">
+                              <Phone className="h-3.5 w-3.5" />
+                              <span>{party.contacts?.find((contact) => contact.type === 'phone')?.value}</span>
+                            </div>
+                          ) : null}
+                          {party.contacts?.find((contact) => contact.type === 'address')?.value ? (
+                            <div className="flex items-center gap-1.5">
+                              <MapPin className="h-3.5 w-3.5" />
+                              <span>{party.contacts?.find((contact) => contact.type === 'address')?.value}</span>
+                            </div>
+                          ) : null}
+                        </div>
+                        {party.taxinfo ? (
+                          <div className="mt-2">
+                            <Badge variant="outline" className={cn('border-dashed')}>
+                              {String((party.taxinfo as any)?.taxType ?? 'tax').toUpperCase()}: {(party.taxinfo as any)?.taxNumber ?? 'N/A'}
+                            </Badge>
+                          </div>
+                        ) : null}
+                        {party.paymentMethods?.length ? (
+                          <div className="mt-2 flex flex-wrap gap-2">
+                            {party.paymentMethods.map((method) => (
+                              <Badge key={method.id} variant="secondary" className="gap-1">
+                                <Wallet className="h-3 w-3" />
+                                {method.type}: {method.value}
+                              </Badge>
+                            ))}
+                          </div>
+                        ) : null}
+                      </div>
+                    </div>
+                    <Button variant="ghost" size="icon">
+                      <MoreVertical className="h-5 w-5" />
+                    </Button>
+                  </div>
+                )) : (
+                  <StackedEmptyStateRow
+                    icon={Inbox}
+                    title="No parties found"
+                    description="Create your first party from the card above."
+                    className={stackedCardClassName(1, 2, 'bg-card')}
+                  />
+                )}
+              </>
+            )}
+          </div>
         </div>
       </div>
     </AppShell>

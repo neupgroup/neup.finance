@@ -6,17 +6,19 @@ import { AppShell } from '@/components/layout/app-shell';
 import { SmartProjections } from '@/components/dashboard/smart-projections';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { PlusCircle, ArrowUpRight, ArrowDownLeft, Loader, XCircle, Repeat } from 'lucide-react';
+import { PlusCircle, ArrowUpRight, ArrowDownLeft, Inbox, XCircle, Repeat } from 'lucide-react';
 import Link from 'next/link';
-import { type Projection } from '@/lib/mock-data';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationLink } from '@/components/ui/pagination';
 import { useUser } from '@/auth/provider';
 import { useProjections } from '@/hooks/api';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { YearlyProjectionChart } from '@/components/charts/yearly-projection-chart';
+import { stackedCardClassName } from '@/components/ui/stacked-card';
+import { StackedEmptyStateRow } from '@/components/ui/stacked-empty-state';
 
 
 const certaintyColors = {
@@ -81,91 +83,148 @@ export default function ProjectionsPage() {
         }
     };
     
-    const isLoading = isUserLoading || areProjectionsLoading;
+  const isLoading = isUserLoading || areProjectionsLoading;
+  const stackedTotal = paginatedProjections.length > 0 ? paginatedProjections.length + 1 : 2;
 
   return (
     <AppShell>
         <div className="space-y-6">
+            <div className="space-y-1">
+                <h1 className="text-3xl font-bold tracking-tight">Future Projections</h1>
+                <p className="text-sm text-muted-foreground">Track expected income and expenses, then add a new projection from the first card.</p>
+            </div>
             <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                    <div>
-                        <CardTitle>Future Projections</CardTitle>
-                        <CardDescription>A list of your projected income and expenses.</CardDescription>
-                    </div>
-                    <Link href="/projections/add">
-                        <Button disabled={isLoading}>
-                            <PlusCircle className="mr-2 h-4 w-4" />
-                            Add Projection
-                        </Button>
-                    </Link>
+                <CardHeader>
+                    <CardTitle>Future Projections</CardTitle>
+                    <CardDescription>A list of your projected income and expenses.</CardDescription>
                 </CardHeader>
                 <CardContent>
                         {isLoading ? (
-                        <div className="flex items-center justify-center py-12 text-muted-foreground">
-                            <Loader className="mr-3 h-6 w-6 animate-spin" />
-                            <p>Loading your projections...</p>
+                        <div className="overflow-hidden rounded-lg border">
+                          <div className="divide-y">
+                            <div className={stackedCardClassName(0, 4, 'flex items-center justify-between p-4')}>
+                              <div className="flex items-center gap-4">
+                                <Skeleton className="h-10 w-10 rounded-full" />
+                                <div className="space-y-2">
+                                  <Skeleton className="h-4 w-40" />
+                                  <Skeleton className="h-3 w-52" />
+                                </div>
+                              </div>
+                              <Skeleton className="h-9 w-9 rounded-md" />
+                            </div>
+                            <div className="flex items-center justify-between border-b border-border bg-card p-4">
+                              <div className="flex items-center gap-4">
+                                <Skeleton className="h-10 w-10 rounded-full" />
+                                <div className="space-y-2">
+                                  <Skeleton className="h-4 w-36" />
+                                  <Skeleton className="h-3 w-48" />
+                                </div>
+                              </div>
+                              <Skeleton className="h-6 w-24" />
+                            </div>
+                            <div className="flex items-center justify-between border-b border-border bg-card p-4">
+                              <div className="flex items-center gap-4">
+                                <Skeleton className="h-10 w-10 rounded-full" />
+                                <div className="space-y-2">
+                                  <Skeleton className="h-4 w-32" />
+                                  <Skeleton className="h-3 w-44" />
+                                </div>
+                              </div>
+                              <Skeleton className="h-6 w-28" />
+                            </div>
+                            <div className="flex items-center justify-between rounded-b-lg border-b-0 bg-card p-4">
+                              <div className="flex items-center gap-4">
+                                <Skeleton className="h-10 w-10 rounded-full" />
+                                <div className="space-y-2">
+                                  <Skeleton className="h-4 w-28" />
+                                  <Skeleton className="h-3 w-40" />
+                                </div>
+                              </div>
+                              <Skeleton className="h-6 w-20" />
+                            </div>
+                          </div>
                         </div>
                     ) : (
-                        <div className="space-y-4">
-                            {paginatedProjections.length > 0 ? paginatedProjections.map((item) => (
-                                <div key={item.id} className={cn("flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors", item.status === 'Canceled' && 'opacity-50 bg-muted/50')}>
-                                    <div className="flex items-center gap-4">
-                                        <div className="p-2 rounded-full bg-muted">
-                                            {typeIcons[item.type]}
-                                        </div>
-                                        <div>
-                                            <p className={cn("font-semibold", item.status === 'Canceled' && 'line-through')}>{item.title}</p>
-                                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                                <span>{new Date(item.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric'})}</span>
-                                                {item.isRecurring && (
-                                                    <div className="flex items-center gap-1">
-                                                        <Repeat className="h-3 w-3" />
-                                                        <span>{item.recurrence}</span>
-                                                        {item.endsOn && <span>until {new Date(item.endsOn).toLocaleDateString('en-US', { month: 'short', day: 'numeric'})}</span>}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <div className="text-right">
-                                            <p className={cn("font-semibold", item.type === 'Income' ? 'text-green-500' : 'text-red-500', item.status === 'Canceled' && 'line-through')}>
-                                                {new Intl.NumberFormat('en-US', { style: 'currency', currency: item.currency }).format(item.amount)}
-                                            </p>
-                                            {item.status === 'Canceled' ? (
-                                                <Badge variant="destructive" className="mt-1">Canceled</Badge>
-                                            ) : (
-                                                <Badge variant="outline" className={cn("mt-1", certaintyColors[item.certainty])}>{item.certainty}</Badge>
-                                            )}
-                                        </div>
-                                        {item.status !== 'Canceled' && (
-                                        <AlertDialog>
-                                            <AlertDialogTrigger asChild>
-                                                <Button variant="ghost" size="icon">
-                                                    <XCircle className="h-4 w-4 text-muted-foreground hover:text-destructive" />
-                                                </Button>
-                                            </AlertDialogTrigger>
-                                            <AlertDialogContent>
-                                                <AlertDialogHeader>
-                                                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                                                    <AlertDialogDescription>
-                                                        This action will mark the projection as canceled. You cannot undo this action.
-                                                    </AlertDialogDescription>
-                                                </AlertDialogHeader>
-                                                <AlertDialogFooter>
-                                                    <AlertDialogCancel>Back</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={() => handleCancelProjection(item.id!)}>Cancel Projection</AlertDialogAction>
-                                                </AlertDialogFooter>
-                                            </AlertDialogContent>
-                                        </AlertDialog>
-                                        )}
-                                    </div>
+                        <div className="overflow-hidden rounded-lg border">
+                          <Link href="/projections/add" className="block">
+                            <div className={stackedCardClassName(0, stackedTotal, 'flex items-center justify-between p-4')}>
+                              <div className="flex items-center gap-4">
+                                <div className="rounded-full bg-muted p-2">
+                                  <PlusCircle className="h-5 w-5 text-muted-foreground" />
                                 </div>
-                            )) : (
-                            <div className="text-center py-12 text-muted-foreground">
-                                <p>No projections found. Add your first one!</p>
+                                <div>
+                                  <p className="font-semibold">Add Projection</p>
+                                  <p className="text-sm text-muted-foreground">Create a future income or expense projection.</p>
+                                </div>
+                              </div>
+                              <Button variant="ghost" size="icon">
+                                <PlusCircle className="h-4 w-4" />
+                              </Button>
                             </div>
-                            )}
+                          </Link>
+
+                          {paginatedProjections.length > 0 ? paginatedProjections.map((item, index) => (
+                              <div key={item.id} className={stackedCardClassName(index + 1, stackedTotal, cn("flex items-center justify-between p-3", item.status === 'Canceled' && 'opacity-50 bg-muted/50'))}>
+                                  <div className="flex items-center gap-4">
+                                      <div className="p-2 rounded-full bg-muted">
+                                          {typeIcons[item.type]}
+                                      </div>
+                                      <div>
+                                          <p className={cn("font-semibold", item.status === 'Canceled' && 'line-through')}>{item.title}</p>
+                                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                              <span>{new Date(item.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric'})}</span>
+                                              {item.isRecurring && (
+                                                  <div className="flex items-center gap-1">
+                                                      <Repeat className="h-3 w-3" />
+                                                      <span>{item.recurrence}</span>
+                                                      {item.endsOn && <span>until {new Date(item.endsOn).toLocaleDateString('en-US', { month: 'short', day: 'numeric'})}</span>}
+                                                  </div>
+                                              )}
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                      <div className="text-right">
+                                          <p className={cn("font-semibold", item.type === 'Income' ? 'text-green-500' : 'text-red-500', item.status === 'Canceled' && 'line-through')}>
+                                              {new Intl.NumberFormat('en-US', { style: 'currency', currency: item.currency }).format(item.amount)}
+                                          </p>
+                                          {item.status === 'Canceled' ? (
+                                              <Badge variant="destructive" className="mt-1">Canceled</Badge>
+                                          ) : (
+                                              <Badge variant="outline" className={cn("mt-1", certaintyColors[item.certainty])}>{item.certainty}</Badge>
+                                          )}
+                                      </div>
+                                      {item.status !== 'Canceled' && (
+                                      <AlertDialog>
+                                          <AlertDialogTrigger asChild>
+                                              <Button variant="ghost" size="icon">
+                                                  <XCircle className="h-4 w-4 text-muted-foreground hover:text-destructive" />
+                                              </Button>
+                                          </AlertDialogTrigger>
+                                          <AlertDialogContent>
+                                              <AlertDialogHeader>
+                                                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                                  <AlertDialogDescription>
+                                                      This action will mark the projection as canceled. You cannot undo this action.
+                                                  </AlertDialogDescription>
+                                              </AlertDialogHeader>
+                                              <AlertDialogFooter>
+                                                  <AlertDialogCancel>Back</AlertDialogCancel>
+                                                  <AlertDialogAction onClick={() => handleCancelProjection(item.id!)}>Cancel Projection</AlertDialogAction>
+                                              </AlertDialogFooter>
+                                          </AlertDialogContent>
+                                      </AlertDialog>
+                                      )}
+                                  </div>
+                              </div>
+                          )) : (
+                          <StackedEmptyStateRow
+                              icon={Inbox}
+                              title="No projections found"
+                              description="Create your first projection from the card above."
+                              className={stackedCardClassName(1, 2, 'bg-card')}
+                          />
+                          )}
                         </div>
                     )}
                         {totalPages > 1 && (

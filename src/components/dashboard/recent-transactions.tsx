@@ -12,18 +12,26 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { type Transaction } from '@/lib/mock-data';
-import { ArrowDownLeft, ArrowUpRight, Loader } from 'lucide-react';
+import { ArrowDownLeft, ArrowUpRight, Loader, MoreVertical } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationLink } from '@/components/ui/pagination';
 import { useUser } from '@/auth/provider';
 import { useTransactionsList } from '@/hooks/api';
+import { Button } from '@/components/ui/button';
+import { stackedCardClassName } from '@/components/ui/stacked-card';
 
 
 const ITEMS_PER_PAGE = 10;
 
-export function RecentTransactions() {
+type RecentTransactionsProps = {
+  variant?: 'table' | 'stacked';
+  stackedStartIndex?: number;
+  stackedTotal?: number;
+};
+
+export function RecentTransactions({ variant = 'table', stackedStartIndex = 0, stackedTotal }: RecentTransactionsProps) {
   const pathname = usePathname();
   const isDashboard = pathname === '/';
   
@@ -37,6 +45,7 @@ export function RecentTransactions() {
       (currentPage - 1) * ITEMS_PER_PAGE,
       currentPage * ITEMS_PER_PAGE
   ) || [];
+  const visibleTransactions = paginatedTransactions ?? [];
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -52,6 +61,54 @@ export function RecentTransactions() {
               <Loader className="h-6 w-6 animate-spin" />
           </div>
       )
+  }
+
+  if (variant === 'stacked' || !isDashboard) {
+    const total = stackedTotal ?? visibleTransactions.length;
+
+    return (
+      <div className="divide-y">
+          {visibleTransactions.length > 0 ? visibleTransactions.map((transaction, index) => {
+            const isCredit = ['sale', 'refund', 'income'].includes(transaction.transaction_type);
+
+            return (
+              <Link key={transaction.id} href={`/transactions/${transaction.id}`} className="block">
+                <div className={stackedCardClassName(index + stackedStartIndex, total, 'flex items-center justify-between p-4')}>
+                  <div className="flex items-center gap-4">
+                    <div className={cn("p-1.5 rounded-full", isCredit ? 'bg-chart-2/20' : 'bg-destructive/20' )}>
+                      {isCredit ? <ArrowUpRight className="h-4 w-4 text-chart-2" /> : <ArrowDownLeft className="h-4 w-4 text-destructive" />}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <p className="font-medium hover:underline">{transaction.title}</p>
+                        <Badge variant="outline">{transaction.status}</Badge>
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        {transaction.accountId} · {new Date(transaction.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="text-right">
+                      <p className={cn("font-semibold", isCredit ? 'text-chart-2' : 'text-foreground')}>
+                        {isCredit ? '+' : ''}
+                        {new Intl.NumberFormat('en-US', { style: 'currency', currency: transaction.currency }).format(transaction.total_amount)}
+                      </p>
+                    </div>
+                    <Button variant="ghost" size="icon">
+                      <MoreVertical className="h-5 w-5" />
+                    </Button>
+                  </div>
+                </div>
+              </Link>
+            );
+          }) : (
+            <div className="px-4 py-12 text-center text-muted-foreground">
+              No transactions found.
+            </div>
+          )}
+      </div>
+    );
   }
 
   return (
