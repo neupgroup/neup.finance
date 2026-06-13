@@ -9,7 +9,7 @@ import { Logo } from '../icons';
 import { Header } from './header';
 import { useUser } from '@/auth/provider';
 import { useUserProfile } from '@/hooks/api';
-import { Loader } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 // Define a type for the user profile data
 type UserProfile = {
@@ -17,11 +17,29 @@ type UserProfile = {
     connection_id: string;
 }
 
+function MainContentSkeleton() {
+    return (
+        <div className="space-y-6">
+            <div className="space-y-2">
+                <Skeleton className="h-8 w-56" />
+                <Skeleton className="h-4 w-96 max-w-full" />
+            </div>
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                <Skeleton className="h-32 rounded-xl" />
+                <Skeleton className="h-32 rounded-xl" />
+                <Skeleton className="h-32 rounded-xl" />
+            </div>
+            <Skeleton className="h-64 rounded-xl" />
+        </div>
+    );
+}
+
 function AppShellContent({ children }: { children: React.ReactNode }) {
     const { user, isUserLoading } = useUser();
     const router = useRouter();
 
     const { data: userProfile, isLoading: isProfileLoading } = useUserProfile(user?.uid);
+    const isShellLoading = isUserLoading || (user && isProfileLoading) || !userProfile;
 
     useEffect(() => {
         // The middleware now handles the primary redirection logic.
@@ -31,14 +49,6 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
         }
     }, [user, isUserLoading, router]);
 
-    if (isUserLoading || (user && isProfileLoading) || !userProfile) {
-        return (
-            <div className="flex min-h-screen w-full items-center justify-center bg-background">
-                <Loader className="h-10 w-10 animate-spin" />
-            </div>
-        )
-    }
-    
     return (
          <div className="min-h-screen w-full bg-background text-foreground">
             <header className="sticky top-0 z-10 flex h-16 items-center border-b bg-background shadow">
@@ -49,11 +59,19 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
                             <Logo className="h-8 w-8" />
                             <div className="flex flex-col">
                                 <span>Neup.Ledger</span>
-                                {userProfile?.connection_id && <span className="text-xs font-normal text-muted-foreground">{userProfile.connection_id}</span>}
+                                {isShellLoading ? (
+                                    <Skeleton className="mt-1 h-3 w-20" />
+                                ) : userProfile?.connection_id ? (
+                                    <span className="text-xs font-normal text-muted-foreground">{userProfile.connection_id}</span>
+                                ) : null}
                             </div>
                         </Link>
                     </div>
-                    <Header />
+                    {isShellLoading ? (
+                        <Skeleton className="h-9 w-9 rounded-full" />
+                    ) : (
+                        <Header />
+                    )}
                 </div>
             </header>
             <div className="mx-auto grid w-full max-w-[1440px] lg:grid-cols-[280px_1fr] xl:grid-cols-[320px_1fr]">
@@ -64,7 +82,7 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
                 </Sidebar>
                 <main className="min-h-[calc(100vh-4rem)] p-4 md:p-6 lg:p-8">
                     <div className="w-full">
-                        {children}
+                        {isShellLoading ? <MainContentSkeleton /> : children}
                     </div>
                 </main>
             </div>
