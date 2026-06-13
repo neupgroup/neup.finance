@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { AppShell } from '@/components/layout/app-shell';
 import {
   Card,
   CardContent,
@@ -477,7 +478,8 @@ export default function PaymentProfilesSettingsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <AppShell>
+      <div className="space-y-6">
       <Card>
         <CardHeader>
           <CardTitle>Payment Profiles</CardTitle>
@@ -887,6 +889,7 @@ export default function PaymentProfilesSettingsPage() {
           </Table>
         </CardContent>
       </Card>
-    </div>
+      </div>
+    </AppShell>
   );
 }

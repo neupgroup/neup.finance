@@ -53,7 +53,7 @@ export function MainNav() {
         );
       })}
        <div className="mt-auto">
-          <Link href="/settings/appearance" onClick={handleLinkClick}>
+      <Link href="/settings" onClick={handleLinkClick}>
               <Button
                 variant={pathname.startsWith('/settings') ? 'default' : 'ghost'}
                 className="w-full justify-start gap-2"

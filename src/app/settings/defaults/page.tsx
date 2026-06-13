@@ -2,6 +2,7 @@
 'use client';
 
 import { useState } from 'react';
+import { AppShell } from '@/components/layout/app-shell';
 import {
   Card,
   CardHeader,
@@ -31,7 +32,8 @@ export default function DefaultsSettingsPage() {
     };
 
   return (
-    <div className="space-y-6">
+    <AppShell>
+      <div className="space-y-6">
         <Card>
           <CardHeader>
             <CardTitle>Defaults</CardTitle>
@@ -64,5 +66,6 @@ export default function DefaultsSettingsPage() {
           </CardFooter>
         </Card>
       </div>
+    </AppShell>
   );
 }

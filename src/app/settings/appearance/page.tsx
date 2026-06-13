@@ -2,6 +2,7 @@
 'use client';
 
 import { useTheme } from 'next-themes';
+import { AppShell } from '@/components/layout/app-shell';
 import {
   Card,
   CardHeader,
@@ -17,7 +18,8 @@ export default function AppearanceSettingsPage() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <div className="space-y-6">
+    <AppShell>
+      <div className="space-y-6">
         <Card>
           <CardHeader>
             <CardTitle>Appearance</CardTitle>
@@ -80,5 +82,6 @@ export default function AppearanceSettingsPage() {
           </CardContent>
         </Card>
       </div>
+    </AppShell>
   );
 }
