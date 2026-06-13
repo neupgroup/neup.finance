@@ -17,23 +17,6 @@ type UserProfile = {
     connection_id: string;
 }
 
-function MainContentSkeleton() {
-    return (
-        <div className="space-y-6">
-            <div className="space-y-2">
-                <Skeleton className="h-8 w-56" />
-                <Skeleton className="h-4 w-96 max-w-full" />
-            </div>
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                <Skeleton className="h-32 rounded-xl" />
-                <Skeleton className="h-32 rounded-xl" />
-                <Skeleton className="h-32 rounded-xl" />
-            </div>
-            <Skeleton className="h-64 rounded-xl" />
-        </div>
-    );
-}
-
 function AppShellContent({ children }: { children: React.ReactNode }) {
     const { user, isUserLoading } = useUser();
     const router = useRouter();
@@ -82,7 +65,7 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
                 </Sidebar>
                 <main className="min-h-[calc(100vh-4rem)] p-4 md:p-6 lg:p-8">
                     <div className="w-full">
-                        {isShellLoading ? <MainContentSkeleton /> : children}
+                        {children}
                     </div>
                 </main>
             </div>
