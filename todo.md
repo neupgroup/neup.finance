@@ -1,0 +1,4 @@
+- [ ] Add documentation for the `prisma/` folder and its schema/migration files, including the `Account` model mapped to the `accounts` table.
+- [ ] Add documentation for the `app/` folder, including the shared layout and global styling conventions used by the ledger UI.
+- [ ] Add documentation for the `components/layout/` and `components/dashboard/` folders so the app shell and dashboard composition are described near the source.
+- [ ] Resolve the existing typecheck failures caused by missing `@/services/*` modules and related implicit `any` errors in `neup.core/auth/*`, `neup.core/helper/*`, and `neup.core/providers/session.tsx`.

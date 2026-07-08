@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack -p 3462",
+    "dev": "next dev --turbopack --port 3462",
     "build": "NODE_ENV=production next build",
-    "start": "next start -p 3462",
+    "start": "next start --port 3462",
     "lint": "next lint",
     "typecheck": "tsc --noEmit"
   },
