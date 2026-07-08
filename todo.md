@@ -1,4 +1,10 @@
 - [ ] Add documentation for the `prisma/` folder and its schema/migration files, including the `Account` model mapped to the `accounts` table.
 - [ ] Add documentation for the `app/` folder, including the shared layout and global styling conventions used by the ledger UI.
+- [ ] Add documentation for the `app/transactions/` folder, including the add-transaction validation and submit flow.
+- [ ] Add documentation for `app/transactions/[id]/page.tsx` and its transaction detail, line-item, attachment, and invoice-link behavior.
+- [ ] Add documentation for the `app/api/transactions/` route behavior, including cookie-based account resolution and user-record provisioning before transaction writes.
 - [ ] Add documentation for the `components/layout/` and `components/dashboard/` folders so the app shell and dashboard composition are described near the source.
+- [ ] Add documentation for the `components/ui/` folder, including the custom combobox, currency amount input, and date choice input behaviors.
 - [ ] Resolve the existing typecheck failures caused by missing `@/services/*` modules and related implicit `any` errors in `neup.core/auth/*`, `neup.core/helper/*`, and `neup.core/providers/session.tsx`.
+- [ ] Add documentation for `app/transactions/[id]/invoice/layout.tsx` and its standalone invoice shell providers.
+- [ ] Add documentation for `lib/mock-data.ts` and the shared transaction, line, projection, recipient, and party data shapes.

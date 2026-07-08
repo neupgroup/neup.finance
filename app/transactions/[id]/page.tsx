@@ -41,9 +41,13 @@ function DetailItem({ label, value, className }: { label: string; value?: React.
     return (
         <div className={cn("flex flex-col gap-1", className)}>
             <p className="text-sm text-muted-foreground">{label}</p>
-            <p className="font-medium text-foreground">{value}</p>
+            <div className="font-medium text-foreground">{value}</div>
         </div>
     );
+}
+
+function getTransactionDirection(type: string) {
+    return ['sale', 'refund', 'income'].includes(type) ? 'Incoming' : 'Outgoing';
 }
 
 function AddLineItemForm({ transactionId, currency, onAddLine }: { transactionId: string, currency: string, onAddLine: (line: TransactionLine) => void }) {
@@ -219,7 +223,7 @@ export default function TransactionDetailPage() {
                     <ArrowLeft className="mr-2 h-4 w-4" />
                     Back
                 </Button>
-                <Link href={`/transactions/${id}/invoice`}>
+                <Link href={`/print?type=transaction&id=${id}`}>
                     <Button variant="outline">
                         <Printer className="mr-2 h-4 w-4" />
                         View Invoice
@@ -241,7 +245,7 @@ export default function TransactionDetailPage() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                     <DetailItem label="Status" value={<Badge variant="outline" className="capitalize">{transaction.status.replace('_', ' ')}</Badge>} />
                     <DetailItem label="Category" value={transaction.category} />
-                    <DetailItem label="Type" value={<span className="capitalize">{transaction.transaction_type}</span>} />
+                    <DetailItem label="Direction" value={getTransactionDirection(transaction.transaction_type)} />
                     <DetailItem label="Account" value={transaction.accountId} />
                     <DetailItem label="Party" value={partyLabel} />
                     <DetailItem label="Due On" value={formatDate(transaction.due_on)} />

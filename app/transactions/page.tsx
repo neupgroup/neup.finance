@@ -135,7 +135,7 @@ export default function TransactionsPage() {
                     <div>
                       <p className="font-semibold">Add Transaction</p>
                       <p className="text-sm text-muted-foreground">
-                        Record an income, expense, refund, or sale.
+                        Record incoming or outgoing money.
                       </p>
                     </div>
                   </div>
@@ -157,7 +157,7 @@ export default function TransactionsPage() {
                     <div>
                       <p className="font-semibold">Add Transaction</p>
                       <p className="text-sm text-muted-foreground">
-                        Record an income, expense, refund, or sale.
+                        Record incoming or outgoing money.
                       </p>
                     </div>
                   </div>

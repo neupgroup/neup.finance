@@ -14,9 +14,10 @@ import { type Transaction, type TransactionCategory, type TransactionStatus, typ
 import { useToast } from '@/hooks/use-toast';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { ArrowLeft, Loader } from 'lucide-react';
+import { ArrowLeft, ArrowDownLeft, ArrowUpRight, Loader } from 'lucide-react';
 import { useUser } from '@/auth/provider';
 import { createTransaction, useParties } from '@/hooks/api';
+import { cn } from '@/lib/utils';
 
 const accounts = [
   { value: 'Checking Account', label: 'Checking Account' },
@@ -38,14 +39,11 @@ const categories: {value: TransactionCategory, label: TransactionCategory}[] = [
   { value: 'Refunds', label: 'Refunds' },
   { value: 'Other', label: 'Other' },
 ];
-const transactionTypes: {value: TransactionType, label: TransactionType}[] = [
-    {value: 'sale', label: 'sale'}, 
-    {value: 'purchase', label: 'purchase'}, 
-    {value: 'refund', label: 'refund'}, 
-    {value: 'expense', label: 'expense'}, 
-    {value: 'payroll', label: 'payroll'}, 
-    {value: 'income', label: 'income'},
-    {value: 'other', label: 'other'}
+type TransactionDirection = 'incoming' | 'outgoing';
+
+const transactionDirections: {value: TransactionDirection, label: string, description: string}[] = [
+    {value: 'incoming', label: 'Incoming', description: 'Money coming in'},
+    {value: 'outgoing', label: 'Outgoing', description: 'Money going out'},
 ];
 const transactionStatuses: {value: TransactionStatus, label: TransactionStatus}[] = [
     {value: 'unpaid', label: 'unpaid'},
@@ -68,7 +66,7 @@ function ReviewTransactionForm() {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [date, setDate] = useState('');
-    const [transactionType, setTransactionType] = useState<TransactionType | ''>('');
+    const [direction, setDirection] = useState<TransactionDirection | ''>('');
     const [category, setCategory] = useState<TransactionCategory | ''>('');
     const [currency, setCurrency] = useState('');
     const [totalAmount, setTotalAmount] = useState<number | ''>('');
@@ -87,7 +85,7 @@ function ReviewTransactionForm() {
                 setTitle(parsedData.title || '');
                 setDescription(parsedData.description || '');
                 setDate(parsedData.date || new Date().toISOString().split('T')[0]);
-                setTransactionType(parsedData.transaction_type || '');
+                setDirection(['sale', 'refund', 'income'].includes(parsedData.transaction_type) ? 'incoming' : 'outgoing');
                 setCategory(parsedData.category || '');
                 setCurrency(parsedData.currency?.toUpperCase() || 'USD');
                 setTotalAmount(parsedData.total_amount || '');
@@ -158,7 +156,7 @@ function ReviewTransactionForm() {
 
     const handleCommitTransaction = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!title || !date || !transactionType || !category || !currency || totalAmount === '' || !status || !user) {
+        if (!title || !date || !direction || !category || !currency || totalAmount === '' || !status || !user) {
             toast({
                 variant: "destructive",
                 title: "Missing Fields",
@@ -174,6 +172,7 @@ function ReviewTransactionForm() {
         } else if (status === 'partially_paid') {
             finalAmountPaid = typeof amountPaid === 'number' ? amountPaid : 0;
         }
+        const transactionType: TransactionType = direction === 'incoming' ? 'income' : 'expense';
 
         try {
             const newTransaction: Omit<Transaction, 'id' | 'created_at'> = {
@@ -182,7 +181,7 @@ function ReviewTransactionForm() {
                 accountId: accountId,
                 partyId: partyId || undefined,
                 category: category as TransactionCategory,
-                transaction_type: transactionType as TransactionType,
+                transaction_type: transactionType,
                 total_amount: totalAmount as number,
                 total_paid: finalAmountPaid,
                 balance_due: (totalAmount as number) - finalAmountPaid,
@@ -251,13 +250,37 @@ function ReviewTransactionForm() {
             </div>
             <div className="grid grid-cols-2 gap-4">
                 <div className="grid gap-2">
-                    <Label htmlFor="type">Type</Label>
-                    <Combobox
-                        options={transactionTypes}
-                        value={transactionType}
-                        onChange={(v) => setTransactionType(v as any)}
-                        placeholder="Select transaction type"
-                    />
+                    <Label htmlFor="direction">Direction</Label>
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                        {transactionDirections.map((item) => {
+                            const isActive = direction === item.value;
+                            return (
+                                <button
+                                    key={item.value}
+                                    type="button"
+                                    onClick={() => setDirection(item.value)}
+                                    aria-pressed={isActive}
+                                    className={cn(
+                                        "flex items-start gap-3 rounded-lg border p-4 text-left transition-colors",
+                                        isActive
+                                            ? "border-primary bg-primary/5 ring-2 ring-primary/20"
+                                            : "border-border hover:border-primary/40 hover:bg-muted/40"
+                                    )}
+                                >
+                                    <div className={cn(
+                                        "mt-0.5 rounded-full p-2",
+                                        isActive ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                                    )}>
+                                        {item.value === 'incoming' ? <ArrowUpRight className="h-4 w-4" /> : <ArrowDownLeft className="h-4 w-4" />}
+                                    </div>
+                                    <div className="space-y-1">
+                                        <div className="font-medium">{item.label}</div>
+                                        <div className="text-sm text-muted-foreground">{item.description}</div>
+                                    </div>
+                                </button>
+                            );
+                        })}
+                    </div>
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="category">Category</Label>

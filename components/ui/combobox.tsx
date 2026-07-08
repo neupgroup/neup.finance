@@ -25,6 +25,8 @@ type ComboboxProps = {
   placeholder?: string;
   searchPlaceholder?: string;
   notFoundMessage?: string;
+  className?: string;
+  ariaInvalid?: boolean;
 };
 
 export function Combobox({
@@ -34,6 +36,8 @@ export function Combobox({
   placeholder = "Select...",
   searchPlaceholder = "Search...",
   notFoundMessage = "Nothing found.",
+  className,
+  ariaInvalid = false,
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
   const [inputValue, setInputValue] = React.useState(value);
@@ -79,8 +83,14 @@ export function Combobox({
               onChange={handleInputChange}
               role="combobox"
               aria-expanded={open}
+              aria-invalid={ariaInvalid}
               placeholder={placeholder}
-              className={cn("w-full pr-8", !value && 'text-muted-foreground')}
+              className={cn(
+                "w-full pr-8",
+                !value && "text-muted-foreground",
+                ariaInvalid && "border-destructive focus-visible:ring-destructive",
+                className
+              )}
             />
             <ChevronsUpDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 shrink-0 opacity-50" />
           </div>

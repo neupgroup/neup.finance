@@ -8,6 +8,22 @@ function getConnectionIdFromCookie(req: NextRequest): string | null {
   return connectionId || null
 }
 
+async function ensureTransactionUser(userId: string, owner: { id: string; displayName: string }) {
+  return prisma.user.upsert({
+    where: { id: userId },
+    create: {
+      id: userId,
+      displayName: owner.displayName || 'Ledger User',
+      accountId: owner.id,
+    },
+    update: {
+      accountId: owner.id,
+      displayName: owner.displayName || 'Ledger User',
+    },
+    select: { id: true },
+  })
+}
+
 export async function GET(req: NextRequest) {
   const connectionId = getConnectionIdFromCookie(req)
   if (!connectionId) {
@@ -89,7 +105,7 @@ export async function POST(req: NextRequest) {
 
   const owner = await prisma.account.findUnique({
     where: { connection_id: connectionId },
-    select: { id: true },
+    select: { id: true, displayName: true },
   })
   if (!owner) {
     return NextResponse.json({ error: 'connection_id not registered' }, { status: 404 })
@@ -126,6 +142,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'asset group not found' }, { status: 404 })
   }
 
+  const persistedUser = await ensureTransactionUser(userId, owner)
+
   let resolvedParty = null as { id: string; name: string; type: string } | null
   if (typeof partyId === 'string' && partyId.trim()) {
     const party = await prisma.party.findFirst({
@@ -156,7 +174,7 @@ export async function POST(req: NextRequest) {
       partyId: resolvedParty?.id ?? null,
       due_on: due_on ? new Date(due_on) : null,
       reference_document: reference_document ?? null,
-      userId,
+      userId: persistedUser.id,
     },
     include: {
       party: true,
