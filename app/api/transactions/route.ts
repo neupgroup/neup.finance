@@ -139,7 +139,7 @@ export async function POST(req: NextRequest) {
   }
 
   if (!activeLedger) {
-    return NextResponse.json({ error: 'asset group not found' }, { status: 404 })
+    return NextResponse.json({ error: 'book not found' }, { status: 404 })
   }
 
   const persistedUser = await ensureTransactionUser(userId, owner)

@@ -23,7 +23,7 @@ const accountTypeIcons = {
 
 const ITEMS_PER_PAGE = 10;
 
-function AssetCardSkeleton({ className = '' }: { className?: string }) {
+function BookCardSkeleton({ className = '' }: { className?: string }) {
   return (
     <div className={`flex items-center justify-between bg-card p-4 ${className}`}>
       <div className="flex items-center gap-4">
@@ -44,7 +44,7 @@ function AssetCardSkeleton({ className = '' }: { className?: string }) {
   );
 }
 
-export default function AssetsPage() {
+export default function BooksPage() {
   const { user } = useUser();
 
   const { data: accounts, isLoading: areAccountsLoading } = useUserAccounts(user?.uid);
@@ -65,23 +65,23 @@ export default function AssetsPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
             <div className="space-y-1">
-              <h1 className="text-3xl font-bold tracking-tight">Your Assets</h1>
-              <p className="text-sm text-muted-foreground">Manage asset groups and jump straight into creating a new one.</p>
+              <h1 className="text-3xl font-bold tracking-tight">Your Books</h1>
+              <p className="text-sm text-muted-foreground">Manage books and jump straight into creating a new one.</p>
             </div>
         </div>
          <div className="w-full">
             <div className="overflow-hidden rounded-lg border">
               {areAccountsLoading ? (
                 <div className="divide-y">
-                  <Link href="/assets/add" className="block">
+                  <Link href="/books/add" className="block">
                     <div className={stackedCardClassName(0, 4, 'flex items-center justify-between p-4')}>
                       <div className="flex items-center gap-4">
                         <div className="rounded-full bg-muted p-2">
                           <PlusCircle className="h-5 w-5 text-muted-foreground" />
                         </div>
                         <div>
-                          <p className="font-semibold">Create Asset Group</p>
-                          <p className="text-sm text-muted-foreground">Add a new cash, bank, or investment asset group.</p>
+                          <p className="font-semibold">Create Book</p>
+                          <p className="text-sm text-muted-foreground">Add a new cash, bank, or investment book.</p>
                         </div>
                       </div>
                       <Button variant="ghost" size="icon" className="shrink-0">
@@ -89,21 +89,21 @@ export default function AssetsPage() {
                       </Button>
                     </div>
                   </Link>
-                  <AssetCardSkeleton className="border-b border-border" />
-                  <AssetCardSkeleton className="border-b border-border" />
-                  <AssetCardSkeleton className="border-b-0 rounded-b-lg" />
+                  <BookCardSkeleton className="border-b border-border" />
+                  <BookCardSkeleton className="border-b border-border" />
+                  <BookCardSkeleton className="border-b-0 rounded-b-lg" />
                 </div>
               ) : (
                 <div className="divide-y">
-                  <Link href="/assets/add" className="block">
+                  <Link href="/books/add" className="block">
                     <div className={stackedCardClassName(0, stackedTotal, 'flex items-center justify-between p-4')}>
                       <div className="flex items-center gap-4">
                         <div className="rounded-full bg-muted p-2">
                           <PlusCircle className="h-5 w-5 text-muted-foreground" />
                         </div>
                         <div>
-                          <p className="font-semibold">Create Asset Group</p>
-                          <p className="text-sm text-muted-foreground">Add a new cash, bank, or investment asset group.</p>
+                          <p className="font-semibold">Create Book</p>
+                          <p className="text-sm text-muted-foreground">Add a new cash, bank, or investment book.</p>
                         </div>
                       </div>
                       <Button variant="ghost" size="icon" className="shrink-0">
@@ -113,7 +113,7 @@ export default function AssetsPage() {
                   </Link>
                   {paginatedAccounts.length > 0 ? paginatedAccounts.map((account, index) => {
                     return (
-                      <Link key={account.id} href={`/assets/${account.id}`} className="block">
+                      <Link key={account.id} href={`/books/${account.id}`} className="block">
                         <div className={stackedCardClassName(index + 1, stackedTotal, 'flex items-center justify-between p-4')}>
                           <div className="flex items-center gap-4">
                             <div className="rounded-full bg-muted p-2">
@@ -121,7 +121,7 @@ export default function AssetsPage() {
                             </div>
                             <div>
                               <p className="font-semibold">{account.name}</p>
-                              <p className="text-sm text-muted-foreground">{account.type} Account</p>
+                              <p className="text-sm text-muted-foreground">{account.type} Book</p>
                             </div>
                           </div>
                           <div className="flex items-center gap-4">
@@ -141,8 +141,8 @@ export default function AssetsPage() {
                   }) : (
                     <StackedEmptyStateRow
                       icon={Inbox}
-                      title="No assets found"
-                      description="Create your first asset group from the card above."
+                      title="No books found"
+                      description="Create your first book from the card above."
                       className={stackedCardClassName(1, 2, 'bg-card')}
                     />
                   )}

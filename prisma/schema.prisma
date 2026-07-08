@@ -82,7 +82,7 @@ model AssetGroup {
   transactions Transaction[]
 
   @@index([accountId])
-  @@map("asset_group")
+  @@map("book")
 }
 
 model Transaction {

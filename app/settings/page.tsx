@@ -74,7 +74,7 @@ const settingsSections: { title: string; description: string; items: SettingsIte
     items: [
       {
         title: 'Transaction Blocks',
-        description: 'Rule-based blocks for account, asset group, or profile flows.',
+        description: 'Rule-based blocks for account, book, or profile flows.',
         href: '/settings/transaction-blocks',
         section: 'Integrations',
       },

@@ -19,7 +19,7 @@ import { useSidebar } from '../ui/sidebar';
 
 const menuItems = [
   { href: '/', label: 'Dashboard', icon: Home },
-  { href: '/assets', label: 'Assets', icon: Landmark },
+  { href: '/books', label: 'Books', icon: Landmark },
   { href: '/party', label: 'Party', icon: Users },
   { href: '/transactions', label: 'Transactions', icon: ArrowLeftRight },
   { href: '/projections', label: 'Projections', icon: BarChart },

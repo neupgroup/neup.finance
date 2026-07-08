@@ -21,7 +21,7 @@ const accountTypes: { value: AccountType; label: string; description: string }[]
   { value: 'Cash', label: 'Cash', description: 'Physical cash or wallets.' },
   { value: 'Investment', label: 'Investment', description: 'Long-term investment accounts.' },
   { value: 'Stock', label: 'Stock', description: 'Market-linked holdings.' },
-  { value: 'Other', label: 'Other', description: 'Any other asset group.' },
+  { value: 'Other', label: 'Other', description: 'Any other book.' },
 ];
 
 const currencies = [
@@ -33,7 +33,7 @@ const currencies = [
   { value: 'NPR', label: 'NPR - Nepali Rupee' },
 ];
 
-export default function AddAssetGroupPage() {
+export default function AddBookPage() {
   const { user } = useUser();
   const { toast } = useToast();
   const router = useRouter();
@@ -57,11 +57,11 @@ export default function AddAssetGroupPage() {
       });
 
       toast({
-        title: 'Account Created',
-        description: `Your ${accountName} account has been created.`,
+        title: 'Book Created',
+        description: `Your ${accountName} book has been created.`,
       });
 
-      router.push('/assets');
+      router.push('/books');
     } catch (error) {
       console.error('Error creating account:', error);
       toast({
@@ -78,23 +78,23 @@ export default function AddAssetGroupPage() {
     <AppShell>
       <div className="space-y-6">
         <Button asChild variant="ghost" className="w-fit pl-0">
-          <Link href="/assets">
+          <Link href="/books">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to assets
+            Back to books
           </Link>
         </Button>
 
         <Card className="max-w-2xl">
           <CardHeader>
-            <CardTitle>Create New Asset Group</CardTitle>
+            <CardTitle>Create New Book</CardTitle>
             <CardDescription>
-              Add a new cash, bank, or investment asset group.
+              Add a new cash, bank, or investment book.
             </CardDescription>
           </CardHeader>
           <form onSubmit={handleAddAccount}>
             <CardContent className="grid gap-4">
               <div className="space-y-2">
-                <Label htmlFor="accountName">Asset Group Name</Label>
+                <Label htmlFor="accountName">Book Name</Label>
                 <Input
                   id="accountName"
                   value={accountName}
@@ -104,7 +104,7 @@ export default function AddAssetGroupPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="accountType">Asset Group Type</Label>
+                <Label htmlFor="accountType">Book Type</Label>
                 <Select onValueChange={(value) => setAccountType(value as AccountType)} value={accountType} required>
                   <SelectTrigger id="accountType">
                     <SelectValue placeholder="Select a type" />
@@ -118,7 +118,7 @@ export default function AddAssetGroupPage() {
                   </SelectContent>
                 </Select>
                 <p className="text-xs text-muted-foreground">
-                  Choose the category that best matches how the asset should behave.
+                  Choose the category that best matches how the book should behave.
                 </p>
               </div>
               <div className="space-y-2">
@@ -140,7 +140,7 @@ export default function AddAssetGroupPage() {
             <CardFooter className="flex items-center justify-end border-t px-6 py-4">
               <Button type="submit" disabled={isSubmitting}>
                 <PlusCircle className="mr-2 h-4 w-4" />
-                Add Asset Group
+                Add Book
               </Button>
             </CardFooter>
           </form>

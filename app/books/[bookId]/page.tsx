@@ -77,16 +77,16 @@ function formatCurrency(value: number, currency: string) {
   }).format(value);
 }
 
-export default function AssetGroupPage() {
-  const params = useParams<{ assetGroupId: string }>();
-  const assetGroupId = params.assetGroupId;
+export default function BookPage() {
+  const params = useParams<{ bookId: string }>();
+  const bookId = params.bookId;
 
   const { user, isUserLoading } = useUser();
   const { toast } = useToast();
   const { data: accounts, isLoading: areAccountsLoading } = useUserAccounts(user?.uid);
-  const { data: transactions, isLoading: areTransactionsLoading } = useTransactionsList(user?.uid, undefined, [assetGroupId], assetGroupId);
+  const { data: transactions, isLoading: areTransactionsLoading } = useTransactionsList(user?.uid, undefined, [bookId], bookId);
 
-  const assetGroup = accounts?.find((account) => account.id === assetGroupId);
+  const book = accounts?.find((account) => account.id === bookId);
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -101,10 +101,10 @@ export default function AssetGroupPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    if (assetGroup?.currency) {
-      setCurrency(assetGroup.currency);
+    if (book?.currency) {
+      setCurrency(book.currency);
     }
-  }, [assetGroup?.currency]);
+  }, [book?.currency]);
 
   const handleAddTransaction = async (e: FormEvent) => {
     e.preventDefault();
@@ -127,8 +127,8 @@ export default function AssetGroupPage() {
       await createTransaction({
         title,
         description: description || undefined,
-        accountId: assetGroup?.name || assetGroupId,
-        assetGroupId,
+        accountId: book?.name || bookId,
+        assetGroupId: bookId,
         category,
         transaction_type: transactionType,
         total_amount: total,
@@ -144,7 +144,7 @@ export default function AssetGroupPage() {
 
       toast({
         title: 'Transaction Added',
-        description: `${title} was added to this asset group.`,
+        description: `${title} was added to this book.`,
       });
 
       setTitle('');
@@ -177,32 +177,32 @@ export default function AssetGroupPage() {
         <div className="flex items-center justify-between gap-4">
           <div>
             <Button asChild variant="ghost" className="mb-3 pl-0">
-              <Link href="/assets">
+              <Link href="/books">
                 <ArrowLeft className="mr-2 h-4 w-4" />
-                Back to assets
+                Back to books
               </Link>
             </Button>
             <h1 className="text-3xl font-bold tracking-tight">
-              {assetGroup?.name || 'Asset Group'}
+              {book?.name || 'Book'}
             </h1>
             <p className="text-muted-foreground">
-              All transactions recorded for this asset group.
+              All transactions recorded for this book.
             </p>
           </div>
           <div className="flex flex-col items-end gap-3">
-            {assetGroup && (
+            {book && (
               <Card className="min-w-[220px]">
                 <CardHeader className="pb-2">
                   <CardDescription>Current balance</CardDescription>
                   <CardTitle className="text-2xl">
-                    {formatCurrency(assetGroup.balance, assetGroup.currency)}
+                    {formatCurrency(book.balance, book.currency)}
                   </CardTitle>
                 </CardHeader>
               </Card>
             )}
             <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
               <DialogTrigger asChild>
-                <Button disabled={!assetGroup || isLoading}>
+                <Button disabled={!book || isLoading}>
                   <PlusCircle className="mr-2 h-4 w-4" />
                   Add Transaction
                 </Button>
@@ -211,7 +211,7 @@ export default function AssetGroupPage() {
                 <DialogHeader>
                   <DialogTitle>Add Transaction</DialogTitle>
                   <DialogDescription>
-                    Record a transaction against this asset group.
+                    Record a transaction against this book.
                   </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleAddTransaction} className="space-y-4 py-2">
@@ -369,7 +369,7 @@ export default function AssetGroupPage() {
         ) : (
           <Card>
             <CardContent className="py-16 text-center text-muted-foreground">
-              No transactions found for this asset group.
+              No transactions found for this book.
             </CardContent>
           </Card>
         )}

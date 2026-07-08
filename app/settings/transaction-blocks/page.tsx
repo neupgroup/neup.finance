@@ -65,7 +65,7 @@ const STORAGE_KEY = 'neup.finance.settings.transaction-blocks';
 
 const applicableForOptions: { value: ApplicableFor; label: string; description: string }[] = [
   { value: 'account', label: 'Account', description: 'Rules tied to a specific account context.' },
-  { value: 'assetGroup', label: 'Asset Group', description: 'Rules tied to an asset group context.' },
+  { value: 'assetGroup', label: 'Book', description: 'Rules tied to a book context.' },
   { value: 'profile', label: 'Profile', description: 'Rules tied to a transaction profile context.' },
 ];
 
@@ -289,7 +289,7 @@ export default function TransactionBlocksSettingsPage() {
           <CardHeader>
             <CardTitle>Transaction Blocks</CardTitle>
             <CardDescription>
-              Define block rules for accounts, asset groups, or profiles using a single readable
+              Define block rules for accounts, books, or profiles using a single readable
               rule string. You can also attach the rule to a party for future payable tracking.
             </CardDescription>
           </CardHeader>
@@ -299,7 +299,7 @@ export default function TransactionBlocksSettingsPage() {
               <div className="mt-2 text-3xl font-semibold">{summary.accountBlocks}</div>
             </div>
             <div className="rounded-lg border bg-muted/30 p-4">
-              <div className="text-sm text-muted-foreground">Asset group rules</div>
+              <div className="text-sm text-muted-foreground">Book rules</div>
               <div className="mt-2 text-3xl font-semibold">{summary.assetGroupBlocks}</div>
             </div>
             <div className="rounded-lg border bg-muted/30 p-4">
