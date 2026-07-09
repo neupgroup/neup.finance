@@ -11,13 +11,32 @@ import { Label } from '@/components/ui/label';
 import { Combobox } from '@/components/ui/combobox';
 import { CurrencyAmountInput } from '@/components/ui/currency-amount-input';
 import { DateChoiceInput } from '@/components/ui/date-choice-input';
-import { type Transaction, type TransactionCategory, type TransactionStatus, type TransactionType } from '@/lib/mock-data';
+import { type Transaction, type TransactionCategory, type TransactionLineCategory, type TransactionStatus, type TransactionType } from '@/lib/mock-data';
 import { useToast } from '@/hooks/use-toast';
 import { Textarea } from '@/components/ui/textarea';
 import { useUser } from '@/auth/provider';
-import { createTransaction, useParties, useTransactionsList } from '@/hooks/api';
+import { addTransactionLine, createTransaction, useParties, useTransactionsList } from '@/hooks/api';
 import { ArrowLeft, ArrowDownLeft, ArrowUpRight, Check, Loader } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  TRANSACTION_BLOCKS_STORAGE_KEY,
+  calculateTransactionSubblocks,
+  describeTransactionSubblock,
+  emptyTransactionSubblockForm,
+  formatTransactionBlockNumber,
+  getTransactionSubblockFinalAmount,
+  migrateTransactionBlock,
+  normalizeTransactionBlockKey,
+  transactionSubblockCalculationModeOptions,
+  transactionSubblockTemplates,
+  type CalculatedTransactionSubblock,
+  type LegacyTransactionBlock,
+  type TransactionBlock,
+  type TransactionSubblock,
+  type TransactionSubblockCalculationMode,
+  type TransactionSubblockForm,
+} from '@/services/transactions/blocks';
 
 const accounts = [
   { value: 'Checking Account', label: 'Checking Account' },
@@ -40,6 +59,45 @@ const categories: {value: TransactionCategory, label: TransactionCategory}[] = [
   { value: 'Other', label: 'Other' },
 ];
 type TransactionDirection = 'incoming' | 'outgoing';
+
+const baseTransactionSubblock: TransactionSubblock = {
+  id: 'transaction-amount',
+  key: 'amount',
+  label: 'Transaction amount',
+  mode: 'transaction_amount',
+  value: '',
+  referenceKey: '',
+};
+
+const nonLedgerSubblockKeys = new Set(['amount', 'final_amount', 'quantity', 'rate']);
+
+function isPersistableTransactionSubblock(subblock: CalculatedTransactionSubblock) {
+  const key = normalizeTransactionBlockKey(subblock.key);
+  const haystack = `${key} ${subblock.label}`.toLowerCase();
+
+  if (nonLedgerSubblockKeys.has(key) || subblock.amount === 0) {
+    return false;
+  }
+
+  return !haystack.includes('quantity') && !haystack.includes('rate');
+}
+
+function getTransactionLineCategory(
+  subblock: CalculatedTransactionSubblock,
+  direction: TransactionDirection
+): TransactionLineCategory {
+  const haystack = `${subblock.key} ${subblock.label}`.toLowerCase();
+
+  if (haystack.includes('vat') || haystack.includes('tax')) {
+    return direction === 'incoming' ? 'vat_return' : 'vat_paid';
+  }
+
+  if (haystack.includes('discount')) {
+    return 'sales';
+  }
+
+  return direction === 'incoming' ? 'receivable' : 'payable';
+}
 
 const transactionDirections: { value: TransactionDirection; label: string; description: string }[] = [
     { value: 'incoming', label: 'Incoming', description: 'Money coming in' },
@@ -89,6 +147,10 @@ export default function AddTransactionPage() {
   const [dueOn, setDueOn] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
+  const [savedTransactionBlocks, setSavedTransactionBlocks] = useState<TransactionBlock[]>([]);
+  const [selectedTransactionBlockId, setSelectedTransactionBlockId] = useState('');
+  const [transactionSubblocks, setTransactionSubblocks] = useState<TransactionSubblock[]>([baseTransactionSubblock]);
+  const [subblockForm, setSubblockForm] = useState<TransactionSubblockForm>(emptyTransactionSubblockForm);
 
   const recommendedParties = useMemo(() => {
     const counts = new Map<string, { id: string; name: string; type: string; count: number }>();
@@ -116,8 +178,21 @@ export default function AddTransactionPage() {
       .slice(0, 3);
   }, [transactions]);
 
+    const totalAmountValue = typeof totalAmount === 'number' ? totalAmount : 0;
+    const transactionSubblockRows = useMemo(
+      () => calculateTransactionSubblocks(transactionSubblocks, totalAmountValue),
+      [transactionSubblocks, totalAmountValue]
+    );
+    const resolvedTransactionTotal = useMemo(
+      () => getTransactionSubblockFinalAmount(transactionSubblockRows, totalAmountValue),
+      [transactionSubblockRows, totalAmountValue]
+    );
+    const hasCalculatedTransactionTotal = transactionSubblocks.some(
+      (subblock) => normalizeTransactionBlockKey(subblock.key) === 'final_amount'
+    );
+
     const finalAmountPaid = useMemo(() => {
-    const total = typeof totalAmount === 'number' ? totalAmount : 0;
+    const total = resolvedTransactionTotal;
     if (status === 'paid') {
             return total;
     }
@@ -127,10 +202,27 @@ export default function AddTransactionPage() {
         }
 
         return 0;
-    }, [totalAmount, amountPaid, status]);
+    }, [resolvedTransactionTotal, amountPaid, status]);
 
-    const totalAmountValue = typeof totalAmount === 'number' ? totalAmount : 0;
-    const balanceDue = useMemo(() => Math.max(totalAmountValue - finalAmountPaid, 0), [totalAmountValue, finalAmountPaid]);
+    const balanceDue = useMemo(() => Math.max(resolvedTransactionTotal - finalAmountPaid, 0), [resolvedTransactionTotal, finalAmountPaid]);
+
+    useEffect(() => {
+      try {
+        const raw = window.localStorage.getItem(TRANSACTION_BLOCKS_STORAGE_KEY);
+        if (!raw) return;
+
+        const parsed = JSON.parse(raw) as LegacyTransactionBlock[];
+        if (Array.isArray(parsed)) {
+          setSavedTransactionBlocks(
+            parsed
+              .map(migrateTransactionBlock)
+              .filter((block) => Boolean(block.fieldName) && block.subblocks.length > 0)
+          );
+        }
+      } catch {
+        setSavedTransactionBlocks([]);
+      }
+    }, []);
 
     useEffect(() => {
       if (showDescription) {
@@ -172,7 +264,7 @@ export default function AddTransactionPage() {
     if (status === 'partially_paid') {
       if (amountPaid === '' || Number.isNaN(amountPaid) || amountPaid <= 0) {
         nextErrors.amountPaid = 'Amount paid must be greater than 0.';
-      } else if (typeof totalAmount === 'number' && amountPaid > totalAmount) {
+      } else if (amountPaid > resolvedTransactionTotal) {
         nextErrors.amountPaid = 'Amount paid cannot exceed the total amount.';
       }
     }
@@ -222,8 +314,8 @@ export default function AddTransactionPage() {
     
     setIsSubmitting(true);
     let finalAmountPaid = 0;
-    if (status === 'paid' && totalAmount) {
-        finalAmountPaid = totalAmount;
+    if (status === 'paid' && resolvedTransactionTotal) {
+        finalAmountPaid = resolvedTransactionTotal;
     } else if (status === 'partially_paid') {
         finalAmountPaid = typeof amountPaid === 'number' ? amountPaid : 0;
     }
@@ -236,7 +328,7 @@ export default function AddTransactionPage() {
             partyId: partyId || undefined,
             category: category as TransactionCategory,
             transaction_type: transactionType,
-            total_amount: totalAmount as number,
+            total_amount: resolvedTransactionTotal,
             total_paid: finalAmountPaid,
             balance_due: balanceDue,
             status: status as TransactionStatus,
@@ -248,10 +340,49 @@ export default function AddTransactionPage() {
             userId: user.uid,
         };
         const saved = await createTransaction(newTransaction);
+        const monetarySubblocks = transactionSubblockRows.filter(isPersistableTransactionSubblock);
+
+        if (saved?.id && monetarySubblocks.length > 0) {
+          try {
+            await Promise.all(
+              monetarySubblocks.map((subblock) => {
+                const amount = Math.abs(subblock.amount);
+                const isDiscount = `${subblock.key} ${subblock.label}`.toLowerCase().includes('discount');
+                const debit =
+                  (direction === 'outgoing' && !isDiscount) || (direction === 'incoming' && isDiscount)
+                    ? amount
+                    : 0;
+                const credit =
+                  (direction === 'incoming' && !isDiscount) || (direction === 'outgoing' && isDiscount)
+                    ? amount
+                    : 0;
+
+                return addTransactionLine(saved.id, {
+                  line_title: subblock.label,
+                  description: describeTransactionSubblock(subblock),
+                  category: getTransactionLineCategory(subblock, direction),
+                  account: accountId || selectedParty?.name || 'Transaction subblocks',
+                  debit,
+                  credit,
+                  currency: totalAmountCurrency,
+                });
+              })
+            );
+          } catch (lineError) {
+            console.error("Error adding transaction subblocks: ", lineError);
+            toast({
+              variant: "destructive",
+              title: "Transaction saved",
+              description: "The transaction was saved, but calculated subblocks could not be saved as line items.",
+            });
+            router.push(`/transactions/${saved.id}`);
+            return;
+          }
+        }
         
         toast({
             title: "Transaction Added",
-            description: `A new transaction for ${totalAmountCurrency} ${totalAmount} has been successfully added.`,
+            description: `A new transaction for ${totalAmountCurrency} ${resolvedTransactionTotal} has been successfully added.`,
         });
 
         router.push(`/transactions/${saved.id}`);
@@ -266,6 +397,71 @@ export default function AddTransactionPage() {
     } finally {
         setIsSubmitting(false);
     }
+  };
+
+  const addTransactionSubblock = (nextSubblock: TransactionSubblockForm) => {
+    const key = normalizeTransactionBlockKey(nextSubblock.key || nextSubblock.label);
+    const label = nextSubblock.label.trim();
+
+    if (!key || !label) {
+      toast({
+        variant: 'destructive',
+        title: 'Subblock name required',
+        description: 'Enter a label and key for the transaction subblock.',
+      });
+      return;
+    }
+
+    if (transactionSubblocks.some((subblock) => normalizeTransactionBlockKey(subblock.key) === key)) {
+      toast({
+        variant: 'destructive',
+        title: 'Duplicate subblock',
+        description: `${key} already exists in this transaction.`,
+      });
+      return;
+    }
+
+    const requiresValue = ['custom_amount', 'percent_of', 'included_percent', 'multiply'].includes(nextSubblock.mode);
+    if (requiresValue && !nextSubblock.value.trim()) {
+      toast({
+        variant: 'destructive',
+        title: 'Value required',
+        description: 'Enter an amount, percentage, or referenced key for this subblock.',
+      });
+      return;
+    }
+
+    setTransactionSubblocks((current) => [
+      ...current,
+      {
+        id: crypto.randomUUID(),
+        key,
+        label,
+        mode: nextSubblock.mode,
+        value: nextSubblock.value.trim(),
+        referenceKey: normalizeTransactionBlockKey(nextSubblock.referenceKey),
+      },
+    ]);
+    setSubblockForm(emptyTransactionSubblockForm);
+  };
+
+  const applySavedTransactionBlock = (blockId: string) => {
+    setSelectedTransactionBlockId(blockId);
+    if (blockId === 'none') {
+      setSelectedTransactionBlockId('');
+      setTransactionSubblocks([baseTransactionSubblock]);
+      return;
+    }
+
+    const block = savedTransactionBlocks.find((item) => item.id === blockId);
+    if (!block) return;
+
+    setTransactionSubblocks(
+      block.subblocks.map((subblock) => ({
+        ...subblock,
+        id: crypto.randomUUID(),
+      }))
+    );
   };
 
   return (
@@ -425,7 +621,7 @@ export default function AddTransactionPage() {
               {errors.category ? <p className="text-sm font-medium text-destructive">{errors.category}</p> : null}
             </div>
             <div ref={setFieldErrorRef('totalAmount')} className="space-y-2">
-              <Label htmlFor="amount">Total amount</Label>
+              <Label htmlFor="amount">Transaction amount</Label>
               <CurrencyAmountInput
                 id="amount"
                 currency={totalAmountCurrency}
@@ -448,6 +644,186 @@ export default function AddTransactionPage() {
               />
               {errors.currency ? <p className="text-sm font-medium text-destructive">{errors.currency}</p> : null}
               {errors.totalAmount ? <p className="text-sm font-medium text-destructive">{errors.totalAmount}</p> : null}
+            </div>
+            <div className="space-y-4 rounded-lg border p-4">
+              <div className="space-y-1">
+                <h2 className="font-semibold">Transaction subblocks</h2>
+                <p className="text-sm text-muted-foreground">
+                  Add VAT, tax, quantity, rate, discounts, taxable amount, and final amount from
+                  this transaction amount.
+                </p>
+              </div>
+
+              {savedTransactionBlocks.length > 0 ? (
+                <div className="space-y-2">
+                  <Label htmlFor="savedTransactionBlock">Use saved block setup</Label>
+                  <Select value={selectedTransactionBlockId || 'none'} onValueChange={applySavedTransactionBlock}>
+                    <SelectTrigger id="savedTransactionBlock">
+                      <SelectValue placeholder="Select saved transaction block" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">No saved setup</SelectItem>
+                      {savedTransactionBlocks.map((block) => (
+                        <SelectItem key={block.id} value={block.id}>
+                          {block.fieldName}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              ) : null}
+
+              <div className="flex flex-wrap gap-2">
+                {transactionSubblockTemplates.map((template) => (
+                  <Button
+                    key={template.templateLabel}
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="h-7 rounded-full px-3 text-xs"
+                    onClick={() => addTransactionSubblock(template)}
+                  >
+                    + {template.templateLabel}
+                  </Button>
+                ))}
+              </div>
+
+              <div className="grid gap-4 rounded-lg bg-muted/30 p-4 md:grid-cols-5">
+                <div className="space-y-2">
+                  <Label htmlFor="subblockLabel">Label</Label>
+                  <Input
+                    id="subblockLabel"
+                    value={subblockForm.label}
+                    onChange={(event) => {
+                      const label = event.target.value;
+                      setSubblockForm((current) => ({
+                        ...current,
+                        label,
+                        key: current.key || normalizeTransactionBlockKey(label),
+                      }));
+                    }}
+                    placeholder="VAT"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="subblockKey">Key</Label>
+                  <Input
+                    id="subblockKey"
+                    value={subblockForm.key}
+                    onChange={(event) =>
+                      setSubblockForm((current) => ({
+                        ...current,
+                        key: normalizeTransactionBlockKey(event.target.value),
+                      }))
+                    }
+                    placeholder="vat"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="subblockMode">Calculation</Label>
+                  <Select
+                    value={subblockForm.mode}
+                    onValueChange={(value) =>
+                      setSubblockForm((current) => ({
+                        ...current,
+                        mode: value as TransactionSubblockCalculationMode,
+                      }))
+                    }
+                  >
+                    <SelectTrigger id="subblockMode">
+                      <SelectValue placeholder="Mode" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {transactionSubblockCalculationModeOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="subblockReference">Reference</Label>
+                  <Select
+                    value={subblockForm.referenceKey || 'none'}
+                    onValueChange={(value) =>
+                      setSubblockForm((current) => ({
+                        ...current,
+                        referenceKey: value === 'none' ? '' : value,
+                      }))
+                    }
+                  >
+                    <SelectTrigger id="subblockReference">
+                      <SelectValue placeholder="Reference" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">No reference</SelectItem>
+                      {transactionSubblocks.map((subblock) => (
+                        <SelectItem key={subblock.id} value={normalizeTransactionBlockKey(subblock.key)}>
+                          {subblock.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="subblockValue">Value</Label>
+                  <Input
+                    id="subblockValue"
+                    value={subblockForm.value}
+                    onChange={(event) =>
+                      setSubblockForm((current) => ({ ...current, value: event.target.value }))
+                    }
+                    placeholder="13, 100, quantity"
+                  />
+                </div>
+                <div className="flex items-end md:col-span-5">
+                  <Button type="button" onClick={() => addTransactionSubblock(subblockForm)}>
+                    Add subblock
+                  </Button>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                {transactionSubblockRows.map((subblock) => (
+                  <div key={subblock.id} className="flex items-start justify-between gap-4 rounded-md border bg-card p-3">
+                    <div className="space-y-1">
+                      <div className="font-medium">{subblock.label}</div>
+                      <div className="font-mono text-xs text-muted-foreground">{subblock.key}</div>
+                      <div className="text-xs text-muted-foreground">{describeTransactionSubblock(subblock)}</div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="text-right font-semibold">
+                        {formatTransactionBlockNumber(subblock.amount)}
+                      </div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() =>
+                          setTransactionSubblocks((current) =>
+                            current.filter((item) => item.id !== subblock.id)
+                          )
+                        }
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="rounded-lg bg-muted/40 p-3 text-sm">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-muted-foreground">
+                    {hasCalculatedTransactionTotal ? 'Calculated final amount' : 'Current transaction amount'}
+                  </span>
+                  <span className="text-lg font-semibold">
+                    {totalAmountCurrency ? `${totalAmountCurrency} ` : ''}
+                    {formatTransactionBlockNumber(resolvedTransactionTotal)}
+                  </span>
+                </div>
+              </div>
             </div>
             <div ref={setFieldErrorRef('status')} className="space-y-2">
               <Label htmlFor="status">Status</Label>

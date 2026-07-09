@@ -5,6 +5,7 @@
 - [ ] Add documentation for `app/transactions/[id]/page.tsx` and its transaction detail, line-item, attachment, and invoice-link behavior.
 - [ ] Add documentation for the `app/api/transactions/` route behavior, including cookie-based account resolution and user-record provisioning before transaction writes.
 - [ ] Add documentation for `app/settings/page.tsx` and `app/settings/transaction-blocks/page.tsx`, including book-scoped transaction block settings.
+- [ ] Add documentation for `hooks/api.ts`, including shared fetch hooks and transaction/book/party mutation helpers.
 - [ ] Add documentation for the `components/layout/` and `components/dashboard/` folders so the app shell and dashboard composition are described near the source.
 - [ ] Add documentation for the `components/ui/` folder, including the custom combobox, currency amount input, and date choice input behaviors.
 - [ ] Resolve the existing typecheck failures caused by missing `@/services/*` modules, missing Prisma helper dependencies/generated client imports, and related implicit `any` errors in `neup.core/auth/*`, `neup.core/helper*`, and `neup.core/providers/session.tsx`.
