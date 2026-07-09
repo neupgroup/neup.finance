@@ -3,15 +3,25 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { suggestExpenseOptimizations, type SuggestExpenseOptimizationsOutput } from '@/core/ai/flows/suggest-expense-optimizations';
-import { transactions } from '@/core/lib/mock-data';
 import { Lightbulb, Loader } from 'lucide-react';
+import { useUser } from '@/core/providers/auth';
+import { useTransactionsList } from '@/core/hooks/api';
 
 export function ExpenseAutopilot() {
+  const { user } = useUser();
+  const { data: transactions, isLoading: areTransactionsLoading } = useTransactionsList(user?.uid);
   const [suggestions, setSuggestions] = useState<SuggestExpenseOptimizationsOutput['suggestions']>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     async function getSuggestions() {
+      if (!transactions || transactions.length === 0) {
+        setSuggestions([]);
+        setIsLoading(false);
+        return;
+      }
+
+      setIsLoading(true);
       try {
         const spendingData = JSON.stringify(transactions);
         const financialGoals = "Save for a down payment and reduce monthly subscriptions.";
@@ -24,7 +34,7 @@ export function ExpenseAutopilot() {
       }
     }
     getSuggestions();
-  }, []);
+  }, [transactions]);
 
   return (
     <Card>
@@ -33,11 +43,13 @@ export function ExpenseAutopilot() {
         <CardDescription>AI-powered suggestions to optimize your spending.</CardDescription>
       </CardHeader>
       <CardContent>
-        {isLoading ? (
+        {areTransactionsLoading || isLoading ? (
           <div className="flex items-center space-x-2 text-muted-foreground">
             <Loader className="h-4 w-4 animate-spin" />
             <span>Scanning for optimizations...</span>
           </div>
+        ) : suggestions.length === 0 ? (
+          <p className="text-sm text-muted-foreground">Add expense transactions to generate optimization ideas.</p>
         ) : (
           <ul className="space-y-4">
             {suggestions.slice(0, 3).map((item, index) => (

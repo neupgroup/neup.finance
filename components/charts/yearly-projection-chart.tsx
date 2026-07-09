@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import { AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { useUser } from '@/core/providers/auth';
 import { useUserAccounts, useProjections } from '@/core/hooks/api';
-import { type Projection } from '@/core/lib/mock-data';
+import { type Projection } from '@/core/lib/ledger';
 import { addMonths, format, startOfMonth, endOfMonth, isWithinInterval, isAfter, isBefore, eachDayOfInterval } from 'date-fns';
 import { Loader } from 'lucide-react';
 

@@ -10,31 +10,19 @@ import { Label } from '@/components/ui/label';
 import { Combobox } from '@/components/ui/combobox';
 import { CurrencyAmountInput } from '@/components/ui/currency-amount-input';
 import { useToast } from '@/core/hooks/use-toast';
-import { type Projection, type ProjectionType, type ProjectionCertainty, type ProjectionRecurrence } from '@/core/lib/mock-data';
+import {
+  projectionCertaintyOptions,
+  projectionRecurrenceOptions,
+  projectionTypeOptions,
+  type Projection,
+  type ProjectionType,
+  type ProjectionCertainty,
+  type ProjectionRecurrence,
+} from '@/core/lib/ledger';
 import { useUser } from '@/core/providers/auth';
 import { createProjection, useParties } from '@/core/hooks/api';
 import { Loader } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
-
-
-const projectionTypes: {value: ProjectionType, label: ProjectionType}[] = [
-    {value: 'Income', label: 'Income'},
-    {value: 'Expense', label: 'Expense'},
-];
-const projectionCertainties: {value: ProjectionCertainty, label: ProjectionCertainty}[] = [
-    {value: 'Fixed', label: 'Fixed'},
-    {value: 'Probable', label: 'Probable'},
-    {value: 'Possible', label: 'Possible'},
-];
-
-const recurrenceTypes = [
-    { value: 'Once', label: 'Once' },
-    { value: 'Daily', label: 'Daily' },
-    { value: 'Weekly', label: 'Weekly' },
-    { value: 'Monthly', label: 'Monthly' },
-    { value: 'Yearly', label: 'Yearly' },
-    { value: 'Custom', label: 'Custom' },
-]
 
 
 export default function AddProjectionPage() {
@@ -149,7 +137,7 @@ export default function AddProjectionPage() {
                     <div className="grid gap-2">
                         <Label htmlFor="type">Type</Label>
                         <Combobox
-                            options={projectionTypes}
+                            options={projectionTypeOptions}
                             value={type}
                             onChange={(v) => setType(v as any)}
                             placeholder="Select type"
@@ -160,7 +148,7 @@ export default function AddProjectionPage() {
                     <div className="grid gap-2">
                         <Label htmlFor="certainty">Certainty Level</Label>
                         <Combobox
-                            options={projectionCertainties}
+                            options={projectionCertaintyOptions}
                             value={certainty}
                             onChange={(v) => setCertainty(v as any)}
                             placeholder="Select certainty"
@@ -169,7 +157,7 @@ export default function AddProjectionPage() {
                      <div className="grid gap-2">
                         <Label htmlFor="recurrence">Recurrence</Label>
                         <Combobox
-                            options={recurrenceTypes}
+                            options={projectionRecurrenceOptions}
                             value={recurrence}
                             onChange={v => setRecurrence(v as ProjectionRecurrence)}
                             placeholder="Select recurrence"

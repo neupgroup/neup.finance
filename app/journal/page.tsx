@@ -2,13 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import { AppShell } from '@/components/layout/app-shell';
-import { transactions, transactionLines, type Transaction, type TransactionLine } from '@/core/lib/mock-data';
+import { TransactionLineCategory, type Transaction, type TransactionLine } from '@/core/lib/ledger';
 import { Loader } from 'lucide-react';
 import { useToast } from '@/core/hooks/use-toast';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Separator } from '@/components/ui/separator';
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationLink } from '@/components/ui/pagination';
 import { cn } from '@/core/lib/utils';
+import { useUser } from '@/core/providers/auth';
+import { useTransactionsList } from '@/core/hooks/api';
 
 type JournalEntry = {
     transaction: Transaction;
@@ -20,22 +22,39 @@ const ITEMS_PER_PAGE = 10;
 
 export default function JournalPage() {
   const [journal, setJournal] = useState<JournalEntry[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingJournal, setIsLoadingJournal] = useState(true);
   const { toast } = useToast();
+  const { user, isUserLoading } = useUser();
+  const { data: transactions, isLoading: areTransactionsLoading } = useTransactionsList(user?.uid);
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    function generateJournal() {
-      try {
-        const entries: JournalEntry[] = transactions.map(transaction => {
-            const lines = transactionLines.filter(line => line.transaction_id === transaction.id);
-            return {
-                transaction,
-                lines
-            };
-        });
+    let cancelled = false;
 
-        // Add pseudo-entries for transactions without explicit lines for clarity
+    async function generateJournal() {
+      if (!transactions) {
+        setIsLoadingJournal(false);
+        setJournal([]);
+        return;
+      }
+
+      try {
+        setIsLoadingJournal(true);
+        const entries = await Promise.all(
+          transactions.map(async (transaction) => {
+            const response = await fetch(`/api/transactions/${transaction.id}/lines`, { cache: 'no-store' });
+            if (!response.ok) {
+              throw new Error(`Failed to load lines for transaction ${transaction.id}`);
+            }
+
+            const lines = (await response.json()) as TransactionLine[];
+            return {
+              transaction,
+              lines,
+            };
+          })
+        );
+
         entries.forEach(entry => {
             if (entry.lines.length === 0 && entry.transaction.accountId) {
                 const isCredit = ['sale', 'income', 'refund'].includes(entry.transaction.transaction_type);
@@ -43,7 +62,7 @@ export default function JournalPage() {
                     id: `pseudo-${entry.transaction.id ?? 'unknown'}`,
                     transaction_id: entry.transaction.id ?? 'unknown',
                     line_title: entry.transaction.title,
-                    category: 'sales', // Fallback
+                    category: TransactionLineCategory.SALES,
                     account: entry.transaction.accountId,
                     debit: isCredit ? 0 : entry.transaction.total_amount,
                     credit: isCredit ? entry.transaction.total_amount : 0,
@@ -52,21 +71,30 @@ export default function JournalPage() {
             }
         });
 
-        setJournal(entries.sort((a, b) => new Date(b.transaction.date).getTime() - new Date(a.transaction.date).getTime()));
+        if (!cancelled) {
+          setJournal(entries.sort((a, b) => new Date(b.transaction.date).getTime() - new Date(a.transaction.date).getTime()));
+        }
 
       } catch (error) {
         console.error('Failed to generate journal entries:', error);
-        toast({
-            variant: "destructive",
-            title: "Error",
-            description: "Could not generate your financial journal at this time.",
-        });
+        if (!cancelled) {
+          toast({
+              variant: "destructive",
+              title: "Error",
+              description: "Could not generate your financial journal at this time.",
+          });
+        }
       } finally {
-        setIsLoading(false);
+        if (!cancelled) {
+          setIsLoadingJournal(false);
+        }
       }
     }
     generateJournal();
-  }, [toast]);
+    return () => {
+      cancelled = true;
+    };
+  }, [toast, transactions]);
   
   const totalPages = Math.ceil(journal.length / ITEMS_PER_PAGE);
   const paginatedJournal = journal.slice(
@@ -84,6 +112,8 @@ export default function JournalPage() {
     if (amount === 0) return '-';
     return new Intl.NumberFormat('en-US', { style: 'currency', currency, minimumFractionDigits: 2 }).format(amount);
   };
+
+  const isLoading = isUserLoading || areTransactionsLoading || isLoadingJournal;
 
   return (
     <AppShell>

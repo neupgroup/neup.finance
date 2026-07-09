@@ -3,10 +3,11 @@
 import React from 'react';
 import { AppShell } from '@/components/layout/app-shell';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { transactions } from '@/core/lib/mock-data';
 import { ArrowDown, ArrowUp, Banknote, Landmark, Minus, Scale } from 'lucide-react';
 import { IncomeExpenseChart } from '@/components/charts/income-expense-chart';
 import { CategoryPieChart } from '@/components/charts/category-pie-chart';
+import { useUser } from '@/core/providers/auth';
+import { useTransactionsList, useUserAccounts } from '@/core/hooks/api';
 
 
 function StatCard({ title, value, icon, description, colorClass }: { title: string, value: string, icon: React.ReactNode, description: string, colorClass?: string }) {
@@ -25,6 +26,9 @@ function StatCard({ title, value, icon, description, colorClass }: { title: stri
 }
 
 export default function ReportPage() {
+    const { user } = useUser();
+    const { data: transactions } = useTransactionsList(user?.uid);
+    const { data: accounts } = useUserAccounts(user?.uid);
 
     const { income, expenses, assets, liabilities, netWorth, receivables, payables } = React.useMemo(() => {
         let income = 0;
@@ -32,7 +36,7 @@ export default function ReportPage() {
         let payables = 0;
         let receivables = 0;
 
-        transactions.forEach(t => {
+        (transactions ?? []).forEach(t => {
             if (['sale', 'income', 'refund'].includes(t.transaction_type)) {
                 income += t.total_amount;
             }
@@ -48,13 +52,12 @@ export default function ReportPage() {
             }
         });
         
-        // Simplified asset/liability calculation
-        const assets = 12500.75 + 42000.00 + 350.50; // from initial accounts
+        const assets = (accounts ?? []).reduce((sum, account) => sum + account.balance, 0);
         const liabilities = payables;
         const netWorth = assets - liabilities;
 
         return { income, expenses, assets, liabilities, netWorth, receivables, payables };
-    }, []);
+    }, [accounts, transactions]);
 
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
@@ -108,7 +111,7 @@ export default function ReportPage() {
                         <span className="text-3xl font-bold text-green-500">{formatCurrency(receivables)}</span>
                     </div>
                      <ul className="text-sm text-muted-foreground space-y-2">
-                        {transactions.filter(t => t.balance_due > 0 && ['sale', 'income'].includes(t.transaction_type)).map(t => (
+                        {(transactions ?? []).filter(t => t.balance_due > 0 && ['sale', 'income'].includes(t.transaction_type)).map(t => (
                             <li key={t.id} className="flex justify-between"><span>{t.title} (from {t.party?.name || t.recipient})</span> <span>{formatCurrency(t.balance_due)}</span></li>
                         ))}
                     </ul>
@@ -125,7 +128,7 @@ export default function ReportPage() {
                         <span className="text-3xl font-bold text-red-500">{formatCurrency(payables)}</span>
                     </div>
                      <ul className="text-sm text-muted-foreground space-y-2">
-                        {transactions.filter(t => t.balance_due > 0 && ['purchase', 'expense'].includes(t.transaction_type)).map(t => (
+                        {(transactions ?? []).filter(t => t.balance_due > 0 && ['purchase', 'expense'].includes(t.transaction_type)).map(t => (
                             <li key={t.id} className="flex justify-between"><span>{t.title} (to {t.party?.name || t.recipient})</span> <span>{formatCurrency(t.balance_due)}</span></li>
                         ))}
                     </ul>

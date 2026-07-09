@@ -7,20 +7,24 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { projectFutureSavings } from '@/core/ai/flows/project-future-savings';
-import { transactions } from '@/core/lib/mock-data';
 import { Loader } from 'lucide-react';
+import { useUser } from '@/core/providers/auth';
+import { useTransactionsList } from '@/core/hooks/api';
 
 export function SmartProjections() {
+  const { user } = useUser();
+  const { data: transactions } = useTransactionsList(user?.uid);
   const [savingsGoal, setSavingsGoal] = useState(10000);
   const [projection, setProjection] = useState<{ monthsToGoal: number; projectedSavings: number } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [timeWarp, setTimeWarp] = useState(0);
 
   const { currentIncome, currentSpending, currentSavings } = useMemo(() => {
-    const income = transactions.filter(t => t.transaction_type === 'sale' || t.transaction_type === 'refund').reduce((sum, t) => sum + t.total_amount, 0);
-    const spending = transactions.filter(t => t.transaction_type === 'purchase' || t.transaction_type === 'expense').reduce((sum, t) => sum + Math.abs(t.total_amount), 0);
+    const transactionList = transactions ?? [];
+    const income = transactionList.filter(t => t.transaction_type === 'sale' || t.transaction_type === 'refund' || t.transaction_type === 'income').reduce((sum, t) => sum + t.total_amount, 0);
+    const spending = transactionList.filter(t => t.transaction_type === 'purchase' || t.transaction_type === 'expense' || t.transaction_type === 'payroll').reduce((sum, t) => sum + Math.abs(t.total_amount), 0);
     return { currentIncome: income, currentSpending: spending, currentSavings: income - spending };
-  }, []);
+  }, [transactions]);
 
   const handleProjection = async () => {
     setIsLoading(true);

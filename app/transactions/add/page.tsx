@@ -11,11 +11,19 @@ import { Label } from '@/components/ui/label';
 import { Combobox } from '@/components/ui/combobox';
 import { CurrencyAmountInput } from '@/components/ui/currency-amount-input';
 import { DateChoiceInput } from '@/components/ui/date-choice-input';
-import { type Transaction, type TransactionCategory, type TransactionLineCategory, type TransactionStatus, type TransactionType } from '@/core/lib/mock-data';
+import {
+  transactionCategoryOptions,
+  transactionStatusOptions,
+  type Transaction,
+  type TransactionCategory,
+  type TransactionLineCategory,
+  type TransactionStatus,
+  type TransactionType,
+} from '@/core/lib/ledger';
 import { useToast } from '@/core/hooks/use-toast';
 import { Textarea } from '@/components/ui/textarea';
 import { useUser } from '@/core/providers/auth';
-import { addTransactionLine, createTransaction, useParties, useTransactionsList } from '@/core/hooks/api';
+import { addTransactionLine, createTransaction, useParties, useTransactionsList, useUserAccounts } from '@/core/hooks/api';
 import { ArrowLeft, ArrowDownLeft, ArrowUpRight, Check, Loader } from 'lucide-react';
 import { cn } from '@/core/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -38,26 +46,6 @@ import {
   type TransactionSubblockForm,
 } from '@/services/transactions/blocks';
 
-const accounts = [
-  { value: 'Checking Account', label: 'Checking Account' },
-  { value: 'Savings Account', label: 'Savings Account' },
-  { value: 'Wallet', label: 'Wallet' },
-];
-
-const categories: {value: TransactionCategory, label: TransactionCategory}[] = [
-  { value: 'Sales', label: 'Sales' },
-  { value: 'Purchases', label: 'Purchases' },
-  { value: 'Discounts', label: 'Discounts' },
-  { value: 'Payroll', label: 'Payroll' },
-  { value: 'Utilities', label: 'Utilities' },
-  { value: 'Vendor payments', label: 'Vendor payments' },
-  { value: 'EMIs', label: 'EMIs' },
-  { value: 'Bank charges', label: 'Bank charges' },
-  { value: 'VAT / Tax', label: 'VAT / Tax' },
-  { value: 'Transfers', label: 'Transfers' },
-  { value: 'Refunds', label: 'Refunds' },
-  { value: 'Other', label: 'Other' },
-];
 type TransactionDirection = 'incoming' | 'outgoing';
 
 const baseTransactionSubblock: TransactionSubblock = {
@@ -103,13 +91,6 @@ const transactionDirections: { value: TransactionDirection; label: string; descr
     { value: 'incoming', label: 'Incoming', description: 'Money coming in' },
     { value: 'outgoing', label: 'Outgoing', description: 'Money going out' },
 ];
-const transactionStatuses: {value: TransactionStatus, label: string}[] = [
-    {value: 'unpaid', label: 'Unpaid'},
-    {value: 'partially_paid', label: 'Partially paid'},
-    {value: 'paid', label: 'Paid'},
-    {value: 'canceled', label: 'Canceled'}
-];
-
 type FormErrors = Partial<{
   title: string;
   date: string;
@@ -127,6 +108,7 @@ export default function AddTransactionPage() {
   const { toast } = useToast();
   const { user } = useUser();
   const { data: parties } = useParties();
+  const { data: accounts } = useUserAccounts(user?.uid);
   const { data: transactions } = useTransactionsList(user?.uid);
   const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
   const titleRef = useRef<HTMLInputElement | null>(null);
@@ -151,6 +133,13 @@ export default function AddTransactionPage() {
   const [selectedTransactionBlockId, setSelectedTransactionBlockId] = useState('');
   const [transactionSubblocks, setTransactionSubblocks] = useState<TransactionSubblock[]>([baseTransactionSubblock]);
   const [subblockForm, setSubblockForm] = useState<TransactionSubblockForm>(emptyTransactionSubblockForm);
+  const accountOptions = useMemo(
+    () => (accounts ?? []).map((account) => ({
+      value: account.name,
+      label: `${account.name} (${account.type})`,
+    })),
+    [accounts]
+  );
 
   const recommendedParties = useMemo(() => {
     const counts = new Map<string, { id: string; name: string; type: string; count: number }>();
@@ -311,6 +300,7 @@ export default function AddTransactionPage() {
     }
     const selectedParty = parties?.find((item) => item.id === partyId);
     const transactionType: TransactionType = direction === 'incoming' ? 'income' : 'expense';
+    const resolvedDirection = direction as TransactionDirection;
     
     setIsSubmitting(true);
     let finalAmountPaid = 0;
@@ -349,18 +339,18 @@ export default function AddTransactionPage() {
                 const amount = Math.abs(subblock.amount);
                 const isDiscount = `${subblock.key} ${subblock.label}`.toLowerCase().includes('discount');
                 const debit =
-                  (direction === 'outgoing' && !isDiscount) || (direction === 'incoming' && isDiscount)
+                  (resolvedDirection === 'outgoing' && !isDiscount) || (resolvedDirection === 'incoming' && isDiscount)
                     ? amount
                     : 0;
                 const credit =
-                  (direction === 'incoming' && !isDiscount) || (direction === 'outgoing' && isDiscount)
+                  (resolvedDirection === 'incoming' && !isDiscount) || (resolvedDirection === 'outgoing' && isDiscount)
                     ? amount
                     : 0;
 
                 return addTransactionLine(saved.id, {
                   line_title: subblock.label,
                   description: describeTransactionSubblock(subblock),
-                  category: getTransactionLineCategory(subblock, direction),
+                  category: getTransactionLineCategory(subblock, resolvedDirection),
                   account: accountId || selectedParty?.name || 'Transaction subblocks',
                   debit,
                   credit,
@@ -607,7 +597,7 @@ export default function AddTransactionPage() {
             <div ref={setFieldErrorRef('category')} className="space-y-2">
               <Label htmlFor="category">Category</Label>
               <Combobox
-                options={categories}
+                options={transactionCategoryOptions}
                 value={category}
                 onChange={(v) => {
                   setCategory(v as any);
@@ -828,7 +818,7 @@ export default function AddTransactionPage() {
             <div ref={setFieldErrorRef('status')} className="space-y-2">
               <Label htmlFor="status">Status</Label>
               <Combobox
-                options={transactionStatuses}
+                options={transactionStatusOptions}
                 value={status}
                 onChange={(v) => {
                   setStatus(v as any);
@@ -848,7 +838,7 @@ export default function AddTransactionPage() {
               <div ref={setFieldErrorRef('accountId')} className="space-y-2">
                 <Label htmlFor="account">Account</Label>
                 <Combobox
-                  options={accounts}
+                  options={accountOptions}
                   value={accountId}
                   onChange={(value) => {
                     setAccountId(value);

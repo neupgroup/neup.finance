@@ -3,15 +3,25 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { summarizeSpending } from '@/core/ai/flows/summarize-spending';
-import { transactions } from '@/core/lib/mock-data';
 import { Loader } from 'lucide-react';
+import { useUser } from '@/core/providers/auth';
+import { useTransactionsList } from '@/core/hooks/api';
 
 export function FinancialStory() {
+  const { user } = useUser();
+  const { data: transactions, isLoading: areTransactionsLoading } = useTransactionsList(user?.uid);
   const [summary, setSummary] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     async function getSummary() {
+      if (!transactions || transactions.length === 0) {
+        setSummary('Add some expense activity to generate a financial story.');
+        setIsLoading(false);
+        return;
+      }
+
+      setIsLoading(true);
       try {
         const spendingData = JSON.stringify(transactions.filter(t => t.transaction_type === 'purchase' || t.transaction_type === 'expense'));
         const result = await summarizeSpending({ spendingData });
@@ -24,7 +34,7 @@ export function FinancialStory() {
       }
     }
     getSummary();
-  }, []);
+  }, [transactions]);
 
   return (
     <Card>
@@ -33,7 +43,7 @@ export function FinancialStory() {
         <CardDescription>Your financial journey, narrated by AI.</CardDescription>
       </CardHeader>
       <CardContent>
-        {isLoading ? (
+        {areTransactionsLoading || isLoading ? (
           <div className="flex items-center space-x-2 text-muted-foreground">
             <Loader className="h-4 w-4 animate-spin" />
             <span>Generating your story...</span>

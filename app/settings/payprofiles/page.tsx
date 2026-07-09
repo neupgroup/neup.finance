@@ -27,54 +27,16 @@ import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/core/hooks/use-toast';
 import { useUser } from '@/core/providers/auth';
-import { type TransactionCategory, type TransactionStatus, type TransactionType } from '@/core/lib/mock-data';
-
-const accounts = [
-  { value: 'Checking Account', label: 'Checking Account' },
-  { value: 'Savings Account', label: 'Savings Account' },
-  { value: 'Wallet', label: 'Wallet' },
-];
-
-const categories: { value: TransactionCategory; label: TransactionCategory }[] = [
-  { value: 'Sales', label: 'Sales' },
-  { value: 'Purchases', label: 'Purchases' },
-  { value: 'Discounts', label: 'Discounts' },
-  { value: 'Payroll', label: 'Payroll' },
-  { value: 'Utilities', label: 'Utilities' },
-  { value: 'Vendor payments', label: 'Vendor payments' },
-  { value: 'EMIs', label: 'EMIs' },
-  { value: 'Bank charges', label: 'Bank charges' },
-  { value: 'VAT / Tax', label: 'VAT / Tax' },
-  { value: 'Transfers', label: 'Transfers' },
-  { value: 'Refunds', label: 'Refunds' },
-  { value: 'Other', label: 'Other' },
-];
-
-const transactionTypes: { value: TransactionType; label: string }[] = [
-  { value: 'sale', label: 'Sale' },
-  { value: 'purchase', label: 'Purchase' },
-  { value: 'refund', label: 'Refund' },
-  { value: 'expense', label: 'Expense' },
-  { value: 'payroll', label: 'Payroll' },
-  { value: 'income', label: 'Income' },
-  { value: 'other', label: 'Other' },
-];
-
-const transactionStatuses: { value: TransactionStatus; label: string }[] = [
-  { value: 'unpaid', label: 'Unpaid' },
-  { value: 'partially_paid', label: 'Partially paid' },
-  { value: 'paid', label: 'Paid' },
-  { value: 'canceled', label: 'Canceled' },
-];
-
-const currencies = [
-  { value: 'USD', label: 'USD - US Dollar' },
-  { value: 'EUR', label: 'EUR - Euro' },
-  { value: 'GBP', label: 'GBP - British Pound' },
-  { value: 'JPY', label: 'JPY - Japanese Yen' },
-  { value: 'INR', label: 'INR - Indian Rupee' },
-  { value: 'NPR', label: 'NPR - Nepali Rupee' },
-];
+import {
+  currencyOptions,
+  transactionCategoryOptions,
+  transactionStatusOptions,
+  transactionTypeOptions,
+  type TransactionCategory,
+  type TransactionStatus,
+  type TransactionType,
+} from '@/core/lib/ledger';
+import { useUserAccounts } from '@/core/hooks/api';
 
 type ProfileFieldKey =
   | 'title'
@@ -248,6 +210,7 @@ function normalizeProfile(raw: any): PaymentProfile {
 export default function PaymentProfilesSettingsPage() {
   const { user } = useUser();
   const { toast } = useToast();
+  const { data: accounts } = useUserAccounts(user?.uid);
 
   const [profiles, setProfiles] = useState<PaymentProfile[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -256,6 +219,14 @@ export default function PaymentProfilesSettingsPage() {
   const storageKey = useMemo(() => {
     return `payment_profiles_${user?.uid ?? 'guest'}`;
   }, [user?.uid]);
+
+  const accountOptions = useMemo(
+    () => (accounts ?? []).map((account) => ({
+      value: account.name,
+      label: `${account.name} (${account.type})`,
+    })),
+    [accounts]
+  );
 
   useEffect(() => {
     try {
@@ -583,7 +554,7 @@ export default function PaymentProfilesSettingsPage() {
                   <div className="grid gap-2">
                     <Label htmlFor="type">Type</Label>
                     <Combobox
-                      options={transactionTypes}
+                      options={transactionTypeOptions}
                       value={form.transactionType}
                       onChange={(value) => setForm((prev) => ({ ...prev, transactionType: value as TransactionType | '' }))}
                       placeholder="Select transaction type"
@@ -597,7 +568,7 @@ export default function PaymentProfilesSettingsPage() {
                   <div className="grid gap-2">
                     <Label htmlFor="category">Category</Label>
                     <Combobox
-                      options={categories}
+                      options={transactionCategoryOptions}
                       value={form.category}
                       onChange={(value) => setForm((prev) => ({ ...prev, category: value as TransactionCategory | '' }))}
                       placeholder="Select category"
@@ -611,7 +582,7 @@ export default function PaymentProfilesSettingsPage() {
                   <div className="grid gap-2">
                     <Label htmlFor="currency">Currency</Label>
                     <Combobox
-                      options={currencies}
+                      options={currencyOptions}
                       value={form.currency}
                       onChange={(value) => setForm((prev) => ({ ...prev, currency: value }))}
                       placeholder="Select currency"
@@ -643,7 +614,7 @@ export default function PaymentProfilesSettingsPage() {
                   <div className="grid gap-2">
                     <Label htmlFor="status">Status</Label>
                     <Combobox
-                      options={transactionStatuses}
+                      options={transactionStatusOptions}
                       value={form.status}
                       onChange={(value) => setForm((prev) => ({ ...prev, status: value as TransactionStatus | '' }))}
                       placeholder="Select status"
@@ -657,7 +628,7 @@ export default function PaymentProfilesSettingsPage() {
                   <div className="grid gap-2">
                     <Label htmlFor="account">Account</Label>
                     <Combobox
-                      options={accounts}
+                      options={accountOptions}
                       value={form.accountId}
                       onChange={(value) => setForm((prev) => ({ ...prev, accountId: value }))}
                       placeholder="Select account"

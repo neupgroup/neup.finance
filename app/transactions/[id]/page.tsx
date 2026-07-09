@@ -4,7 +4,12 @@
 import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { AppShell } from '@/components/layout/app-shell';
-import { type Transaction, type TransactionLine, type TransactionLineCategory } from '@/core/lib/mock-data';
+import {
+  transactionLineCategoryOptions,
+  type Transaction,
+  type TransactionLine,
+  type TransactionLineCategory,
+} from '@/core/lib/ledger';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Paperclip, PlusCircle, Printer, Loader } from 'lucide-react';
 import Link from 'next/link';
@@ -18,23 +23,7 @@ import { Combobox } from '@/components/ui/combobox';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useToast } from '@/core/hooks/use-toast';
 import { Card } from '@/components/ui/card';
-import { addTransactionLine, useTransactionById, useTransactionLines } from '@/core/hooks/api';
-
-
-const lineItemCategories: {value: TransactionLineCategory, label: string}[] = [
-    {value: 'vat_paid', label: 'VAT Paid'},
-    {value: 'vat_return', label: 'VAT Return'},
-    {value: 'sales', label: 'Sales'},
-    {value: 'referral_paid', label: 'Referral Paid'},
-    {value: 'payable', label: 'Payable'},
-    {value: 'receivable', label: 'Receivable'},
-];
-
-const accounts = [
-  { value: 'Checking Account', label: 'Checking Account' },
-  { value: 'Savings Account', label: 'Savings Account' },
-  { value: 'Wallet', label: 'Wallet' },
-];
+import { addTransactionLine, useTransactionById, useTransactionLines, useUserAccounts } from '@/core/hooks/api';
 
 function DetailItem({ label, value, className }: { label: string; value?: React.ReactNode, className?: string }) {
     if (value === null || value === undefined || value === '') return null;
@@ -50,7 +39,7 @@ function getTransactionDirection(type: string) {
     return ['sale', 'refund', 'income'].includes(type) ? 'Incoming' : 'Outgoing';
 }
 
-function AddLineItemForm({ transactionId, currency, onAddLine }: { transactionId: string, currency: string, onAddLine: (line: TransactionLine) => void }) {
+function AddLineItemForm({ transactionId, currency, accountOptions, onAddLine }: { transactionId: string, currency: string, accountOptions: Array<{ value: string; label: string }>, onAddLine: (line: TransactionLine) => void }) {
     const { toast } = useToast();
     const [lineTitle, setLineTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -123,7 +112,7 @@ function AddLineItemForm({ transactionId, currency, onAddLine }: { transactionId
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="line_category">Category</Label>
-                    <Combobox options={lineItemCategories} value={category} onChange={v => setCategory(v as any)} placeholder="Select category..." />
+                    <Combobox options={transactionLineCategoryOptions} value={category} onChange={v => setCategory(v as any)} placeholder="Select category..." />
                 </div>
             </div>
             <div className="grid gap-2">
@@ -143,7 +132,7 @@ function AddLineItemForm({ transactionId, currency, onAddLine }: { transactionId
             <div className="grid md:grid-cols-2 gap-4">
                  <div className="grid gap-2">
                     <Label htmlFor="line_account">Account</Label>
-                    <Combobox options={accounts} value={account} onChange={setAccount} placeholder="Select account..." />
+                    <Combobox options={accountOptions} value={account} onChange={setAccount} placeholder="Select account..." />
                 </div>
             </div>
 
@@ -164,9 +153,14 @@ export default function TransactionDetailPage() {
   const id = params.id as string;
   const { data: transaction, isLoading: isTransactionLoading } = useTransactionById(id);
   const { data: lines, isLoading: areLinesLoading } = useTransactionLines(id);
+  const { data: accounts } = useUserAccounts(transaction?.userId);
 
   const [showAddLineForm, setShowAddLineForm] = useState(false);
   const partyLabel = transaction?.party?.name || transaction?.recipient || 'N/A';
+  const accountOptions = (accounts ?? []).map((account) => ({
+    value: account.name,
+    label: `${account.name} (${account.type})`,
+  }));
 
   const handleAddLine = () => {
       // The useCollection hook will update automatically
@@ -286,7 +280,7 @@ export default function TransactionDetailPage() {
                         </Button>
                     </div>
 
-                    {showAddLineForm && <AddLineItemForm transactionId={id} currency={transaction.currency} onAddLine={handleAddLine} />}
+                    {showAddLineForm && <AddLineItemForm transactionId={id} currency={transaction.currency} accountOptions={accountOptions} onAddLine={handleAddLine} />}
                     
                     <div className="mt-4 border rounded-lg">
                         <Table>

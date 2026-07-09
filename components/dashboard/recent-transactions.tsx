@@ -11,7 +11,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { type Transaction } from '@/core/lib/mock-data';
+import { type Transaction } from '@/core/lib/ledger';
 import { ArrowDownLeft, ArrowUpRight, Loader, MoreVertical } from 'lucide-react';
 import { cn } from '@/core/lib/utils';
 import { usePathname } from 'next/navigation';

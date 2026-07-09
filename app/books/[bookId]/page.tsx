@@ -15,51 +15,16 @@ import { useUser } from '@/core/providers/auth';
 import { createTransaction, useTransactionsList, useUserAccounts } from '@/core/hooks/api';
 import { useToast } from '@/core/hooks/use-toast';
 import { Textarea } from '@/components/ui/textarea';
-import { type TransactionCategory, type TransactionStatus, type TransactionType } from '@/core/lib/mock-data';
-
-const creditTypes = new Set(['sale', 'refund', 'income']);
-
-const transactionTypes: { value: TransactionType; label: string }[] = [
-  { value: 'sale', label: 'Sale' },
-  { value: 'purchase', label: 'Purchase' },
-  { value: 'refund', label: 'Refund' },
-  { value: 'expense', label: 'Expense' },
-  { value: 'payroll', label: 'Payroll' },
-  { value: 'income', label: 'Income' },
-  { value: 'other', label: 'Other' },
-];
-
-const transactionStatuses: { value: TransactionStatus; label: string }[] = [
-  { value: 'unpaid', label: 'Unpaid' },
-  { value: 'partially_paid', label: 'Partially paid' },
-  { value: 'paid', label: 'Paid' },
-  { value: 'canceled', label: 'Canceled' },
-];
-
-const categories: { value: TransactionCategory; label: TransactionCategory }[] = [
-  { value: 'Sales', label: 'Sales' },
-  { value: 'Purchases', label: 'Purchases' },
-  { value: 'Discounts', label: 'Discounts' },
-  { value: 'Payroll', label: 'Payroll' },
-  { value: 'Utilities', label: 'Utilities' },
-  { value: 'Vendor payments', label: 'Vendor payments' },
-  { value: 'EMIs', label: 'EMIs' },
-  { value: 'Bank charges', label: 'Bank charges' },
-  { value: 'VAT / Tax', label: 'VAT / Tax' },
-  { value: 'Transfers', label: 'Transfers' },
-  { value: 'Refunds', label: 'Refunds' },
-  { value: 'Income', label: 'Income' },
-  { value: 'Other', label: 'Other' },
-];
-
-const currencies = [
-  { value: 'USD', label: 'USD - US Dollar' },
-  { value: 'EUR', label: 'EUR - Euro' },
-  { value: 'GBP', label: 'GBP - British Pound' },
-  { value: 'JPY', label: 'JPY - Japanese Yen' },
-  { value: 'INR', label: 'INR - Indian Rupee' },
-  { value: 'NPR', label: 'NPR - Nepali Rupee' },
-];
+import {
+  currencyOptions,
+  isCreditTransactionType,
+  transactionCategoryOptions,
+  transactionStatusOptions,
+  transactionTypeOptions,
+  type TransactionCategory,
+  type TransactionStatus,
+  type TransactionType,
+} from '@/core/lib/ledger';
 
 function formatDate(value: string) {
   return new Date(value).toLocaleDateString('en-US', {
@@ -235,7 +200,7 @@ export default function BookPage() {
                           <SelectValue placeholder="Select currency" />
                         </SelectTrigger>
                         <SelectContent>
-                          {currencies.map((option) => (
+                          {currencyOptions.map((option) => (
                             <SelectItem key={option.value} value={option.value}>
                               {option.label}
                             </SelectItem>
@@ -252,7 +217,7 @@ export default function BookPage() {
                           <SelectValue placeholder="Select type" />
                         </SelectTrigger>
                         <SelectContent>
-                          {transactionTypes.map((option) => (
+                          {transactionTypeOptions.map((option) => (
                             <SelectItem key={option.value} value={option.value}>
                               {option.label}
                             </SelectItem>
@@ -267,7 +232,7 @@ export default function BookPage() {
                           <SelectValue placeholder="Select category" />
                         </SelectTrigger>
                         <SelectContent>
-                          {categories.map((option) => (
+                          {transactionCategoryOptions.map((option) => (
                             <SelectItem key={option.value} value={option.value}>
                               {option.label}
                             </SelectItem>
@@ -297,7 +262,7 @@ export default function BookPage() {
                           <SelectValue placeholder="Select status" />
                         </SelectTrigger>
                         <SelectContent>
-                          {transactionStatuses.map((option) => (
+                          {transactionStatusOptions.map((option) => (
                             <SelectItem key={option.value} value={option.value}>
                               {option.label}
                             </SelectItem>
@@ -336,7 +301,7 @@ export default function BookPage() {
         ) : transactions && transactions.length > 0 ? (
           <div className="space-y-3">
             {transactions.map((transaction) => {
-              const isCredit = creditTypes.has(transaction.transaction_type);
+              const isCredit = isCreditTransactionType(transaction.transaction_type);
               const amount = isCredit ? transaction.total_amount : Math.abs(transaction.total_amount);
 
               return (

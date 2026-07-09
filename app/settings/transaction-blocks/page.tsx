@@ -33,7 +33,7 @@ import {
 } from '@/components/ui/table';
 import { useParties } from '@/core/hooks/api';
 import { useToast } from '@/core/hooks/use-toast';
-import type { Party } from '@/core/lib/mock-data';
+import type { Party } from '@/core/lib/ledger';
 
 type ApplicableFor = 'account' | 'assetGroup' | 'profile';
 type SubblockCalculationMode =

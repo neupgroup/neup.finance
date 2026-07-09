@@ -1,10 +1,13 @@
+'use client';
+
 import React from 'react';
 import { RecentTransactions } from './recent-transactions';
 import { SmartProjections } from './smart-projections';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { SmartEntry } from './smart-entry';
-import { transactions } from '@/core/lib/mock-data';
 import { ArrowDown, ArrowUp } from 'lucide-react';
+import { useUser } from '@/core/providers/auth';
+import { useTransactionsList } from '@/core/hooks/api';
 
 function StatCard({ title, value, icon, description, colorClass }: { title: string, value: string, icon: React.ReactNode, description: string, colorClass?: string }) {
     return (
@@ -23,11 +26,14 @@ function StatCard({ title, value, icon, description, colorClass }: { title: stri
 
 
 export function Dashboard() {
+    const { user } = useUser();
+    const { data: transactions } = useTransactionsList(user?.uid);
+
     const { receivables, payables } = React.useMemo(() => {
         let payables = 0;
         let receivables = 0;
 
-        transactions.forEach(t => {
+        (transactions ?? []).forEach(t => {
             if (t.status === 'unpaid' || t.status === 'partially_paid') {
                  if (['sale', 'income'].includes(t.transaction_type)) {
                     receivables += t.balance_due;
@@ -38,7 +44,7 @@ export function Dashboard() {
         });
         
         return { receivables, payables };
-    }, []);
+    }, [transactions]);
 
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);

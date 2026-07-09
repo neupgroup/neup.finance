@@ -10,55 +10,34 @@ import { Label } from '@/components/ui/label';
 import { Combobox } from '@/components/ui/combobox';
 import { CurrencyAmountInput } from '@/components/ui/currency-amount-input';
 import { DateChoiceInput } from '@/components/ui/date-choice-input';
-import { type Transaction, type TransactionCategory, type TransactionStatus, type TransactionType } from '@/core/lib/mock-data';
+import {
+  transactionCategoryOptions,
+  transactionStatusOptions,
+  type Transaction,
+  type TransactionCategory,
+  type TransactionStatus,
+  type TransactionType,
+} from '@/core/lib/ledger';
 import { useToast } from '@/core/hooks/use-toast';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { ArrowLeft, ArrowDownLeft, ArrowUpRight, Loader } from 'lucide-react';
 import { useUser } from '@/core/providers/auth';
-import { createTransaction, useParties } from '@/core/hooks/api';
+import { createTransaction, useParties, useUserAccounts } from '@/core/hooks/api';
 import { cn } from '@/core/lib/utils';
-
-const accounts = [
-  { value: 'Checking Account', label: 'Checking Account' },
-  { value: 'Savings Account', label: 'Savings Account' },
-  { value: 'Wallet', label: 'Wallet' },
-];
-
-const categories: {value: TransactionCategory, label: TransactionCategory}[] = [
-  { value: 'Sales', label: 'Sales' },
-  { value: 'Purchases', label: 'Purchases' },
-  { value: 'Discounts', label: 'Discounts' },
-  { value: 'Payroll', label: 'Payroll' },
-  { value: 'Utilities', label: 'Utilities' },
-  { value: 'Vendor payments', label: 'Vendor payments' },
-  { value: 'EMIs', label: 'EMIs' },
-  { value: 'Bank charges', label: 'Bank charges' },
-  { value: 'VAT / Tax', label: 'VAT / Tax' },
-  { value: 'Transfers', label: 'Transfers' },
-  { value: 'Refunds', label: 'Refunds' },
-  { value: 'Other', label: 'Other' },
-];
 type TransactionDirection = 'incoming' | 'outgoing';
 
 const transactionDirections: {value: TransactionDirection, label: string, description: string}[] = [
     {value: 'incoming', label: 'Incoming', description: 'Money coming in'},
     {value: 'outgoing', label: 'Outgoing', description: 'Money going out'},
 ];
-const transactionStatuses: {value: TransactionStatus, label: TransactionStatus}[] = [
-    {value: 'unpaid', label: 'unpaid'},
-    {value: 'partially_paid', label: 'partially_paid'},
-    {value: 'paid', label: 'paid'},
-    {value: 'canceled', label: 'canceled'}
-];
-
-
 function ReviewTransactionForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { toast } = useToast();
     const { user } = useUser();
     const { data: parties } = useParties();
+    const { data: accounts } = useUserAccounts(user?.uid);
 
     const [hydrated, setHydrated] = useState(false);
     
@@ -76,6 +55,13 @@ function ReviewTransactionForm() {
     const [amountPaid, setAmountPaid] = useState<number | ''>('');
     const [dueOn, setDueOn] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const accountOptions = useMemo(
+        () => (accounts ?? []).map((account) => ({
+            value: account.name,
+            label: `${account.name} (${account.type})`,
+        })),
+        [accounts]
+    );
     
     useEffect(() => {
         const transactionData = searchParams.get('data');
@@ -285,7 +271,7 @@ function ReviewTransactionForm() {
                 <div className="grid gap-2">
                     <Label htmlFor="category">Category</Label>
                     <Combobox
-                        options={categories}
+                        options={transactionCategoryOptions}
                         value={category}
                         onChange={(v) => setCategory(v as any)}
                         placeholder="Select a category"
@@ -309,7 +295,7 @@ function ReviewTransactionForm() {
             <div className="grid gap-2">
                 <Label htmlFor="status">Status</Label>
                 <Combobox
-                    options={transactionStatuses}
+                    options={transactionStatusOptions}
                     value={status}
                     onChange={(v) => setStatus(v as any)}
                     placeholder="Select status"
@@ -319,7 +305,7 @@ function ReviewTransactionForm() {
                  <div className="grid gap-2">
                     <Label htmlFor="account">Account</Label>
                         <Combobox
-                        options={accounts}
+                        options={accountOptions}
                         value={accountId}
                         onChange={setAccountId}
                         placeholder="Select an account"

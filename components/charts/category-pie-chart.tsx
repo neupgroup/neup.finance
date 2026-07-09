@@ -1,8 +1,9 @@
 'use client';
 
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { transactions } from '@/core/lib/mock-data';
 import { useMemo } from 'react';
+import { useUser } from '@/core/providers/auth';
+import { useTransactionsList } from '@/core/hooks/api';
 
 const COLORS = [
     'hsl(var(--chart-1))',
@@ -15,9 +16,12 @@ const COLORS = [
 ];
 
 export function CategoryPieChart() {
+    const { user } = useUser();
+    const { data: transactions } = useTransactionsList(user?.uid);
+
     const data = useMemo(() => {
         const categoryTotals: {[key: string]: number} = {};
-        transactions.forEach(t => {
+        (transactions ?? []).forEach(t => {
             if (['purchase', 'expense'].includes(t.transaction_type)) {
                 if(categoryTotals[t.category]) {
                     categoryTotals[t.category] += t.total_amount;
@@ -29,7 +33,7 @@ export function CategoryPieChart() {
 
         return Object.entries(categoryTotals).map(([name, value]) => ({ name, value }));
 
-    }, []);
+    }, [transactions]);
 
     const RADIAN = Math.PI / 180;
     const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }: any) => {
@@ -83,4 +87,3 @@ export function CategoryPieChart() {
         </ResponsiveContainer>
     );
 }
-

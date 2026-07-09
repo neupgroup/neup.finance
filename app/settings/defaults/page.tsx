@@ -15,7 +15,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Combobox } from '@/components/ui/combobox';
 import { useToast } from '@/core/hooks/use-toast';
-import { currencies, transactionTypes } from '@/core/lib/mock-data';
+import { currencyOptions, transactionTypeOptions } from '@/core/lib/ledger';
 
 export default function DefaultsSettingsPage() {
     const { toast } = useToast();
@@ -45,7 +45,7 @@ export default function DefaultsSettingsPage() {
             <div className="space-y-2">
                 <Label htmlFor="defaultCurrency">Default Currency</Label>
                 <Combobox
-                    options={currencies}
+                    options={currencyOptions}
                     value={defaultCurrency}
                     onChange={setDefaultCurrency}
                     placeholder="Select a default currency..."
@@ -54,7 +54,7 @@ export default function DefaultsSettingsPage() {
             <div className="space-y-2">
                 <Label htmlFor="defaultTransactionType">Default Transaction Type</Label>
                 <Combobox
-                    options={transactionTypes}
+                    options={transactionTypeOptions}
                     value={defaultTransactionType}
                     onChange={(v) => setDefaultTransactionType(v)}
                     placeholder="Select a default type..."

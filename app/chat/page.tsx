@@ -8,8 +8,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { answerFinancialQuestion } from '@/core/ai/flows/answer-financial-questions';
-import { transactions } from '@/core/lib/mock-data';
 import { useToast } from '@/core/hooks/use-toast';
+import { useUser } from '@/core/providers/auth';
+import { useTransactionsList } from '@/core/hooks/api';
 
 type Message = {
   role: 'user' | 'assistant';
@@ -17,6 +18,8 @@ type Message = {
 };
 
 export default function ChatPage() {
+  const { user } = useUser();
+  const { data: transactions } = useTransactionsList(user?.uid);
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -37,7 +40,7 @@ export default function ChatPage() {
     setInput('');
 
     try {
-        const financialData = JSON.stringify(transactions);
+        const financialData = JSON.stringify(transactions ?? []);
         const result = await answerFinancialQuestion({ question: input, financialData });
 
         const assistantMessage: Message = { role: 'assistant', content: result.answer };
