@@ -25,9 +25,9 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
-import { useToast } from '@/hooks/use-toast';
-import { useUser } from '@/auth/provider';
-import { type TransactionCategory, type TransactionStatus, type TransactionType } from '@/lib/mock-data';
+import { useToast } from '@/core/hooks/use-toast';
+import { useUser } from '@/core/providers/auth';
+import { type TransactionCategory, type TransactionStatus, type TransactionType } from '@/core/lib/mock-data';
 
 const accounts = [
   { value: 'Checking Account', label: 'Checking Account' },

@@ -3,7 +3,7 @@ import { RecentTransactions } from './recent-transactions';
 import { SmartProjections } from './smart-projections';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { SmartEntry } from './smart-entry';
-import { transactions } from '@/lib/mock-data';
+import { transactions } from '@/core/lib/mock-data';
 import { ArrowDown, ArrowUp } from 'lucide-react';
 
 function StatCard({ title, value, icon, description, colorClass }: { title: string, value: string, icon: React.ReactNode, description: string, colorClass?: string }) {

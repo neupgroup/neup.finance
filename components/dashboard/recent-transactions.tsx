@@ -11,14 +11,14 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { type Transaction } from '@/lib/mock-data';
+import { type Transaction } from '@/core/lib/mock-data';
 import { ArrowDownLeft, ArrowUpRight, Loader, MoreVertical } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/core/lib/utils';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationLink } from '@/components/ui/pagination';
-import { useUser } from '@/auth/provider';
-import { useTransactionsList } from '@/hooks/api';
+import { useUser } from '@/core/providers/auth';
+import { useTransactionsList } from '@/core/hooks/api';
 import { Button } from '@/components/ui/button';
 import { stackedCardClassName } from '@/components/ui/stacked-card';
 

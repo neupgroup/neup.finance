@@ -7,8 +7,8 @@ import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger } from '@/comp
 import { MainNav } from './main-nav';
 import { Logo } from '../icons';
 import { Header } from './header';
-import { useUser } from '@/auth/provider';
-import { useUserProfile } from '@/hooks/api';
+import { useUser } from '@/core/providers/auth';
+import { useUserProfile } from '@/core/hooks/api';
 
 type ShellIdentity = {
     label: string;

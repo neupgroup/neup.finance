@@ -7,9 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { answerFinancialQuestion } from '@/ai/flows/answer-financial-questions';
-import { transactions } from '@/lib/mock-data';
-import { useToast } from '@/hooks/use-toast';
+import { answerFinancialQuestion } from '@/core/ai/flows/answer-financial-questions';
+import { transactions } from '@/core/lib/mock-data';
+import { useToast } from '@/core/hooks/use-toast';
 
 type Message = {
   role: 'user' | 'assistant';

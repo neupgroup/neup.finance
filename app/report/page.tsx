@@ -3,7 +3,7 @@
 import React from 'react';
 import { AppShell } from '@/components/layout/app-shell';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { transactions } from '@/lib/mock-data';
+import { transactions } from '@/core/lib/mock-data';
 import { ArrowDown, ArrowUp, Banknote, Landmark, Minus, Scale } from 'lucide-react';
 import { IncomeExpenseChart } from '@/components/charts/income-expense-chart';
 import { CategoryPieChart } from '@/components/charts/category-pie-chart';

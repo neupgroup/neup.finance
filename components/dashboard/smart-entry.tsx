@@ -6,8 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Sparkles, Loader } from 'lucide-react';
-import { createTransactionFromText } from '@/ai/flows/create-transaction-from-text';
-import { useToast } from '@/hooks/use-toast';
+import { createTransactionFromText } from '@/core/ai/flows/create-transaction-from-text';
+import { useToast } from '@/core/hooks/use-toast';
 
 export function SmartEntry() {
   const [text, setText] = useState('');

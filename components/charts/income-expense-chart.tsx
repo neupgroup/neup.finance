@@ -1,7 +1,7 @@
 'use client';
 
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { transactions } from '@/lib/mock-data';
+import { transactions } from '@/core/lib/mock-data';
 import { useMemo } from 'react';
 import { format, subDays, eachDayOfInterval } from 'date-fns';
 

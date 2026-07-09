@@ -5,9 +5,16 @@
 - [ ] Add documentation for `app/transactions/[id]/page.tsx` and its transaction detail, line-item, attachment, and invoice-link behavior.
 - [ ] Add documentation for the `app/api/transactions/` route behavior, including cookie-based account resolution and user-record provisioning before transaction writes.
 - [ ] Add documentation for `app/settings/page.tsx` and `app/settings/transaction-blocks/page.tsx`, including book-scoped transaction block settings.
-- [ ] Add documentation for `hooks/api.ts`, including shared fetch hooks and transaction/book/party mutation helpers.
+- [ ] Add documentation for the `core/` folder, including its shared auth, provider, helper, and interface entrypoint conventions.
+- [ ] Add documentation for the `core/providers/` folder, including `auth.tsx`, cookie state, geolocation, and session provider responsibilities.
+- [ ] Add documentation for the `core/hooks/` folder, including the shared toast, mobile, activity, and API helper hooks.
+- [ ] Add documentation for the `core/lib/` folder, including the shared utility, mock data, and placeholder image modules.
+- [ ] Add documentation for the `core/ai/` folder, including Genkit configuration, registered flows, and AI entrypoint usage.
 - [ ] Add documentation for the `components/layout/` and `components/dashboard/` folders so the app shell and dashboard composition are described near the source.
 - [ ] Add documentation for the `components/ui/` folder, including the custom combobox, currency amount input, and date choice input behaviors.
+- [ ] Add documentation for `components.json`, including the shared component generator aliases and why hooks resolve through `@/core/hooks`.
 - [ ] Resolve the existing typecheck failures caused by missing `@/services/*` modules, missing Prisma helper dependencies/generated client imports, and related implicit `any` errors in `neup.core/auth/*`, `neup.core/helper*`, and `neup.core/providers/session.tsx`.
+- [ ] Resolve the `app/transactions/add/page.tsx` typecheck failure where `"" | TransactionDirection` is passed where `TransactionDirection` is required.
+- [ ] Resolve the remaining typecheck failures from unresolved `@/neup.logica/*` modules and related typing gaps in `logica/*` and `core/hooks/use-log-activity.ts`.
 - [ ] Add documentation for `app/transactions/[id]/invoice/layout.tsx` and its standalone invoice shell providers.
 - [ ] Add documentation for `lib/mock-data.ts` and the shared transaction, line, projection, recipient, and party data shapes.

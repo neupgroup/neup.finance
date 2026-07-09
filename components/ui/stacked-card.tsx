@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/core/lib/utils';
 
 export function stackedCardClassName(index: number, total: number, base = '') {
   const isFirst = index === 0;

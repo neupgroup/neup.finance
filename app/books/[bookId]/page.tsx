@@ -11,11 +11,11 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useUser } from '@/auth/provider';
-import { createTransaction, useTransactionsList, useUserAccounts } from '@/hooks/api';
-import { useToast } from '@/hooks/use-toast';
+import { useUser } from '@/core/providers/auth';
+import { createTransaction, useTransactionsList, useUserAccounts } from '@/core/hooks/api';
+import { useToast } from '@/core/hooks/use-toast';
 import { Textarea } from '@/components/ui/textarea';
-import { type TransactionCategory, type TransactionStatus, type TransactionType } from '@/lib/mock-data';
+import { type TransactionCategory, type TransactionStatus, type TransactionType } from '@/core/lib/mock-data';
 
 const creditTypes = new Set(['sale', 'refund', 'income']);
 

@@ -11,13 +11,13 @@ import { Label } from '@/components/ui/label';
 import { Combobox } from '@/components/ui/combobox';
 import { CurrencyAmountInput } from '@/components/ui/currency-amount-input';
 import { DateChoiceInput } from '@/components/ui/date-choice-input';
-import { type Transaction, type TransactionCategory, type TransactionLineCategory, type TransactionStatus, type TransactionType } from '@/lib/mock-data';
-import { useToast } from '@/hooks/use-toast';
+import { type Transaction, type TransactionCategory, type TransactionLineCategory, type TransactionStatus, type TransactionType } from '@/core/lib/mock-data';
+import { useToast } from '@/core/hooks/use-toast';
 import { Textarea } from '@/components/ui/textarea';
-import { useUser } from '@/auth/provider';
-import { addTransactionLine, createTransaction, useParties, useTransactionsList } from '@/hooks/api';
+import { useUser } from '@/core/providers/auth';
+import { addTransactionLine, createTransaction, useParties, useTransactionsList } from '@/core/hooks/api';
 import { ArrowLeft, ArrowDownLeft, ArrowUpRight, Check, Loader } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/core/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   TRANSACTION_BLOCKS_STORAGE_KEY,

@@ -2,8 +2,8 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useUser } from '@/auth/provider';
-import { useUserProfile, useTransactionById, useTransactionLines } from '@/hooks/api';
+import { useUser } from '@/core/providers/auth';
+import { useUserProfile, useTransactionById, useTransactionLines } from '@/core/hooks/api';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Printer, Loader } from 'lucide-react';
 import { Logo } from '@/components/icons';

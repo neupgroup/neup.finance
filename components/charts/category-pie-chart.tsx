@@ -1,7 +1,7 @@
 'use client';
 
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { transactions } from '@/lib/mock-data';
+import { transactions } from '@/core/lib/mock-data';
 import { useMemo } from 'react';
 
 const COLORS = [

@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { summarizeSpending } from '@/ai/flows/summarize-spending';
-import { transactions } from '@/lib/mock-data';
+import { summarizeSpending } from '@/core/ai/flows/summarize-spending';
+import { transactions } from '@/core/lib/mock-data';
 import { Loader } from 'lucide-react';
 
 export function FinancialStory() {

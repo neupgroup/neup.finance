@@ -14,8 +14,8 @@ import {
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Combobox } from '@/components/ui/combobox';
-import { useToast } from '@/hooks/use-toast';
-import { currencies, transactionTypes } from '@/lib/mock-data';
+import { useToast } from '@/core/hooks/use-toast';
+import { currencies, transactionTypes } from '@/core/lib/mock-data';
 
 export default function DefaultsSettingsPage() {
     const { toast } = useToast();

@@ -10,14 +10,14 @@ import { Label } from '@/components/ui/label';
 import { Combobox } from '@/components/ui/combobox';
 import { CurrencyAmountInput } from '@/components/ui/currency-amount-input';
 import { DateChoiceInput } from '@/components/ui/date-choice-input';
-import { type Transaction, type TransactionCategory, type TransactionStatus, type TransactionType } from '@/lib/mock-data';
-import { useToast } from '@/hooks/use-toast';
+import { type Transaction, type TransactionCategory, type TransactionStatus, type TransactionType } from '@/core/lib/mock-data';
+import { useToast } from '@/core/hooks/use-toast';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { ArrowLeft, ArrowDownLeft, ArrowUpRight, Loader } from 'lucide-react';
-import { useUser } from '@/auth/provider';
-import { createTransaction, useParties } from '@/hooks/api';
-import { cn } from '@/lib/utils';
+import { useUser } from '@/core/providers/auth';
+import { createTransaction, useParties } from '@/core/hooks/api';
+import { cn } from '@/core/lib/utils';
 
 const accounts = [
   { value: 'Checking Account', label: 'Checking Account' },

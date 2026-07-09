@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import '@/app/globals.css';
 import { Toaster } from '@/components/ui/toaster';
-import { cn } from '@/lib/utils';
+import { cn } from '@/core/lib/utils';
 import { ThemeProvider } from '@/components/theme-provider';
-import { AuthProvider } from '@/auth/provider';
+import { AuthProvider } from '@/core/providers/auth';
 import { Outfit } from 'next/font/google';
 
 const outfit = Outfit({

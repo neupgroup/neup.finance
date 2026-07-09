@@ -4,21 +4,21 @@
 import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { AppShell } from '@/components/layout/app-shell';
-import { type Transaction, type TransactionLine, type TransactionLineCategory } from '@/lib/mock-data';
+import { type Transaction, type TransactionLine, type TransactionLineCategory } from '@/core/lib/mock-data';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Paperclip, PlusCircle, Printer, Loader } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
+import { cn } from '@/core/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Combobox } from '@/components/ui/combobox';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/core/hooks/use-toast';
 import { Card } from '@/components/ui/card';
-import { addTransactionLine, useTransactionById, useTransactionLines } from '@/hooks/api';
+import { addTransactionLine, useTransactionById, useTransactionLines } from '@/core/hooks/api';
 
 
 const lineItemCategories: {value: TransactionLineCategory, label: string}[] = [

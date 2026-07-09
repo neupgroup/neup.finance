@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { AppShell } from '@/components/layout/app-shell';
-import { transactions, transactionLines, type Transaction, type TransactionLine } from '@/lib/mock-data';
+import { transactions, transactionLines, type Transaction, type TransactionLine } from '@/core/lib/mock-data';
 import { Loader } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/core/hooks/use-toast';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Separator } from '@/components/ui/separator';
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationLink } from '@/components/ui/pagination';
-import { cn } from '@/lib/utils';
+import { cn } from '@/core/lib/utils';
 
 type JournalEntry = {
     transaction: Transaction;

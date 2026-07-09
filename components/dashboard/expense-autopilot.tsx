@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { suggestExpenseOptimizations, type SuggestExpenseOptimizationsOutput } from '@/ai/flows/suggest-expense-optimizations';
-import { transactions } from '@/lib/mock-data';
+import { suggestExpenseOptimizations, type SuggestExpenseOptimizationsOutput } from '@/core/ai/flows/suggest-expense-optimizations';
+import { transactions } from '@/core/lib/mock-data';
 import { Lightbulb, Loader } from 'lucide-react';
 
 export function ExpenseAutopilot() {

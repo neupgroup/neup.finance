@@ -1,4 +1,4 @@
-import { type Transaction, type TransactionLine, type TransactionType } from '@/lib/mock-data';
+import { type Transaction, type TransactionLine, type TransactionType } from '@/core/lib/mock-data';
 
 /*
 ::neup.documentation::invoice-service

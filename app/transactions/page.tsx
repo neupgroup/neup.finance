@@ -6,9 +6,9 @@ import { AppShell } from '@/components/layout/app-shell';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { cn } from '@/lib/utils';
-import { useUser } from '@/auth/provider';
-import { useTransactionsList } from '@/hooks/api';
+import { cn } from '@/core/lib/utils';
+import { useUser } from '@/core/providers/auth';
+import { useTransactionsList } from '@/core/hooks/api';
 import { stackedCardClassName } from '@/components/ui/stacked-card';
 import { StackedEmptyStateRow } from '@/components/ui/stacked-empty-state';
 

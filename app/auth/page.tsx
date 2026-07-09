@@ -15,9 +15,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Logo } from '@/components/icons';
 import { ArrowRight, Loader } from 'lucide-react';
-import { useUser } from '@/auth/provider';
-import { upsertUserProfile } from '@/hooks/api';
-import { useToast } from '@/hooks/use-toast';
+import { useUser } from '@/core/providers/auth';
+import { upsertUserProfile } from '@/core/hooks/api';
+import { useToast } from '@/core/hooks/use-toast';
 
 // A simple utility to set a cookie
 function setCookie(name: string, value: string, days: number) {

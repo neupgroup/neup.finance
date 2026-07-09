@@ -31,9 +31,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useParties } from '@/hooks/api';
-import { useToast } from '@/hooks/use-toast';
-import type { Party } from '@/lib/mock-data';
+import { useParties } from '@/core/hooks/api';
+import { useToast } from '@/core/hooks/use-toast';
+import type { Party } from '@/core/lib/mock-data';
 
 type ApplicableFor = 'account' | 'assetGroup' | 'profile';
 type SubblockCalculationMode =

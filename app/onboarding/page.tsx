@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/card';
 import { Logo } from '@/components/icons';
 import { ArrowRight, Loader } from 'lucide-react';
-import { useUser, useAuthActions } from '@/auth/provider';
+import { useUser, useAuthActions } from '@/core/providers/auth';
 
 export default function OnboardingPage() {
   const [isLoading, setIsLoading] = useState(false);

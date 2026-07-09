@@ -3,9 +3,9 @@
 
 import { useMemo } from 'react';
 import { AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { useUser } from '@/auth/provider';
-import { useUserAccounts, useProjections } from '@/hooks/api';
-import { type Projection } from '@/lib/mock-data';
+import { useUser } from '@/core/providers/auth';
+import { useUserAccounts, useProjections } from '@/core/hooks/api';
+import { type Projection } from '@/core/lib/mock-data';
 import { addMonths, format, startOfMonth, endOfMonth, isWithinInterval, isAfter, isBefore, eachDayOfInterval } from 'date-fns';
 import { Loader } from 'lucide-react';
 

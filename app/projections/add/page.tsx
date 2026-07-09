@@ -9,10 +9,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Combobox } from '@/components/ui/combobox';
 import { CurrencyAmountInput } from '@/components/ui/currency-amount-input';
-import { useToast } from '@/hooks/use-toast';
-import { type Projection, type ProjectionType, type ProjectionCertainty, type ProjectionRecurrence } from '@/lib/mock-data';
-import { useUser } from '@/auth/provider';
-import { createProjection, useParties } from '@/hooks/api';
+import { useToast } from '@/core/hooks/use-toast';
+import { type Projection, type ProjectionType, type ProjectionCertainty, type ProjectionRecurrence } from '@/core/lib/mock-data';
+import { useUser } from '@/core/providers/auth';
+import { createProjection, useParties } from '@/core/hooks/api';
 import { Loader } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 

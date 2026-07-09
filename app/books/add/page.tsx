@@ -10,9 +10,9 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useUser } from '@/auth/provider';
-import { createAccount, type Account } from '@/hooks/api';
-import { useToast } from '@/hooks/use-toast';
+import { useUser } from '@/core/providers/auth';
+import { createAccount, type Account } from '@/core/hooks/api';
+import { useToast } from '@/core/hooks/use-toast';
 
 type AccountType = Account['type'];
 
