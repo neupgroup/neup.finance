@@ -44,6 +44,9 @@ export async function GET(req: NextRequest) {
     orderBy: { date: 'desc' },
     include: {
       party: true,
+      lines: {
+        orderBy: { id: 'asc' },
+      },
     },
     take: limit ? Number(limit) : undefined,
   })
@@ -69,6 +72,17 @@ export async function GET(req: NextRequest) {
       reference_document: t.reference_document ?? undefined,
       created_at: t.created_at.toISOString(),
       userId: t.userId,
+      lines: t.lines.map((line) => ({
+        id: line.id,
+        transaction_id: line.transactionId,
+        line_title: line.line_title,
+        description: line.description ?? undefined,
+        category: line.category,
+        account: line.account,
+        debit: Number(line.debit),
+        credit: Number(line.credit),
+        currency: line.currency,
+      })),
     }))
   )
 }

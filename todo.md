@@ -1,6 +1,7 @@
 - [ ] Add documentation for the `prisma/` folder and its schema/migration files, including the `Account` model mapped to the `accounts` table.
 - [ ] Add documentation for the `app/` folder, including the shared layout and global styling conventions used by the ledger UI.
 - [ ] Add documentation for `app/books/` pages, including book listing, book creation, and book transaction recording flows.
+- [ ] Add documentation for `app/transactions/page.tsx`, including the transaction list row layout and nested line-item display behavior.
 - [ ] Add documentation for the `app/transactions/` folder, including the add-transaction validation and submit flow.
 - [ ] Add documentation for `app/transactions/[id]/page.tsx` and its transaction detail, line-item, attachment, and invoice-link behavior.
 - [ ] Add documentation for the `app/api/transactions/` route behavior, including cookie-based account resolution and user-record provisioning before transaction writes.

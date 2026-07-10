@@ -1,5 +1,15 @@
 'use client';
 
+/*
+::neup.documentation::transactions-list-page
+::function TransactionsPage()
+
+Renders the main transaction list with one summary row per transaction and
+shows any saved line items directly underneath each transaction row.
+
+::end
+*/
+
 import Link from 'next/link';
 import { ArrowDownLeft, ArrowUpRight, Inbox, MoreVertical, PlusCircle } from 'lucide-react';
 import { AppShell } from '@/components/layout/app-shell';
@@ -19,52 +29,78 @@ export default function TransactionsPage() {
   const stackedTotal = items.length > 0 ? items.length + 1 : 2;
 
   const isCredit = (type: string) => ['sale', 'refund', 'income'].includes(type);
+  const formatCurrency = (amount: number, currency: string) =>
+    new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency,
+    }).format(amount);
 
   const renderTransactionRow = (transaction: typeof items[number], index: number) => {
     const credit = isCredit(transaction.transaction_type);
 
     return (
-      <Link key={transaction.id} href={`/transactions/${transaction.id}`} className="block">
-        <div className={stackedCardClassName(index + 1, stackedTotal, 'flex items-center justify-between p-4')}>
-          <div className="flex items-center gap-4">
-            <div className={cn('rounded-full p-2', credit ? 'bg-chart-2/20' : 'bg-destructive/20')}>
-              {credit ? (
-                <ArrowUpRight className="h-5 w-5 text-chart-2" />
-              ) : (
-                <ArrowDownLeft className="h-5 w-5 text-destructive" />
-              )}
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <p className="font-semibold">{transaction.title}</p>
-                <Badge variant="outline">{transaction.status}</Badge>
+      <div key={transaction.id} className={stackedCardClassName(index + 1, stackedTotal, 'p-4')}>
+        <Link href={`/transactions/${transaction.id}`} className="block">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className={cn('rounded-full p-2', credit ? 'bg-chart-2/20' : 'bg-destructive/20')}>
+                {credit ? (
+                  <ArrowUpRight className="h-5 w-5 text-chart-2" />
+                ) : (
+                  <ArrowDownLeft className="h-5 w-5 text-destructive" />
+                )}
               </div>
-              <p className="text-sm text-muted-foreground">
-                {transaction.accountId} ·{' '}
-                {new Date(transaction.date).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'short',
-                  day: 'numeric',
-                })}
-              </p>
+              <div>
+                <div className="flex items-center gap-2">
+                  <p className="font-semibold">{transaction.title}</p>
+                  <Badge variant="outline">{transaction.status}</Badge>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  {new Date(transaction.date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  })}{' '}
+                  [{transaction.accountId}]
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="text-right">
+                <p className={cn('font-semibold', credit ? 'text-chart-2' : 'text-foreground')}>
+                  {credit ? '+' : ''}
+                  {formatCurrency(transaction.total_amount, transaction.currency)}
+                </p>
+              </div>
+              <Button variant="ghost" size="icon">
+                <MoreVertical className="h-5 w-5" />
+              </Button>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="text-right">
-              <p className={cn('font-semibold', credit ? 'text-chart-2' : 'text-foreground')}>
-                {credit ? '+' : ''}
-                {new Intl.NumberFormat('en-US', {
-                  style: 'currency',
-                  currency: transaction.currency,
-                }).format(transaction.total_amount)}
-              </p>
-            </div>
-            <Button variant="ghost" size="icon">
-              <MoreVertical className="h-5 w-5" />
-            </Button>
+        </Link>
+        {transaction.lines?.length ? (
+          <div className="ml-14 mt-3 space-y-2">
+            {transaction.lines.map((line) => (
+              <div key={line.id ?? `${transaction.id}-${line.line_title}`} className="rounded-md border bg-muted/30 px-3 py-2">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium">{line.line_title}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {line.account} [{line.category}]
+                    </p>
+                    {line.description ? (
+                      <p className="mt-1 text-xs text-muted-foreground">{line.description}</p>
+                    ) : null}
+                  </div>
+                  <p className="text-sm font-medium text-foreground">
+                    {formatCurrency(line.debit > 0 ? line.debit : line.credit, line.currency)}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
-        </div>
-      </Link>
+        ) : null}
+      </div>
     );
   };
 
