@@ -12,6 +12,15 @@ import { Textarea } from '@/components/ui/textarea';
 import { PlusCircle } from 'lucide-react';
 import { createParty } from '@/core/hooks/api';
 
+/*
+::neup.documentation::party-add-page
+::function AddPartyPage()
+
+Creates a new party, then forwards the user to the generated id detail page.
+
+::end
+*/
+
 export default function AddPartyPage() {
   const router = useRouter();
   const { toast } = useToast();
@@ -35,7 +44,7 @@ export default function AddPartyPage() {
     setIsSubmitting(true);
 
     try {
-      await createParty({
+      const createdParty = await createParty({
         name,
         type,
         taxinfo: taxType && taxType !== 'none'
@@ -54,7 +63,7 @@ export default function AddPartyPage() {
         description: `${name} has been successfully added.`,
       });
 
-      router.push('/party');
+      router.push(`/party/${createdParty.id}`);
     } catch (error) {
       console.error('Failed to create party', error);
       toast({

@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { AppShell } from '@/components/layout/app-shell';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/core/lib/utils';
@@ -10,6 +9,15 @@ import { useParties } from '@/core/hooks/api';
 import { Building, Inbox, Mail, MapPin, MoreVertical, Phone, PlusCircle, User, Wallet } from 'lucide-react';
 import { stackedCardClassName } from '@/components/ui/stacked-card';
 import { StackedEmptyStateRow } from '@/components/ui/stacked-empty-state';
+
+/*
+::neup.documentation::party-list-page
+::function PartyPage()
+
+Renders the account party list and links each party into its detail id route.
+
+::end
+*/
 
 export default function PartyPage() {
   const { data: parties, isLoading } = useParties();
@@ -41,9 +49,9 @@ export default function PartyPage() {
                         <p className="text-sm text-muted-foreground">Create a person or organization record.</p>
                       </div>
                     </div>
-                    <Button variant="ghost" size="icon">
+                    <div className="inline-flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground">
                       <PlusCircle className="h-5 w-5" />
-                    </Button>
+                    </div>
                   </div>
                 </Link>
                 <div className="flex items-start justify-between border-b border-border bg-card p-4">
@@ -93,9 +101,9 @@ export default function PartyPage() {
                         <p className="text-sm text-muted-foreground">Create a person or organization record.</p>
                       </div>
                     </div>
-                    <Button variant="ghost" size="icon">
+                    <div className="inline-flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground">
                       <PlusCircle className="h-5 w-5" />
-                    </Button>
+                    </div>
                   </div>
                 </Link>
 
@@ -107,7 +115,9 @@ export default function PartyPage() {
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <p className="font-semibold">{party.name}</p>
+                          <Link href={`/party/${party.id}`} className="font-semibold hover:underline">
+                            {party.name}
+                          </Link>
                           <Badge variant="secondary" className="capitalize">{party.type}</Badge>
                         </div>
                         <div className="mt-2 flex flex-col gap-1 text-sm text-muted-foreground">
@@ -154,9 +164,9 @@ export default function PartyPage() {
                         ) : null}
                       </div>
                     </div>
-                    <Button variant="ghost" size="icon">
+                    <div className="inline-flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground">
                       <MoreVertical className="h-5 w-5" />
-                    </Button>
+                    </div>
                   </div>
                 )) : (
                   <StackedEmptyStateRow
