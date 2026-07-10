@@ -36,6 +36,16 @@ export type SerializedParty = {
   name: string;
   type: string;
   taxinfo: unknown;
+  totals: {
+    received: Array<{
+      currency: string;
+      amount: number;
+    }>;
+    sent: Array<{
+      currency: string;
+      amount: number;
+    }>;
+  };
   contacts: Array<{
     id: string;
     party_id: string;
@@ -84,6 +94,13 @@ export type SerializedPartyPageData = {
 const partyInclude = {
   contacts: true,
   paymentMethods: true,
+  transactions: {
+    select: {
+      transaction_type: true,
+      total_paid: true,
+      currency: true,
+    },
+  },
 } as const;
 
 const partyTransactionInclude = {
@@ -102,12 +119,35 @@ type PartyTransactionRecord = Prisma.TransactionGetPayload<{
 }>;
 
 function serializeParty(party: PartyWithRelationsRecord): SerializedParty {
+  const receivedTotals = new Map<string, number>();
+  const sentTotals = new Map<string, number>();
+
+  for (const transaction of party.transactions) {
+    const paid = Number(transaction.total_paid);
+    if (!paid) {
+      continue;
+    }
+
+    if (['sale', 'refund', 'income'].includes(transaction.transaction_type)) {
+      receivedTotals.set(transaction.currency, (receivedTotals.get(transaction.currency) ?? 0) + paid);
+      continue;
+    }
+
+    if (['purchase', 'expense', 'payroll'].includes(transaction.transaction_type)) {
+      sentTotals.set(transaction.currency, (sentTotals.get(transaction.currency) ?? 0) + paid);
+    }
+  }
+
   return {
     id: party.id,
     account_id: party.accountId,
     name: party.name,
     type: party.type,
     taxinfo: party.taxinfo,
+    totals: {
+      received: Array.from(receivedTotals.entries()).map(([currency, amount]) => ({ currency, amount })),
+      sent: Array.from(sentTotals.entries()).map(([currency, amount]) => ({ currency, amount })),
+    },
     contacts: party.contacts.map((contact) => ({
       id: contact.id,
       party_id: contact.partyId,

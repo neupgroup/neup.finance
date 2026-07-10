@@ -5,7 +5,8 @@ import { createPartyForAccount, getAccountIdByConnectionId, getPartiesForAccount
 ::neup.documentation::api-parties-route
 ::api GET /api/parties
 
-Lists the current account's parties with contacts and payment methods.
+Lists the current account's parties with contacts, payment methods, and
+received or sent payment totals derived from linked transactions.
 
 ::api POST /api/parties
 

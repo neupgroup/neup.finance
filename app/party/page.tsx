@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/core/lib/utils';
 import { useParties } from '@/core/hooks/api';
-import { Building, Inbox, Mail, MapPin, MoreVertical, Phone, PlusCircle, User, Wallet } from 'lucide-react';
+import { ArrowDownLeft, ArrowUpRight, Building, Inbox, Mail, MapPin, MoreVertical, Phone, PlusCircle, User, Wallet } from 'lucide-react';
 import { stackedCardClassName } from '@/components/ui/stacked-card';
 import { StackedEmptyStateRow } from '@/components/ui/stacked-empty-state';
 
@@ -23,6 +23,13 @@ export default function PartyPage() {
   const { data: parties, isLoading } = useParties();
   const recipients = parties ?? [];
   const stackedTotal = recipients.length > 0 ? recipients.length + 1 : 2;
+
+  const formatCurrency = (amount: number, currency: string) =>
+    new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency,
+      minimumFractionDigits: 2,
+    }).format(amount);
 
   return (
     <AppShell>
@@ -160,6 +167,28 @@ export default function PartyPage() {
                                 {method.type}: {method.value}
                               </Badge>
                             ))}
+                          </div>
+                        ) : null}
+                        {party.totals?.received?.length || party.totals?.sent?.length ? (
+                          <div className="mt-3 flex flex-col gap-1.5 text-sm text-muted-foreground">
+                            {party.totals?.received?.length ? (
+                              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                                <ArrowUpRight className="h-3.5 w-3.5 text-chart-2" />
+                                <span>Amount received</span>
+                                <span className="font-medium text-foreground">
+                                  {party.totals.received.map((item) => formatCurrency(item.amount, item.currency)).join(', ')}
+                                </span>
+                              </div>
+                            ) : null}
+                            {party.totals?.sent?.length ? (
+                              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                                <ArrowDownLeft className="h-3.5 w-3.5 text-foreground" />
+                                <span>Amount sent</span>
+                                <span className="font-medium text-foreground">
+                                  {party.totals.sent.map((item) => formatCurrency(item.amount, item.currency)).join(', ')}
+                                </span>
+                              </div>
+                            ) : null}
                           </div>
                         ) : null}
                       </div>
