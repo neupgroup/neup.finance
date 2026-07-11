@@ -27,8 +27,10 @@ artifacts at the viewport edge.
 Selecting an option delays the external value change until the option list has
 collapsed. The clicked card stays visible as the selected card while the other
 cards shrink away. The collapse duration is 100ms per matching item, capped at
-1000ms. The list scrollbar uses the same muted border tone as the selector
-stack.
+1000ms. Clearing the selection plays the reverse transition, expanding the
+stack from the selected card back to the visible card window before the
+highlight is removed. The list scrollbar uses the same muted border tone as
+the selector stack.
 
 ::end
 */
@@ -49,6 +51,12 @@ const CARD_HEIGHT_REM = 3.75;
 const CARD_HEIGHT_FALLBACK_PX = CARD_HEIGHT_REM * 16;
 const SELECTION_COLLAPSE_MS_PER_ITEM = 100;
 const MAX_SELECTION_COLLAPSE_MS = 1000;
+const OPTION_ENTER_EXPAND_DELAY_MS = 20;
+
+type SelectionAnimationMode =
+  | 'collapsing'
+  | 'expanding'
+  | null;
 
 export type SnappyCardSelectOption<
   TValue extends string = string,
@@ -106,6 +114,14 @@ export function SnappyCardSelect<
     collapseListHeight,
     setCollapseListHeight,
   ] = useState<number | null>(null);
+  const [
+    selectionAnimationMode,
+    setSelectionAnimationMode,
+  ] = useState<SelectionAnimationMode>(null);
+  const [
+    shouldCollapseNonSelectedOptions,
+    setShouldCollapseNonSelectedOptions,
+  ] = useState(false);
   const [
     topVisibleOptionIndex,
     setTopVisibleOptionIndex,
@@ -178,6 +194,33 @@ export function SnappyCardSelect<
       maxScrollTop,
     );
   }, []);
+
+  const getExpandedListHeight = useCallback(() => {
+    const container = listRef.current;
+
+    if (!container) {
+      return CARD_HEIGHT_FALLBACK_PX;
+    }
+
+    const optionElements = getOptionElements();
+    const optionHeight =
+      optionElements[0]?.getBoundingClientRect().height ??
+      CARD_HEIGHT_FALLBACK_PX;
+    const maxVisibleHeight = shouldShowAllCards
+      ? Number.POSITIVE_INFINITY
+      : optionHeight * visibleOptionCount -
+        visibleCardOverlapPx;
+
+    return Math.min(
+      container.scrollHeight,
+      maxVisibleHeight,
+    );
+  }, [
+    getOptionElements,
+    shouldShowAllCards,
+    visibleCardOverlapPx,
+    visibleOptionCount,
+  ]);
 
   const normalizedMaxCards = Number.isFinite(maxCards)
     ? Math.floor(maxCards)
@@ -345,6 +388,8 @@ export function SnappyCardSelect<
     setPendingSelectedOption(option);
     setPendingSelectedOptionIndex(index);
     setCollapseListHeight(listHeight);
+    setSelectionAnimationMode('collapsing');
+    setShouldCollapseNonSelectedOptions(true);
 
     requestAnimationFrame(() => {
       setCollapseListHeight(selectedCardHeight);
@@ -355,19 +400,61 @@ export function SnappyCardSelect<
       setPendingSelectedOption(null);
       setPendingSelectedOptionIndex(null);
       setCollapseListHeight(null);
+      setSelectionAnimationMode(null);
+      setShouldCollapseNonSelectedOptions(false);
       onChange(option);
       selectionTimeoutRef.current = null;
     }, selectionCollapseDurationMs);
   };
 
   const handleClear = () => {
+    if (!value) {
+      return;
+    }
+
     clearSelectionTimeout();
+    clearSnapTimeout();
+
+    const selectedOptionIndex = options.findIndex(
+      (option) => option.value === value.value,
+    );
+
     setQuery('');
-    setPendingSelectedOption(null);
-    setPendingSelectedOptionIndex(null);
-    setCollapseListHeight(null);
+    setPendingSelectedOption(value);
+    setPendingSelectedOptionIndex(
+      selectedOptionIndex >= 0
+        ? selectedOptionIndex
+        : null,
+    );
+    setCollapseListHeight(CARD_HEIGHT_FALLBACK_PX);
+    setSelectionAnimationMode('expanding');
+    setShouldCollapseNonSelectedOptions(true);
+    setTopVisibleOptionIndex(0);
     onChange(null);
-    resetListPosition();
+
+    requestAnimationFrame(() => {
+      listRef.current?.scrollTo({
+        top: 0,
+        behavior: 'auto',
+      });
+
+      const expandedListHeight =
+        getExpandedListHeight();
+
+      requestAnimationFrame(() => {
+        setShouldCollapseNonSelectedOptions(false);
+        setCollapseListHeight(expandedListHeight);
+      });
+    });
+
+    selectionTimeoutRef.current = window.setTimeout(() => {
+      setPendingSelectedOption(null);
+      setPendingSelectedOptionIndex(null);
+      setCollapseListHeight(null);
+      setSelectionAnimationMode(null);
+      setShouldCollapseNonSelectedOptions(false);
+      selectionTimeoutRef.current = null;
+    }, selectionCollapseDurationMs + OPTION_ENTER_EXPAND_DELAY_MS);
   };
 
   useEffect(() => {
@@ -397,7 +484,14 @@ export function SnappyCardSelect<
   }, [clearSelectionTimeout, clearSnapTimeout]);
 
   const isSelectionCollapsing =
+    selectionAnimationMode === 'collapsing';
+  const isSelectionExpanding =
+    selectionAnimationMode === 'expanding';
+  const isSelectionAnimating =
+    selectionAnimationMode !== null &&
     pendingSelectedOption !== null;
+  const shouldShowSelectedValueCard =
+    value !== null && !isSelectionExpanding;
 
   return (
     <div className="space-y-2">
@@ -414,7 +508,7 @@ export function SnappyCardSelect<
         ) : null}
       </Label>
 
-      {value ? (
+      {shouldShowSelectedValueCard ? (
         <div className="flex w-full items-start justify-between rounded-lg border border-primary bg-primary/5 px-4 py-3">
           <div className="min-w-0">
             <div className="truncate text-sm font-medium">
@@ -471,14 +565,14 @@ export function SnappyCardSelect<
               '[&::-webkit-scrollbar-thumb]:bg-border',
               '[&::-webkit-scrollbar-thumb:hover]:bg-muted-foreground/40',
               snappy ? 'scroll-smooth' : '',
-              isSelectionCollapsing
+              isSelectionAnimating
                 ? 'overflow-hidden transition-[height,max-height] ease-in-out'
                 : '',
             ]
               .filter(Boolean)
               .join(' ')}
             style={
-              isSelectionCollapsing
+              isSelectionAnimating
                 ? {
                     height: `${collapseListHeight ?? 0}px`,
                     maxHeight: `${collapseListHeight ?? 0}px`,
@@ -502,7 +596,7 @@ export function SnappyCardSelect<
                 const isPendingSelectedOption =
                   pendingSelectedOptionIndex === index;
                 const shouldCollapseOption =
-                  isSelectionCollapsing &&
+                  shouldCollapseNonSelectedOptions &&
                   !isPendingSelectedOption;
                 const isFirstVisible =
                   index === topVisibleOptionIndex;
@@ -532,7 +626,7 @@ export function SnappyCardSelect<
                     type="button"
                     role="option"
                     disabled={
-                      disabled || isSelectionCollapsing
+                      disabled || isSelectionAnimating
                     }
                     aria-selected={isPendingSelectedOption}
                     onClick={() => handleSelect(option, index)}
@@ -545,7 +639,7 @@ export function SnappyCardSelect<
                       'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
                       'disabled:pointer-events-none',
                       disabled ? 'opacity-50' : '',
-                      index > 0 && !isSelectionCollapsing
+                      index > 0 && !isSelectionAnimating
                         ? '-mt-px'
                         : '',
                       shouldCollapseOption
