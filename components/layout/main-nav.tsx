@@ -1,6 +1,15 @@
 
 'use client';
 
+/*
+::neup.documentation::main-sidebar-navigation
+::title Main Sidebar Navigation
+
+Defines the primary sidebar destinations for the finance app shell.
+
+::end
+*/
+
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -19,7 +28,7 @@ import { useSidebar } from '../ui/sidebar';
 
 const menuItems = [
   { href: '/', label: 'Dashboard', icon: Home },
-  { href: '/books', label: 'Books', icon: Landmark },
+  { href: '/finaccounts', label: 'Accounts', icon: Landmark },
   { href: '/party', label: 'Party', icon: Users },
   { href: '/transactions', label: 'Transactions', icon: ArrowLeftRight },
   { href: '/projections', label: 'Projections', icon: BarChart },

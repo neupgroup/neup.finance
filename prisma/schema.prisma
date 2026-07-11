@@ -7,6 +7,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/// ::neup.documentation::finance-ledger-schema
+/// ::title Finance Ledger Schema
+///
+/// Defines the Prisma models for the finance ledger, including the physical
+/// `fin_book` and `fin_account` tables used by transaction lines.
+///
+/// ::end
+
 model User {
   id                  String        @id
   displayName         String
@@ -82,7 +90,25 @@ model AssetGroup {
   transactionLines TransactionLine[]
 
   @@index([accountId])
-  @@map("book")
+  @@map("fin_book")
+}
+
+model FinAccount {
+  id                String            @id @default(uuid())
+  profile_id        String
+  name              String
+  description       String?
+  type              String
+  currency          String
+  is_multi_currency Boolean           @default(false)
+  status            String
+  notes             String?
+  opened_on         DateTime?
+  created_on        DateTime          @default(now())
+
+  @@index([profile_id])
+  @@index([status])
+  @@map("fin_account")
 }
 
 model Transaction {
@@ -134,6 +160,7 @@ model TransactionLine {
   @@index([transactionId])
   @@index([referenceType, referenceId])
   @@index([finBook])
+  @@index([finAccount])
   @@map("transaction_line")
 }
 
