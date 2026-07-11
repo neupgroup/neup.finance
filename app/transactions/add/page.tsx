@@ -23,7 +23,7 @@ import {
 import { useToast } from '@/core/hooks/use-toast';
 import { Textarea } from '@/components/ui/textarea';
 import { useUser } from '@/core/providers/auth';
-import { addTransactionLine, createTransaction, useParties, useTransactionsList, useUserAccounts } from '@/core/hooks/api';
+import { createTransaction, useParties, useTransactionsList, useUserAccounts } from '@/core/hooks/api';
 import { ArrowLeft, ArrowDownLeft, ArrowUpRight, Check, Loader } from 'lucide-react';
 import { cn } from '@/core/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -311,7 +311,7 @@ export default function AddTransactionPage() {
     }
 
     try {
-        const newTransaction: Omit<Transaction, 'id' | 'created_at'> = {
+        const newTransaction = {
             title,
             description,
             accountId: accountId,
@@ -326,53 +326,49 @@ export default function AddTransactionPage() {
             currency: totalAmountCurrency,
             recipient: selectedParty?.name,
             due_on: dueOn || undefined,
-            // reference_document: attachment || undefined, // Not storing files yet
             userId: user.uid,
         };
-        const saved = await createTransaction(newTransaction);
         const monetarySubblocks = transactionSubblockRows.filter(isPersistableTransactionSubblock);
+        const legacyFallbackLine = {
+          title,
+          line_type_id: (category as string) || transactionType,
+          currency: totalAmountCurrency,
+          base_amount: direction === 'incoming' ? resolvedTransactionTotal : -resolvedTransactionTotal,
+          fin_account: accountId || selectedParty?.name || 'Transaction',
+          fin_book: undefined,
+          reference_type: partyId ? 'party' : undefined,
+          reference_id: partyId || undefined,
+        };
 
-        if (saved?.id && monetarySubblocks.length > 0) {
-          try {
-            await Promise.all(
-              monetarySubblocks.map((subblock) => {
+        const saved = await createTransaction({
+          ...newTransaction,
+          lines: monetarySubblocks.length > 0
+            ? monetarySubblocks.map((subblock, index) => {
                 const amount = Math.abs(subblock.amount);
                 const isDiscount = `${subblock.key} ${subblock.label}`.toLowerCase().includes('discount');
-                const debit =
-                  (resolvedDirection === 'outgoing' && !isDiscount) || (resolvedDirection === 'incoming' && isDiscount)
-                    ? amount
-                    : 0;
-                const credit =
-                  (resolvedDirection === 'incoming' && !isDiscount) || (resolvedDirection === 'outgoing' && isDiscount)
-                    ? amount
-                    : 0;
+                const baseAmount =
+                  resolvedDirection === 'incoming'
+                    ? (isDiscount ? -amount : amount)
+                    : (isDiscount ? amount : -amount);
 
-                return addTransactionLine(saved.id, {
-                  line_title: subblock.label,
+                return {
+                  title: subblock.label,
                   description: describeTransactionSubblock(subblock),
-                  category: getTransactionLineCategory(subblock, resolvedDirection),
-                  account: accountId || selectedParty?.name || 'Transaction subblocks',
-                  debit,
-                  credit,
+                  line_type_id: getTransactionLineCategory(subblock, resolvedDirection),
                   currency: totalAmountCurrency,
-                });
+                  base_amount: baseAmount,
+                  sort_order: index,
+                  fin_account: accountId || selectedParty?.name || 'Transaction subblocks',
+                  reference_type: partyId ? 'party' : undefined,
+                  reference_id: partyId || undefined,
+                };
               })
-            );
-          } catch (lineError) {
-            console.error("Error adding transaction subblocks: ", lineError);
-            toast({
-              variant: "destructive",
-              title: "Transaction saved",
-              description: "The transaction was saved, but calculated subblocks could not be saved as line items.",
-            });
-            router.push(`/transactions/${saved.id}`);
-            return;
-          }
-        }
-        
+            : [legacyFallbackLine],
+        });
+
         toast({
             title: "Transaction Added",
-            description: `A new transaction for ${totalAmountCurrency} ${resolvedTransactionTotal} has been successfully added.`,
+            description: `A new transaction for ${totalAmountCurrency} ${saved.final_amount ?? resolvedTransactionTotal} has been successfully added.`,
         });
 
         router.push(`/transactions/${saved.id}`);

@@ -23,8 +23,12 @@ The positive invoice-facing line amount.
 
 ::end
 */
-export function getInvoiceLineAmount(transactionType: TransactionType, line: TransactionLine) {
-  return isCreditTransaction(transactionType) ? line.credit : line.debit;
+export function getInvoiceLineAmount(transactionType: TransactionType | string, line: TransactionLine) {
+  if (typeof line.base_amount === 'number') {
+    return Math.abs(line.base_amount);
+  }
+
+  return isCreditTransaction(transactionType) ? Number(line.credit ?? 0) : Number(line.debit ?? 0);
 }
 
 /*
@@ -45,7 +49,7 @@ Returns true when the transaction type is sale, refund, or income.
 
 ::end
 */
-export function isCreditTransaction(transactionType: TransactionType) {
+export function isCreditTransaction(transactionType: TransactionType | string) {
   return ['sale', 'refund', 'income'].includes(transactionType);
 }
 
@@ -96,7 +100,7 @@ The line total when lines exist, otherwise the transaction total amount.
 */
 export function getInvoiceSubtotal(transaction: Transaction, lines?: TransactionLine[] | null) {
   if (!lines || lines.length === 0) {
-    return transaction.total_amount;
+    return transaction.final_amount ?? transaction.total_amount;
   }
 
   return lines.reduce((total, line) => total + getInvoiceLineAmount(transaction.transaction_type, line), 0);
@@ -126,7 +130,8 @@ The tax amount when the final total is greater than the subtotal.
 ::end
 */
 export function getInvoiceTaxAmount(transaction: Transaction, subtotal: number) {
-  return Math.max(transaction.total_amount - subtotal, 0);
+  const total = transaction.final_amount ?? transaction.total_amount;
+  return Math.max(total - subtotal, 0);
 }
 
 /*

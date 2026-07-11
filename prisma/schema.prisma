@@ -8,23 +8,24 @@ datasource db {
 }
 
 model User {
-  id           String        @id
-  displayName  String
-  accountId    String
-  email        String?       @unique
-  createdAt    DateTime      @default(now())
-  projections  Projection[]
-  transactions Transaction[]
+  id                  String        @id
+  displayName         String
+  accountId           String
+  email               String?       @unique
+  createdAt           DateTime      @default(now())
+  projections         Projection[]
+  createdTransactions Transaction[] @relation("TransactionCreatedBy")
 }
 
 model Account {
-  id             String   @id
-  connection_id  String   @unique
-  displayName    String   @default("")
-  neupid         String   @default("")
-  displayImage   String   @default("")
-  assetGroups    AssetGroup[]
-  parties        Party[]
+  id                       String        @id
+  connection_id            String        @unique
+  displayName              String        @default("")
+  neupid                   String        @default("")
+  displayImage             String        @default("")
+  assetGroups              AssetGroup[]
+  parties                  Party[]
+  organizationTransactions Transaction[] @relation("TransactionOrganization")
 
   @@map("accounts")
 }
@@ -38,7 +39,6 @@ model Party {
   account   Account          @relation(fields: [accountId], references: [id], onDelete: Cascade)
   contacts  PartyContact[]
   paymentMethods PartyPaymentMethod[]
-  transactions Transaction[]
 
   @@index([accountId])
   @@map("party")
@@ -79,56 +79,62 @@ model AssetGroup {
   createdAt DateTime    @default(now())
   account   Account     @relation(fields: [accountId], references: [id], onDelete: Cascade)
   activityStock ActivityStock[]
-  transactions Transaction[]
+  transactionLines TransactionLine[]
 
   @@index([accountId])
   @@map("book")
 }
 
 model Transaction {
-  id                 String            @id @default(uuid())
-  title              String
-  description        String?
-  accountId          String
-  partyId            String?           @map("party_id")
-  assetGroupId       String
-  category           String
-  transaction_type   TransactionType
-  total_amount       Decimal
-  total_paid         Decimal           @default(0)
-  balance_due        Decimal           @default(0)
-  status             TransactionStatus
-  date               DateTime
-  currency           String
-  recipient          String?
-  due_on             DateTime?
-  reference_document String?
-  created_at         DateTime          @default(now())
-  userId             String
-  user               User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  assetGroup         AssetGroup        @relation(fields: [assetGroupId], references: [id], onDelete: Cascade)
-  party              Party?            @relation(fields: [partyId], references: [id], onDelete: SetNull)
-  lines              TransactionLine[]
+  id                String            @id @default(uuid())
+  organizationId    String            @map("organization_id")
+  transactionTypeId String            @map("transaction_type_id")
+  title             String
+  description       String?
+  transactionDate   DateTime          @map("transaction_date")
+  status            String
+  referenceNumber   String?           @map("reference_number")
+  externalReference String?           @map("external_reference")
+  currency          String
+  finalAmount       Decimal           @default(0) @map("final_amount")
+  createdBy         String?           @map("created_by")
+  createdAt         DateTime          @default(now()) @map("created_at")
+  tags              Json?
+  notes             Json?
+  details           Json?
+  organization      Account           @relation("TransactionOrganization", fields: [organizationId], references: [id], onDelete: Cascade)
+  creator           User?             @relation("TransactionCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
+  lines             TransactionLine[]
 
-  @@index([userId])
-  @@index([assetGroupId])
-  @@index([date])
-  @@index([partyId])
+  @@index([organizationId])
+  @@index([createdBy])
+  @@index([transactionDate])
+  @@map("transaction")
 }
 
 model TransactionLine {
-  id            String                  @id @default(uuid())
-  transactionId String
-  line_title    String
+  id            String       @id @default(uuid())
+  transactionId String       @map("transaction_id")
+  lineTypeId    String?      @map("line_type_id")
+  title         String
   description   String?
-  category      TransactionLineCategory
-  account       String
-  debit         Decimal                 @default(0)
-  credit        Decimal                 @default(0)
+  referenceType String?      @map("reference_type")
+  referenceId   String?      @map("reference_id")
   currency      String
-  transaction   Transaction             @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  baseAmount    Decimal      @default(0) @map("base_amount")
+  sortOrder     Int          @default(0) @map("sort_order")
+  metadata      Json?
+  finBook       String?      @map("fin_book")
+  finAccount    String?      @map("fin_account")
+  tags          Json?
+  details       Json?
+  transaction   Transaction  @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  book          AssetGroup?  @relation(fields: [finBook], references: [id], onDelete: SetNull)
 
   @@index([transactionId])
+  @@index([referenceType, referenceId])
+  @@index([finBook])
+  @@map("transaction_line")
 }
 
 model Projection {
@@ -175,23 +181,6 @@ model ActivityStock {
   @@map("activity_stock")
 }
 
-enum TransactionStatus {
-  unpaid
-  partially_paid
-  paid
-  canceled
-}
-
-enum TransactionType {
-  sale
-  purchase
-  refund
-  expense
-  payroll
-  income
-  other
-}
-
 enum ProjectionType {
   Income
   Expense
@@ -215,15 +204,6 @@ enum ProjectionRecurrence {
   Monthly
   Yearly
   Custom
-}
-
-enum TransactionLineCategory {
-  vat_paid
-  vat_return
-  sales
-  referral_paid
-  payable
-  receivable
 }
 
 enum ActivityStockType {

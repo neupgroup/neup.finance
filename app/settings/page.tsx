@@ -80,6 +80,18 @@ const settingsSections: { title: string; description: string; items: SettingsIte
       },
     ],
   },
+  {
+    title: 'Data',
+    description: 'Export and move your ledger data when you need an offline copy.',
+    items: [
+      {
+        title: 'Export',
+        description: 'Download transactions, books, parties, and projections as JSON.',
+        href: '/settings/export',
+        section: 'Data',
+      },
+    ],
+  },
 ];
 
 export default function SettingsPage() {

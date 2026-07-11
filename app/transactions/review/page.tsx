@@ -161,7 +161,7 @@ function ReviewTransactionForm() {
         const transactionType: TransactionType = direction === 'incoming' ? 'income' : 'expense';
 
         try {
-            const newTransaction: Omit<Transaction, 'id' | 'created_at'> = {
+            const newTransaction = {
                 title,
                 description,
                 accountId: accountId,

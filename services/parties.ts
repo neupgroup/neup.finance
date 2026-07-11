@@ -9,6 +9,7 @@ Shared lookup and creation helpers for account-scoped party data.
 
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/server/db';
+import { parseTransactionCompatibilityDetails } from '@/services/transactions/records';
 
 export type PartyContactInput = {
   type: string;
@@ -69,9 +70,9 @@ export type SerializedPartyTransaction = {
   title: string;
   description?: string;
   accountId: string;
-  assetGroupId: string;
+  assetGroupId?: string;
   assetGroupName?: string;
-  category: string;
+  category?: string;
   transaction_type: string;
   total_amount: number;
   total_paid: number;
@@ -82,7 +83,7 @@ export type SerializedPartyTransaction = {
   recipient?: string;
   due_on?: string;
   created_at: string;
-  userId: string;
+  userId?: string;
 };
 
 export type SerializedPartyPageData = {
@@ -94,49 +95,20 @@ export type SerializedPartyPageData = {
 const partyInclude = {
   contacts: true,
   paymentMethods: true,
-  transactions: {
-    select: {
-      transaction_type: true,
-      total_paid: true,
-      currency: true,
-    },
-  },
-} as const;
-
-const partyTransactionInclude = {
-  assetGroup: {
-    select: {
-      name: true,
-    },
-  },
 } as const;
 
 type PartyWithRelationsRecord = Prisma.PartyGetPayload<{
   include: typeof partyInclude;
 }>;
 type PartyTransactionRecord = Prisma.TransactionGetPayload<{
-  include: typeof partyTransactionInclude;
+  include: {
+    lines: true;
+  };
 }>;
 
 function serializeParty(party: PartyWithRelationsRecord): SerializedParty {
   const receivedTotals = new Map<string, number>();
   const sentTotals = new Map<string, number>();
-
-  for (const transaction of party.transactions) {
-    const paid = Number(transaction.total_paid);
-    if (!paid) {
-      continue;
-    }
-
-    if (['sale', 'refund', 'income'].includes(transaction.transaction_type)) {
-      receivedTotals.set(transaction.currency, (receivedTotals.get(transaction.currency) ?? 0) + paid);
-      continue;
-    }
-
-    if (['purchase', 'expense', 'payroll'].includes(transaction.transaction_type)) {
-      sentTotals.set(transaction.currency, (sentTotals.get(transaction.currency) ?? 0) + paid);
-    }
-  }
 
   return {
     id: party.id,
@@ -168,25 +140,28 @@ function serializeParty(party: PartyWithRelationsRecord): SerializedParty {
 }
 
 function serializePartyTransaction(transaction: PartyTransactionRecord): SerializedPartyTransaction {
+  const details = parseTransactionCompatibilityDetails(transaction.details);
+  const bookLine = transaction.lines.find((line) => line.finBook);
+
   return {
     id: transaction.id,
     title: transaction.title,
     description: transaction.description ?? undefined,
-    accountId: transaction.accountId,
-    assetGroupId: transaction.assetGroupId,
-    assetGroupName: transaction.assetGroup?.name,
-    category: transaction.category,
-    transaction_type: transaction.transaction_type,
-    total_amount: Number(transaction.total_amount),
-    total_paid: Number(transaction.total_paid),
-    balance_due: Number(transaction.balance_due),
+    accountId: details.accountId ?? transaction.organizationId,
+    assetGroupId: details.assetGroupId ?? bookLine?.finBook ?? undefined,
+    assetGroupName: undefined,
+    category: details.category,
+    transaction_type: transaction.transactionTypeId,
+    total_amount: Number(transaction.finalAmount),
+    total_paid: Number(details.total_paid ?? (transaction.status === 'paid' ? Number(transaction.finalAmount) : 0)),
+    balance_due: Number(details.balance_due ?? 0),
     status: transaction.status,
-    date: transaction.date.toISOString(),
+    date: transaction.transactionDate.toISOString(),
     currency: transaction.currency,
-    recipient: transaction.recipient ?? undefined,
-    due_on: transaction.due_on ? transaction.due_on.toISOString() : undefined,
-    created_at: transaction.created_at.toISOString(),
-    userId: transaction.userId,
+    recipient: details.recipient ?? undefined,
+    due_on: details.due_on,
+    created_at: transaction.createdAt.toISOString(),
+    userId: transaction.createdBy ?? undefined,
   };
 }
 
@@ -221,17 +196,23 @@ export async function getPartyById(accountId: string, id: string): Promise<Seria
 export async function getPartyTransactions(accountId: string, partyId: string): Promise<SerializedPartyTransaction[]> {
   const transactions = await prisma.transaction.findMany({
     where: {
-      partyId,
-      party: {
-        is: {
-          accountId,
-        },
+      organizationId: accountId,
+      details: {
+        path: ['partyId'],
+        equals: partyId,
       },
     },
     orderBy: {
-      date: 'desc',
+      transactionDate: 'desc',
     },
-    include: partyTransactionInclude,
+    include: {
+      lines: {
+        orderBy: [
+          { sortOrder: 'asc' },
+          { id: 'asc' },
+        ],
+      },
+    },
   });
 
   return transactions.map(serializePartyTransaction);

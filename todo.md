@@ -6,6 +6,7 @@
 - [ ] Add documentation for `app/transactions/[id]/page.tsx` and its transaction detail, line-item, attachment, and invoice-link behavior.
 - [ ] Add documentation for the `app/api/transactions/` route behavior, including cookie-based account resolution and user-record provisioning before transaction writes.
 - [ ] Add documentation for `app/settings/page.tsx` and `app/settings/transaction-blocks/page.tsx`, including book-scoped transaction block settings.
+- [ ] Add documentation for `app/settings/defaults/page.tsx`, including its default currency and transaction-type preference flow.
 - [ ] Add documentation for `app/journal/page.tsx`, including how it derives double-entry rows from live transactions and line items.
 - [ ] Add documentation for the `core/` folder, including its shared auth, provider, helper, and interface entrypoint conventions.
 - [ ] Add documentation for the `core/providers/` folder, including `auth.tsx`, cookie state, geolocation, and session provider responsibilities.

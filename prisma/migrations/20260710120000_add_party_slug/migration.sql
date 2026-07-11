@@ -1,0 +1,3 @@
+-- This migration directory was present without its SQL file in the checkout.
+-- The current Prisma schema does not define a party slug column, so restoring
+-- this as a no-op keeps migration history consistent without inventing drift.

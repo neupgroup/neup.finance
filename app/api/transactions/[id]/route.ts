@@ -1,42 +1,64 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/server/db'
+import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/server/db';
+import { serializeTransactionRecord } from '@/services/transactions/records';
+
+/*
+::neup.documentation::transaction-detail-route
+::api GET /api/transactions/:id
+
+Returns one organization-scoped transaction from the replacement transaction
+tables and serializes both the new and compatibility field names.
+
+::end
+*/
 
 export async function GET(
   req: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
   const connectionId = req.cookies.get('connection_id')?.value?.trim()
-    || req.cookies.get('accountId')?.value?.trim()
+    || req.cookies.get('accountId')?.value?.trim();
   if (!connectionId) {
-    return NextResponse.json({ error: 'connection_id cookie required' }, { status: 401 })
+    return NextResponse.json({ error: 'connection_id cookie required' }, { status: 401 });
   }
 
-  const { id } = await context.params
-  const t = await prisma.transaction.findFirst({
-    where: { id, accountId: connectionId },
-    include: { party: true },
-  })
-  if (!t) return NextResponse.json({ error: 'Not found' }, { status: 404 })
-  return NextResponse.json({
-    id: t.id,
-    title: t.title,
-    description: t.description ?? undefined,
-    accountId: t.accountId,
-    assetGroupId: t.assetGroupId,
-    category: t.category,
-    transaction_type: t.transaction_type,
-    total_amount: Number(t.total_amount),
-    total_paid: Number(t.total_paid),
-    balance_due: Number(t.balance_due),
-    status: t.status,
-    date: t.date.toISOString(),
-    currency: t.currency,
-    recipient: t.recipient ?? undefined,
-    partyId: t.partyId ?? undefined,
-    party: t.party ? { id: t.party.id, name: t.party.name, type: t.party.type } : undefined,
-    due_on: t.due_on ? t.due_on.toISOString() : undefined,
-    reference_document: t.reference_document ?? undefined,
-    created_at: t.created_at.toISOString(),
-    userId: t.userId,
-  })
+  const owner = await prisma.account.findUnique({
+    where: { connection_id: connectionId },
+    select: { id: true },
+  });
+  if (!owner) {
+    return NextResponse.json({ error: 'connection_id not registered' }, { status: 404 });
+  }
+
+  const { id } = await context.params;
+  const transaction = await prisma.transaction.findFirst({
+    where: { id, organizationId: owner.id },
+    include: {
+      lines: {
+        orderBy: [
+          { sortOrder: 'asc' },
+          { id: 'asc' },
+        ],
+      },
+    },
+  });
+  if (!transaction) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+
+  let party = null as { id: string; name: string; type: string } | null;
+  if (transaction.details && typeof transaction.details === 'object' && !Array.isArray(transaction.details)) {
+    const partyId = (transaction.details as Record<string, unknown>).partyId;
+    if (typeof partyId === 'string' && partyId) {
+      party = await prisma.party.findFirst({
+        where: { id: partyId, accountId: owner.id },
+        select: { id: true, name: true, type: true },
+      });
+    }
+  }
+
+  return NextResponse.json(
+    serializeTransactionRecord(transaction, { party }),
+    { status: 200 }
+  );
 }

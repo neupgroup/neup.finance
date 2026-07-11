@@ -1,14 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/server/db'
 
-const CREDIT_TYPES = new Set(['sale', 'refund', 'income'])
+/*
+::neup.documentation::user-accounts-route
+::api GET /api/users/:id/accounts
+::api POST /api/users/:id/accounts
 
-function calculateBalance(transactions: Array<{ transaction_type: string; total_amount: unknown; status: string }>) {
-  return transactions.reduce((sum, transaction) => {
-    if (transaction.status === 'canceled') return sum
-    const amount = Number(transaction.total_amount)
+Lists book accounts and derives each non-stock balance from the replacement
+transaction line amounts stored against that book.
+
+::end
+*/
+
+function calculateBalance(lines: Array<{ baseAmount: unknown; transaction: { status: string } | null }>) {
+  return lines.reduce((sum, line) => {
+    if (line.transaction?.status === 'canceled') return sum
+    const amount = Number(line.baseAmount)
     if (Number.isNaN(amount)) return sum
-    return sum + (CREDIT_TYPES.has(transaction.transaction_type) ? amount : -amount)
+    return sum + amount
   }, 0)
 }
 
@@ -34,11 +43,14 @@ export async function GET(
           balance: true,
         },
       },
-      transactions: {
+      transactionLines: {
         select: {
-          transaction_type: true,
-          total_amount: true,
-          status: true,
+          baseAmount: true,
+          transaction: {
+            select: {
+              status: true,
+            },
+          },
         },
       },
     },
@@ -48,7 +60,7 @@ export async function GET(
       id: a.id,
       name: a.name,
       type: a.type,
-      balance: a.type === 'Stock' ? calculateLatestStockBalance(a.activityStock) : calculateBalance(a.transactions),
+      balance: a.type === 'Stock' ? calculateLatestStockBalance(a.activityStock) : calculateBalance(a.transactionLines),
       currency: a.currency,
       userId: a.accountId,
     }))

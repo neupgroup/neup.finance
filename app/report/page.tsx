@@ -1,5 +1,15 @@
 'use client';
 
+/*
+::neup.documentation::financial-reports-page
+::title Financial Reports Page
+
+Renders the dashboard report cards and charts, including receivable and payable
+sections that group outstanding balances by their real transaction currency.
+
+::end
+*/
+
 import React from 'react';
 import { AppShell } from '@/components/layout/app-shell';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
@@ -9,6 +19,7 @@ import { CategoryPieChart } from '@/components/charts/category-pie-chart';
 import { useUser } from '@/core/providers/auth';
 import { useTransactionsList, useUserAccounts } from '@/core/hooks/api';
 
+type CurrencyTotals = Record<string, number>;
 
 function StatCard({ title, value, icon, description, colorClass }: { title: string, value: string, icon: React.ReactNode, description: string, colorClass?: string }) {
     return (
@@ -33,8 +44,8 @@ export default function ReportPage() {
     const { income, expenses, assets, liabilities, netWorth, receivables, payables } = React.useMemo(() => {
         let income = 0;
         let expenses = 0;
-        let payables = 0;
-        let receivables = 0;
+        const payables: CurrencyTotals = {};
+        const receivables: CurrencyTotals = {};
 
         (transactions ?? []).forEach(t => {
             if (['sale', 'income', 'refund'].includes(t.transaction_type)) {
@@ -44,16 +55,17 @@ export default function ReportPage() {
                 expenses += t.total_amount;
             }
             if (t.status === 'unpaid' || t.status === 'partially_paid') {
+                const currency = t.currency || 'USD';
                  if (['sale', 'income'].includes(t.transaction_type)) {
-                    receivables += t.balance_due;
+                    receivables[currency] = (receivables[currency] ?? 0) + t.balance_due;
                 } else if (['purchase', 'expense', 'payroll'].includes(t.transaction_type)) {
-                    payables += t.balance_due;
+                    payables[currency] = (payables[currency] ?? 0) + t.balance_due;
                 }
             }
         });
         
         const assets = (accounts ?? []).reduce((sum, account) => sum + account.balance, 0);
-        const liabilities = payables;
+        const liabilities = Object.values(payables).reduce((sum, amount) => sum + amount, 0);
         const netWorth = assets - liabilities;
 
         return { income, expenses, assets, liabilities, netWorth, receivables, payables };
@@ -62,6 +74,22 @@ export default function ReportPage() {
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
     }
+
+    const formatAmountWithCurrency = (amount: number, currency: string) => {
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(amount);
+    };
+
+    const formatCurrencyTotals = (totals: CurrencyTotals) => {
+        const entries = Object.entries(totals).filter(([, amount]) => amount !== 0);
+        if (entries.length === 0) {
+            return formatAmountWithCurrency(0, 'USD');
+        }
+
+        return entries
+            .sort(([left], [right]) => left.localeCompare(right))
+            .map(([currency, amount]) => formatAmountWithCurrency(amount, currency))
+            .join(' · ');
+    };
 
   return (
     <AppShell>
@@ -108,11 +136,11 @@ export default function ReportPage() {
                 <CardContent className="space-y-4">
                     <div className="flex items-center">
                         <ArrowUp className="h-6 w-6 text-green-500 mr-2" />
-                        <span className="text-3xl font-bold text-green-500">{formatCurrency(receivables)}</span>
+                        <span className="text-3xl font-bold text-green-500">{formatCurrencyTotals(receivables)}</span>
                     </div>
                      <ul className="text-sm text-muted-foreground space-y-2">
                         {(transactions ?? []).filter(t => t.balance_due > 0 && ['sale', 'income'].includes(t.transaction_type)).map(t => (
-                            <li key={t.id} className="flex justify-between"><span>{t.title} (from {t.party?.name || t.recipient})</span> <span>{formatCurrency(t.balance_due)}</span></li>
+                            <li key={t.id} className="flex justify-between"><span>{t.title} (from {t.party?.name || t.recipient})</span> <span>{formatAmountWithCurrency(t.balance_due, t.currency)}</span></li>
                         ))}
                     </ul>
                 </CardContent>
@@ -125,11 +153,11 @@ export default function ReportPage() {
                  <CardContent className="space-y-4">
                     <div className="flex items-center">
                         <ArrowDown className="h-6 w-6 text-red-500 mr-2" />
-                        <span className="text-3xl font-bold text-red-500">{formatCurrency(payables)}</span>
+                        <span className="text-3xl font-bold text-red-500">{formatCurrencyTotals(payables)}</span>
                     </div>
                      <ul className="text-sm text-muted-foreground space-y-2">
                         {(transactions ?? []).filter(t => t.balance_due > 0 && ['purchase', 'expense'].includes(t.transaction_type)).map(t => (
-                            <li key={t.id} className="flex justify-between"><span>{t.title} (to {t.party?.name || t.recipient})</span> <span>{formatCurrency(t.balance_due)}</span></li>
+                            <li key={t.id} className="flex justify-between"><span>{t.title} (to {t.party?.name || t.recipient})</span> <span>{formatAmountWithCurrency(t.balance_due, t.currency)}</span></li>
                         ))}
                     </ul>
                 </CardContent>
