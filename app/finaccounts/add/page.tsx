@@ -18,13 +18,13 @@ import { AppShell } from '@/components/layout/app-shell';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { SnappyCardSelect, type SnappyCardSelectOption } from '@/components/ui/snappy-card-select';
 import { useUser } from '@/core/providers/auth';
 import { createAccount, type Account } from '@/core/hooks/api';
 import { useToast } from '@/core/hooks/use-toast';
 
 type AccountType = Account['type'];
+type CurrencyCode = 'USD' | 'EUR' | 'GBP' | 'JPY' | 'INR' | 'NPR';
 
 const accountTypeSuggestions: SnappyCardSelectOption<AccountType>[] = [
   { value: 'Bank', label: 'Bank', description: 'General checking or savings accounts.' },
@@ -39,7 +39,7 @@ const accountTypeSuggestions: SnappyCardSelectOption<AccountType>[] = [
   { value: 'Other', label: 'Other', description: 'Any other account type.' },
 ];
 
-const currencies = [
+const currencies: SnappyCardSelectOption<CurrencyCode>[] = [
   { value: 'USD', label: 'USD - US Dollar' },
   { value: 'EUR', label: 'EUR - Euro' },
   { value: 'GBP', label: 'GBP - British Pound' },
@@ -55,12 +55,12 @@ export default function AddFinAccountPage() {
 
   const [accountName, setAccountName] = useState('');
   const [selectedAccountType, setSelectedAccountType] = useState<SnappyCardSelectOption<AccountType> | null>(null);
-  const [currency, setCurrency] = useState('');
+  const [selectedCurrency, setSelectedCurrency] = useState<SnappyCardSelectOption<CurrencyCode> | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleAddAccount = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!accountName || !selectedAccountType || !currency || !user) return;
+    if (!accountName || !selectedAccountType || !selectedCurrency || !user) return;
 
     setIsSubmitting(true);
 
@@ -68,7 +68,7 @@ export default function AddFinAccountPage() {
       await createAccount(user.uid, {
         name: accountName,
         type: selectedAccountType.value,
-        currency,
+        currency: selectedCurrency.value,
       });
 
       toast({
@@ -130,21 +130,17 @@ export default function AddFinAccountPage() {
                 snappy
                 required
               />
-              <div className="space-y-2">
-                <Label htmlFor="currency">Currency</Label>
-                <Select onValueChange={setCurrency} value={currency} required>
-                  <SelectTrigger id="currency">
-                    <SelectValue placeholder="Select a currency" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {currencies.map((currencyOption) => (
-                      <SelectItem key={currencyOption.value} value={currencyOption.value}>
-                        {currencyOption.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              <SnappyCardSelect
+                inputId="currency"
+                label="Currency"
+                options={currencies}
+                value={selectedCurrency}
+                onChange={setSelectedCurrency}
+                placeholder="Type to search currencies"
+                maxCards={0}
+                snappy
+                required
+              />
             </div>
 
             <div className="flex items-center justify-end">

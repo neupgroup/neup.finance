@@ -32,7 +32,7 @@ artifacts at the viewport edge.
 Selecting an option delays the external value change until the option list has
 collapsed. The clicked card stays visible as the selected card while the other
 cards shrink away. The collapse duration is 100ms per matching item, capped at
-1000ms. Clearing the selection plays the reverse transition, expanding the
+300ms. Clearing the selection plays the reverse transition, expanding the
 stack from the selected card back to the visible card window before the
 highlight is removed. The list scrollbar uses the same muted border tone as
 the selector stack.
@@ -55,7 +55,7 @@ import { Label } from '@/components/ui/label';
 const CARD_HEIGHT_REM = 3.75;
 const CARD_HEIGHT_FALLBACK_PX = CARD_HEIGHT_REM * 16;
 const SELECTION_COLLAPSE_MS_PER_ITEM = 100;
-const MAX_SELECTION_COLLAPSE_MS = 1000;
+const MAX_SELECTION_COLLAPSE_MS = 300;
 const OPTION_ENTER_EXPAND_DELAY_MS = 20;
 
 type SelectionAnimationMode =
