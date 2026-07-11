@@ -9,6 +9,11 @@ selected-card collapse state, and removable selection for form fields that need
 descriptive option cards instead of a plain select box. Snapping is configured
 by the caller through the `snappy` prop, not through an in-field UI toggle.
 
+The option list opens when the field is activated and remains visible through
+outside clicks that do not move interaction to another form control. Focusing
+or clicking another interactive field closes the option list while preserving
+the current input text or selected value card.
+
 Snappy mode calculates each card's scroll position relative to the scroll
 container, then snaps to the nearest card after scrolling pauses. This keeps
 middle cards selectable instead of letting native scroll-snap clamp the list to
@@ -126,7 +131,10 @@ export function SnappyCardSelect<
     topVisibleOptionIndex,
     setTopVisibleOptionIndex,
   ] = useState(0);
+  const [isOptionsVisible, setIsOptionsVisible] =
+    useState(false);
 
+  const rootRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const snapTimeoutRef = useRef<number | null>(null);
   const selectionTimeoutRef = useRef<number | null>(null);
@@ -195,6 +203,23 @@ export function SnappyCardSelect<
     );
   }, []);
 
+  const normalizedMaxCards = Number.isFinite(maxCards)
+    ? Math.floor(maxCards)
+    : 5;
+  const shouldShowAllCards = normalizedMaxCards === 0;
+  const visibleOptionCount = shouldShowAllCards
+    ? filteredOptions.length
+    : Math.max(normalizedMaxCards, 2);
+  const visibleCardOverlapPx = Math.max(
+    visibleOptionCount - 1,
+    0,
+  );
+  const selectionCollapseDurationMs = Math.min(
+    filteredOptions.length *
+      SELECTION_COLLAPSE_MS_PER_ITEM,
+    MAX_SELECTION_COLLAPSE_MS,
+  );
+
   const getExpandedListHeight = useCallback(() => {
     const container = listRef.current;
 
@@ -221,23 +246,6 @@ export function SnappyCardSelect<
     visibleCardOverlapPx,
     visibleOptionCount,
   ]);
-
-  const normalizedMaxCards = Number.isFinite(maxCards)
-    ? Math.floor(maxCards)
-    : 5;
-  const shouldShowAllCards = normalizedMaxCards === 0;
-  const visibleOptionCount = shouldShowAllCards
-    ? filteredOptions.length
-    : Math.max(normalizedMaxCards, 2);
-  const visibleCardOverlapPx = Math.max(
-    visibleOptionCount - 1,
-    0,
-  );
-  const selectionCollapseDurationMs = Math.min(
-    filteredOptions.length *
-      SELECTION_COLLAPSE_MS_PER_ITEM,
-    MAX_SELECTION_COLLAPSE_MS,
-  );
 
   /**
    * Finds the card whose top edge is nearest to the
@@ -363,6 +371,7 @@ export function SnappyCardSelect<
     nextQuery: string,
   ) => {
     setQuery(nextQuery);
+    setIsOptionsVisible(true);
 
     if (value) {
       onChange(null);
@@ -402,6 +411,7 @@ export function SnappyCardSelect<
       setCollapseListHeight(null);
       setSelectionAnimationMode(null);
       setShouldCollapseNonSelectedOptions(false);
+      setIsOptionsVisible(false);
       onChange(option);
       selectionTimeoutRef.current = null;
     }, selectionCollapseDurationMs);
@@ -412,6 +422,7 @@ export function SnappyCardSelect<
       return;
     }
 
+    setIsOptionsVisible(true);
     clearSelectionTimeout();
     clearSnapTimeout();
 
@@ -483,6 +494,66 @@ export function SnappyCardSelect<
     };
   }, [clearSelectionTimeout, clearSnapTimeout]);
 
+  useEffect(() => {
+    const isInteractiveTarget = (
+      target: EventTarget | null,
+    ) => {
+      if (!(target instanceof Element)) {
+        return false;
+      }
+
+      return target.closest(
+        'input, textarea, select, button, [role="button"], [role="combobox"], [role="listbox"], [contenteditable="true"], [tabindex]:not([tabindex="-1"])',
+      );
+    };
+
+    const handleDocumentInteraction = (
+      event: FocusEvent | PointerEvent,
+    ) => {
+      if (!isOptionsVisible) {
+        return;
+      }
+
+      const target = event.target;
+
+      if (
+        rootRef.current &&
+        target instanceof Node &&
+        rootRef.current.contains(target)
+      ) {
+        return;
+      }
+
+      if (!isInteractiveTarget(target)) {
+        return;
+      }
+
+      setIsOptionsVisible(false);
+    };
+
+    document.addEventListener(
+      'focusin',
+      handleDocumentInteraction,
+    );
+    document.addEventListener(
+      'pointerdown',
+      handleDocumentInteraction,
+      true,
+    );
+
+    return () => {
+      document.removeEventListener(
+        'focusin',
+        handleDocumentInteraction,
+      );
+      document.removeEventListener(
+        'pointerdown',
+        handleDocumentInteraction,
+        true,
+      );
+    };
+  }, [isOptionsVisible]);
+
   const isSelectionCollapsing =
     selectionAnimationMode === 'collapsing';
   const isSelectionExpanding =
@@ -492,9 +563,11 @@ export function SnappyCardSelect<
     pendingSelectedOption !== null;
   const shouldShowSelectedValueCard =
     value !== null && !isSelectionExpanding;
+  const shouldRenderOptions =
+    isOptionsVisible || isSelectionAnimating;
 
   return (
-    <div className="space-y-2">
+    <div ref={rootRef} className="space-y-2">
       <Label htmlFor={inputId}>
         {label}
 
@@ -538,6 +611,8 @@ export function SnappyCardSelect<
             <Input
               id={inputId}
               value={query}
+              onFocus={() => setIsOptionsVisible(true)}
+              onClick={() => setIsOptionsVisible(true)}
               onChange={(event) =>
                 handleInputChange(event.target.value)
               }
@@ -546,135 +621,142 @@ export function SnappyCardSelect<
               required={required}
               disabled={disabled}
               aria-controls={`${inputId}-options`}
-              aria-expanded={filteredOptions.length > 0}
+              aria-expanded={
+                shouldRenderOptions &&
+                filteredOptions.length > 0
+              }
             />
           ) : null}
 
-          <div
-            id={`${inputId}-options`}
-            ref={listRef}
-            onScroll={handleScroll}
-            role="listbox"
-            aria-label={`${label} options`}
-            className={[
-              'overflow-y-auto',
-              '[scrollbar-color:hsl(var(--border))_transparent] [scrollbar-width:thin]',
-              '[&::-webkit-scrollbar]:w-2',
-              '[&::-webkit-scrollbar-track]:bg-transparent',
-              '[&::-webkit-scrollbar-thumb]:rounded-full',
-              '[&::-webkit-scrollbar-thumb]:bg-border',
-              '[&::-webkit-scrollbar-thumb:hover]:bg-muted-foreground/40',
-              snappy ? 'scroll-smooth' : '',
-              isSelectionAnimating
-                ? 'overflow-hidden transition-[height,max-height] ease-in-out'
-                : '',
-            ]
-              .filter(Boolean)
-              .join(' ')}
-            style={
-              isSelectionAnimating
-                ? {
-                    height: `${collapseListHeight ?? 0}px`,
-                    maxHeight: `${collapseListHeight ?? 0}px`,
-                    transitionDuration: `${selectionCollapseDurationMs}ms`,
-                  }
-                : shouldShowAllCards
-                  ? undefined
-                  : {
-                      maxHeight: `calc(${
-                        visibleOptionCount * CARD_HEIGHT_REM
-                      }rem - ${visibleCardOverlapPx}px)`,
-                    }
-            }
-          >
-            {filteredOptions.length === 0 ? (
-              <div className="rounded-lg border border-dashed px-4 py-6 text-center text-sm text-muted-foreground">
-                {emptyMessage}
-              </div>
-            ) : (
-              filteredOptions.map((option, index) => {
-                const isPendingSelectedOption =
-                  pendingSelectedOptionIndex === index;
-                const shouldCollapseOption =
-                  shouldCollapseNonSelectedOptions &&
-                  !isPendingSelectedOption;
-                const isFirstVisible =
-                  index === topVisibleOptionIndex;
-                const lastVisibleOptionIndex = Math.min(
-                  topVisibleOptionIndex +
-                    visibleOptionCount -
-                    1,
-                  filteredOptions.length - 1,
-                );
-                const isLastVisible =
-                  index === lastVisibleOptionIndex;
-                const isInsideVisibleWindow =
-                  index >= topVisibleOptionIndex &&
-                  index <= lastVisibleOptionIndex;
-                const radiusClass = [
-                  isPendingSelectedOption || isFirstVisible
-                    ? 'rounded-t-lg'
-                    : 'rounded-t-none',
-                  isPendingSelectedOption || isLastVisible
-                    ? 'rounded-b-lg'
-                    : 'rounded-b-none',
-                ].join(' ');
-
-                return (
-                  <button
-                    key={`${option.value}-${index}`}
-                    type="button"
-                    role="option"
-                    disabled={
-                      disabled || isSelectionAnimating
-                    }
-                    aria-selected={isPendingSelectedOption}
-                    onClick={() => handleSelect(option, index)}
-                    data-snappy-card-option="true"
-                    className={[
-                      'flex h-[3.75rem] w-full flex-col justify-center overflow-hidden border px-4 text-left',
-                      'transition-[height,border-width,background-color,border-color,opacity]',
-                      'hover:border-primary/40 hover:bg-muted/40',
-                      'focus-visible:relative focus-visible:z-10',
-                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-                      'disabled:pointer-events-none',
-                      disabled ? 'opacity-50' : '',
-                      index > 0 && !isSelectionAnimating
-                        ? '-mt-px'
-                        : '',
-                      shouldCollapseOption
-                        ? 'h-0 border-y-0 opacity-0'
-                        : '',
-                      isPendingSelectedOption
-                        ? 'border-primary bg-primary/5'
-                        : isInsideVisibleWindow
-                          ? 'border-border'
-                          : 'border-transparent',
-                      radiusClass,
-                    ]
-                      .filter(Boolean)
-                      .join(' ')}
-                    style={{
-                      height: shouldCollapseOption
-                        ? '0px'
-                        : undefined,
+          {shouldRenderOptions ? (
+            <div
+              id={`${inputId}-options`}
+              ref={listRef}
+              onScroll={handleScroll}
+              role="listbox"
+              aria-label={`${label} options`}
+              className={[
+                'overflow-y-auto',
+                '[scrollbar-color:hsl(var(--border))_transparent] [scrollbar-width:thin]',
+                '[&::-webkit-scrollbar]:w-2',
+                '[&::-webkit-scrollbar-track]:bg-transparent',
+                '[&::-webkit-scrollbar-thumb]:rounded-full',
+                '[&::-webkit-scrollbar-thumb]:bg-border',
+                '[&::-webkit-scrollbar-thumb:hover]:bg-muted-foreground/40',
+                snappy ? 'scroll-smooth' : '',
+                isSelectionAnimating
+                  ? 'overflow-hidden transition-[height,max-height] ease-in-out'
+                  : '',
+              ]
+                .filter(Boolean)
+                .join(' ')}
+              style={
+                isSelectionAnimating
+                  ? {
+                      height: `${collapseListHeight ?? 0}px`,
+                      maxHeight: `${collapseListHeight ?? 0}px`,
                       transitionDuration: `${selectionCollapseDurationMs}ms`,
-                    }}
-                  >
-                    <div className="truncate text-sm font-medium">
-                      {option.label}
-                    </div>
+                    }
+                  : shouldShowAllCards
+                    ? undefined
+                    : {
+                        maxHeight: `calc(${
+                          visibleOptionCount * CARD_HEIGHT_REM
+                        }rem - ${visibleCardOverlapPx}px)`,
+                      }
+              }
+            >
+              {filteredOptions.length === 0 ? (
+                <div className="rounded-lg border border-dashed px-4 py-6 text-center text-sm text-muted-foreground">
+                  {emptyMessage}
+                </div>
+              ) : (
+                filteredOptions.map((option, index) => {
+                  const isPendingSelectedOption =
+                    pendingSelectedOptionIndex === index;
+                  const shouldCollapseOption =
+                    shouldCollapseNonSelectedOptions &&
+                    !isPendingSelectedOption;
+                  const isFirstVisible =
+                    index === topVisibleOptionIndex;
+                  const lastVisibleOptionIndex = Math.min(
+                    topVisibleOptionIndex +
+                      visibleOptionCount -
+                      1,
+                    filteredOptions.length - 1,
+                  );
+                  const isLastVisible =
+                    index === lastVisibleOptionIndex;
+                  const isInsideVisibleWindow =
+                    index >= topVisibleOptionIndex &&
+                    index <= lastVisibleOptionIndex;
+                  const radiusClass = [
+                    isPendingSelectedOption || isFirstVisible
+                      ? 'rounded-t-lg'
+                      : 'rounded-t-none',
+                    isPendingSelectedOption || isLastVisible
+                      ? 'rounded-b-lg'
+                      : 'rounded-b-none',
+                  ].join(' ');
 
-                    {option.description ? (
-                      <div className="mt-0.5 truncate text-xs text-muted-foreground">
-                        {option.description}
+                  return (
+                    <button
+                      key={`${option.value}-${index}`}
+                      type="button"
+                      role="option"
+                      disabled={
+                        disabled || isSelectionAnimating
+                      }
+                      aria-selected={isPendingSelectedOption}
+                      onClick={() =>
+                        handleSelect(option, index)
+                      }
+                      data-snappy-card-option="true"
+                      className={[
+                        'flex h-[3.75rem] w-full flex-col justify-center overflow-hidden border px-4 text-left',
+                        'transition-[height,border-width,background-color,border-color,opacity]',
+                        'hover:border-primary/40 hover:bg-muted/40',
+                        'focus-visible:relative focus-visible:z-10',
+                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+                        'disabled:pointer-events-none',
+                        disabled ? 'opacity-50' : '',
+                        index > 0 && !isSelectionAnimating
+                          ? '-mt-px'
+                          : '',
+                        shouldCollapseOption
+                          ? 'h-0 border-y-0 opacity-0'
+                          : '',
+                        isPendingSelectedOption
+                          ? 'border-primary bg-primary/5'
+                          : isInsideVisibleWindow
+                            ? 'border-border'
+                            : 'border-transparent',
+                        radiusClass,
+                      ]
+                        .filter(Boolean)
+                        .join(' ')}
+                      style={{
+                        height: shouldCollapseOption
+                          ? '0px'
+                          : undefined,
+                        transitionDuration: `${selectionCollapseDurationMs}ms`,
+                      }}
+                    >
+                      <div className="truncate text-sm font-medium">
+                        {option.label}
                       </div>
-                    ) : null}
-                  </button>
-                );
-              })
-            )}
-          </div>
+
+                      {option.description ? (
+                        <div className="mt-0.5 truncate text-xs text-muted-foreground">
+                          {option.description}
+                        </div>
+                      ) : null}
+                    </button>
+                  );
+                })
+              )}
+            </div>
+          ) : null}
         </>
       )}
     </div>
