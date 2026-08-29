@@ -11,7 +11,7 @@ shows any saved line items directly underneath each transaction row.
 */
 
 import Link from 'next/link';
-import { ArrowDownLeft, ArrowUpRight, Inbox, MoreVertical, PlusCircle } from 'lucide-react';
+import { ArrowDownLeft, ArrowUpRight, Inbox, MoreVertical, PlusCircle, Upload } from 'lucide-react';
 import { AppShell } from '@/components/layout/app-shell';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -112,6 +112,20 @@ export default function TransactionsPage() {
           <p className="text-sm text-muted-foreground">
             Review every transaction and jump into the add flow from the first card.
           </p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Button asChild variant="outline">
+            <Link href="/transactions/import">
+              <Upload className="h-4 w-4" />
+              Import
+            </Link>
+          </Button>
+          <Button asChild>
+            <Link href="/transactions/add">
+              <PlusCircle className="h-4 w-4" />
+              Add
+            </Link>
+          </Button>
         </div>
 
         <div className="w-full">

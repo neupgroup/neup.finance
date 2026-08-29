@@ -90,6 +90,12 @@ const settingsSections: { title: string; description: string; items: SettingsIte
         href: '/settings/export',
         section: 'Data',
       },
+      {
+        title: 'Import',
+        description: 'Upload transaction CSV or JSON rows.',
+        href: '/transactions/import',
+        section: 'Data',
+      },
     ],
   },
 ];
