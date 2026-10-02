@@ -4,10 +4,10 @@ import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { ArrowRight, Search } from 'lucide-react';
 import { AppShell } from '@/components/layout/app-shell';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Input } from '@neup/components/ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@neup/components/ui/card';
+import { Badge } from '@neup/components/ui/badge';
+import { Button } from '@neup/components/ui/button';
 
 type SettingsItem = {
   title: string;

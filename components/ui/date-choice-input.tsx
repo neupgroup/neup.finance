@@ -2,9 +2,9 @@
 
 import * as React from "react";
 import { Check } from "lucide-react";
-import { cn } from "@/core/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { cn } from "@neup/core/utils";
+import { Button } from "@neup/components/ui/button";
+import { Input } from "@neup/components/ui/input";
 
 type DateMode = "hidden" | "today" | "yesterday" | "tomorrow" | "custom";
 

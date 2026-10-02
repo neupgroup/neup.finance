@@ -9,12 +9,12 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+} from '@neup/components/ui/card';
+import { Label } from '@neup/components/ui/label';
+import { Input } from '@neup/components/ui/input';
+import { Textarea } from '@neup/components/ui/textarea';
 import { Combobox } from '@/components/ui/combobox';
-import { Button } from '@/components/ui/button';
+import { Button } from '@neup/components/ui/button';
 import {
   Table,
   TableBody,
@@ -22,10 +22,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
-import { useToast } from '@/core/hooks/use-toast';
+} from '@neup/components/ui/table';
+import { Badge } from '@neup/components/ui/badge';
+import { Checkbox } from '@neup/components/ui/checkbox';
+import { useToast } from '@neup/components/ui/toast';
 import { useUser } from '@/core/providers/auth';
 import {
   currencyOptions,
@@ -313,7 +313,8 @@ export default function PaymentProfilesSettingsPage() {
   const handleSaveProfile = () => {
     if (!form.name.trim()) {
       toast({
-        variant: 'destructive',
+        name: 'app',
+        state: 'error',
         title: 'Profile name required',
         description: 'Give this payment profile a name before saving.',
       });
@@ -322,7 +323,8 @@ export default function PaymentProfilesSettingsPage() {
 
     if (form.selectedFields.length === 0) {
       toast({
-        variant: 'destructive',
+        name: 'app',
+        state: 'error',
         title: 'Select fields first',
         description: 'Choose at least one field to include in this profile.',
       });
@@ -333,7 +335,8 @@ export default function PaymentProfilesSettingsPage() {
       for (const operation of form.operations) {
         if (!operation.label.trim()) {
           toast({
-            variant: 'destructive',
+            name: 'app',
+            state: 'error',
             title: 'Operation label required',
             description: 'Each operation needs a label, such as VAT 13% or Withholding tax.',
           });
@@ -342,7 +345,8 @@ export default function PaymentProfilesSettingsPage() {
 
         if (operation.value === '' || Number(operation.value) <= 0) {
           toast({
-            variant: 'destructive',
+            name: 'app',
+            state: 'error',
             title: 'Operation value required',
             description: 'Each operation must have a value greater than 0.',
           });
@@ -351,7 +355,8 @@ export default function PaymentProfilesSettingsPage() {
 
         if (operation.action === 'transfer_to_account' && !operation.destinationAccount.trim()) {
           toast({
-            variant: 'destructive',
+            name: 'app',
+            state: 'error',
             title: 'Destination account required',
             description: 'Choose where to transfer amounts for transfer operations.',
           });
@@ -390,12 +395,14 @@ export default function PaymentProfilesSettingsPage() {
       });
       persistProfiles(nextProfiles);
       toast({
+        name: 'app',
         title: 'Profile updated',
         description: 'Your payment profile defaults were updated.',
       });
     } else {
       persistProfiles([profilePayload, ...profiles]);
       toast({
+        name: 'app',
         title: 'Profile saved',
         description: 'A new payment profile is now available.',
       });
@@ -435,6 +442,7 @@ export default function PaymentProfilesSettingsPage() {
     }
 
     toast({
+      name: 'app',
       title: 'Profile removed',
       description: 'The payment profile was deleted.',
     });
@@ -443,6 +451,7 @@ export default function PaymentProfilesSettingsPage() {
   const handleApplyToForm = (profile: PaymentProfile) => {
     handleEditProfile(profile);
     toast({
+      name: 'app',
       title: 'Profile loaded',
       description: `Loaded defaults from ${profile.name}.`,
     });

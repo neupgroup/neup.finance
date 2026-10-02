@@ -3,12 +3,12 @@
 import { useState, useRef, useEffect } from 'react';
 import { Bot, Loader, User } from 'lucide-react';
 import { AppShell } from '@/components/layout/app-shell';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { Button } from '@neup/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@neup/components/ui/card';
+import { Input } from '@neup/components/ui/input';
+import { ScrollArea } from '@neup/components/ui/scroll-area';
 import { answerFinancialQuestion } from '@/core/ai/flows/answer-financial-questions';
-import { useToast } from '@/core/hooks/use-toast';
+import { useToast } from '@neup/components/ui/toast';
 import { useUser } from '@/core/providers/auth';
 import { useTransactionsList } from '@/core/hooks/api';
 
@@ -48,7 +48,8 @@ export default function ChatPage() {
     } catch (error) {
         console.error('AI error:', error);
         toast({
-            variant: "destructive",
+            name: 'app',
+            state: "error",
             title: "Error",
             description: "Failed to get a response from the AI.",
         });

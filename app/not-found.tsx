@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { AlertTriangle, Home, ReceiptText } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@neup/components/ui/button';
 import {
   Card,
   CardContent,
@@ -8,7 +8,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from '@neup/components/ui/card';
 
 export default function NotFound() {
   return (

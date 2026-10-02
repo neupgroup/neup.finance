@@ -4,18 +4,18 @@
 import { useState } from 'react';
 import { AppShell } from '@/components/layout/app-shell';
 import { SmartProjections } from '@/components/dashboard/smart-projections';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@neup/components/ui/card';
+import { Button } from '@neup/components/ui/button';
 import { PlusCircle, ArrowUpRight, ArrowDownLeft, Inbox, XCircle, Repeat } from 'lucide-react';
 import Link from 'next/link';
-import { Badge } from '@/components/ui/badge';
-import { cn } from '@/core/lib/utils';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Badge } from '@neup/components/ui/badge';
+import { cn } from '@neup/core/utils';
+import { Skeleton } from '@neup/components/ui/skeleton';
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationLink } from '@/components/ui/pagination';
 import { useUser } from '@/core/providers/auth';
 import { useProjections } from '@/core/hooks/api';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { useToast } from '@/core/hooks/use-toast';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@neup/components/ui/alert-dialog';
+import { useToast } from '@neup/components/ui/toast';
 import { YearlyProjectionChart } from '@/components/charts/yearly-projection-chart';
 import { stackedCardClassName } from '@/components/ui/stacked-card';
 import { StackedEmptyStateRow } from '@/components/ui/stacked-empty-state';
@@ -70,13 +70,15 @@ export default function ProjectionsPage() {
             });
             if (!res.ok) throw new Error('Failed to cancel projection');
             toast({
+                name: 'app',
                 title: "Projection Canceled",
                 description: "The projection has been successfully canceled.",
             })
         } catch (error) {
             console.error("Error canceling projection:", error);
             toast({
-                variant: 'destructive',
+                name: 'app',
+                state: 'error',
                 title: "Error",
                 description: "Could not cancel the projection.",
             })

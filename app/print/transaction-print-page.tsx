@@ -4,7 +4,7 @@
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/core/providers/auth';
 import { useUserProfile, useTransactionById, useTransactionLines } from '@/core/hooks/api';
-import { Button } from '@/components/ui/button';
+import { Button } from '@neup/components/ui/button';
 import { ArrowLeft, Printer, Loader } from 'lucide-react';
 import { Logo } from '@/components/icons';
 import {

@@ -9,17 +9,17 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
+} from '@neup/components/ui/table';
+import { Badge } from '@neup/components/ui/badge';
 import { type Transaction } from '@/core/lib/ledger';
 import { ArrowDownLeft, ArrowUpRight, Loader, MoreVertical } from 'lucide-react';
-import { cn } from '@/core/lib/utils';
+import { cn } from '@neup/core/utils';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationLink } from '@/components/ui/pagination';
 import { useUser } from '@/core/providers/auth';
 import { useTransactionsList } from '@/core/hooks/api';
-import { Button } from '@/components/ui/button';
+import { Button } from '@neup/components/ui/button';
 import { stackedCardClassName } from '@/components/ui/stacked-card';
 
 

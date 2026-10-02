@@ -4,16 +4,16 @@ import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, FileJson, Loader2, Upload } from 'lucide-react';
 import { AppShell } from '@/components/layout/app-shell';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
-import { useToast } from '@/core/hooks/use-toast';
+import { Button } from '@neup/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@neup/components/ui/card';
+import { Input } from '@neup/components/ui/input';
+import { Label } from '@neup/components/ui/label';
+import { Textarea } from '@neup/components/ui/textarea';
+import { Badge } from '@neup/components/ui/badge';
+import { useToast } from '@neup/components/ui/toast';
 import { useUser } from '@/core/providers/auth';
 import { importTransactions } from '@/core/hooks/api';
-import { cn } from '@/core/lib/utils';
+import { cn } from '@neup/core/utils';
 
 /*
 ::neup.documentation::transactions-import-page
@@ -80,7 +80,8 @@ export default function ImportTransactionsPage() {
 
     if (!user) {
       toast({
-        variant: 'destructive',
+        name: 'app',
+        state: 'error',
         title: 'Not signed in',
         description: 'Please sign in before importing transactions.',
       });
@@ -89,7 +90,8 @@ export default function ImportTransactionsPage() {
 
     if (!content.trim()) {
       toast({
-        variant: 'destructive',
+        name: 'app',
+        state: 'error',
         title: 'Import file required',
         description: 'Choose a file or paste transaction rows.',
       });
@@ -107,12 +109,14 @@ export default function ImportTransactionsPage() {
       });
       setResult(importResult);
       toast({
+        name: 'app',
         title: 'Import finished',
         description: `${importResult.created.length} imported, ${importResult.failed.length} failed.`,
       });
     } catch (error) {
       toast({
-        variant: 'destructive',
+        name: 'app',
+        state: 'error',
         title: 'Import failed',
         description: error instanceof Error ? error.message : 'Could not import transactions.',
       });

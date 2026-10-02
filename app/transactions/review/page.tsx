@@ -4,9 +4,9 @@
 import { useState, useMemo, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { AppShell } from '@/components/layout/app-shell';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Button } from '@neup/components/ui/button';
+import { Input } from '@neup/components/ui/input';
+import { Label } from '@neup/components/ui/label';
 import { Combobox } from '@/components/ui/combobox';
 import { CurrencyAmountInput } from '@/components/ui/currency-amount-input';
 import { DateChoiceInput } from '@/components/ui/date-choice-input';
@@ -18,13 +18,13 @@ import {
   type TransactionStatus,
   type TransactionType,
 } from '@/core/lib/ledger';
-import { useToast } from '@/core/hooks/use-toast';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { useToast } from '@neup/components/ui/toast';
+import { Textarea } from '@neup/components/ui/textarea';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@neup/components/ui/card';
 import { ArrowLeft, ArrowDownLeft, ArrowUpRight, Loader } from 'lucide-react';
 import { useUser } from '@/core/providers/auth';
 import { createTransaction, useParties, useUserAccounts } from '@/core/hooks/api';
-import { cn } from '@/core/lib/utils';
+import { cn } from '@neup/core/utils';
 type TransactionDirection = 'incoming' | 'outgoing';
 
 const transactionDirections: {value: TransactionDirection, label: string, description: string}[] = [
@@ -90,7 +90,8 @@ function ReviewTransactionForm() {
             } catch (error) {
                 console.error("Failed to parse transaction data from URL", error);
                 toast({
-                    variant: 'destructive',
+                    name: 'app',
+                    state: 'error',
                     title: 'Error',
                     description: 'Could not read AI-generated transaction data.'
                 });
@@ -144,7 +145,8 @@ function ReviewTransactionForm() {
         e.preventDefault();
         if (!title || !date || !direction || !category || !currency || totalAmount === '' || !status || !user) {
             toast({
-                variant: "destructive",
+                name: 'app',
+                state: "error",
                 title: "Missing Fields",
                 description: "Please fill out all required fields.",
             });
@@ -181,6 +183,7 @@ function ReviewTransactionForm() {
             const saved = await createTransaction(newTransaction);
             
             toast({
+                name: 'app',
                 title: "Transaction Committed",
                 description: `A new transaction for ${currency} ${totalAmount} has been successfully created.`,
             });
@@ -189,7 +192,8 @@ function ReviewTransactionForm() {
         } catch (error) {
             console.error("Error committing transaction: ", error);
             toast({
-                variant: "destructive",
+                name: 'app',
+                state: "error",
                 title: "Error",
                 description: "Could not save the transaction. Please try again.",
             });

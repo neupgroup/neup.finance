@@ -4,12 +4,12 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AppShell } from '@/components/layout/app-shell';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Button } from '@neup/components/ui/button';
+import { Input } from '@neup/components/ui/input';
+import { Label } from '@neup/components/ui/label';
 import { Combobox } from '@/components/ui/combobox';
 import { CurrencyAmountInput } from '@/components/ui/currency-amount-input';
-import { useToast } from '@/core/hooks/use-toast';
+import { useToast } from '@neup/components/ui/toast';
 import {
   projectionCertaintyOptions,
   projectionRecurrenceOptions,
@@ -22,7 +22,7 @@ import {
 import { useUser } from '@/core/providers/auth';
 import { createProjection, useParties } from '@/core/hooks/api';
 import { Loader } from 'lucide-react';
-import { Switch } from '@/components/ui/switch';
+import { Switch } from '@neup/components/ui/switch';
 
 
 export default function AddProjectionPage() {
@@ -47,7 +47,8 @@ export default function AddProjectionPage() {
     e.preventDefault();
     if (!title || !date || !type || !certainty || !currency || amount === '' || !user) {
       toast({
-        variant: "destructive",
+        name: 'app',
+        state: "error",
         title: "Missing Fields",
         description: "Please fill out all required fields.",
       });
@@ -76,6 +77,7 @@ export default function AddProjectionPage() {
         await createProjection(newProjection);
         
         toast({
+            name: 'app',
             title: "Projection Added",
             description: `A new projection for ${currency} ${amount} has been successfully added.`,
         });
@@ -84,7 +86,8 @@ export default function AddProjectionPage() {
     } catch (error) {
         console.error("Error creating projection:", error);
         toast({
-            variant: "destructive",
+            name: 'app',
+            state: "error",
             title: "Error",
             description: "Could not create projection. Please try again."
         });

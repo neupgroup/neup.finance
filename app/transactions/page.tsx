@@ -13,10 +13,10 @@ shows any saved line items directly underneath each transaction row.
 import Link from 'next/link';
 import { ArrowDownLeft, ArrowUpRight, Inbox, MoreVertical, PlusCircle, Upload } from 'lucide-react';
 import { AppShell } from '@/components/layout/app-shell';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
-import { cn } from '@/core/lib/utils';
+import { Button } from '@neup/components/ui/button';
+import { Badge } from '@neup/components/ui/badge';
+import { Skeleton } from '@neup/components/ui/skeleton';
+import { cn } from '@neup/core/utils';
 import { useUser } from '@/core/providers/auth';
 import { useTransactionsList } from '@/core/hooks/api';
 import { stackedCardClassName } from '@/components/ui/stacked-card';

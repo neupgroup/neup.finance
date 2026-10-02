@@ -1,4 +1,4 @@
-import { cn } from '@/core/lib/utils';
+import { cn } from '@neup/core/utils';
 
 export function stackedCardClassName(index: number, total: number, base = '') {
   const isFirst = index === 0;

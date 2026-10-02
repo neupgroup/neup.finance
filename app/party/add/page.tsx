@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AppShell } from '@/components/layout/app-shell';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { useToast } from '@/core/hooks/use-toast';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@neup/components/ui/button';
+import { Input } from '@neup/components/ui/input';
+import { Label } from '@neup/components/ui/label';
+import { useToast } from '@neup/components/ui/toast';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@neup/components/ui/select';
+import { Textarea } from '@neup/components/ui/textarea';
 import { PlusCircle } from 'lucide-react';
 import { createParty } from '@/core/hooks/api';
 
@@ -59,6 +59,7 @@ export default function AddPartyPage() {
       });
 
       toast({
+        name: 'app',
         title: 'Party Added',
         description: `${name} has been successfully added.`,
       });
@@ -67,7 +68,8 @@ export default function AddPartyPage() {
     } catch (error) {
       console.error('Failed to create party', error);
       toast({
-        variant: 'destructive',
+        name: 'app',
+        state: 'error',
         title: 'Error',
         description: 'Could not save the party. Please try again.',
       });

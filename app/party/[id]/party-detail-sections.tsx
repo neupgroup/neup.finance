@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
+import { Badge } from '@neup/components/ui/badge';
+import { Button } from '@neup/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@neup/components/ui/card';
+import { Separator } from '@neup/components/ui/separator';
 import type { SerializedParty, SerializedPartyTransaction } from '@/services/parties';
 import { ArrowDownLeft, ArrowUpRight, Building, ChevronLeft, Inbox, Mail, MapPin, Phone, Wallet } from 'lucide-react';
 

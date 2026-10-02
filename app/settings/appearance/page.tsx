@@ -9,9 +9,9 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-} from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+} from '@neup/components/ui/card';
+import { Label } from '@neup/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@neup/components/ui/radio-group';
 import { Sun, Moon, Laptop } from 'lucide-react';
 
 export default function AppearanceSettingsPage() {

@@ -10,19 +10,19 @@ import {
   type TransactionLine,
   type TransactionLineCategory,
 } from '@/core/lib/ledger';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@neup/components/ui/badge';
 import { ArrowLeft, Paperclip, PlusCircle, Printer, Loader } from 'lucide-react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { cn } from '@/core/lib/utils';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@neup/components/ui/button';
+import { Separator } from '@neup/components/ui/separator';
+import { cn } from '@neup/core/utils';
+import { Input } from '@neup/components/ui/input';
+import { Label } from '@neup/components/ui/label';
+import { Textarea } from '@neup/components/ui/textarea';
 import { Combobox } from '@/components/ui/combobox';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { useToast } from '@/core/hooks/use-toast';
-import { Card } from '@/components/ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@neup/components/ui/table';
+import { useToast } from '@neup/components/ui/toast';
+import { Card } from '@neup/components/ui/card';
 import { addTransactionLine, useTransactionById, useTransactionLines, useUserAccounts } from '@/core/hooks/api';
 
 function DetailItem({ label, value, className }: { label: string; value?: React.ReactNode, className?: string }) {
@@ -53,7 +53,8 @@ function AddLineItemForm({ transactionId, currency, accountOptions, onAddLine }:
         e.preventDefault();
         if (!lineTitle || !category || !account || (debit === '' && credit === '')) {
             toast({
-                variant: 'destructive',
+                name: 'app',
+                state: 'error',
                 title: 'Missing Fields',
                 description: 'Please fill out all required line item fields.'
             });
@@ -86,6 +87,7 @@ function AddLineItemForm({ transactionId, currency, accountOptions, onAddLine }:
             setCredit('');
 
             toast({
+                name: 'app',
                 title: 'Line Item Added',
                 description: `${lineTitle} has been added to the transaction.`
             })
@@ -93,7 +95,8 @@ function AddLineItemForm({ transactionId, currency, accountOptions, onAddLine }:
         } catch (error) {
             console.error("Error adding line item:", error);
              toast({
-                variant: 'destructive',
+                name: 'app',
+                state: 'error',
                 title: 'Error',
                 description: 'Could not add line item. Please try again.'
             });

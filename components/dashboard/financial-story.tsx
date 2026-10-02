@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@neup/components/ui/card';
 import { summarizeSpending } from '@/core/ai/flows/summarize-spending';
 import { Loader } from 'lucide-react';
 import { useUser } from '@/core/providers/auth';

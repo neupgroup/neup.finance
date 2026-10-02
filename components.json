@@ -11,9 +11,9 @@
     "prefix": ""
   },
   "aliases": {
-    "components": "@/components",
+    "components": "@neup/components",
     "utils": "@/lib/utils",
-    "ui": "@/components/ui",
+    "ui": "@neup/components/ui",
     "lib": "@/lib",
     "hooks": "@/core/hooks"
   },

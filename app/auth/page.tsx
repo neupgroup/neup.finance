@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
+import { Button } from '@neup/components/ui/button';
 import {
   Card,
   CardContent,
@@ -10,14 +10,14 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+} from '@neup/components/ui/card';
+import { Input } from '@neup/components/ui/input';
+import { Label } from '@neup/components/ui/label';
 import { Logo } from '@/components/icons';
 import { ArrowRight, Loader } from 'lucide-react';
 import { useUser } from '@/core/providers/auth';
 import { upsertUserProfile } from '@/core/hooks/api';
-import { useToast } from '@/core/hooks/use-toast';
+import { useToast } from '@neup/components/ui/toast';
 
 // A simple utility to set a cookie
 function setCookie(name: string, value: string, days: number) {
@@ -41,7 +41,8 @@ export default function AuthPage() {
     e.preventDefault();
     if (!connectionId.trim() || !user) {
         toast({
-            variant: "destructive",
+            name: 'app',
+            state: "error",
             title: "Error",
             description: "Connection ID is required.",
         });
@@ -63,7 +64,8 @@ export default function AuthPage() {
     } catch (error) {
         console.error("Error creating user profile:", error);
         toast({
-            variant: "destructive",
+            name: 'app',
+            state: "error",
             title: "Profile Creation Failed",
             description: "Could not save your profile. Please try again.",
         });

@@ -1,4 +1,4 @@
-import { cn } from '@/core/lib/utils';
+import { cn } from '@neup/core/utils';
 import type { LucideIcon } from 'lucide-react';
 
 type StackedEmptyStateRowProps = {

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarProvider, Sidebar, SidebarTrigger } from '@neup/components/ui/sidebar';
 import { MainNav } from './main-nav';
 import { Logo } from '../icons';
 import { Header } from './header';
@@ -102,9 +102,7 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
             </header>
             <div className="mx-auto grid w-full max-w-[1440px] lg:grid-cols-[280px_1fr] xl:grid-cols-[320px_1fr]">
                 <Sidebar className="hidden h-[calc(100vh-4rem)] flex-col border-r bg-background lg:sticky lg:top-16 lg:flex p-2">
-                    <SidebarContent>
-                        <MainNav />
-                    </SidebarContent>
+                    <MainNav />
                 </Sidebar>
                 <main className="min-h-[calc(100vh-4rem)] p-4 md:p-6 lg:p-8">
                     <div className="w-full">

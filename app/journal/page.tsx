@@ -4,11 +4,11 @@ import { useState, useEffect } from 'react';
 import { AppShell } from '@/components/layout/app-shell';
 import { TransactionLineCategory, type Transaction, type TransactionLine } from '@/core/lib/ledger';
 import { Loader } from 'lucide-react';
-import { useToast } from '@/core/hooks/use-toast';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Separator } from '@/components/ui/separator';
+import { useToast } from '@neup/components/ui/toast';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@neup/components/ui/table';
+import { Separator } from '@neup/components/ui/separator';
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationLink } from '@/components/ui/pagination';
-import { cn } from '@/core/lib/utils';
+import { cn } from '@neup/core/utils';
 import { useUser } from '@/core/providers/auth';
 import { useTransactionsList } from '@/core/hooks/api';
 
@@ -79,7 +79,8 @@ export default function JournalPage() {
         console.error('Failed to generate journal entries:', error);
         if (!cancelled) {
           toast({
-              variant: "destructive",
+              name: 'app',
+              state: "error",
               title: "Error",
               description: "Could not generate your financial journal at this time.",
           });

@@ -12,10 +12,10 @@ creation and account detail pages.
 
 import { useState } from 'react';
 import { AppShell } from '@/components/layout/app-shell';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@neup/components/ui/button';
+import { Skeleton } from '@neup/components/ui/skeleton';
 import { PlusCircle, Landmark, Wallet, Activity, MoreVertical, Inbox } from 'lucide-react';
-import { cn } from '@/core/lib/utils';
+import { cn } from '@neup/core/utils';
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationLink } from '@/components/ui/pagination';
 import { useUser } from '@/core/providers/auth';
 import { useUserAccounts } from '@/core/hooks/api';

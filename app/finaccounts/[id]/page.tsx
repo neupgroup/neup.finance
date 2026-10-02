@@ -15,16 +15,16 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { useParams } from 'next/navigation';
 import { ArrowLeft, Loader, PlusCircle, TrendingDown, TrendingUp } from 'lucide-react';
 import { AppShell } from '@/components/layout/app-shell';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Button } from '@neup/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@neup/components/ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@neup/components/ui/dialog';
+import { Input } from '@neup/components/ui/input';
+import { Label } from '@neup/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@neup/components/ui/select';
 import { useUser } from '@/core/providers/auth';
 import { createTransaction, useTransactionsList, useUserAccounts } from '@/core/hooks/api';
-import { useToast } from '@/core/hooks/use-toast';
-import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@neup/components/ui/toast';
+import { Textarea } from '@neup/components/ui/textarea';
 import {
   currencyOptions,
   isCreditTransactionType,
@@ -85,7 +85,8 @@ export default function FinAccountPage() {
     e.preventDefault();
     if (!user || !title || !date || !transactionType || !category || !currency || totalAmount === '' || !status) {
       toast({
-        variant: 'destructive',
+        name: 'app',
+        state: 'error',
         title: 'Missing Fields',
         description: 'Please fill out all required fields.',
       });
@@ -118,6 +119,7 @@ export default function FinAccountPage() {
       });
 
       toast({
+        name: 'app',
         title: 'Transaction Added',
         description: `${title} was added to this account.`,
       });
@@ -135,7 +137,8 @@ export default function FinAccountPage() {
     } catch (error) {
       console.error('Error creating transaction:', error);
       toast({
-        variant: 'destructive',
+        name: 'app',
+        state: 'error',
         title: 'Error',
         description: 'Could not create transaction. Please try again.',
       });

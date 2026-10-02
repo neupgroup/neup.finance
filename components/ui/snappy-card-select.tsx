@@ -49,8 +49,8 @@ import {
 } from 'react';
 import { X } from 'lucide-react';
 
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Input } from '@neup/components/ui/input';
+import { Label } from '@neup/components/ui/label';
 
 const CARD_HEIGHT_REM = 3.75;
 const CARD_HEIGHT_FALLBACK_PX = CARD_HEIGHT_REM * 16;

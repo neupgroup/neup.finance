@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { AppShell } from '@/components/layout/app-shell';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Badge } from '@neup/components/ui/badge';
+import { Button } from '@neup/components/ui/button';
 import { Combobox } from '@/components/ui/combobox';
 import {
   Card,
@@ -12,17 +12,17 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
+} from '@neup/components/ui/card';
+import { Input } from '@neup/components/ui/input';
+import { Label } from '@neup/components/ui/label';
+import { Separator } from '@neup/components/ui/separator';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from '@neup/components/ui/select';
 import {
   Table,
   TableBody,
@@ -30,9 +30,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from '@neup/components/ui/table';
 import { useParties } from '@/core/hooks/api';
-import { useToast } from '@/core/hooks/use-toast';
+import { useToast } from '@neup/components/ui/toast';
 import type { Party } from '@/core/lib/ledger';
 
 type ApplicableFor = 'account' | 'assetGroup' | 'profile';
@@ -629,18 +629,20 @@ export default function TransactionBlocksSettingsPage() {
 
     if (!key || !label) {
       toast({
+        name: 'app',
         title: 'Subblock name required',
         description: 'Enter a label and key for the transaction subblock.',
-        variant: 'destructive',
+        state: 'error',
       });
       return;
     }
 
     if (form.subblocks.some((subblock) => normalizeBlockKey(subblock.key) === key)) {
       toast({
+        name: 'app',
         title: 'Duplicate subblock key',
         description: `${key} already exists in this transaction block.`,
-        variant: 'destructive',
+        state: 'error',
       });
       return;
     }
@@ -648,9 +650,10 @@ export default function TransactionBlocksSettingsPage() {
     const requiresValue = ['custom_amount', 'percent_of', 'included_percent', 'multiply'].includes(nextSubblock.mode);
     if (requiresValue && !nextSubblock.value.trim()) {
       toast({
+        name: 'app',
         title: 'Value required',
         description: 'Enter an amount, percentage, or referenced key for this calculation.',
-        variant: 'destructive',
+        state: 'error',
       });
       return;
     }
@@ -686,27 +689,30 @@ export default function TransactionBlocksSettingsPage() {
   const handleSubmit = () => {
     if (!form.fieldName.trim()) {
       toast({
+        name: 'app',
         title: 'Field name required',
         description: 'Enter the field name you want to block or adjust.',
-        variant: 'destructive',
+        state: 'error',
       });
       return;
     }
 
     if (!form.valueRule.trim() && form.subblocks.length === 0) {
       toast({
+        name: 'app',
         title: 'Rule required',
         description: 'Enter a value rule like =100, =5%, if(amount<50000)=1%, or add transaction subblocks.',
-        variant: 'destructive',
+        state: 'error',
       });
       return;
     }
 
     if (form.subblocks.length === 0) {
       toast({
+        name: 'app',
         title: 'Subblock required',
         description: 'Add at least one transaction subblock.',
-        variant: 'destructive',
+        state: 'error',
       });
       return;
     }
@@ -730,6 +736,7 @@ export default function TransactionBlocksSettingsPage() {
     });
     setSubblockForm(emptySubblockForm);
     toast({
+      name: 'app',
       title: 'Transaction block saved',
       description: `${nextBlock.fieldName} was added with ${nextBlock.subblocks.length} subblocks.`,
     });
@@ -738,6 +745,7 @@ export default function TransactionBlocksSettingsPage() {
   const handleDelete = (id: string) => {
     setBlocks((current) => current.filter((block) => block.id !== id));
     toast({
+      name: 'app',
       title: 'Transaction block removed',
       description: 'The selected block has been deleted.',
     });

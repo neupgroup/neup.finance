@@ -7,8 +7,8 @@ import {
   MoreHorizontal,
 } from 'lucide-react';
 
-import { cn } from '@/core/lib/utils';
-import { Button } from '@/components/ui/button';
+import { cn } from '@neup/core/utils';
+import { Button } from '@neup/components/ui/button';
 
 const Pagination = ({
   className,

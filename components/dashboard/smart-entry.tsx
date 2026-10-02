@@ -2,12 +2,12 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@neup/components/ui/card';
+import { Textarea } from '@neup/components/ui/textarea';
+import { Button } from '@neup/components/ui/button';
 import { Sparkles, Loader } from 'lucide-react';
 import { createTransactionFromText } from '@/core/ai/flows/create-transaction-from-text';
-import { useToast } from '@/core/hooks/use-toast';
+import { useToast } from '@neup/components/ui/toast';
 
 export function SmartEntry() {
   const [text, setText] = useState('');
@@ -27,7 +27,8 @@ export function SmartEntry() {
     } catch (error) {
       console.error('AI processing error:', error);
       toast({
-        variant: "destructive",
+        name: 'app',
+        state: "error",
         title: "AI Error",
         description: "Could not process the transaction text. Please try again.",
       });

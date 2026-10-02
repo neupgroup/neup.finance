@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
+import { Button } from '@neup/components/ui/button';
 import {
   Card,
   CardContent,
@@ -10,7 +10,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from '@neup/components/ui/card';
 import { Logo } from '@/components/icons';
 import { ArrowRight, Loader } from 'lucide-react';
 import { useUser, useAuthActions } from '@/core/providers/auth';

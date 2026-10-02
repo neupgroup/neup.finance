@@ -10,11 +10,11 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
+} from '@neup/components/ui/card';
+import { Label } from '@neup/components/ui/label';
+import { Button } from '@neup/components/ui/button';
 import { Combobox } from '@/components/ui/combobox';
-import { useToast } from '@/core/hooks/use-toast';
+import { useToast } from '@neup/components/ui/toast';
 import { currencyOptions, transactionTypeOptions } from '@/core/lib/ledger';
 
 export default function DefaultsSettingsPage() {
@@ -26,6 +26,7 @@ export default function DefaultsSettingsPage() {
         // In a real app, you would save these to user preferences (e.g., localStorage or a database)
         console.log('Saving default settings:', { defaultCurrency, defaultTransactionType });
         toast({
+            name: 'app',
             title: 'Settings Saved',
             description: 'Your default settings have been updated.',
         });

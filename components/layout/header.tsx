@@ -7,7 +7,7 @@ import {
   Sun,
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import { Button } from '@/components/ui/button';
+import { Button } from '@neup/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,11 +19,11 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuPortal,
   DropdownMenuSubContent
-} from '@/components/ui/dropdown-menu';
+} from '@neup/components/ui/dropdown-menu';
 import { useAuthActions } from '@/core/providers/auth';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@neup/components/ui/avatar';
 
 type HeaderProps = {
   displayLabel: string;

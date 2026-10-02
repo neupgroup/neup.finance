@@ -2,9 +2,9 @@
 
 import Link from 'next/link';
 import { AppShell } from '@/components/layout/app-shell';
-import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
-import { cn } from '@/core/lib/utils';
+import { Badge } from '@neup/components/ui/badge';
+import { Skeleton } from '@neup/components/ui/skeleton';
+import { cn } from '@neup/core/utils';
 import { useParties } from '@/core/hooks/api';
 import { ArrowDownLeft, ArrowUpRight, Building, Inbox, Mail, MapPin, MoreVertical, Phone, PlusCircle, User, Wallet } from 'lucide-react';
 import { stackedCardClassName } from '@/components/ui/stacked-card';

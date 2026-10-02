@@ -3,10 +3,10 @@
 import { useState } from 'react';
 import { Download, FileJson, FolderArchive, Loader2 } from 'lucide-react';
 import { AppShell } from '@/components/layout/app-shell';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { useToast } from '@/core/hooks/use-toast';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@neup/components/ui/card';
+import { Button } from '@neup/components/ui/button';
+import { Badge } from '@neup/components/ui/badge';
+import { useToast } from '@neup/components/ui/toast';
 import { useParties, useProjections, useTransactionsList, useUserAccounts } from '@/core/hooks/api';
 import { useUser } from '@/core/providers/auth';
 
@@ -73,6 +73,7 @@ export default function ExportSettingsPage() {
   const handleExport = (key: ExportKey) => {
     if (isLoading) {
       toast({
+        name: 'app',
         title: 'Export not ready',
         description: 'Please wait until the current data finishes loading.',
       });
@@ -100,6 +101,7 @@ export default function ExportSettingsPage() {
     }
 
     toast({
+      name: 'app',
       title: 'Export ready',
       description: key === 'everything'
         ? 'Your full finance export has been downloaded.'

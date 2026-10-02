@@ -15,13 +15,13 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, PlusCircle } from 'lucide-react';
 import { AppShell } from '@/components/layout/app-shell';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Button } from '@neup/components/ui/button';
+import { Input } from '@neup/components/ui/input';
+import { Label } from '@neup/components/ui/label';
 import { SnappyCardSelect, type SnappyCardSelectOption } from '@/components/ui/snappy-card-select';
 import { useUser } from '@/core/providers/auth';
 import { createAccount, type Account } from '@/core/hooks/api';
-import { useToast } from '@/core/hooks/use-toast';
+import { useToast } from '@neup/components/ui/toast';
 
 type AccountType = Account['type'];
 type CurrencyCode = 'USD' | 'EUR' | 'GBP' | 'JPY' | 'INR' | 'NPR';
@@ -72,6 +72,7 @@ export default function AddFinAccountPage() {
       });
 
       toast({
+        name: 'app',
         title: 'Account Created',
         description: `Your ${accountName} account has been created.`,
       });
@@ -80,7 +81,8 @@ export default function AddFinAccountPage() {
     } catch (error) {
       console.error('Error creating account:', error);
       toast({
-        variant: 'destructive',
+        name: 'app',
+        state: 'error',
         title: 'Error',
         description: 'Could not create account. Please try again.',
       });

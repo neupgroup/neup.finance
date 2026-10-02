@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { cn } from "@/core/lib/utils";
+import { cn } from "@neup/core/utils";
 import {
   Command,
   CommandEmpty,
@@ -15,8 +15,8 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { Input } from "./input";
+} from "@neup/components/ui/popover";
+import { Input } from "@neup/components/ui/input";
 
 type ComboboxProps = {
   options: { value: string; label: string }[];

@@ -3,7 +3,7 @@
 import React from 'react';
 import { RecentTransactions } from './recent-transactions';
 import { SmartProjections } from './smart-projections';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@neup/components/ui/card';
 import { SmartEntry } from './smart-entry';
 import { ArrowDown, ArrowUp } from 'lucide-react';
 import { useUser } from '@/core/providers/auth';

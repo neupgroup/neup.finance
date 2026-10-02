@@ -5,9 +5,9 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AppShell } from '@/components/layout/app-shell';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Button } from '@neup/components/ui/button';
+import { Input } from '@neup/components/ui/input';
+import { Label } from '@neup/components/ui/label';
 import { Combobox } from '@/components/ui/combobox';
 import { CurrencyAmountInput } from '@/components/ui/currency-amount-input';
 import { DateChoiceInput } from '@/components/ui/date-choice-input';
@@ -20,13 +20,13 @@ import {
   type TransactionStatus,
   type TransactionType,
 } from '@/core/lib/ledger';
-import { useToast } from '@/core/hooks/use-toast';
-import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@neup/components/ui/toast';
+import { Textarea } from '@neup/components/ui/textarea';
 import { useUser } from '@/core/providers/auth';
 import { createTransaction, useParties, useTransactionsList, useUserAccounts } from '@/core/hooks/api';
 import { ArrowLeft, ArrowDownLeft, ArrowUpRight, Check, Loader } from 'lucide-react';
-import { cn } from '@/core/lib/utils';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { cn } from '@neup/core/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@neup/components/ui/select';
 import {
   TRANSACTION_BLOCKS_STORAGE_KEY,
   calculateTransactionSubblocks,
@@ -280,7 +280,8 @@ export default function AddTransactionPage() {
     const nextErrors = validateForm();
     if (!user) {
       toast({
-        variant: "destructive",
+        name: 'app',
+        state: "error",
         title: "Not signed in",
         description: "Please sign in before adding a transaction.",
       });
@@ -291,7 +292,8 @@ export default function AddTransactionPage() {
 
     if (Object.keys(nextErrors).length > 0) {
       toast({
-        variant: "destructive",
+        name: 'app',
+        state: "error",
         title: "Missing Fields",
         description: "Please fix the highlighted fields and try again.",
       });
@@ -367,6 +369,7 @@ export default function AddTransactionPage() {
         });
 
         toast({
+            name: 'app',
             title: "Transaction Added",
             description: `A new transaction for ${totalAmountCurrency} ${saved.final_amount ?? resolvedTransactionTotal} has been successfully added.`,
         });
@@ -376,7 +379,8 @@ export default function AddTransactionPage() {
     } catch (error) {
         console.error("Error adding transaction: ", error);
         toast({
-            variant: "destructive",
+            name: 'app',
+            state: "error",
             title: "Error",
             description: "Could not save the transaction. Please try again.",
         });
@@ -391,7 +395,8 @@ export default function AddTransactionPage() {
 
     if (!key || !label) {
       toast({
-        variant: 'destructive',
+        name: 'app',
+        state: 'error',
         title: 'Subblock name required',
         description: 'Enter a label and key for the transaction subblock.',
       });
@@ -400,7 +405,8 @@ export default function AddTransactionPage() {
 
     if (transactionSubblocks.some((subblock) => normalizeTransactionBlockKey(subblock.key) === key)) {
       toast({
-        variant: 'destructive',
+        name: 'app',
+        state: 'error',
         title: 'Duplicate subblock',
         description: `${key} already exists in this transaction.`,
       });
@@ -410,7 +416,8 @@ export default function AddTransactionPage() {
     const requiresValue = ['custom_amount', 'percent_of', 'included_percent', 'multiply'].includes(nextSubblock.mode);
     if (requiresValue && !nextSubblock.value.trim()) {
       toast({
-        variant: 'destructive',
+        name: 'app',
+        state: 'error',
         title: 'Value required',
         description: 'Enter an amount, percentage, or referenced key for this subblock.',
       });

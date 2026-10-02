@@ -23,8 +23,8 @@ import {
   BookText,
   Users,
 } from 'lucide-react';
-import { Button } from '../ui/button';
-import { useSidebar } from '../ui/sidebar';
+import { Button } from '@neup/components/ui/button';
+import { useSidebar } from '@neup/components/ui/sidebar';
 
 const menuItems = [
   { href: '/', label: 'Dashboard', icon: Home },

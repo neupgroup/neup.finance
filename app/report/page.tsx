@@ -12,7 +12,7 @@ sections that group outstanding balances by their real transaction currency.
 
 import React from 'react';
 import { AppShell } from '@/components/layout/app-shell';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@neup/components/ui/card';
 import { ArrowDown, ArrowUp, Banknote, Landmark, Minus, Scale } from 'lucide-react';
 import { IncomeExpenseChart } from '@/components/charts/income-expense-chart';
 import { CategoryPieChart } from '@/components/charts/category-pie-chart';
