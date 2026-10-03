@@ -10,12 +10,10 @@ Defines the primary sidebar destinations for the finance app shell.
 ::end
 */
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import {
   ArrowLeftRight,
   BarChart,
-  Bot,
   FileText,
   Home,
   Landmark,
@@ -23,7 +21,7 @@ import {
   BookText,
   Users,
 } from 'lucide-react';
-import { Button } from '@neup/components/ui/button';
+import { NavLink } from '@neup/components/ui/nav-link';
 import { useSidebar } from '@neup/components/ui/sidebar';
 
 const menuItems = [
@@ -34,12 +32,14 @@ const menuItems = [
   { href: '/projections', label: 'Projections', icon: BarChart },
   { href: '/report', label: 'Reports', icon: FileText },
   { href: '/journal', label: 'Journal', icon: BookText },
-  { href: '/chat', label: 'Chat', icon: Bot },
 ];
 
 export function MainNav() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const { setOpenMobile } = useSidebar();
+  const projectId = searchParams.get('project');
+  const withProject = (href: string) => projectId ? `${href}?project=${encodeURIComponent(projectId)}` : href;
 
   const handleLinkClick = () => {
     setOpenMobile(false);
@@ -50,28 +50,31 @@ export function MainNav() {
       {menuItems.map((item, index) => {
         const isActive = pathname.startsWith(item.href) && (item.href !== '/' || pathname === '/');
         return (
-          <Link key={index} href={item.href} onClick={handleLinkClick}>
-            <Button
-              variant={isActive ? 'default' : 'ghost'}
-              className="w-full justify-start gap-2"
-            >
-              <item.icon className="h-5 w-5" />
-              {item.label}
-            </Button>
-          </Link>
+          <NavLink
+            key={index}
+            href={withProject(item.href)}
+            active={isActive}
+            alignment="left"
+            className="w-full"
+            onClick={handleLinkClick}
+          >
+            <item.icon className="h-5 w-5" />
+            {item.label}
+          </NavLink>
         );
       })}
-       <div className="mt-auto">
-      <Link href="/settings" onClick={handleLinkClick}>
-              <Button
-                variant={pathname.startsWith('/settings') ? 'default' : 'ghost'}
-                className="w-full justify-start gap-2"
-              >
-                  <Settings className="h-5 w-5" />
-                  Settings
-              </Button>
-          </Link>
-       </div>
+      <div className="mt-auto">
+        <NavLink
+          href={withProject('/settings')}
+          active={pathname.startsWith('/settings')}
+          alignment="left"
+          className="w-full"
+          onClick={handleLinkClick}
+        >
+          <Settings className="h-5 w-5" />
+          Settings
+        </NavLink>
+      </div>
     </nav>
   );
 }

@@ -23,18 +23,20 @@ type PartyEditPageProps = {
   params: Promise<{
     id: string;
   }>;
+  searchParams: Promise<{ project?: string }>;
 };
 
-export default async function PartyEditPage({ params }: PartyEditPageProps) {
+export default async function PartyEditPage({ params, searchParams }: PartyEditPageProps) {
   const { id } = await params;
+  const query = await searchParams;
   const cookieStore = await cookies();
   const authToken = cookieStore.get('auth_account')?.value?.trim() || null;
 
   if (!authToken) {
-    redirect('/onboarding');
+    redirect('/switch');
   }
 
-  const projectId = cookieStore.get('project_id')?.value?.trim() || '';
+  const projectId = query.project?.trim() || '';
   const pageData = await getPartyPageData(authToken, projectId, id);
   if (!pageData) {
     notFound();

@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { SidebarProvider, Sidebar, SidebarTrigger } from '@neup/components/ui/sidebar';
 import { MainNav } from './main-nav';
 import { Logo } from '../icons';
@@ -41,8 +40,7 @@ function readShellIdentity(userId?: string | null): ShellIdentity {
 }
 
 function AppShellContent({ children }: { children: React.ReactNode }) {
-    const { user, isUserLoading } = useUser();
-    const router = useRouter();
+    const { user } = useUser();
 
     const { data: userProfile } = useAccountProfile();
     const [shellIdentity, setShellIdentity] = useState<ShellIdentity>(() => readShellIdentity(user?.uid));
@@ -50,6 +48,49 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         setShellIdentity(readShellIdentity(user?.uid));
     }, [user?.uid]);
+
+    useEffect(() => {
+        const projectId = new URLSearchParams(window.location.search).get('project');
+        if (!projectId) return;
+
+        const addProject = (value: string | URL) => {
+            const url = new URL(value.toString(), window.location.origin);
+            if (url.origin !== window.location.origin || url.pathname.startsWith('/api') || url.pathname.startsWith('/_next')) {
+                return value.toString();
+            }
+            if (!url.searchParams.has('project')) url.searchParams.set('project', projectId);
+            return `${url.pathname}${url.search}${url.hash}`;
+        };
+
+        const originalPushState = window.history.pushState.bind(window.history);
+        const originalReplaceState = window.history.replaceState.bind(window.history);
+        window.history.pushState = (state, unused, url) => {
+            originalPushState(state, unused, url == null ? url : addProject(url.toString()));
+        };
+        window.history.replaceState = (state, unused, url) => {
+            originalReplaceState(state, unused, url == null ? url : addProject(url.toString()));
+        };
+
+        const preserveProject = (event: MouseEvent) => {
+            const target = event.target instanceof Element ? event.target.closest('a') : null;
+            if (!target || target.target === '_blank') return;
+            const href = target.getAttribute('href');
+            if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
+            const url = new URL(href, window.location.origin);
+            if (url.origin !== window.location.origin || url.pathname.startsWith('/bridge/api.v1')) return;
+            if (!url.searchParams.has('project')) {
+                url.searchParams.set('project', projectId);
+                target.setAttribute('href', `${url.pathname}${url.search}${url.hash}`);
+            }
+        };
+
+        document.addEventListener('click', preserveProject, true);
+        return () => {
+            document.removeEventListener('click', preserveProject, true);
+            window.history.pushState = originalPushState;
+            window.history.replaceState = originalReplaceState;
+        };
+    }, []);
 
     useEffect(() => {
         if (!user?.uid || !userProfile) return;
@@ -68,14 +109,6 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
             window.localStorage.setItem(key, JSON.stringify(nextIdentity));
         }
     }, [user?.uid, user?.displayName, user?.photoURL, userProfile]);
-
-    useEffect(() => {
-        // The middleware now handles the primary redirection logic.
-        // This effect can be simplified or used for other client-side-only checks if needed.
-        if (!isUserLoading && !user) {
-            router.push('/onboarding');
-        }
-    }, [user, isUserLoading, router]);
 
     return (
          <div className="min-h-screen w-full bg-background text-foreground">
@@ -98,7 +131,7 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
                 </div>
             </header>
             <div className="mx-auto grid w-full max-w-[1440px] lg:grid-cols-[280px_1fr] xl:grid-cols-[320px_1fr]">
-                <Sidebar className="hidden h-[calc(100vh-4rem)] flex-col border-r bg-background lg:sticky lg:top-16 lg:flex p-2">
+                <Sidebar className="hidden h-[calc(100vh-4rem)] flex-col border-r border-sidebar-border p-2 lg:sticky lg:top-16 lg:flex">
                     <MainNav />
                 </Sidebar>
                 <main className="min-h-[calc(100vh-4rem)] p-4 md:p-6 lg:p-8">

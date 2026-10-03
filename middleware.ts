@@ -3,31 +3,26 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  const projectId = request.cookies.get('project_id');
   const { pathname } = request.nextUrl;
 
   // Allow requests for static files, API routes, and images to pass through
-  if (pathname.startsWith('/api') || pathname.startsWith('/_next/static') || pathname.startsWith('/_next/image') || pathname.endsWith('favicon.ico')) {
+  if (pathname.startsWith('/bridge/api.v1') || pathname.startsWith('/bridge/webhook.v1') || pathname.startsWith('/_next/static') || pathname.startsWith('/_next/image') || pathname.endsWith('favicon.ico')) {
     return NextResponse.next();
   }
 
-  // If user is on the onboarding or auth page, let them proceed.
-  if (pathname === '/onboarding' || pathname === '/auth') {
-    // If they are already set up, redirect them to the home page.
-    if (projectId) {
-      return NextResponse.redirect(new URL('/', request.url));
-    }
+  if (pathname === '/switch' || pathname === '/switch/new') {
     return NextResponse.next();
   }
 
-  // Project selection is established during account setup.
-  if (!projectId) {
-    return NextResponse.redirect(new URL('/onboarding', request.url));
+  if (!request.nextUrl.searchParams.get('project')?.trim()) {
+    const switchUrl = new URL('/switch', request.url);
+    switchUrl.searchParams.set('returnTo', pathname);
+    return NextResponse.redirect(switchUrl);
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/((?!bridge/api.v1|bridge/webhook.v1|_next/static|_next/image|favicon.ico).*)'],
 };

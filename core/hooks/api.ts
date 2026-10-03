@@ -5,7 +5,13 @@ import { useEffect, useState } from "react";
 type QueryResult<T> = { data: T | undefined; isLoading: boolean; error: Error | null };
 
 async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(path, {
+  const url = new URL(path, typeof window === 'undefined' ? 'http://localhost' : window.location.origin);
+  if (typeof window !== 'undefined') {
+    const projectId = new URLSearchParams(window.location.search).get('project');
+    if (projectId && !url.searchParams.has('project')) url.searchParams.set('project', projectId);
+  }
+  const requestPath = typeof window === 'undefined' ? path : `${url.pathname}${url.search}`;
+  const response = await fetch(requestPath, {
     ...init,
     credentials: "include",
     headers: {
@@ -60,7 +66,7 @@ export type FinBook = {
 export type ProjectOption = { id: string; name: string; roles: string[]; selected: boolean };
 
 export function useSelectedProject() {
-  const query = useQuery<ProjectOption[]>('/api/projects');
+  const query = useQuery<ProjectOption[]>('/bridge/api.v1/projects');
   return { ...query, project: query.data?.find((project) => project.selected) };
 }
 
@@ -68,69 +74,76 @@ export function useTransactionsList(limit?: number, assetGroupId?: string) {
   const params = new URLSearchParams();
   if (limit) params.set("limit", String(limit));
   if (assetGroupId) params.set("assetGroupId", assetGroupId);
-  return useQuery<any[]>(`/api/transactions?${params}`);
+  return useQuery<any[]>(`/bridge/api.v1/transactions?${params}`);
 }
 
 export function useProjectBooks() {
-  return useQuery<FinBook[]>('/api/books');
+  return useQuery<FinBook[]>('/bridge/api.v1/books');
 }
 
 export function useAccountProfile() {
-  return useQuery<any>('/api/account');
+  return useQuery<any>('/bridge/api.v1/account');
 }
 
 export function useParties() {
-  return useQuery<any[]>("/api/parties");
+  return useQuery<any[]>("/bridge/api.v1/parties");
 }
 
 export function useProjections(status?: string) {
   const params = new URLSearchParams();
   if (status) params.set("status", status);
-  return useQuery<any[]>(`/api/projections?${params}`);
+  return useQuery<any[]>(`/bridge/api.v1/projections?${params}`);
 }
 
 export function useTransactionById(id?: string) {
-  return useQuery<any>(id ? `/api/transactions/${encodeURIComponent(id)}` : null);
+  return useQuery<any>(id ? `/bridge/api.v1/transactions/${encodeURIComponent(id)}` : null);
 }
 
 export function useTransactionLines(id?: string) {
-  return useQuery<any[]>(id ? `/api/transactions/${encodeURIComponent(id)}/lines` : null);
+  return useQuery<any[]>(id ? `/bridge/api.v1/transactions/${encodeURIComponent(id)}/lines` : null);
 }
 
 export async function ensureAccount() {
-  return requestJson('/api/account', {
+  return requestJson('/bridge/api.v1/account', {
     method: "PUT",
   });
 }
 
+export async function createProject(name: string) {
+  return requestJson<{ id: string; name: string }>('/bridge/api.v1/projects', {
+    method: 'POST',
+    body: JSON.stringify({ name }),
+  });
+}
+
 export async function createFinBook(data: Pick<FinBook, "name" | "type" | "currency">) {
-  return requestJson<FinBook>('/api/books', {
+  return requestJson<FinBook>('/bridge/api.v1/books', {
     method: "POST",
     body: JSON.stringify(data),
   });
 }
 
 export async function createParty(data: Record<string, unknown>) {
-  return requestJson<any>("/api/parties", { method: "POST", body: JSON.stringify(data) });
+  return requestJson<any>("/bridge/api.v1/parties", { method: "POST", body: JSON.stringify(data) });
 }
 
 export async function createProjection(data: Record<string, unknown>) {
-  return requestJson<any>("/api/projections", { method: "POST", body: JSON.stringify(data) });
+  return requestJson<any>("/bridge/api.v1/projections", { method: "POST", body: JSON.stringify(data) });
 }
 
 export async function createTransaction(data: Record<string, unknown>) {
-  return requestJson<any>("/api/transactions", { method: "POST", body: JSON.stringify(data) });
+  return requestJson<any>("/bridge/api.v1/transactions", { method: "POST", body: JSON.stringify(data) });
 }
 
 export async function addTransactionLine(id: string, data: Record<string, unknown>) {
-  return requestJson<any>(`/api/transactions/${encodeURIComponent(id)}/lines`, {
+  return requestJson<any>(`/bridge/api.v1/transactions/${encodeURIComponent(id)}/lines`, {
     method: "POST",
     body: JSON.stringify(data),
   });
 }
 
 export async function importTransactions(data: { format: "csv" | "json"; content: string }) {
-  return requestJson<{ created: any[]; failed: any[]; totalRows: number }>("/api/transactions/import", {
+  return requestJson<{ created: any[]; failed: any[]; totalRows: number }>("/bridge/api.v1/transactions/import", {
     method: "POST",
     body: JSON.stringify(data),
   });

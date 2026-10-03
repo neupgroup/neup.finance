@@ -3,7 +3,6 @@
 
 import { useState } from 'react';
 import { AppShell } from '@/components/layout/app-shell';
-import { SmartProjections } from '@/components/dashboard/smart-projections';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@neup/components/ui/card';
 import { Button } from '@neup/components/ui/button';
 import { PlusCircle, ArrowUpRight, ArrowDownLeft, Inbox, XCircle, Repeat } from 'lucide-react';
@@ -63,7 +62,7 @@ export default function ProjectionsPage() {
     const handleCancelProjection = async (projectionId: string) => {
         if (!user?.uid) return;
         try {
-            const res = await fetch('/api/projections', {
+            const res = await fetch('/bridge/api.v1/projections', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id: projectionId, status: 'Canceled' }),
@@ -267,7 +266,6 @@ export default function ProjectionsPage() {
                 </CardContent>
             </Card>
 
-            <SmartProjections />
         </div>
     </AppShell>
   );

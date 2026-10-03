@@ -1,6 +1,6 @@
 import type { NextRequest } from 'next/server';
 import { prisma } from '@/server/db';
-import { ensureRecord } from '@neup/shared/account/self';
+import logica from '@neup/logica';
 
 export type ProjectAccess = {
   accountId: string;
@@ -9,12 +9,15 @@ export type ProjectAccess = {
 };
 
 export async function getProjectAccess(req: NextRequest): Promise<ProjectAccess | null> {
-  return getProjectAccessForToken(req.cookies.get('auth_account')?.value, req.cookies.get('project_id')?.value);
+  return getProjectAccessForToken(
+    req.cookies.get('auth_account')?.value,
+    req.nextUrl.searchParams.get('project')?.trim(),
+  );
 }
 
 export async function getProjectAccessForToken(authToken?: string, projectId?: string): Promise<ProjectAccess | null> {
   if (!authToken || !projectId) return null;
-  const account = await ensureRecord(authToken);
+  const account = await logica.account.self.ensureRecord(authToken);
   if (!account) return null;
 
   const grants = await prisma.access.findMany({

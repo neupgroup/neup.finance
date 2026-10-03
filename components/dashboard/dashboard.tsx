@@ -2,9 +2,7 @@
 
 import React from 'react';
 import { RecentTransactions } from './recent-transactions';
-import { SmartProjections } from './smart-projections';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@neup/components/ui/card';
-import { SmartEntry } from './smart-entry';
 import { ArrowDown, ArrowUp } from 'lucide-react';
 import { useTransactionsList } from '@/core/hooks/api';
 
@@ -51,7 +49,6 @@ export function Dashboard() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
         <div className="lg:col-span-2 space-y-6 md:space-y-8">
-            <SmartEntry />
              <div className="grid md:grid-cols-2 gap-6">
                 <StatCard title="Accounts Receivable" value={formatCurrency(receivables)} icon={<ArrowUp className="h-4 w-4 text-muted-foreground" />} description="Money you expect to receive." colorClass="text-green-500" />
                 <StatCard title="Accounts Payable" value={formatCurrency(payables)} icon={<ArrowDown className="h-4 w-4 text-muted-foreground" />} description="Money you need to pay." colorClass="text-red-500" />
@@ -65,9 +62,6 @@ export function Dashboard() {
                     <RecentTransactions />
                 </CardContent>
             </Card>
-        </div>
-        <div className="space-y-6 md:space-y-8">
-            <SmartProjections />
         </div>
     </div>
   );

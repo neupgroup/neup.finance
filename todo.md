@@ -12,7 +12,6 @@
 - [ ] Add documentation for the `core/providers/` folder, including `auth.tsx`, cookie state, geolocation, and session provider responsibilities.
 - [ ] Add documentation for the `core/hooks/` folder, including the shared toast, mobile, activity, and API helper hooks.
 - [ ] Add documentation for the `core/lib/` folder, including the shared utility, ledger contract, and any placeholder/runtime support modules.
-- [ ] Add documentation for the `core/ai/` folder, including Genkit configuration, registered flows, and AI entrypoint usage.
 - [ ] Add documentation for the `components/layout/` and `components/dashboard/` folders so the app shell and dashboard composition are described near the source.
 - [ ] Add documentation for the `components/ui/` folder, including the custom combobox, currency amount input, and date choice input behaviors.
 - [ ] Add documentation for `components.json`, including the shared component generator aliases and why hooks resolve through `@/core/hooks`.

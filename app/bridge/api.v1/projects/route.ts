@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/server/db';
-import { ensureRecord } from '@neup/shared/account/self';
+import logica from '@neup/logica';
 import { OWNER_ROLE_ID } from '@/server/roles';
 
 export async function GET(req: NextRequest) {
-  const account = await ensureRecord(req.cookies.get('auth_account')?.value);
+  const account = await logica.account.self.ensureRecord(req.cookies.get('auth_account')?.value);
   if (!account) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const grants = await prisma.access.findMany({
@@ -20,14 +20,14 @@ export async function GET(req: NextRequest) {
       id: grant.projectId,
       name: grant.project.name,
       roles: [grant.role.name],
-      selected: grant.projectId === req.cookies.get('project_id')?.value,
+      selected: grant.projectId === req.nextUrl.searchParams.get('project'),
     });
   }
   return NextResponse.json([...projects.values()]);
 }
 
 export async function POST(req: NextRequest) {
-  const account = await ensureRecord(req.cookies.get('auth_account')?.value);
+  const account = await logica.account.self.ensureRecord(req.cookies.get('auth_account')?.value);
   if (!account) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const body = await req.json().catch(() => null);
@@ -51,7 +51,5 @@ export async function POST(req: NextRequest) {
     return created;
   });
 
-  const response = NextResponse.json(project, { status: 201 });
-  response.cookies.set('project_id', project.id, { httpOnly: true, sameSite: 'lax', secure: req.nextUrl.protocol === 'https:' });
-  return response;
+  return NextResponse.json(project, { status: 201 });
 }

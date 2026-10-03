@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/server/db';
-import { ensureRecord } from '@neup/shared/account/self';
+import logica from '@neup/logica';
 import { createHash } from 'node:crypto';
 import { OWNER_ROLE_ID } from '@/server/roles';
 
@@ -10,7 +10,7 @@ function defaultId(accountId: string, kind: string) {
 }
 
 export async function GET(req: NextRequest) {
-  const account = await ensureRecord(req.cookies.get('auth_account')?.value);
+  const account = await logica.account.self.ensureRecord(req.cookies.get('auth_account')?.value);
   if (!account) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
@@ -19,14 +19,14 @@ export async function GET(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   const token = req.cookies.get('auth_account')?.value;
-  const account = await ensureRecord(token);
+  const account = await logica.account.self.ensureRecord(token);
   if (!account || !token) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
   const id = account.id;
   const profile = account;
 
-  const selectedProjectId = req.cookies.get('project_id')?.value;
+  const selectedProjectId = req.nextUrl.searchParams.get('project')?.trim();
   let grant = selectedProjectId ? await prisma.access.findFirst({
     where: { accountId: id, projectId: selectedProjectId, status: 'active', project: { status: 'active' } },
     include: { project: true },
@@ -60,7 +60,5 @@ export async function PUT(req: NextRequest) {
     });
   }
 
-  const response = NextResponse.json({ ...profile, project: grant.project, roleId: grant.roleId });
-  response.cookies.set('project_id', grant.projectId, { httpOnly: true, sameSite: 'lax', secure: req.nextUrl.protocol === 'https:' });
-  return response;
+  return NextResponse.json({ ...profile, project: grant.project, roleId: grant.roleId });
 }

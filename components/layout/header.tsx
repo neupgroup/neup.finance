@@ -24,7 +24,7 @@ import {
 } from '@neup/components/ui/dropdown-menu';
 import { useAuthActions } from '@/core/providers/auth';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@neup/components/ui/avatar';
 
 type HeaderProps = {
@@ -45,21 +45,25 @@ export function Header({ displayLabel, avatarSrc }: HeaderProps) {
   const { setTheme } = useTheme();
   const { signOut } = useAuthActions();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [projects, setProjects] = useState<ProjectOption[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState('');
 
   useEffect(() => {
-    fetch('/api/projects', { credentials: 'include' })
+    const project = new URLSearchParams(window.location.search).get('project');
+    const projectsUrl = new URL('/bridge/api.v1/projects', window.location.origin);
+    if (project) projectsUrl.searchParams.set('project', project);
+    fetch(`${projectsUrl.pathname}${projectsUrl.search}`, { credentials: 'include' })
       .then((response) => response.ok ? response.json() : [])
       .then((items: ProjectOption[]) => {
         setProjects(items);
-        setSelectedProjectId(items.find((item) => item.selected)?.id ?? '');
+        setSelectedProjectId(project ?? items.find((item) => item.selected)?.id ?? '');
       })
       .catch(() => setProjects([]));
   }, []);
 
   const selectProject = async (projectId: string) => {
-    const response = await fetch('/api/projects/select', {
+    const response = await fetch('/bridge/api.v1/projects/select', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -67,13 +71,15 @@ export function Header({ displayLabel, avatarSrc }: HeaderProps) {
     });
     if (!response.ok) return;
     setSelectedProjectId(projectId);
-    window.location.reload();
+    const url = new URL(window.location.href);
+    url.searchParams.set('project', projectId);
+    window.location.assign(url.toString());
   };
 
 
   const handleLogout = async () => {
     await signOut();
-    router.push('/onboarding');
+    router.push('/switch');
   }
 
   return (
@@ -84,7 +90,11 @@ export function Header({ displayLabel, avatarSrc }: HeaderProps) {
           className="max-w-40 rounded-md border bg-background px-2 py-1 text-sm"
           value={selectedProjectId}
           onChange={(event) => {
-            if (event.target.value === '__new__') router.push('/projects/new');
+            if (event.target.value === '__new__') {
+              const url = new URL('/switch/new', window.location.origin);
+              url.searchParams.set('project', selectedProjectId);
+              router.push(`${url.pathname}${url.search}`);
+            }
             else void selectProject(event.target.value);
           }}
         >
@@ -107,7 +117,7 @@ export function Header({ displayLabel, avatarSrc }: HeaderProps) {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>{displayLabel}</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <Link href="/settings/appearance">
+          <Link href={`/settings/appearance${searchParams.get('project') ? `?project=${encodeURIComponent(searchParams.get('project')!)}` : ''}`}>
             <DropdownMenuItem>
               <Settings className="mr-2 h-4 w-4"/>
               <span>Settings</span>

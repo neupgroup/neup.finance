@@ -18,7 +18,7 @@ export default function NewProjectPage() {
     setSaving(true);
     setError('');
     try {
-      const response = await fetch('/api/projects', {
+      const response = await fetch('/bridge/api.v1/projects', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
