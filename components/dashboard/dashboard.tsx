@@ -38,7 +38,7 @@ export function Dashboard() {
                 }
             }
         });
-        
+
         return { receivables, payables };
     }, [transactions]);
 
@@ -47,9 +47,9 @@ export function Dashboard() {
     }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
-        <div className="lg:col-span-2 space-y-6 md:space-y-8">
-             <div className="grid md:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <div className="space-y-4 lg:col-span-2">
+             <div className="grid gap-4 md:grid-cols-2">
                 <StatCard title="Accounts Receivable" value={formatCurrency(receivables)} icon={<ArrowUp className="h-4 w-4 text-muted-foreground" />} description="Money you expect to receive." colorClass="text-green-500" />
                 <StatCard title="Accounts Payable" value={formatCurrency(payables)} icon={<ArrowDown className="h-4 w-4 text-muted-foreground" />} description="Money you need to pay." colorClass="text-red-500" />
             </div>

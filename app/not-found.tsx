@@ -1,6 +1,5 @@
-import Link from 'next/link';
 import { AlertTriangle, Home, ReceiptText } from 'lucide-react';
-import { Button } from '@neup/components/ui/button';
+import { LinkButton } from '@neup/components/ui/link-button';
 import {
   Card,
   CardContent,
@@ -29,18 +28,8 @@ export default function NotFound() {
         </CardContent>
 
         <CardFooter className="flex flex-col gap-2 sm:flex-row sm:justify-center">
-          <Button asChild>
-            <Link href="/">
-              <Home className="mr-2 h-4 w-4" />
-              Go to dashboard
-            </Link>
-          </Button>
-          <Button asChild variant="outline">
-            <Link href="/transactions">
-              <ReceiptText className="mr-2 h-4 w-4" />
-              View transactions
-            </Link>
-          </Button>
+          <LinkButton href="/" preIcon={<Home className="mr-2 h-4 w-4" />}>Go to dashboard</LinkButton>
+          <LinkButton href="/transactions" variant="outline" preIcon={<ReceiptText className="mr-2 h-4 w-4" />}>View transactions</LinkButton>
         </CardFooter>
       </Card>
     </main>

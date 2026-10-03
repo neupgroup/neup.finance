@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { cn } from '@neup/core/utils';
-import BaseRootLayout from '@neup/components/layout/RootLayout';
+import { Suspense } from 'react';
+import { Toaster } from '@neup/components/ui/toaster';
+import { ProgressBar } from '@neup/components/element/progressbar';
 import { ThemeProvider } from '@/components/theme-provider';
 import { AuthProvider } from '@/core/providers/auth';
 import { Outfit } from 'next/font/google';
@@ -24,16 +26,20 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={outfit.variable}>
       <body className={cn("font-body antialiased")}>
-        <BaseRootLayout>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <AuthProvider>{children}</AuthProvider>
-          </ThemeProvider>
-        </BaseRootLayout>
+        <Suspense fallback={null}>
+          <ProgressBar />
+        </Suspense>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+        </ThemeProvider>
+        <Toaster />
       </body>
     </html>
   );

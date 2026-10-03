@@ -26,8 +26,11 @@ import { useAuthActions } from '@/core/providers/auth';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@neup/components/ui/avatar';
+import { useUser } from '@/core/providers/auth';
+import { useAccountProfile } from '@/core/hooks/api';
+import { Logo } from '../icons';
 
-type HeaderProps = {
+type ShellIdentity = {
   displayLabel: string;
   avatarSrc: string | null;
 };
@@ -41,13 +44,116 @@ function getInitials(value?: string | null) {
   return parts.slice(0, 2).map((part) => part[0]?.toUpperCase()).join('');
 }
 
-export function Header({ displayLabel, avatarSrc }: HeaderProps) {
+function getShellIdentityKey(userId?: string | null) {
+  return userId ? `shell_identity_${userId}` : null;
+}
+
+function readShellIdentity(userId?: string | null): ShellIdentity {
+  if (typeof window === 'undefined') return { displayLabel: '...', avatarSrc: null };
+  const key = getShellIdentityKey(userId);
+  if (!key) return { displayLabel: '...', avatarSrc: null };
+  try {
+    const raw = window.localStorage.getItem(key);
+    if (!raw) return { displayLabel: '...', avatarSrc: null };
+    const parsed = JSON.parse(raw) as Partial<ShellIdentity> & { label?: string };
+    return {
+      displayLabel: typeof parsed.displayLabel === 'string' && parsed.displayLabel.trim()
+        ? parsed.displayLabel
+        : typeof parsed.label === 'string' && parsed.label.trim() ? parsed.label : '...',
+      avatarSrc: typeof parsed.avatarSrc === 'string' && parsed.avatarSrc.trim() ? parsed.avatarSrc : null,
+    };
+  } catch {
+    return { displayLabel: '...', avatarSrc: null };
+  }
+}
+
+function useShellIdentity() {
+  const { user } = useUser();
+  const { data: userProfile } = useAccountProfile();
+  const [identity, setIdentity] = useState<ShellIdentity>(() => readShellIdentity(user?.uid));
+
+  useEffect(() => {
+    setIdentity(readShellIdentity(user?.uid));
+  }, [user?.uid]);
+
+  useEffect(() => {
+    if (!user?.uid || !userProfile) return;
+    const nextIdentity: ShellIdentity = {
+      displayLabel: userProfile.displayName || user.displayName || 'My Account',
+      avatarSrc: userProfile.displayImage || user.photoURL || null,
+    };
+    setIdentity(nextIdentity);
+    const key = getShellIdentityKey(user.uid);
+    if (key) window.localStorage.setItem(key, JSON.stringify(nextIdentity));
+  }, [user?.uid, user?.displayName, user?.photoURL, userProfile]);
+
+  return identity;
+}
+
+export function HeaderBrand() {
+  const { displayLabel } = useShellIdentity();
+  return (
+    <Link href="/" className="hidden items-center gap-2 font-semibold md:flex">
+      <Logo className="h-8 w-8" />
+      <span className="flex flex-col">
+        <span>Neup.Ledger</span>
+        <span className="text-xs font-normal text-muted-foreground">{displayLabel}</span>
+      </span>
+    </Link>
+  );
+}
+
+export function Header() {
+  const { displayLabel, avatarSrc } = useShellIdentity();
   const { setTheme } = useTheme();
   const { signOut } = useAuthActions();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [projects, setProjects] = useState<ProjectOption[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState('');
+
+  useEffect(() => {
+    const projectId = new URLSearchParams(window.location.search).get('project');
+    if (!projectId) return;
+
+    const addProject = (value: string | URL) => {
+      const url = new URL(value.toString(), window.location.origin);
+      if (url.origin !== window.location.origin || url.pathname.startsWith('/api') || url.pathname.startsWith('/_next')) {
+        return value.toString();
+      }
+      if (!url.searchParams.has('project')) url.searchParams.set('project', projectId);
+      return `${url.pathname}${url.search}${url.hash}`;
+    };
+
+    const originalPushState = window.history.pushState.bind(window.history);
+    const originalReplaceState = window.history.replaceState.bind(window.history);
+    window.history.pushState = (state, unused, url) => {
+      originalPushState(state, unused, url == null ? url : addProject(url.toString()));
+    };
+    window.history.replaceState = (state, unused, url) => {
+      originalReplaceState(state, unused, url == null ? url : addProject(url.toString()));
+    };
+
+    const preserveProject = (event: MouseEvent) => {
+      const target = event.target instanceof Element ? event.target.closest('a') : null;
+      if (!target || target.target === '_blank') return;
+      const href = target.getAttribute('href');
+      if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
+      const url = new URL(href, window.location.origin);
+      if (url.origin !== window.location.origin || url.pathname.startsWith('/bridge/api.v1')) return;
+      if (!url.searchParams.has('project')) {
+        url.searchParams.set('project', projectId);
+        target.setAttribute('href', `${url.pathname}${url.search}${url.hash}`);
+      }
+    };
+
+    document.addEventListener('click', preserveProject, true);
+    return () => {
+      document.removeEventListener('click', preserveProject, true);
+      window.history.pushState = originalPushState;
+      window.history.replaceState = originalReplaceState;
+    };
+  }, []);
 
   useEffect(() => {
     const project = new URLSearchParams(window.location.search).get('project');
