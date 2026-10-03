@@ -2,7 +2,6 @@
 
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useMemo } from 'react';
-import { useUser } from '@/core/providers/auth';
 import { useTransactionsList } from '@/core/hooks/api';
 
 const COLORS = [
@@ -16,8 +15,7 @@ const COLORS = [
 ];
 
 export function CategoryPieChart() {
-    const { user } = useUser();
-    const { data: transactions } = useTransactionsList(user?.uid);
+      const { data: transactions } = useTransactionsList();
 
     const data = useMemo(() => {
         const categoryTotals: {[key: string]: number} = {};

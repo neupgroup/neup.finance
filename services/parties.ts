@@ -9,6 +9,7 @@ Shared lookup and creation helpers for account-scoped party data.
 
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/server/db';
+import { getProjectAccessForToken, canAccess } from '@/server/access';
 import { parseTransactionCompatibilityDetails } from '@/services/transactions/records';
 
 export type PartyContactInput = {
@@ -165,18 +166,9 @@ function serializePartyTransaction(transaction: PartyTransactionRecord): Seriali
   };
 }
 
-export async function getAccountIdByConnectionId(connectionId: string) {
-  const account = await prisma.account.findUnique({
-    where: { connection_id: connectionId },
-    select: { id: true },
-  });
-
-  return account?.id ?? null;
-}
-
-export async function getPartiesForAccount(accountId: string): Promise<SerializedParty[]> {
+export async function getPartiesForAccount(projectId: string): Promise<SerializedParty[]> {
   const parties = await prisma.party.findMany({
-    where: { accountId },
+    where: { projectId },
     orderBy: { name: 'asc' },
     include: partyInclude,
   });
@@ -184,19 +176,19 @@ export async function getPartiesForAccount(accountId: string): Promise<Serialize
   return parties.map(serializeParty);
 }
 
-export async function getPartyById(accountId: string, id: string): Promise<SerializedParty | null> {
+export async function getPartyById(projectId: string, id: string): Promise<SerializedParty | null> {
   const party = await prisma.party.findFirst({
-    where: { accountId, id },
+    where: { projectId, id },
     include: partyInclude,
   });
 
   return party ? serializeParty(party) : null;
 }
 
-export async function getPartyTransactions(accountId: string, partyId: string): Promise<SerializedPartyTransaction[]> {
+export async function getPartyTransactions(projectId: string, partyId: string): Promise<SerializedPartyTransaction[]> {
   const transactions = await prisma.transaction.findMany({
     where: {
-      organizationId: accountId,
+      projectId,
       details: {
         path: ['partyId'],
         equals: partyId,
@@ -220,15 +212,20 @@ export async function getPartyTransactions(accountId: string, partyId: string): 
 
 /*
 ::neup.documentation::party-page-data-service
-::function getPartyPageData(connectionId, partyId)
+::function getPartyPageData(authToken, projectId, partyId)
 
-Resolves the active account from the connection id and returns the matching
-party with its related transactions for party route pages.
+Verifies the active account and project grant, then returns the matching party
+with its related transactions for party route pages.
 
-::param external connectionId
+::param external authToken
 ::datatype string
 
-The authenticated account connection id cookie value.
+The authenticated account token cookie value.
+
+::param external projectId
+::datatype string
+
+The selected project id.
 
 ::param external partyId
 ::datatype string
@@ -242,18 +239,19 @@ account.
 
 ::end
 */
-export async function getPartyPageData(connectionId: string, partyId: string): Promise<SerializedPartyPageData | null> {
-  const accountId = await getAccountIdByConnectionId(connectionId);
-  if (!accountId) {
+export async function getPartyPageData(authToken: string, projectId: string, partyId: string): Promise<SerializedPartyPageData | null> {
+  const access = await getProjectAccessForToken(authToken, projectId);
+  if (!access || !canAccess(access, 'parties.read')) {
     return null;
   }
+  const accountId = access.accountId;
 
-  const party = await getPartyById(accountId, partyId);
+  const party = await getPartyById(projectId, partyId);
   if (!party) {
     return null;
   }
 
-  const transactions = await getPartyTransactions(accountId, party.id);
+  const transactions = await getPartyTransactions(projectId, party.id);
 
   return {
     accountId,
@@ -262,10 +260,11 @@ export async function getPartyPageData(connectionId: string, partyId: string): P
   };
 }
 
-export async function createPartyForAccount(accountId: string, input: CreatePartyInput): Promise<SerializedParty> {
+export async function createPartyForAccount(accountId: string, projectId: string, input: CreatePartyInput): Promise<SerializedParty> {
   const created = await prisma.party.create({
     data: {
       accountId,
+      projectId,
       name: String(input.name).trim(),
       type: String(input.type).trim(),
       taxinfo: input.taxinfo ?? Prisma.JsonNull,

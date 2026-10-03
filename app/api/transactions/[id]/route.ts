@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/server/db';
+import { getProjectAccess, canAccess } from '@/server/access';
 import { serializeTransactionRecord } from '@/services/transactions/records';
 
 /*
@@ -16,23 +17,14 @@ export async function GET(
   req: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
-  const connectionId = req.cookies.get('connection_id')?.value?.trim()
-    || req.cookies.get('accountId')?.value?.trim();
-  if (!connectionId) {
-    return NextResponse.json({ error: 'connection_id cookie required' }, { status: 401 });
-  }
-
-  const owner = await prisma.account.findUnique({
-    where: { connection_id: connectionId },
-    select: { id: true },
-  });
-  if (!owner) {
-    return NextResponse.json({ error: 'connection_id not registered' }, { status: 404 });
+  const access = await getProjectAccess(req);
+  if (!access || !canAccess(access, 'transactions.read')) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
   const { id } = await context.params;
   const transaction = await prisma.transaction.findFirst({
-    where: { id, organizationId: owner.id },
+    where: { id, projectId: access.projectId },
     include: {
       lines: {
         orderBy: [
@@ -51,7 +43,7 @@ export async function GET(
     const partyId = (transaction.details as Record<string, unknown>).partyId;
     if (typeof partyId === 'string' && partyId) {
       party = await prisma.party.findFirst({
-        where: { id: partyId, accountId: owner.id },
+        where: { id: partyId, projectId: access.projectId },
         select: { id: true, name: true, type: true },
       });
     }

@@ -22,7 +22,7 @@ import { Input } from '@neup/components/ui/input';
 import { Label } from '@neup/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@neup/components/ui/select';
 import { useUser } from '@/core/providers/auth';
-import { createTransaction, useTransactionsList, useUserAccounts } from '@/core/hooks/api';
+import { createTransaction, useTransactionsList, useProjectBooks } from '@/core/hooks/api';
 import { useToast } from '@neup/components/ui/toast';
 import { Textarea } from '@neup/components/ui/textarea';
 import {
@@ -58,8 +58,8 @@ export default function FinAccountPage() {
 
   const { user, isUserLoading } = useUser();
   const { toast } = useToast();
-  const { data: accounts, isLoading: areAccountsLoading } = useUserAccounts(user?.uid);
-  const { data: transactions, isLoading: areTransactionsLoading } = useTransactionsList(user?.uid, undefined, [finAccountId], finAccountId);
+  const { data: accounts, isLoading: areAccountsLoading } = useProjectBooks();
+  const { data: transactions, isLoading: areTransactionsLoading } = useTransactionsList(undefined, finAccountId);
 
   const finAccount = accounts?.find((account) => account.id === finAccountId);
   const [isAddOpen, setIsAddOpen] = useState(false);

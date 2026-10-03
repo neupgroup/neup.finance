@@ -1,0 +1,149 @@
+Table: accounts, Model: Account
+Fields:
+> id: string, primary key;
+> connection_id: string, unique, nullable;
+> displayName: string, default: "";
+> neupid: string, default: "";
+> displayImage: string, default: "";
+
+Table: projects, Model: Project
+Fields:
+> id: string, UUID, primary key;
+> name: string;
+> status: string;
+> createdOn: timestamp, default: current timestamp;
+
+Table: roles, Model: Role
+Fields:
+> id: string, UUID, primary key;
+> name: string;
+> description: string;
+> permissions: jsonb;
+
+Table: access, Model: Access
+Fields:
+> id: string, UUID, primary key;
+> accountId: string, references accounts.id;
+> roleId: string, references roles.id;
+> projectId: string, references projects.id;
+> status: string;
+> permittedOn: timestamp;
+
+Table: party, Model: Party
+Fields:
+> id: string, UUID, primary key;
+> account_id: string, references accounts.id;
+> projectId: string, references projects.id;
+> name: string;
+> type: string;
+> taxinfo: JSON, nullable;
+
+Table: party_contact, Model: PartyContact
+Fields:
+> id: string, UUID, primary key;
+> party_id: string, references party.id;
+> type: string;
+> value: string;
+> added_on: timestamp, default: current timestamp;
+> details: JSON, nullable;
+
+Table: party_payment_method, Model: PartyPaymentMethod
+Fields:
+> id: string, UUID, primary key;
+> party_id: string, references party.id;
+> type: string;
+> value: string;
+> added_on: timestamp, default: current timestamp;
+> details: JSON, nullable;
+
+Table: fin_book, Model: AssetGroup
+Fields:
+> id: string, UUID, primary key;
+> name: string;
+> type: AccountType enum;
+> currency: string;
+> accountId: string, references accounts.id;
+> projectId: string, references projects.id;
+> createdAt: timestamp, default: current timestamp;
+
+Table: fin_account, Model: FinAccount
+Fields:
+> id: string, UUID, primary key;
+> profile_id: string;
+> projectId: string, references projects.id;
+> name: string;
+> description: string, nullable;
+> type: string;
+> currency: string;
+> is_multi_currency: boolean, default: false;
+> status: string;
+> notes: string, nullable;
+> opened_on: timestamp, nullable;
+> created_on: timestamp, default: current timestamp;
+
+Table: transaction, Model: Transaction
+Fields:
+> id: string, UUID, primary key;
+> organization_id: string, references accounts.id;
+> projectId: string, references projects.id;
+> transaction_type_id: string;
+> title: string;
+> description: string, nullable;
+> transaction_date: timestamp;
+> status: string;
+> reference_number: string, nullable;
+> external_reference: string, nullable;
+> currency: string;
+> final_amount: decimal, default: 0;
+> created_by: string, nullable;
+> created_at: timestamp, default: current timestamp;
+> tags: JSON, nullable;
+> notes: JSON, nullable;
+> details: JSON, nullable;
+
+Table: transaction_line, Model: TransactionLine
+Fields:
+> id: string, UUID, primary key;
+> transaction_id: string, references transaction.id;
+> line_type_id: string, nullable;
+> title: string;
+> description: string, nullable;
+> reference_type: string, nullable;
+> reference_id: string, nullable;
+> currency: string;
+> base_amount: decimal, default: 0;
+> sort_order: int, default: 0;
+> metadata: JSON, nullable;
+> fin_book: string, references fin_book.id, nullable;
+> fin_account: string, nullable;
+> tags: JSON, nullable;
+> details: JSON, nullable;
+
+Table: Projection, Model: Projection
+Fields:
+> id: string, UUID, primary key;
+> title: string;
+> type: ProjectionType enum;
+> certainty: ProjectionCertainty enum;
+> amount: decimal;
+> currency: string;
+> date: timestamp;
+> userId: string;
+> projectId: string, references projects.id;
+> status: ProjectionStatus enum;
+> recipient: string, nullable;
+> isRecurring: boolean, default: false;
+> recurrence: ProjectionRecurrence enum;
+> endsOn: timestamp, nullable;
+> createdAt: timestamp, default: current timestamp;
+
+Table: activity_stock, Model: ActivityStock
+Fields:
+> id: string, UUID, primary key;
+> asset_group_id: string, references fin_book.id;
+> stock_name: string;
+> activity_type: ActivityStockType enum;
+> cost: decimal;
+> balance: decimal;
+> recorded_on: timestamp;
+> transaction_on: timestamp;

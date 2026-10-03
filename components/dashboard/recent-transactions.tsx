@@ -17,7 +17,6 @@ import { cn } from '@neup/core/utils';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationLink } from '@/components/ui/pagination';
-import { useUser } from '@/core/providers/auth';
 import { useTransactionsList } from '@/core/hooks/api';
 import { Button } from '@neup/components/ui/button';
 import { stackedCardClassName } from '@/components/ui/stacked-card';
@@ -35,8 +34,7 @@ export function RecentTransactions({ variant = 'table', stackedStartIndex = 0, s
   const pathname = usePathname();
   const isDashboard = pathname === '/';
   
-  const { user } = useUser();
-  const { data: transactions, isLoading } = useTransactionsList(user?.uid, isDashboard ? 5 : undefined, [isDashboard]);
+  const { data: transactions, isLoading } = useTransactionsList(isDashboard ? 5 : undefined);
   
   const [currentPage, setCurrentPage] = React.useState(1);
 

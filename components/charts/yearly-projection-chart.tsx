@@ -4,19 +4,10 @@
 import { useMemo } from 'react';
 import { AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { useUser } from '@/core/providers/auth';
-import { useUserAccounts, useProjections } from '@/core/hooks/api';
+import { useProjectBooks, useProjections } from '@/core/hooks/api';
 import { type Projection } from '@/core/lib/ledger';
 import { addMonths, format, startOfMonth, endOfMonth, isWithinInterval, isAfter, isBefore, eachDayOfInterval } from 'date-fns';
 import { Loader } from 'lucide-react';
-
-type Account = {
-    id?: string;
-    name: string;
-    type: 'Bank' | 'Cash' | 'Investment' | 'Stock' | 'Other';
-    balance: number;
-    currency: string;
-    userId: string;
-};
 
 // Helper to generate shades for colors
 const generateShades = (color: string, count: number) => {
@@ -30,11 +21,11 @@ const generateShades = (color: string, count: number) => {
 }
 
 export function YearlyProjectionChart() {
-    const { user, isUserLoading } = useUser();
+    const { isUserLoading } = useUser();
 
-    const { data: accounts, isLoading: areAccountsLoading } = useUserAccounts(user?.uid);
+    const { data: accounts, isLoading: areAccountsLoading } = useProjectBooks();
 
-    const { data: projections, isLoading: areProjectionsLoading } = useProjections(user?.uid, 'Active');
+    const { data: projections, isLoading: areProjectionsLoading } = useProjections('Active');
 
     const { data, currencies } = useMemo(() => {
         if (!accounts || !projections) return { data: [], currencies: [] };

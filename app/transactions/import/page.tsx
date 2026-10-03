@@ -105,7 +105,6 @@ export default function ImportTransactionsPage() {
       const importResult = await importTransactions({
         format,
         content,
-        userId: user.uid,
       });
       setResult(importResult);
       toast({

@@ -26,7 +26,6 @@ import {
 import { Badge } from '@neup/components/ui/badge';
 import { Checkbox } from '@neup/components/ui/checkbox';
 import { useToast } from '@neup/components/ui/toast';
-import { useUser } from '@/core/providers/auth';
 import {
   currencyOptions,
   transactionCategoryOptions,
@@ -36,7 +35,7 @@ import {
   type TransactionStatus,
   type TransactionType,
 } from '@/core/lib/ledger';
-import { useUserAccounts } from '@/core/hooks/api';
+import { useProjectBooks, useSelectedProject } from '@/core/hooks/api';
 
 type ProfileFieldKey =
   | 'title'
@@ -208,17 +207,15 @@ function normalizeProfile(raw: any): PaymentProfile {
 }
 
 export default function PaymentProfilesSettingsPage() {
-  const { user } = useUser();
   const { toast } = useToast();
-  const { data: accounts } = useUserAccounts(user?.uid);
+  const { data: accounts } = useProjectBooks();
+  const { project } = useSelectedProject();
 
   const [profiles, setProfiles] = useState<PaymentProfile[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<PaymentProfileForm>({ ...emptyProfileForm });
 
-  const storageKey = useMemo(() => {
-    return `payment_profiles_${user?.uid ?? 'guest'}`;
-  }, [user?.uid]);
+  const storageKey = project ? `payment_profiles_${project.id}` : null;
 
   const accountOptions = useMemo(
     () => (accounts ?? []).map((account) => ({
@@ -229,6 +226,7 @@ export default function PaymentProfilesSettingsPage() {
   );
 
   useEffect(() => {
+    if (!storageKey) return;
     try {
       const raw = localStorage.getItem(storageKey);
       if (!raw) {
@@ -249,6 +247,7 @@ export default function PaymentProfilesSettingsPage() {
   }, [storageKey]);
 
   const persistProfiles = (nextProfiles: PaymentProfile[]) => {
+    if (!storageKey) return;
     setProfiles(nextProfiles);
     localStorage.setItem(storageKey, JSON.stringify(nextProfiles));
   };

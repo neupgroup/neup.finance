@@ -23,7 +23,7 @@ import { Combobox } from '@/components/ui/combobox';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@neup/components/ui/table';
 import { useToast } from '@neup/components/ui/toast';
 import { Card } from '@neup/components/ui/card';
-import { addTransactionLine, useTransactionById, useTransactionLines, useUserAccounts } from '@/core/hooks/api';
+import { addTransactionLine, useTransactionById, useTransactionLines, useProjectBooks } from '@/core/hooks/api';
 
 function DetailItem({ label, value, className }: { label: string; value?: React.ReactNode, className?: string }) {
     if (value === null || value === undefined || value === '') return null;
@@ -156,7 +156,7 @@ export default function TransactionDetailPage() {
   const id = params.id as string;
   const { data: transaction, isLoading: isTransactionLoading } = useTransactionById(id);
   const { data: lines, isLoading: areLinesLoading } = useTransactionLines(id);
-  const { data: accounts } = useUserAccounts(transaction?.userId);
+  const { data: accounts } = useProjectBooks();
 
   const [showAddLineForm, setShowAddLineForm] = useState(false);
   const partyLabel = transaction?.party?.name || transaction?.recipient || 'N/A';

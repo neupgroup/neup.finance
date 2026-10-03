@@ -16,8 +16,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@neup
 import { ArrowDown, ArrowUp, Banknote, Landmark, Minus, Scale } from 'lucide-react';
 import { IncomeExpenseChart } from '@/components/charts/income-expense-chart';
 import { CategoryPieChart } from '@/components/charts/category-pie-chart';
-import { useUser } from '@/core/providers/auth';
-import { useTransactionsList, useUserAccounts } from '@/core/hooks/api';
+import { useTransactionsList, useProjectBooks } from '@/core/hooks/api';
 
 type CurrencyTotals = Record<string, number>;
 
@@ -37,9 +36,8 @@ function StatCard({ title, value, icon, description, colorClass }: { title: stri
 }
 
 export default function ReportPage() {
-    const { user } = useUser();
-    const { data: transactions } = useTransactionsList(user?.uid);
-    const { data: accounts } = useUserAccounts(user?.uid);
+      const { data: transactions } = useTransactionsList();
+    const { data: accounts } = useProjectBooks();
 
     const { income, expenses, assets, liabilities, netWorth, receivables, payables } = React.useMemo(() => {
         let income = 0;

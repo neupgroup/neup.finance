@@ -17,14 +17,12 @@ import { Button } from '@neup/components/ui/button';
 import { Badge } from '@neup/components/ui/badge';
 import { Skeleton } from '@neup/components/ui/skeleton';
 import { cn } from '@neup/core/utils';
-import { useUser } from '@/core/providers/auth';
 import { useTransactionsList } from '@/core/hooks/api';
 import { stackedCardClassName } from '@/components/ui/stacked-card';
 import { StackedEmptyStateRow } from '@/components/ui/stacked-empty-state';
 
 export default function TransactionsPage() {
-  const { user } = useUser();
-  const { data: transactions, isLoading } = useTransactionsList(user?.uid, undefined, ['transactions-page']);
+  const { data: transactions, isLoading } = useTransactionsList();
   const items = transactions ?? [];
   const stackedTotal = items.length > 0 ? items.length + 1 : 2;
 

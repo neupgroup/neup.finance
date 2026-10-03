@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createPartyForAccount, getAccountIdByConnectionId, getPartiesForAccount } from '@/services/parties';
+import { createPartyForAccount, getPartiesForAccount } from '@/services/parties';
+import { getProjectAccess, canAccess } from '@/server/access';
 
 /*
 ::neup.documentation::api-parties-route
@@ -15,35 +16,19 @@ Creates a party for the current account and returns the created party record for
 ::end
 */
 
-function getConnectionIdFromCookie(req: NextRequest): string | null {
-  const connectionId = req.cookies.get('connection_id')?.value?.trim()
-    || req.cookies.get('accountId')?.value?.trim();
-  return connectionId || null;
-}
-
 export async function GET(req: NextRequest) {
-  const connectionId = getConnectionIdFromCookie(req);
-  if (!connectionId) {
-    return NextResponse.json({ error: 'connection_id cookie required' }, { status: 401 });
+  const access = await getProjectAccess(req);
+  if (!access || !canAccess(access, 'parties.read')) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
-  const accountId = await getAccountIdByConnectionId(connectionId);
-  if (!accountId) {
-    return NextResponse.json({ error: 'connection_id not registered' }, { status: 404 });
-  }
-
-  return NextResponse.json(await getPartiesForAccount(accountId), { status: 200 });
+  return NextResponse.json(await getPartiesForAccount(access.projectId), { status: 200 });
 }
 
 export async function POST(req: NextRequest) {
-  const connectionId = getConnectionIdFromCookie(req);
-  if (!connectionId) {
-    return NextResponse.json({ error: 'connection_id cookie required' }, { status: 401 });
-  }
-
-  const accountId = await getAccountIdByConnectionId(connectionId);
-  if (!accountId) {
-    return NextResponse.json({ error: 'connection_id not registered' }, { status: 404 });
+  const access = await getProjectAccess(req);
+  if (!access || !canAccess(access, 'parties.write')) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
   const body = await req.json();
@@ -59,7 +44,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
   }
 
-  return NextResponse.json(await createPartyForAccount(accountId, {
+  return NextResponse.json(await createPartyForAccount(access.accountId, access.projectId, {
     name: String(name).trim(),
     type: String(type).trim(),
     taxinfo,

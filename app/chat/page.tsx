@@ -19,7 +19,7 @@ type Message = {
 
 export default function ChatPage() {
   const { user } = useUser();
-  const { data: transactions } = useTransactionsList(user?.uid);
+  const { data: transactions } = useTransactionsList();
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);

@@ -60,7 +60,7 @@ function AuthActionsProvider({ children }: { children: ReactNode }) {
     } catch {
       // Clear the local session even if the remote logout endpoint is unavailable.
     }
-    document.cookie = "connection_id=; Max-Age=0; Path=/; SameSite=Lax";
+    await fetch('/api/session/logout', { method: 'POST', credentials: 'include' });
   }, [setUser]);
 
   const actions = useMemo(() => ({ signInAnonymous, signOut }), [signInAnonymous, signOut]);

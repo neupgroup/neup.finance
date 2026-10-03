@@ -4,12 +4,10 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@neup/components/ui/card';
 import { suggestExpenseOptimizations, type SuggestExpenseOptimizationsOutput } from '@/core/ai/flows/suggest-expense-optimizations';
 import { Lightbulb, Loader } from 'lucide-react';
-import { useUser } from '@/core/providers/auth';
 import { useTransactionsList } from '@/core/hooks/api';
 
 export function ExpenseAutopilot() {
-  const { user } = useUser();
-  const { data: transactions, isLoading: areTransactionsLoading } = useTransactionsList(user?.uid);
+  const { data: transactions, isLoading: areTransactionsLoading } = useTransactionsList();
   const [suggestions, setSuggestions] = useState<SuggestExpenseOptimizationsOutput['suggestions']>([]);
   const [isLoading, setIsLoading] = useState(false);
 

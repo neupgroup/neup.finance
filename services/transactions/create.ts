@@ -21,44 +21,10 @@ service used by single-create and import API routes.
 export type TransactionOwner = {
   id: string;
   displayName: string;
+  projectId: string;
 };
 
 export type TransactionCreateResult = ReturnType<typeof serializeTransactionRecord>;
-
-export function getConnectionIdFromTransactionRequestCookies(cookies: {
-  get(name: string): { value?: string } | undefined;
-}) {
-  const connectionId = cookies.get('connection_id')?.value?.trim()
-    || cookies.get('accountId')?.value?.trim();
-  return connectionId || null;
-}
-
-export async function getTransactionOwnerByConnectionId(connectionId: string): Promise<TransactionOwner | null> {
-  return prisma.account.findUnique({
-    where: { connection_id: connectionId },
-    select: { id: true, displayName: true },
-  });
-}
-
-export async function ensureTransactionUser(userId: string | undefined, owner: TransactionOwner) {
-  if (!userId) {
-    return null;
-  }
-
-  return prisma.user.upsert({
-    where: { id: userId },
-    create: {
-      id: userId,
-      displayName: owner.displayName || 'Ledger User',
-      accountId: owner.id,
-    },
-    update: {
-      accountId: owner.id,
-      displayName: owner.displayName || 'Ledger User',
-    },
-    select: { id: true },
-  });
-}
 
 export function validateTransactionPayload(payload: TransactionPayload) {
   const title = typeof payload.title === 'string' ? payload.title.trim() : '';
@@ -66,22 +32,17 @@ export function validateTransactionPayload(payload: TransactionPayload) {
   const transactionDate = String(payload.transaction_date ?? payload.date ?? '').trim();
   const status = typeof payload.status === 'string' ? payload.status.trim() : '';
   const currency = typeof payload.currency === 'string' ? payload.currency.trim().toUpperCase() : '';
-  const createdBy = typeof payload.created_by === 'string'
-    ? payload.created_by.trim()
-    : (typeof payload.userId === 'string' ? payload.userId.trim() : '');
-
   return {
     title,
     transactionTypeId,
     transactionDate,
     status,
     currency,
-    createdBy,
-    isValid: Boolean(title && transactionTypeId && transactionDate && status && currency && createdBy),
+    isValid: Boolean(title && transactionTypeId && transactionDate && status && currency),
   };
 }
 
-export async function getPartyMapForTransactions(transactions: Array<{ details: unknown }>) {
+export async function getPartyMapForTransactions(projectId: string, transactions: Array<{ details: unknown }>) {
   const partyIds = Array.from(new Set(
     transactions
       .map((transaction) => {
@@ -101,7 +62,7 @@ export async function getPartyMapForTransactions(transactions: Array<{ details: 
   }
 
   const parties = await prisma.party.findMany({
-    where: { id: { in: partyIds } },
+    where: { id: { in: partyIds }, projectId },
     select: { id: true, name: true, type: true },
   });
 
@@ -114,13 +75,22 @@ export async function createTransactionForOwner(owner: TransactionOwner, payload
     throw new Error('Invalid payload');
   }
 
-  const persistedUser = await ensureTransactionUser(validation.createdBy, owner);
   const normalizedLines = normalizeTransactionLines(payload, validation.currency);
+  const bookIds = [...new Set(normalizedLines.map((line) => line.finBook).filter((id): id is string => Boolean(id)))];
+  if (bookIds.length > 0) {
+    const count = await prisma.assetGroup.count({ where: { id: { in: bookIds }, projectId: owner.projectId } });
+    if (count !== bookIds.length) throw new Error('A book is outside the current project');
+  }
+  if (payload.partyId) {
+    const party = await prisma.party.findFirst({ where: { id: payload.partyId, projectId: owner.projectId }, select: { id: true } });
+    if (!party) throw new Error('Party is outside the current project');
+  }
 
   const created = await prisma.$transaction(async (tx) => {
     const transaction = await tx.transaction.create({
       data: {
         organizationId: owner.id,
+        projectId: owner.projectId,
         transactionTypeId: validation.transactionTypeId,
         title: validation.title,
         description: payload.description ? String(payload.description) : null,
@@ -130,7 +100,7 @@ export async function createTransactionForOwner(owner: TransactionOwner, payload
         externalReference: payload.external_reference ? String(payload.external_reference) : null,
         currency: validation.currency,
         finalAmount: new Prisma.Decimal(0),
-        createdBy: persistedUser?.id ?? validation.createdBy,
+        createdBy: owner.id,
         tags: payload.tags == null ? undefined : payload.tags,
         notes: payload.notes == null ? undefined : payload.notes,
         details: buildTransactionCompatibilityDetails(payload),
@@ -185,7 +155,7 @@ export async function createTransactionForOwner(owner: TransactionOwner, payload
   let party = null as { id: string; name: string; type: string } | null;
   if (payload.partyId) {
     party = await prisma.party.findFirst({
-      where: { id: payload.partyId, accountId: owner.id },
+      where: { id: payload.partyId, projectId: owner.projectId },
       select: { id: true, name: true, type: true },
     });
   }

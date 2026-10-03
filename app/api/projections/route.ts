@@ -1,13 +1,14 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/server/db'
+import { getProjectAccess, canAccess } from '@/server/access'
 import { Prisma, ProjectionCertainty, ProjectionRecurrence, ProjectionStatus, ProjectionType } from '@prisma/client'
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
+  const access = await getProjectAccess(req)
+  if (!access || !canAccess(access, 'projections.read')) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   const { searchParams } = new URL(req.url)
-  const userId = searchParams.get('userId') || undefined
   const status = searchParams.get('status') as ProjectionStatus | null
-  const where: any = {}
-  if (userId) where.userId = userId
+  const where: any = { projectId: access.projectId }
   if (status) where.status = status
   const items = await prisma.projection.findMany({
     where,
@@ -32,7 +33,9 @@ export async function GET(req: Request) {
   )
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  const access = await getProjectAccess(req)
+  if (!access || !canAccess(access, 'projections.write')) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   const body = await req.json()
   const {
     title,
@@ -41,25 +44,25 @@ export async function POST(req: Request) {
     amount,
     currency,
     date,
-    userId,
     status,
     recipient,
     isRecurring,
     recurrence,
     endsOn,
   } = body || {}
-  if (!title || !type || !certainty || !amount || !currency || !date || !userId || !status || recurrence == null) {
+  if (!title || !type || !certainty || !amount || !currency || !date || !status || recurrence == null) {
     return NextResponse.json({ error: 'Invalid payload' }, { status: 400 })
   }
   const created = await prisma.projection.create({
     data: {
+      projectId: access.projectId,
       title,
       type,
       certainty,
       amount: new Prisma.Decimal(amount),
       currency,
       date: new Date(date),
-      userId,
+      userId: access.accountId,
       status,
       recipient: recipient ?? null,
       isRecurring: !!isRecurring,
@@ -83,4 +86,3 @@ export async function POST(req: Request) {
     endsOn: created.endsOn ? created.endsOn.toISOString() : undefined,
   })
 }
-

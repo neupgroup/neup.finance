@@ -23,7 +23,7 @@ import { Textarea } from '@neup/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@neup/components/ui/card';
 import { ArrowLeft, ArrowDownLeft, ArrowUpRight, Loader } from 'lucide-react';
 import { useUser } from '@/core/providers/auth';
-import { createTransaction, useParties, useUserAccounts } from '@/core/hooks/api';
+import { createTransaction, useParties, useProjectBooks } from '@/core/hooks/api';
 import { cn } from '@neup/core/utils';
 type TransactionDirection = 'incoming' | 'outgoing';
 
@@ -37,7 +37,7 @@ function ReviewTransactionForm() {
     const { toast } = useToast();
     const { user } = useUser();
     const { data: parties } = useParties();
-    const { data: accounts } = useUserAccounts(user?.uid);
+    const { data: accounts } = useProjectBooks();
 
     const [hydrated, setHydrated] = useState(false);
     

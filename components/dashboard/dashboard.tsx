@@ -6,7 +6,6 @@ import { SmartProjections } from './smart-projections';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@neup/components/ui/card';
 import { SmartEntry } from './smart-entry';
 import { ArrowDown, ArrowUp } from 'lucide-react';
-import { useUser } from '@/core/providers/auth';
 import { useTransactionsList } from '@/core/hooks/api';
 
 function StatCard({ title, value, icon, description, colorClass }: { title: string, value: string, icon: React.ReactNode, description: string, colorClass?: string }) {
@@ -26,8 +25,7 @@ function StatCard({ title, value, icon, description, colorClass }: { title: stri
 
 
 export function Dashboard() {
-    const { user } = useUser();
-    const { data: transactions } = useTransactionsList(user?.uid);
+      const { data: transactions } = useTransactionsList();
 
     const { receivables, payables } = React.useMemo(() => {
         let payables = 0;

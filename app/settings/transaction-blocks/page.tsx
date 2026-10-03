@@ -31,9 +31,10 @@ import {
   TableHeader,
   TableRow,
 } from '@neup/components/ui/table';
-import { useParties } from '@/core/hooks/api';
+import { useParties, useSelectedProject } from '@/core/hooks/api';
 import { useToast } from '@neup/components/ui/toast';
 import type { Party } from '@/core/lib/ledger';
+import { transactionBlocksStorageKey } from '@/services/transactions/blocks';
 
 type ApplicableFor = 'account' | 'assetGroup' | 'profile';
 type SubblockCalculationMode =
@@ -81,8 +82,6 @@ type TransactionBlockForm = {
 };
 
 type SubblockForm = Omit<TransactionSubblock, 'id'>;
-
-const STORAGE_KEY = 'neup.finance.settings.transaction-blocks';
 
 const applicableForOptions: { value: ApplicableFor; label: string; description: string }[] = [
   { value: 'account', label: 'Account', description: 'Rules tied to a specific account context.' },
@@ -576,6 +575,7 @@ function migrateBlock(block: LegacyTransactionBlock): TransactionBlock {
 export default function TransactionBlocksSettingsPage() {
   const { toast } = useToast();
   const { data: parties } = useParties();
+  const { project } = useSelectedProject();
   const [form, setForm] = useState<TransactionBlockForm>(emptyForm);
   const [subblockForm, setSubblockForm] = useState<SubblockForm>(emptySubblockForm);
   const [sampleAmount, setSampleAmount] = useState('1000');
@@ -583,8 +583,9 @@ export default function TransactionBlocksSettingsPage() {
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
+    if (!project) return;
     try {
-      const raw = window.localStorage.getItem(STORAGE_KEY);
+      const raw = window.localStorage.getItem(transactionBlocksStorageKey(project.id));
       if (raw) {
         const parsed = JSON.parse(raw) as LegacyTransactionBlock[];
         if (Array.isArray(parsed) && parsed.length > 0) {
@@ -596,14 +597,14 @@ export default function TransactionBlocksSettingsPage() {
     } finally {
       setHydrated(true);
     }
-  }, []);
+  }, [project?.id]);
 
   useEffect(() => {
-    if (!hydrated) {
+    if (!hydrated || !project) {
       return;
     }
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(blocks));
-  }, [blocks, hydrated]);
+    window.localStorage.setItem(transactionBlocksStorageKey(project.id), JSON.stringify(blocks));
+  }, [blocks, hydrated, project?.id]);
 
   const summary = useMemo(() => {
     const accountBlocks = blocks.filter((block) => block.applicableFor === 'account').length;

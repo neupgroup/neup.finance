@@ -7,8 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@neup/components/ui/button';
 import { Badge } from '@neup/components/ui/badge';
 import { useToast } from '@neup/components/ui/toast';
-import { useParties, useProjections, useTransactionsList, useUserAccounts } from '@/core/hooks/api';
-import { useUser } from '@/core/providers/auth';
+import { useParties, useProjections, useTransactionsList, useProjectBooks, useSelectedProject } from '@/core/hooks/api';
 
 /*
 ::neup.documentation::settings-export-page
@@ -33,12 +32,12 @@ function downloadJson(filename: string, payload: unknown) {
 }
 
 export default function ExportSettingsPage() {
-  const { user } = useUser();
   const { toast } = useToast();
-  const { data: transactions, isLoading: areTransactionsLoading } = useTransactionsList(user?.uid, undefined, ['settings-export']);
-  const { data: accounts, isLoading: areAccountsLoading } = useUserAccounts(user?.uid);
+  const { project } = useSelectedProject();
+  const { data: transactions, isLoading: areTransactionsLoading } = useTransactionsList();
+  const { data: accounts, isLoading: areAccountsLoading } = useProjectBooks();
   const { data: parties, isLoading: arePartiesLoading } = useParties();
-  const { data: projections, isLoading: areProjectionsLoading } = useProjections(user?.uid);
+  const { data: projections, isLoading: areProjectionsLoading } = useProjections();
   const [activeExport, setActiveExport] = useState<ExportKey | null>(null);
 
   const isLoading = areTransactionsLoading || areAccountsLoading || arePartiesLoading || areProjectionsLoading;
@@ -53,7 +52,7 @@ export default function ExportSettingsPage() {
     {
       key: 'books' as const,
       title: 'Books',
-      description: 'Export the available books or ledgers linked to your current profile.',
+      description: 'Export the books in the selected project.',
       count: accounts?.length ?? 0,
     },
     {
@@ -65,7 +64,7 @@ export default function ExportSettingsPage() {
     {
       key: 'projections' as const,
       title: 'Projections',
-      description: 'Export saved future projections from the current account.',
+      description: 'Export saved future projections from the selected project.',
       count: projections?.length ?? 0,
     },
   ];
@@ -93,7 +92,7 @@ export default function ExportSettingsPage() {
     if (key === 'everything') {
       downloadJson(`finance-export-${stamp}.json`, {
         exportedAt: new Date().toISOString(),
-        userId: user?.uid ?? null,
+        projectId: project?.id ?? null,
         ...datasets,
       });
     } else {

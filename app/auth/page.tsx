@@ -11,53 +11,22 @@ import {
   CardHeader,
   CardTitle,
 } from '@neup/components/ui/card';
-import { Input } from '@neup/components/ui/input';
-import { Label } from '@neup/components/ui/label';
 import { Logo } from '@/components/icons';
 import { ArrowRight, Loader } from 'lucide-react';
-import { useUser } from '@/core/providers/auth';
-import { upsertUserProfile } from '@/core/hooks/api';
+import { ensureAccount } from '@/core/hooks/api';
 import { useToast } from '@neup/components/ui/toast';
 
-// A simple utility to set a cookie
-function setCookie(name: string, value: string, days: number) {
-  let expires = "";
-  if (days) {
-    let date = new Date();
-    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-    expires = "; expires=" + date.toUTCString();
-  }
-  document.cookie = name + "=" + (value || "") + expires + "; path=/";
-}
-
 export default function AuthPage() {
-  const [connectionId, setConnectionId] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const { user } = useUser();
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!connectionId.trim() || !user) {
-        toast({
-            name: 'app',
-            state: "error",
-            title: "Error",
-            description: "Connection ID is required.",
-        });
-        return;
-    }
-    
     setIsLoading(true);
 
     try {
-        await upsertUserProfile(user.uid, {
-          connection_id: connectionId.trim(),
-        });
-
-        // Set the connection_id in a cookie to manage session
-        setCookie('connection_id', connectionId.trim(), 7);
+        await ensureAccount();
 
         router.push('/');
 
@@ -67,7 +36,7 @@ export default function AuthPage() {
             name: 'app',
             state: "error",
             title: "Profile Creation Failed",
-            description: "Could not save your profile. Please try again.",
+            description: error instanceof Error ? error.message : "Could not save your profile. Please try again.",
         });
         setIsLoading(false);
     }
@@ -78,22 +47,11 @@ export default function AuthPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="items-center text-center">
           <Logo className="h-12 w-12 mb-2" />
-          <CardTitle>Connection Setup</CardTitle>
-          <CardDescription>Enter your connection ID to continue.</CardDescription>
+          <CardTitle>Account Setup</CardTitle>
+          <CardDescription>Set up your account and open your project.</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-                <Label htmlFor="connectionId">Connection ID</Label>
-                <Input
-                    id="connectionId"
-                    placeholder="e.g., conn_12345"
-                    value={connectionId}
-                    onChange={(e) => setConnectionId(e.target.value)}
-                    required
-                />
-            </div>
-          </CardContent>
+          <CardContent />
           <CardFooter>
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? <Loader className="mr-2 h-4 w-4 animate-spin" /> : <ArrowRight className="mr-2 h-4 w-4" />}

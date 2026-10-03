@@ -37,7 +37,7 @@ const ITEMS_PER_PAGE = 10;
 export default function ProjectionsPage() {
     const { user, isUserLoading } = useUser();
     const { toast } = useToast();
-    const { data: projections, isLoading: areProjectionsLoading } = useProjections(user?.uid);
+    const { data: projections, isLoading: areProjectionsLoading } = useProjections();
 
     const [currentPage, setCurrentPage] = useState(1);
 

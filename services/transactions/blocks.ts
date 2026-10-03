@@ -78,6 +78,10 @@ export type TransactionSubblockForm = Omit<TransactionSubblock, 'id'>;
 
 export const TRANSACTION_BLOCKS_STORAGE_KEY = 'neup.finance.settings.transaction-blocks';
 
+export function transactionBlocksStorageKey(projectId: string) {
+  return `${TRANSACTION_BLOCKS_STORAGE_KEY}.${projectId}`;
+}
+
 export const transactionBlockScopeOptions: Array<{
   value: TransactionBlockScope;
   label: string;

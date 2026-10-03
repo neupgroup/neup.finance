@@ -3,12 +3,10 @@
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useMemo } from 'react';
 import { format, subDays, eachDayOfInterval } from 'date-fns';
-import { useUser } from '@/core/providers/auth';
 import { useTransactionsList } from '@/core/hooks/api';
 
 export function IncomeExpenseChart() {
-  const { user } = useUser();
-  const { data: transactions } = useTransactionsList(user?.uid);
+  const { data: transactions } = useTransactionsList();
 
   const data = useMemo(() => {
     const thirtyDaysAgo = subDays(new Date(), 30);

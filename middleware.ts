@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  const connectionId = request.cookies.get('connection_id') ?? request.cookies.get('accountId');
+  const projectId = request.cookies.get('project_id');
   const { pathname } = request.nextUrl;
 
   // Allow requests for static files, API routes, and images to pass through
@@ -14,14 +14,14 @@ export function middleware(request: NextRequest) {
   // If user is on the onboarding or auth page, let them proceed.
   if (pathname === '/onboarding' || pathname === '/auth') {
     // If they are already set up, redirect them to the home page.
-    if (connectionId) {
+    if (projectId) {
       return NextResponse.redirect(new URL('/', request.url));
     }
     return NextResponse.next();
   }
 
-  // If there's no connection_id cookie and they're not on an auth page, redirect to onboarding.
-  if (!connectionId) {
+  // Project selection is established during account setup.
+  if (!projectId) {
     return NextResponse.redirect(new URL('/onboarding', request.url));
   }
 

@@ -23,12 +23,12 @@ import {
 import { useToast } from '@neup/components/ui/toast';
 import { Textarea } from '@neup/components/ui/textarea';
 import { useUser } from '@/core/providers/auth';
-import { createTransaction, useParties, useTransactionsList, useUserAccounts } from '@/core/hooks/api';
+import { createTransaction, useParties, useTransactionsList, useProjectBooks, useSelectedProject } from '@/core/hooks/api';
 import { ArrowLeft, ArrowDownLeft, ArrowUpRight, Check, Loader } from 'lucide-react';
 import { cn } from '@neup/core/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@neup/components/ui/select';
 import {
-  TRANSACTION_BLOCKS_STORAGE_KEY,
+  transactionBlocksStorageKey,
   calculateTransactionSubblocks,
   describeTransactionSubblock,
   emptyTransactionSubblockForm,
@@ -108,8 +108,9 @@ export default function AddTransactionPage() {
   const { toast } = useToast();
   const { user } = useUser();
   const { data: parties } = useParties();
-  const { data: accounts } = useUserAccounts(user?.uid);
-  const { data: transactions } = useTransactionsList(user?.uid);
+  const { data: accounts } = useProjectBooks();
+  const { project } = useSelectedProject();
+  const { data: transactions } = useTransactionsList();
   const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
   const titleRef = useRef<HTMLInputElement | null>(null);
   const fieldRefs = useRef<Partial<Record<keyof FormErrors, HTMLDivElement | null>>>({});
@@ -196,9 +197,13 @@ export default function AddTransactionPage() {
     const balanceDue = useMemo(() => Math.max(resolvedTransactionTotal - finalAmountPaid, 0), [resolvedTransactionTotal, finalAmountPaid]);
 
     useEffect(() => {
+      if (!project) return;
       try {
-        const raw = window.localStorage.getItem(TRANSACTION_BLOCKS_STORAGE_KEY);
-        if (!raw) return;
+        const raw = window.localStorage.getItem(transactionBlocksStorageKey(project.id));
+        if (!raw) {
+          setSavedTransactionBlocks([]);
+          return;
+        }
 
         const parsed = JSON.parse(raw) as LegacyTransactionBlock[];
         if (Array.isArray(parsed)) {
@@ -211,7 +216,7 @@ export default function AddTransactionPage() {
       } catch {
         setSavedTransactionBlocks([]);
       }
-    }, []);
+    }, [project?.id]);
 
     useEffect(() => {
       if (showDescription) {

@@ -27,13 +27,14 @@ type PartyPaymentPageProps = {
 export default async function PartyPaymentPage({ params }: PartyPaymentPageProps) {
   const { id } = await params;
   const cookieStore = await cookies();
-  const connectionId = cookieStore.get('connection_id')?.value?.trim() || cookieStore.get('accountId')?.value?.trim() || null;
+  const authToken = cookieStore.get('auth_account')?.value?.trim() || null;
 
-  if (!connectionId) {
+  if (!authToken) {
     redirect('/onboarding');
   }
 
-  const pageData = await getPartyPageData(connectionId, id);
+  const projectId = cookieStore.get('project_id')?.value?.trim() || '';
+  const pageData = await getPartyPageData(authToken, projectId, id);
   if (!pageData) {
     notFound();
   }

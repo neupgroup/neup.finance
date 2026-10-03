@@ -2,8 +2,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useUser } from '@/core/providers/auth';
-import { useUserProfile, useTransactionById, useTransactionLines } from '@/core/hooks/api';
+import { useAccountProfile, useTransactionById, useTransactionLines } from '@/core/hooks/api';
 import { Button } from '@neup/components/ui/button';
 import { ArrowLeft, Printer, Loader } from 'lucide-react';
 import { Logo } from '@/components/icons';
@@ -37,9 +36,7 @@ The printable transaction invoice UI.
 export function TransactionPrintPage({ id }: { id: string }) {
     const router = useRouter();
 
-    const { user } = useUser();
-
-    const { data: userProfile } = useUserProfile(user?.uid);
+    const { data: userProfile } = useAccountProfile();
 
     const { data: transaction, isLoading: isTransactionLoading } = useTransactionById(id);
     
@@ -117,9 +114,6 @@ export function TransactionPrintPage({ id }: { id: string }) {
                                 <div>
                                     <p className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500">From</p>
                                     <h2 className="mt-1 text-2xl font-semibold">{userProfile?.displayName || 'Your Company'}</h2>
-                                    {userProfile?.connection_id && (
-                                        <p className="mt-1 text-sm text-slate-500">{userProfile.connection_id}</p>
-                                    )}
                                 </div>
                             </div>
 

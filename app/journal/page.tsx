@@ -25,7 +25,7 @@ export default function JournalPage() {
   const [isLoadingJournal, setIsLoadingJournal] = useState(true);
   const { toast } = useToast();
   const { user, isUserLoading } = useUser();
-  const { data: transactions, isLoading: areTransactionsLoading } = useTransactionsList(user?.uid);
+  const { data: transactions, isLoading: areTransactionsLoading } = useTransactionsList();
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {

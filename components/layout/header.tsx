@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 import {
   LogOut,
   Moon,
@@ -30,6 +32,8 @@ type HeaderProps = {
   avatarSrc: string | null;
 };
 
+type ProjectOption = { id: string; name: string; roles: string[]; selected: boolean };
+
 function getInitials(value?: string | null) {
   if (!value) return 'A';
   const parts = value.trim().split(/\s+/).filter(Boolean);
@@ -41,6 +45,30 @@ export function Header({ displayLabel, avatarSrc }: HeaderProps) {
   const { setTheme } = useTheme();
   const { signOut } = useAuthActions();
   const router = useRouter();
+  const [projects, setProjects] = useState<ProjectOption[]>([]);
+  const [selectedProjectId, setSelectedProjectId] = useState('');
+
+  useEffect(() => {
+    fetch('/api/projects', { credentials: 'include' })
+      .then((response) => response.ok ? response.json() : [])
+      .then((items: ProjectOption[]) => {
+        setProjects(items);
+        setSelectedProjectId(items.find((item) => item.selected)?.id ?? '');
+      })
+      .catch(() => setProjects([]));
+  }, []);
+
+  const selectProject = async (projectId: string) => {
+    const response = await fetch('/api/projects/select', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ projectId }),
+    });
+    if (!response.ok) return;
+    setSelectedProjectId(projectId);
+    window.location.reload();
+  };
 
 
   const handleLogout = async () => {
@@ -50,6 +78,20 @@ export function Header({ displayLabel, avatarSrc }: HeaderProps) {
 
   return (
     <div className="flex w-full items-center justify-end gap-2 md:gap-4">
+      {projects.length > 0 && (
+        <select
+          aria-label="Current project"
+          className="max-w-40 rounded-md border bg-background px-2 py-1 text-sm"
+          value={selectedProjectId}
+          onChange={(event) => {
+            if (event.target.value === '__new__') router.push('/projects/new');
+            else void selectProject(event.target.value);
+          }}
+        >
+          {projects.map((project) => <option key={project.id} value={project.id}>{project.name}</option>)}
+          <option value="__new__">Create project…</option>
+        </select>
+      )}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon" className="rounded-full">

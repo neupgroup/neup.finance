@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/server/db';
+import { getProjectAccess, canAccess } from '@/server/access';
 import {
   serializeTransactionRecord,
 } from '@/services/transactions/records';
 import {
   createTransactionForOwner,
-  getConnectionIdFromTransactionRequestCookies,
   getPartyMapForTransactions,
-  getTransactionOwnerByConnectionId,
   validateTransactionPayload,
 } from '@/services/transactions/create';
 
@@ -29,31 +28,18 @@ The POST flow persists line rows in the same database transaction and computes
 */
 
 export async function GET(req: NextRequest) {
-  const connectionId = getConnectionIdFromTransactionRequestCookies(req.cookies);
-  if (!connectionId) {
-    return NextResponse.json({ error: 'connection_id cookie required' }, { status: 401 });
-  }
-
-  const owner = await prisma.account.findUnique({
-    where: { connection_id: connectionId },
-    select: { id: true },
-  });
-  if (!owner) {
-    return NextResponse.json({ error: 'connection_id not registered' }, { status: 404 });
+  const access = await getProjectAccess(req);
+  if (!access || !canAccess(access, 'transactions.read')) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
   const { searchParams } = new URL(req.url);
-  const userId = searchParams.get('userId');
   const assetGroupId = searchParams.get('assetGroupId');
   const limit = searchParams.get('limit');
-  if (!userId) {
-    return NextResponse.json({ error: 'userId required' }, { status: 400 });
-  }
 
   const items = await prisma.transaction.findMany({
     where: {
-      organizationId: owner.id,
-      ...(userId ? { createdBy: userId } : {}),
+      projectId: access.projectId,
       ...(assetGroupId
         ? {
             lines: {
@@ -76,7 +62,7 @@ export async function GET(req: NextRequest) {
     take: limit ? Number(limit) : undefined,
   });
 
-  const partyMap = await getPartyMapForTransactions(items);
+  const partyMap = await getPartyMapForTransactions(access.projectId, items);
 
   return NextResponse.json(
     items.map((transaction) => {
@@ -94,9 +80,9 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const connectionId = getConnectionIdFromTransactionRequestCookies(req.cookies);
-  if (!connectionId) {
-    return NextResponse.json({ error: 'connection_id cookie required' }, { status: 401 });
+  const access = await getProjectAccess(req);
+  if (!access || !canAccess(access, 'transactions.write')) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
   const body = await req.json();
@@ -105,13 +91,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
   }
 
-  const owner = await getTransactionOwnerByConnectionId(connectionId);
+  const owner = await prisma.account.findUnique({ where: { id: access.accountId }, select: { id: true, displayName: true } });
   if (!owner) {
-    return NextResponse.json({ error: 'connection_id not registered' }, { status: 404 });
+    return NextResponse.json({ error: 'Account not found' }, { status: 404 });
   }
 
-  return NextResponse.json(
-    await createTransactionForOwner(owner, body),
-    { status: 201 }
-  );
+  try {
+    return NextResponse.json(
+      await createTransactionForOwner({ ...owner, projectId: access.projectId }, body),
+      { status: 201 }
+    );
+  } catch (error) {
+    return NextResponse.json({ error: error instanceof Error ? error.message : 'Transaction creation failed' }, { status: 400 });
+  }
 }

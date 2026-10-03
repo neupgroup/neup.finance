@@ -1,0 +1,28 @@
+diff --git a/account/self.ts b/account/self.ts
+index f046e18..e7c3dfb 100644
+--- a/account/self.ts
++++ b/account/self.ts
+@@ -28,7 +28,7 @@ import {
+   getAccountBasics,
+   type LookupResponseBody,
+ } from '@neup/logica/account/lookup';
+-import { prisma as db } from '@neup/core/database/prisma';
++import { prisma as db } from '@/server/db';
+ 
+ export type AccountSelfAuthenticationCheckType = 'local' | 'remote';
+ 
+@@ -245,12 +245,12 @@ export async function ensureRecord(authToken?: string | null) {
+       id: accountId,
+       displayName: basics?.displayName ?? '',
+       displayImage: basics?.displayImage ?? '',
+-      neupId: basics?.neupid ?? null,
++      neupid: basics?.neupid ?? '',
+     },
+     update: {
+       ...(basics?.displayName !== undefined ? { displayName: basics.displayName ?? '' } : {}),
+       ...(basics?.displayImage !== undefined ? { displayImage: basics.displayImage ?? '' } : {}),
+-      ...(basics?.neupid !== undefined ? { neupId: basics.neupid ?? null } : {}),
++      ...(basics?.neupid !== undefined ? { neupid: basics.neupid ?? '' } : {}),
+     },
+   });
+ }

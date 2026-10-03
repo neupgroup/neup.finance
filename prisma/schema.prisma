@@ -15,40 +15,77 @@ datasource db {
 ///
 /// ::end
 
-model User {
-  id                  String        @id
-  displayName         String
-  accountId           String
-  email               String?       @unique
-  createdAt           DateTime      @default(now())
-  projections         Projection[]
-  createdTransactions Transaction[] @relation("TransactionCreatedBy")
-}
-
 model Account {
   id                       String        @id
-  connection_id            String        @unique
+  connection_id            String?       @unique
   displayName              String        @default("")
   neupid                   String        @default("")
   displayImage             String        @default("")
   assetGroups              AssetGroup[]
   parties                  Party[]
   organizationTransactions Transaction[] @relation("TransactionOrganization")
+  accesses                 Access[]
 
   @@map("accounts")
+}
+
+model Project {
+  id        String   @id @default(uuid())
+  name      String
+  status    String
+  createdOn DateTime @default(now())
+  accesses  Access[]
+  parties   Party[]
+  books     AssetGroup[]
+  transactions Transaction[]
+  projections Projection[]
+  finAccounts FinAccount[]
+
+  @@map("projects")
+}
+
+model Role {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  permissions Json     @db.JsonB
+  accesses    Access[]
+
+  @@map("roles")
+}
+
+model Access {
+  id          String   @id @default(uuid())
+  accountId   String
+  roleId      String
+  projectId   String
+  status      String
+  permittedOn DateTime
+  account     Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  role        Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([accountId])
+  @@index([roleId])
+  @@index([projectId])
+  @@unique([accountId, roleId, projectId])
+  @@map("access")
 }
 
 model Party {
   id        String           @id @default(uuid())
   accountId String           @map("account_id")
+  projectId String
   name      String
   type      String
   taxinfo   Json?
   account   Account          @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  project   Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
   contacts  PartyContact[]
   paymentMethods PartyPaymentMethod[]
 
   @@index([accountId])
+  @@index([projectId])
   @@map("party")
 }
 
@@ -84,18 +121,22 @@ model AssetGroup {
   type      AccountType
   currency  String
   accountId String
+  projectId String
   createdAt DateTime    @default(now())
   account   Account     @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  project   Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
   activityStock ActivityStock[]
   transactionLines TransactionLine[]
 
   @@index([accountId])
+  @@index([projectId])
   @@map("fin_book")
 }
 
 model FinAccount {
   id                String            @id @default(uuid())
   profile_id        String
+  projectId         String
   name              String
   description       String?
   type              String
@@ -105,8 +146,10 @@ model FinAccount {
   notes             String?
   opened_on         DateTime?
   created_on        DateTime          @default(now())
+  project           Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   @@index([profile_id])
+  @@index([projectId])
   @@index([status])
   @@map("fin_account")
 }
@@ -114,6 +157,7 @@ model FinAccount {
 model Transaction {
   id                String            @id @default(uuid())
   organizationId    String            @map("organization_id")
+  projectId         String
   transactionTypeId String            @map("transaction_type_id")
   title             String
   description       String?
@@ -129,10 +173,11 @@ model Transaction {
   notes             Json?
   details           Json?
   organization      Account           @relation("TransactionOrganization", fields: [organizationId], references: [id], onDelete: Cascade)
-  creator           User?             @relation("TransactionCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
+  project           Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
   lines             TransactionLine[]
 
   @@index([organizationId])
+  @@index([projectId])
   @@index([createdBy])
   @@index([transactionDate])
   @@map("transaction")
@@ -173,15 +218,16 @@ model Projection {
   currency    String
   date        DateTime
   userId      String
+  projectId   String
   status      ProjectionStatus
   recipient   String?
   isRecurring Boolean              @default(false)
   recurrence  ProjectionRecurrence
   endsOn      DateTime?
   createdAt   DateTime             @default(now())
-  user        User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  project     Project              @relation(fields: [projectId], references: [id], onDelete: Cascade)
   @@index([userId])
+  @@index([projectId])
 }
 
 enum AccountType {

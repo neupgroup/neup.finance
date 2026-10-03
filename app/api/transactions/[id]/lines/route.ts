@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/server/db';
+import { getProjectAccess, canAccess } from '@/server/access';
 import {
   computeTransactionFinalAmount,
   normalizeTransactionLines,
@@ -19,12 +20,14 @@ table, recalculating the parent transaction final amount after writes.
 */
 
 export async function GET(
-  _req: NextRequest,
+  req: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
   const { id } = await context.params;
+  const access = await getProjectAccess(req);
+  if (!access || !canAccess(access, 'transactions.read')) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   const items = await prisma.transactionLine.findMany({
-    where: { transactionId: id },
+    where: { transactionId: id, transaction: { projectId: access.projectId } },
     orderBy: [
       { sortOrder: 'asc' },
       { id: 'asc' },
@@ -42,8 +45,10 @@ export async function POST(
   context: { params: Promise<{ id: string }> }
 ) {
   const { id } = await context.params;
-  const transaction = await prisma.transaction.findUnique({
-    where: { id },
+  const access = await getProjectAccess(req);
+  if (!access || !canAccess(access, 'transactions.write')) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  const transaction = await prisma.transaction.findFirst({
+    where: { id, projectId: access.projectId },
     select: {
       id: true,
       currency: true,
@@ -58,6 +63,10 @@ export async function POST(
   const line = lines[0];
   if (!line || !line.title || !line.currency) {
     return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
+  }
+  if (line.finBook) {
+    const book = await prisma.assetGroup.findFirst({ where: { id: line.finBook, projectId: access.projectId }, select: { id: true } });
+    if (!book) return NextResponse.json({ error: 'Book is outside the current project' }, { status: 400 });
   }
 
   const created = await prisma.$transaction(async (tx) => {

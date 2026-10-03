@@ -48,40 +48,45 @@ function useQuery<T>(path: string | null): QueryResult<T> {
   return { data, isLoading, error };
 }
 
-export type Account = {
+export type FinBook = {
   id: string;
   name: string;
-  type: string;
+  type: 'Bank' | 'Cash' | 'Investment' | 'Stock' | 'Other';
   balance: number;
   currency: string;
-  userId: string;
+  projectId: string;
 };
 
-export function useTransactionsList(userId?: string, limit?: number, _queryKey?: unknown, assetGroupId?: string) {
+export type ProjectOption = { id: string; name: string; roles: string[]; selected: boolean };
+
+export function useSelectedProject() {
+  const query = useQuery<ProjectOption[]>('/api/projects');
+  return { ...query, project: query.data?.find((project) => project.selected) };
+}
+
+export function useTransactionsList(limit?: number, assetGroupId?: string) {
   const params = new URLSearchParams();
-  if (userId) params.set("userId", userId);
   if (limit) params.set("limit", String(limit));
   if (assetGroupId) params.set("assetGroupId", assetGroupId);
-  return useQuery<any[]>(userId ? `/api/transactions?${params}` : null);
+  return useQuery<any[]>(`/api/transactions?${params}`);
 }
 
-export function useUserAccounts(userId?: string) {
-  return useQuery<Account[]>(userId ? `/api/users/${encodeURIComponent(userId)}/accounts` : null);
+export function useProjectBooks() {
+  return useQuery<FinBook[]>('/api/books');
 }
 
-export function useUserProfile(userId?: string) {
-  return useQuery<any>(userId ? `/api/users/${encodeURIComponent(userId)}` : null);
+export function useAccountProfile() {
+  return useQuery<any>('/api/account');
 }
 
 export function useParties() {
   return useQuery<any[]>("/api/parties");
 }
 
-export function useProjections(userId?: string, status?: string) {
+export function useProjections(status?: string) {
   const params = new URLSearchParams();
-  if (userId) params.set("userId", userId);
   if (status) params.set("status", status);
-  return useQuery<any[]>(userId ? `/api/projections?${params}` : null);
+  return useQuery<any[]>(`/api/projections?${params}`);
 }
 
 export function useTransactionById(id?: string) {
@@ -92,15 +97,14 @@ export function useTransactionLines(id?: string) {
   return useQuery<any[]>(id ? `/api/transactions/${encodeURIComponent(id)}/lines` : null);
 }
 
-export async function upsertUserProfile(id: string, data: Record<string, unknown>) {
-  return requestJson(`/api/users/${encodeURIComponent(id)}`, {
+export async function ensureAccount() {
+  return requestJson('/api/account', {
     method: "PUT",
-    body: JSON.stringify(data),
   });
 }
 
-export async function createAccount(userId: string, data: Pick<Account, "name" | "type" | "currency">) {
-  return requestJson<Account>(`/api/users/${encodeURIComponent(userId)}/accounts`, {
+export async function createFinBook(data: Pick<FinBook, "name" | "type" | "currency">) {
+  return requestJson<FinBook>('/api/books', {
     method: "POST",
     body: JSON.stringify(data),
   });
@@ -125,8 +129,8 @@ export async function addTransactionLine(id: string, data: Record<string, unknow
   });
 }
 
-export async function importTransactions(data: { format: "csv" | "json"; content: string; userId: string }) {
-  return requestJson<{ created: any[]; failed: any[] }>("/api/transactions/import", {
+export async function importTransactions(data: { format: "csv" | "json"; content: string }) {
+  return requestJson<{ created: any[]; failed: any[]; totalRows: number }>("/api/transactions/import", {
     method: "POST",
     body: JSON.stringify(data),
   });

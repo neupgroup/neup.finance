@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/server/db'
+import { getProjectAccess, canAccess } from '@/server/access'
 
 /*
-::neup.documentation::user-accounts-route
-::api GET /api/users/:id/accounts
-::api POST /api/users/:id/accounts
+::neup.documentation::project-books-route
+::api GET /api/books
+::api POST /api/books
 
 Lists book accounts and derives each non-stock balance from the replacement
 transaction line amounts stored against that book.
@@ -27,13 +28,13 @@ function calculateLatestStockBalance(activityStock: Array<{ balance: unknown }>)
   return Number.isNaN(latestBalance) ? 0 : latestBalance
 }
 
-export async function GET(
-  _req: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
-  const { id } = await context.params
+export async function GET(req: NextRequest) {
+  const access = await getProjectAccess(req)
+  if (!access || !canAccess(access, 'books.read')) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
   const accounts = await prisma.assetGroup.findMany({
-    where: { accountId: id },
+    where: { projectId: access.projectId },
     orderBy: { createdAt: 'desc' },
     include: {
       activityStock: {
@@ -44,6 +45,7 @@ export async function GET(
         },
       },
       transactionLines: {
+        where: { transaction: { projectId: access.projectId } },
         select: {
           baseAmount: true,
           transaction: {
@@ -62,16 +64,16 @@ export async function GET(
       type: a.type,
       balance: a.type === 'Stock' ? calculateLatestStockBalance(a.activityStock) : calculateBalance(a.transactionLines),
       currency: a.currency,
-      userId: a.accountId,
+      projectId: a.projectId,
     }))
   )
 }
 
-export async function POST(
-  req: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
-  const { id } = await context.params
+export async function POST(req: NextRequest) {
+  const access = await getProjectAccess(req)
+  if (!access || !canAccess(access, 'books.write')) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
   const body = await req.json()
   const { name, type, currency } = body || {}
   if (!name || !type || !currency) {
@@ -82,7 +84,8 @@ export async function POST(
       name,
       type,
       currency,
-      accountId: id,
+      accountId: access.accountId,
+      projectId: access.projectId,
     },
   })
   return NextResponse.json({
@@ -91,6 +94,6 @@ export async function POST(
     type: created.type,
     balance: 0,
     currency: created.currency,
-    userId: created.accountId,
+    projectId: created.projectId,
   })
 }

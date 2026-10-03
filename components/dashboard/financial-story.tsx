@@ -4,12 +4,10 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@neup/components/ui/card';
 import { summarizeSpending } from '@/core/ai/flows/summarize-spending';
 import { Loader } from 'lucide-react';
-import { useUser } from '@/core/providers/auth';
 import { useTransactionsList } from '@/core/hooks/api';
 
 export function FinancialStory() {
-  const { user } = useUser();
-  const { data: transactions, isLoading: areTransactionsLoading } = useTransactionsList(user?.uid);
+  const { data: transactions, isLoading: areTransactionsLoading } = useTransactionsList();
   const [summary, setSummary] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 

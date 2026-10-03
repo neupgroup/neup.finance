@@ -17,8 +17,7 @@ import { Skeleton } from '@neup/components/ui/skeleton';
 import { PlusCircle, Landmark, Wallet, Activity, MoreVertical, Inbox } from 'lucide-react';
 import { cn } from '@neup/core/utils';
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationLink } from '@/components/ui/pagination';
-import { useUser } from '@/core/providers/auth';
-import { useUserAccounts } from '@/core/hooks/api';
+import { useProjectBooks } from '@/core/hooks/api';
 import Link from 'next/link';
 import { stackedCardClassName } from '@/components/ui/stacked-card';
 import { StackedEmptyStateRow } from '@/components/ui/stacked-empty-state';
@@ -55,9 +54,8 @@ function AccountCardSkeleton({ className = '' }: { className?: string }) {
 }
 
 export default function FinAccountsPage() {
-  const { user } = useUser();
 
-  const { data: accounts, isLoading: areAccountsLoading } = useUserAccounts(user?.uid);
+  const { data: accounts, isLoading: areAccountsLoading } = useProjectBooks();
   const [currentPage, setCurrentPage] = useState(1);
 
   const totalPages = Math.ceil((accounts?.length || 0) / ITEMS_PER_PAGE);

@@ -26,9 +26,7 @@ export default function OnboardingPage() {
     setIsLoading(true);
 
     try {
-        if (!user) signInAnonymous();
-        // After sign-in, the onAuthStateChanged listener in the provider will update the user state,
-        // and we can then navigate to the auth page to complete the profile.
+        if (!user) await signInAnonymous();
         router.push('/auth');
     } catch (error) {
         console.error("Anonymous sign-in failed", error);

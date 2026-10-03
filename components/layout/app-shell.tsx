@@ -8,12 +8,11 @@ import { MainNav } from './main-nav';
 import { Logo } from '../icons';
 import { Header } from './header';
 import { useUser } from '@/core/providers/auth';
-import { useUserProfile } from '@/core/hooks/api';
+import { useAccountProfile } from '@/core/hooks/api';
 
 type ShellIdentity = {
     label: string;
     avatarSrc: string | null;
-    connectionId: string | null;
 };
 
 function getShellIdentityKey(userId?: string | null) {
@@ -22,23 +21,22 @@ function getShellIdentityKey(userId?: string | null) {
 
 function readShellIdentity(userId?: string | null): ShellIdentity {
     if (typeof window === 'undefined') {
-        return { label: '...', avatarSrc: null, connectionId: null };
+        return { label: '...', avatarSrc: null };
     }
 
     const key = getShellIdentityKey(userId);
-    if (!key) return { label: '...', avatarSrc: null, connectionId: null };
+    if (!key) return { label: '...', avatarSrc: null };
 
     try {
         const raw = window.localStorage.getItem(key);
-        if (!raw) return { label: '...', avatarSrc: null, connectionId: null };
+        if (!raw) return { label: '...', avatarSrc: null };
         const parsed = JSON.parse(raw) as Partial<ShellIdentity>;
         return {
             label: typeof parsed.label === 'string' && parsed.label.trim() ? parsed.label : '...',
             avatarSrc: typeof parsed.avatarSrc === 'string' && parsed.avatarSrc.trim() ? parsed.avatarSrc : null,
-            connectionId: typeof parsed.connectionId === 'string' && parsed.connectionId.trim() ? parsed.connectionId : null,
         };
     } catch {
-        return { label: '...', avatarSrc: null, connectionId: null };
+        return { label: '...', avatarSrc: null };
     }
 }
 
@@ -46,7 +44,7 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
     const { user, isUserLoading } = useUser();
     const router = useRouter();
 
-    const { data: userProfile } = useUserProfile(user?.uid);
+    const { data: userProfile } = useAccountProfile();
     const [shellIdentity, setShellIdentity] = useState<ShellIdentity>(() => readShellIdentity(user?.uid));
 
     useEffect(() => {
@@ -56,12 +54,11 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         if (!user?.uid || !userProfile) return;
 
-        const resolvedLabel = userProfile.connection_id || userProfile.displayName || user.displayName || 'My Account';
+        const resolvedLabel = userProfile.displayName || user.displayName || 'My Account';
         const resolvedAvatarSrc = userProfile.displayImage || user.photoURL || null;
         const nextIdentity: ShellIdentity = {
             label: resolvedLabel,
             avatarSrc: resolvedAvatarSrc,
-            connectionId: userProfile.connection_id || null,
         };
 
         setShellIdentity(nextIdentity);

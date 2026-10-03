@@ -28,12 +28,13 @@ type PartyDetailPageProps = {
 export default async function PartyDetailPage({ params }: PartyDetailPageProps) {
   const { id } = await params;
   const cookieStore = await cookies();
-  const connectionId = cookieStore.get('connection_id')?.value?.trim() || cookieStore.get('accountId')?.value?.trim() || null;
-  if (!connectionId) {
+  const authToken = cookieStore.get('auth_account')?.value?.trim() || null;
+  if (!authToken) {
     redirect('/onboarding');
   }
 
-  const pageData = await getPartyPageData(connectionId, id);
+  const projectId = cookieStore.get('project_id')?.value?.trim() || '';
+  const pageData = await getPartyPageData(authToken, projectId, id);
   if (!pageData) {
     notFound();
   }

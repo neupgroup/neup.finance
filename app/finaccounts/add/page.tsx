@@ -19,11 +19,10 @@ import { Button } from '@neup/components/ui/button';
 import { Input } from '@neup/components/ui/input';
 import { Label } from '@neup/components/ui/label';
 import { SnappyCardSelect, type SnappyCardSelectOption } from '@/components/ui/snappy-card-select';
-import { useUser } from '@/core/providers/auth';
-import { createAccount, type Account } from '@/core/hooks/api';
+import { createFinBook, type FinBook } from '@/core/hooks/api';
 import { useToast } from '@neup/components/ui/toast';
 
-type AccountType = Account['type'];
+type AccountType = FinBook['type'];
 type CurrencyCode = 'USD' | 'EUR' | 'GBP' | 'JPY' | 'INR' | 'NPR';
 
 const accountTypeSuggestions: SnappyCardSelectOption<AccountType>[] = [
@@ -49,7 +48,6 @@ const currencies: SnappyCardSelectOption<CurrencyCode>[] = [
 ];
 
 export default function AddFinAccountPage() {
-  const { user } = useUser();
   const { toast } = useToast();
   const router = useRouter();
 
@@ -60,12 +58,12 @@ export default function AddFinAccountPage() {
 
   const handleAddAccount = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!accountName || !selectedAccountType || !selectedCurrency || !user) return;
+    if (!accountName || !selectedAccountType || !selectedCurrency) return;
 
     setIsSubmitting(true);
 
     try {
-      await createAccount(user.uid, {
+      await createFinBook({
         name: accountName,
         type: selectedAccountType.value,
         currency: selectedCurrency.value,

@@ -8,12 +8,10 @@ import { Label } from '@neup/components/ui/label';
 import { Slider } from '@neup/components/ui/slider';
 import { projectFutureSavings } from '@/core/ai/flows/project-future-savings';
 import { Loader } from 'lucide-react';
-import { useUser } from '@/core/providers/auth';
 import { useTransactionsList } from '@/core/hooks/api';
 
 export function SmartProjections() {
-  const { user } = useUser();
-  const { data: transactions } = useTransactionsList(user?.uid);
+  const { data: transactions } = useTransactionsList();
   const [savingsGoal, setSavingsGoal] = useState(10000);
   const [projection, setProjection] = useState<{ monthsToGoal: number; projectedSavings: number } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
