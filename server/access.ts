@@ -16,24 +16,37 @@ export async function getProjectAccess(req: NextRequest): Promise<ProjectAccess 
 }
 
 export async function getProjectAccessForToken(authToken?: string, projectId?: string): Promise<ProjectAccess | null> {
-  if (!authToken || !projectId) return null;
+  if (!authToken) return null;
   const account = await logica.account.self.ensureRecord(authToken);
   if (!account) return null;
 
-  const grants = await prisma.access.findMany({
-    where: {
-      accountId: account.id,
-      projectId,
-      status: 'active',
-      project: { status: 'active' },
-    },
-    include: { role: true },
-  });
+  const grants = projectId
+    ? await prisma.access.findMany({
+        where: {
+          accountId: account.id,
+          projectId,
+          status: 'active',
+          project: { status: 'active' },
+        },
+        include: { role: true },
+      })
+    : await prisma.access.findMany({
+        where: {
+          accountId: account.id,
+          status: 'active',
+          project: { status: 'active' },
+        },
+        include: { role: true },
+        orderBy: { permittedOn: 'asc' },
+        take: 1,
+      });
   if (grants.length === 0) return null;
+
+  const resolvedProjectId = projectId || grants[0].projectId;
 
   return {
     accountId: account.id,
-    projectId,
+    projectId: resolvedProjectId,
     permissions: [...new Set(grants.flatMap((grant) =>
       Array.isArray(grant.role.permissions)
         ? grant.role.permissions.filter((permission): permission is string => typeof permission === 'string')

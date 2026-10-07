@@ -81,8 +81,8 @@ export function useProjectBooks() {
   return useQuery<FinBook[]>('/bridge/api.v1/books');
 }
 
-export function useAccountProfile() {
-  return useQuery<any>('/bridge/api.v1/account');
+export function useAccountProfile(enabled = true) {
+  return useQuery<AccountProfile>(enabled ? '/bridge/api.v1/account' : null);
 }
 
 export function useParties() {
@@ -103,8 +103,19 @@ export function useTransactionLines(id?: string) {
   return useQuery<any[]>(id ? `/bridge/api.v1/transactions/${encodeURIComponent(id)}/lines` : null);
 }
 
+export type AccountProfile = {
+  id: string;
+  aid: string;
+  expiry: number | null;
+  displayName: string | null;
+  displayImage: string | null;
+  neupid: string | null;
+  project?: { id?: string; name?: string | null } | null;
+  roleId?: string | null;
+};
+
 export async function ensureAccount() {
-  return requestJson('/bridge/api.v1/account', {
+  return requestJson<AccountProfile>('/bridge/api.v1/account', {
     method: "PUT",
   });
 }

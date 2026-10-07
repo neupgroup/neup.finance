@@ -20,6 +20,7 @@ import {
   Settings,
   BookText,
   Users,
+  BriefcaseBusiness,
 } from 'lucide-react';
 import { NavLink } from '@neup/components/ui/nav-link';
 import { useSidebar } from '@neup/components/ui/sidebar';
@@ -63,6 +64,22 @@ export function MainNav() {
           </NavLink>
         );
       })}
+      <div className="pt-2">
+        <div className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground">
+          <BriefcaseBusiness className="h-5 w-5" />
+          Manage
+        </div>
+        <NavLink
+          href={withProject('/manage/accounts')}
+          active={pathname.startsWith('/manage/accounts')}
+          alignment="left"
+          className="w-full"
+          onClick={handleLinkClick}
+        >
+          <Landmark className="h-5 w-5" />
+          Accounts
+        </NavLink>
+      </div>
       <div className="mt-auto">
         <NavLink
           href={withProject('/settings')}

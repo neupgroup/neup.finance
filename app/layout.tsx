@@ -10,6 +10,9 @@ import { Outfit } from 'next/font/google';
 import { SidebarProvider, Sidebar } from '@neup/components/ui/sidebar';
 import { Header, HeaderBrand } from '@/components/layout/header';
 import { MainNav } from '@/components/layout/main-nav';
+import { cookies } from 'next/headers';
+import logica from '@neup/logica';
+import type { HeaderAccount } from '@/components/layout/header';
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -21,11 +24,30 @@ export const metadata: Metadata = {
   description: 'The first surreal-AI financial universe that simplifies accounts for everyone.',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const authToken = cookieStore.get('auth_account')?.value?.trim();
+  let account: HeaderAccount | null = null;
+
+  if (authToken) {
+    try {
+      const record = await logica.account.self.ensureRecord(authToken);
+      if (record) {
+        account = {
+          displayName: record.displayName,
+          displayImage: record.displayImage,
+          neupid: record.neupid,
+        };
+      }
+    } catch {
+      account = null;
+    }
+  }
+
   return (
     <html lang="en" suppressHydrationWarning className={outfit.variable}>
       <body className={cn("font-body antialiased")}>
@@ -44,9 +66,9 @@ export default function RootLayout({
                 <header className="sticky top-0 z-10 flex h-16 items-center border-b bg-background shadow">
                   <div className="mx-auto flex w-full max-w-[1440px] items-center justify-between px-4 lg:px-6">
                     <div className="flex items-center gap-4">
-                      <HeaderBrand />
+                      <HeaderBrand account={account} />
                     </div>
-                    <Header />
+                    <Header account={account} />
                   </div>
                 </header>
                 <div className="mx-auto grid w-full max-w-[1440px] lg:grid-cols-[280px_1fr] xl:grid-cols-[320px_1fr]">

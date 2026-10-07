@@ -1,11 +1,5 @@
-import { Dashboard } from '@/components/dashboard/dashboard';
+import { redirect } from 'next/navigation';
 
-export default function HomePage() {
-  return (
-
-      <div className="space-y-4">
-        <Dashboard />
-      </div>
-
-  );
+export default function RootPage() {
+  redirect('/home');
 }

@@ -37,8 +37,8 @@ export default function SwitchPage() {
   }, []);
 
   const chooseProject = (projectId: string) => {
-    const returnTo = searchParams.get('returnTo') || '/';
-    const url = new URL(returnTo, window.location.origin);
+    const destination = searchParams.get('redirectsTo') || searchParams.get('returnTo') || '/';
+    const url = new URL(destination, window.location.origin);
     url.searchParams.set('project', projectId);
     router.push(`${url.pathname}${url.search}`);
   };
