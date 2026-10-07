@@ -41,9 +41,11 @@ function getShellIdentity(account: HeaderAccount | null) {
   };
 }
 
-export function HeaderBrand({ account }: { account: HeaderAccount | null }) {
+export function HeaderBrand() {
+  const searchParams = useSearchParams();
+  const query = searchParams.toString();
   return (
-    <Link href="/" className="hidden items-center gap-2 font-semibold md:flex">
+    <Link href={`/home${query ? `?${query}` : ''}`} className="hidden items-center gap-2 font-semibold md:flex">
       <Logo className="h-8 w-8" />
       <span>Neup.Ledger</span>
     </Link>

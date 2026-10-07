@@ -11,9 +11,9 @@ shows any saved line items directly underneath each transaction row.
 */
 
 import Link from 'next/link';
-import { ArrowDownLeft, ArrowUpRight, Inbox, MoreVertical, PlusCircle, Upload } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
+import { ArrowDownLeft, ArrowUpRight, Inbox, MoreVertical, PlusCircle } from 'lucide-react';
 import { Button } from '@neup/components/ui/button';
-import { LinkButton } from '@neup/components/ui/link-button';
 import { Badge } from '@neup/components/ui/badge';
 import { Skeleton } from '@neup/components/ui/skeleton';
 import { cn } from '@neup/core/utils';
@@ -22,6 +22,7 @@ import { stackedCardClassName } from '@/components/ui/stacked-card';
 import { StackedEmptyStateRow } from '@/components/ui/stacked-empty-state';
 
 export default function TransactionsPage() {
+  const searchParams = useSearchParams();
   const { data: transactions, isLoading } = useTransactionsList();
   const items = transactions ?? [];
   const stackedTotal = items.length > 0 ? items.length + 1 : 2;
@@ -32,13 +33,19 @@ export default function TransactionsPage() {
       style: 'currency',
       currency,
     }).format(amount);
+  const withProject = (href: string) => {
+    const url = new URL(href, 'https://transactions.local');
+    const projectId = searchParams.get('project')?.trim();
+    if (projectId) url.searchParams.set('project', projectId);
+    return `${url.pathname}${url.search}${url.hash}`;
+  };
 
   const renderTransactionRow = (transaction: typeof items[number], index: number) => {
     const credit = isCredit(transaction.transaction_type);
 
     return (
       <div key={transaction.id} className={stackedCardClassName(index + 1, stackedTotal, 'p-4')}>
-        <Link href={`/transactions/${transaction.id}`} className="block">
+        <Link href={withProject(`/transactions/${transaction.id}`)} className="block">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <div className={cn('rounded-full p-2', credit ? 'bg-chart-2/20' : 'bg-destructive/20')}>
@@ -111,11 +118,6 @@ export default function TransactionsPage() {
             Review every transaction and jump into the add flow from the first card.
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <LinkButton href="/transactions/import" variant="outline" preIcon={<Upload className="h-4 w-4" />}>Import</LinkButton>
-          <LinkButton href="/transactions/add" preIcon={<PlusCircle className="h-4 w-4" />}>Add</LinkButton>
-        </div>
-
         <div className="w-full">
           {isLoading ? (
             <div className="overflow-hidden rounded-lg border">
@@ -164,7 +166,7 @@ export default function TransactionsPage() {
             </div>
           ) : items.length > 0 ? (
             <div className="overflow-hidden rounded-lg border">
-              <Link href="/transactions/add" className="block">
+              <Link href={withProject('/transactions/add')} className="block">
                 <div className={stackedCardClassName(0, stackedTotal, 'flex items-center justify-between p-4')}>
                   <div className="flex items-center gap-4">
                     <div className="rounded-full bg-muted p-2">
@@ -186,7 +188,7 @@ export default function TransactionsPage() {
             </div>
           ) : (
             <div className="overflow-hidden rounded-lg border">
-              <Link href="/transactions/add" className="block">
+              <Link href={withProject('/transactions/add')} className="block">
                 <div className={stackedCardClassName(0, 2, 'flex items-center justify-between p-4')}>
                   <div className="flex items-center gap-4">
                     <div className="rounded-full bg-muted p-2">

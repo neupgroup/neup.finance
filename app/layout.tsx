@@ -66,7 +66,7 @@ export default async function RootLayout({
                 <header className="sticky top-0 z-10 flex h-16 items-center border-b bg-background shadow">
                   <div className="mx-auto flex w-full max-w-[1440px] items-center justify-between px-4 lg:px-6">
                     <div className="flex items-center gap-4">
-                      <HeaderBrand account={account} />
+                      <HeaderBrand />
                     </div>
                     <Header account={account} />
                   </div>

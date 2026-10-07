@@ -21,12 +21,14 @@ import {
   BookText,
   Users,
   BriefcaseBusiness,
+  Repeat2,
 } from 'lucide-react';
 import { NavLink } from '@neup/components/ui/nav-link';
 import { useSidebar } from '@neup/components/ui/sidebar';
+import type { MouseEvent } from 'react';
 
 const menuItems = [
-  { href: '/', label: 'Dashboard', icon: Home },
+  { href: '/home', label: 'Dashboard', icon: Home },
   { href: '/finaccounts', label: 'Accounts', icon: Landmark },
   { href: '/party', label: 'Party', icon: Users },
   { href: '/transactions', label: 'Transactions', icon: ArrowLeftRight },
@@ -39,17 +41,30 @@ export function MainNav() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { setOpenMobile } = useSidebar();
-  const projectId = searchParams.get('project');
-  const withProject = (href: string) => projectId ? `${href}?project=${encodeURIComponent(projectId)}` : href;
+  const withProject = (href: string) => {
+    const url = new URL(href, 'https://sidebar.local');
+    searchParams.forEach((value, key) => {
+      if (!url.searchParams.has(key)) url.searchParams.set(key, value);
+    });
+    const projectId = searchParams.get('project')?.trim();
+    if (projectId) url.searchParams.set('project', projectId);
+    return `${url.pathname}${url.search}${url.hash}`;
+  };
 
-  const handleLinkClick = () => {
+  const handleLinkClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    const currentProjectId = new URLSearchParams(window.location.search).get('project')?.trim();
+    if (currentProjectId) {
+      const target = new URL(event.currentTarget.href, window.location.origin);
+      target.searchParams.set('project', currentProjectId);
+      event.currentTarget.href = `${target.pathname}${target.search}${target.hash}`;
+    }
     setOpenMobile(false);
   };
 
   return (
     <nav className="grid items-start gap-2">
       {menuItems.map((item, index) => {
-        const isActive = pathname.startsWith(item.href) && (item.href !== '/' || pathname === '/');
+        const isActive = pathname.startsWith(item.href);
         return (
           <NavLink
             key={index}
@@ -64,6 +79,16 @@ export function MainNav() {
           </NavLink>
         );
       })}
+      <NavLink
+        href={withProject('/switch')}
+        active={pathname.startsWith('/switch')}
+        alignment="left"
+        className="w-full"
+        onClick={handleLinkClick}
+      >
+        <Repeat2 className="h-5 w-5" />
+        Switch project
+      </NavLink>
       <div className="pt-2">
         <div className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground">
           <BriefcaseBusiness className="h-5 w-5" />

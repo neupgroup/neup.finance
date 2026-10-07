@@ -27,6 +27,7 @@ type ComboboxProps = {
   notFoundMessage?: string;
   className?: string;
   ariaInvalid?: boolean;
+  onEnter?: () => void;
 };
 
 export function Combobox({
@@ -38,6 +39,7 @@ export function Combobox({
   notFoundMessage = "Nothing found.",
   className,
   ariaInvalid = false,
+  onEnter,
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
   const [inputValue, setInputValue] = React.useState(value);
@@ -84,6 +86,12 @@ export function Combobox({
               role="combobox"
               aria-expanded={open}
               aria-invalid={ariaInvalid}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' && !event.nativeEvent.isComposing && !open && onEnter) {
+                  event.preventDefault();
+                  onEnter();
+                }
+              }}
               placeholder={placeholder}
               className={cn(
                 "w-full pr-8",

@@ -113,6 +113,9 @@ export default function AddTransactionPage() {
   const { data: transactions } = useTransactionsList();
   const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
   const titleRef = useRef<HTMLInputElement | null>(null);
+  const partyFieldRef = useRef<HTMLDivElement | null>(null);
+  const directionFieldRef = useRef<HTMLDivElement | null>(null);
+  const categoryFieldRef = useRef<HTMLDivElement | null>(null);
   const fieldRefs = useRef<Partial<Record<keyof FormErrors, HTMLDivElement | null>>>({});
 
   const [title, setTitle] = useState('');
@@ -239,6 +242,10 @@ export default function AddTransactionPage() {
       return next;
     });
   };
+
+  const focusParty = () => partyFieldRef.current?.querySelector<HTMLInputElement>('[role="combobox"]')?.focus();
+  const focusDirection = () => directionFieldRef.current?.querySelector<HTMLButtonElement>('button')?.focus();
+  const focusCategory = () => categoryFieldRef.current?.querySelector<HTMLInputElement>('[role="combobox"]')?.focus();
 
   const validateForm = (): FormErrors => {
     const nextErrors: FormErrors = {};
@@ -487,6 +494,12 @@ export default function AddTransactionPage() {
                 }}
                 placeholder="e.g., Client payment, office rent, salary"
                 required
+                onKeyDown={(event) => {
+                  if (event.key !== 'Enter' || event.nativeEvent.isComposing) return;
+                  event.preventDefault();
+                  if (!showDescription) setShowDescription(true);
+                  else descriptionRef.current?.focus();
+                }}
                 aria-invalid={Boolean(errors.title)}
                 className={errors.title ? 'border-destructive focus-visible:ring-destructive' : undefined}
               />
@@ -513,10 +526,16 @@ export default function AddTransactionPage() {
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Add a short note"
                   rows={3}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {
+                      event.preventDefault();
+                      focusParty();
+                    }
+                  }}
                 />
               </div>
             )}
-            <div className="space-y-2">
+            <div ref={partyFieldRef} className="space-y-2">
               <Label htmlFor="party">Party <span className="text-muted-foreground">(Optional)</span></Label>
               <Combobox
                 options={(parties ?? []).map((party) => ({
@@ -528,6 +547,7 @@ export default function AddTransactionPage() {
                 placeholder="Select party"
                 searchPlaceholder="Search parties..."
                 notFoundMessage="No parties found. Add one in Party."
+                onEnter={focusDirection}
               />
               {recommendedParties.length > 0 ? (
                 <div className="flex flex-wrap gap-2 pt-1">
@@ -559,7 +579,10 @@ export default function AddTransactionPage() {
               />
               {errors.date ? <p className="text-sm font-medium text-destructive">{errors.date}</p> : null}
             </div>
-            <div ref={setFieldErrorRef('direction')} className="space-y-2">
+            <div ref={(node) => {
+              setFieldErrorRef('direction')(node);
+              directionFieldRef.current = node;
+            }} className="space-y-2">
               <Label htmlFor="direction">Direction</Label>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {transactionDirections.map((item) => {
@@ -568,6 +591,13 @@ export default function AddTransactionPage() {
                     <button
                       key={item.value}
                       type="button"
+                      onKeyDown={(event) => {
+                        if (event.key !== 'Enter' || event.nativeEvent.isComposing) return;
+                        event.preventDefault();
+                        setDirection(item.value);
+                        clearError('direction');
+                        focusCategory();
+                      }}
                       onClick={() => {
                         setDirection(item.value);
                         clearError('direction');
@@ -597,7 +627,10 @@ export default function AddTransactionPage() {
               </div>
               {errors.direction ? <p className="text-sm font-medium text-destructive">{errors.direction}</p> : null}
             </div>
-            <div ref={setFieldErrorRef('category')} className="space-y-2">
+            <div ref={(node) => {
+              setFieldErrorRef('category')(node);
+              categoryFieldRef.current = node;
+            }} className="space-y-2">
               <Label htmlFor="category">Category</Label>
               <Combobox
                 options={transactionCategoryOptions}
