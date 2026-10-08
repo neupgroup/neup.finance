@@ -13,6 +13,31 @@ Fields:
 > status: string;
 > createdOn: timestamp, default: current timestamp;
 
+Table: products, Model: Product
+Fields:
+> id: string, UUID, primary key;
+> projectId: string, references projects.id;
+> type: ProductType enum (goods, services);
+> name: string;
+> code: string;
+> category: string;
+> tax: string;
+> unit: string;
+> currency: string;
+> price: decimal;
+> moreDetails: JSONB, nullable;
+> createdOn: timestamp, default: current timestamp;
+
+Table: movements, Model: Movement
+Fields:
+> id: string, UUID, primary key;
+> productId: string, references products.id;
+> type: MovementType enum (incoming, outgoing, balancing);
+> amount: int;
+> by: string(12);
+> referenceId: string(128);
+> on: datetime;
+
 Table: roles, Model: Role
 Fields:
 > id: string, UUID, primary key;

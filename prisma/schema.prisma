@@ -40,8 +40,55 @@ model Project {
   transactions Transaction[]
   projections Projection[]
   finAccounts FinAccount[]
+  products Product[]
 
   @@map("projects")
+}
+
+model Product {
+  id          String      @id @default(uuid())
+  projectId   String
+  type        ProductType
+  name        String
+  code        String
+  category    String
+  tax         String
+  unit        String
+  currency    String
+  price       Decimal
+  moreDetails Json?
+  createdOn   DateTime    @default(now())
+  project     Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  movements  Movement[]
+
+  @@index([projectId])
+  @@map("products")
+}
+
+model Movement {
+  id          String         @id @default(uuid())
+  productId   String
+  type        MovementType
+  amount      Int
+  by          String         @db.VarChar(12)
+  referenceId String         @db.VarChar(128)
+  on          DateTime
+  product     Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@index([on])
+  @@map("movements")
+}
+
+enum ProductType {
+  goods
+  services
+}
+
+enum MovementType {
+  incoming
+  outgoing
+  balancing
 }
 
 model Role {
