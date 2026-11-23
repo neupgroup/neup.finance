@@ -135,31 +135,6 @@ exports.Prisma.ProjectScalarFieldEnum = {
   createdOn: 'createdOn'
 };
 
-exports.Prisma.ProductScalarFieldEnum = {
-  id: 'id',
-  projectId: 'projectId',
-  type: 'type',
-  name: 'name',
-  code: 'code',
-  category: 'category',
-  tax: 'tax',
-  unit: 'unit',
-  currency: 'currency',
-  price: 'price',
-  moreDetails: 'moreDetails',
-  createdOn: 'createdOn'
-};
-
-exports.Prisma.MovementScalarFieldEnum = {
-  id: 'id',
-  productId: 'productId',
-  type: 'type',
-  amount: 'amount',
-  by: 'by',
-  referenceId: 'referenceId',
-  on: 'on'
-};
-
 exports.Prisma.RoleScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -300,12 +275,12 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
-exports.Prisma.NullableJsonNullValueInput = {
-  DbNull: Prisma.DbNull,
+exports.Prisma.JsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
-exports.Prisma.JsonNullValueInput = {
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull
 };
 
@@ -324,17 +299,6 @@ exports.Prisma.JsonNullValueFilter = {
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
-exports.ProductType = exports.$Enums.ProductType = {
-  goods: 'goods',
-  services: 'services'
-};
-
-exports.MovementType = exports.$Enums.MovementType = {
-  incoming: 'incoming',
-  outgoing: 'outgoing',
-  balancing: 'balancing'
-};
-
 exports.AccountType = exports.$Enums.AccountType = {
   Bank: 'Bank',
   Cash: 'Cash',
@@ -380,8 +344,6 @@ exports.ActivityStockType = exports.$Enums.ActivityStockType = {
 exports.Prisma.ModelName = {
   Account: 'Account',
   Project: 'Project',
-  Product: 'Product',
-  Movement: 'Movement',
   Role: 'Role',
   Access: 'Access',
   Party: 'Party',

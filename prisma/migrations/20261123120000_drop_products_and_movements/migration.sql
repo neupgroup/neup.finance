@@ -1,0 +1,5 @@
+DROP TABLE IF EXISTS "movements";
+DROP TABLE IF EXISTS "products";
+
+DROP TYPE IF EXISTS "MovementType";
+DROP TYPE IF EXISTS "ProductType";

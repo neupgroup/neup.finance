@@ -7,7 +7,6 @@ import HeaderSidebarLayout, { type SidebarLinkGroup } from '@neup/components/lay
 import { ThemeProvider } from '@/components/theme-provider';
 import { AuthProvider } from '@/core/providers/auth';
 import {
-  ArrowDownUp,
   ArrowLeftRight,
   BarChart,
   BookText,
@@ -15,7 +14,6 @@ import {
   FileText,
   Home,
   Landmark,
-  Package,
   Repeat2,
   Settings,
   Users,
@@ -34,8 +32,6 @@ const sidebarGroups: SidebarLinkGroup[] = [
       { href: '/projections', label: 'Projections', icon: BarChart },
       { href: '/report', label: 'Reports', icon: FileText },
       { href: '/journal', label: 'Journal', icon: BookText },
-      { href: '/products', label: 'Products', icon: Package },
-      { href: '/movements', label: 'Movements', icon: ArrowDownUp },
     ],
   },
   {

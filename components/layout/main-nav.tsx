@@ -22,8 +22,6 @@ import {
   Users,
   BriefcaseBusiness,
   Repeat2,
-  Package,
-  ArrowDownUp,
 } from 'lucide-react';
 import { NavLink } from '@neup/components/ui/nav-link';
 import { useSidebar } from '@neup/components/ui/sidebar';
@@ -37,8 +35,6 @@ const menuItems = [
   { href: '/projections', label: 'Projections', icon: BarChart },
   { href: '/report', label: 'Reports', icon: FileText },
   { href: '/journal', label: 'Journal', icon: BookText },
-  { href: '/products', label: 'Products', icon: Package },
-  { href: '/movements', label: 'Movements', icon: ArrowDownUp },
 ];
 
 export function MainNav() {
