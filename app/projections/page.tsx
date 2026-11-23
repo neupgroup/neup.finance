@@ -93,14 +93,9 @@ export default function ProjectionsPage() {
                 <h1 className="text-3xl font-bold tracking-tight">Future Projections</h1>
                 <p className="text-sm text-muted-foreground">Track expected income and expenses, then add a new projection from the first card.</p>
             </div>
-            <Card>
-                <CardHeader>
-                    <CardTitle>Future Projections</CardTitle>
-                    <CardDescription>A list of your projected income and expenses.</CardDescription>
-                </CardHeader>
-                <CardContent>
+            <div>
                         {isLoading ? (
-                        <div className="overflow-hidden rounded-lg border">
+                        <div>
                           <div className="divide-y">
                             <div className={stackedCardClassName(0, 4, 'flex items-center justify-between p-4')}>
                               <div className="flex items-center gap-4">
@@ -252,14 +247,13 @@ export default function ProjectionsPage() {
                             </PaginationContent>
                         </Pagination>
                     )}
-                </CardContent>
-            </Card>
+            </div>
 
+            <section className="space-y-1">
+                <h2 className="text-2xl font-bold tracking-tight">Yearly Financial Projection</h2>
+                <p className="text-sm text-muted-foreground">Estimated balance over the next 12 months.</p>
+            </section>
             <Card>
-                <CardHeader>
-                    <CardTitle>Yearly Financial Projection</CardTitle>
-                    <CardDescription>Estimated balance over the next 12 months.</CardDescription>
-                </CardHeader>
                 <CardContent>
                     <YearlyProjectionChart />
                 </CardContent>

@@ -1,19 +1,9 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { cn } from '@neup/core/utils';
-import { Suspense } from 'react';
-import { Toaster } from '@neup/components/ui/toast';
-import { ProgressBar } from '@neup/components/element/progressbar';
-import { ThemeProvider } from '@/components/theme-provider';
-import { AuthProvider } from '@/core/providers/auth';
 import { Outfit } from 'next/font/google';
-import { SidebarProvider, Sidebar } from '@neup/components/ui/sidebar';
-import { Header, HeaderBrand } from '@/components/layout/header';
-import { MainNav } from '@/components/layout/main-nav';
-import { cookies } from 'next/headers';
-import logica from '@neup/logica';
-import type { HeaderAccount } from '@/components/layout/header';
-import { ensureAccountRecord } from '@/server/account';
+import ClientLayout from './layout.client';
+import { getLayoutAccount } from './layout.server';
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -30,61 +20,12 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = await cookies();
-  const authToken = cookieStore.get('auth')?.value?.trim();
-  let account: HeaderAccount | null = null;
-
-  if (authToken) {
-    try {
-      const record = await ensureAccountRecord(authToken);
-      if (record) {
-        account = {
-          displayName: record.displayName,
-          displayImage: record.displayImage,
-          neupid: record.neupid,
-        };
-      }
-    } catch {
-      account = null;
-    }
-  }
+  const account = await getLayoutAccount();
 
   return (
     <html lang="en" suppressHydrationWarning className={outfit.variable}>
       <body className={cn("font-body antialiased")}>
-        <Suspense fallback={null}>
-          <ProgressBar />
-        </Suspense>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <AuthProvider>
-            <SidebarProvider className="min-h-0">
-              <div className="app-frame w-full bg-background text-foreground">
-                <header className="sticky top-0 z-10 flex h-16 items-center border-b bg-background shadow">
-                  <div className="mx-auto flex w-full max-w-[1440px] items-center justify-between px-4 lg:px-6">
-                    <div className="flex items-center gap-4">
-                      <HeaderBrand />
-                    </div>
-                    <Header account={account} />
-                  </div>
-                </header>
-                <div className="mx-auto grid w-full max-w-[1440px] lg:grid-cols-[280px_1fr] xl:grid-cols-[320px_1fr]">
-                  <Sidebar className="hidden h-[calc(100vh-4rem)] flex-col border-r border-sidebar-border p-2 lg:sticky lg:top-16 lg:flex">
-                    <MainNav />
-                  </Sidebar>
-                  <main className="p-4 md:p-6 lg:p-8">
-                    <div className="w-full">{children}</div>
-                  </main>
-                </div>
-              </div>
-            </SidebarProvider>
-          </AuthProvider>
-        </ThemeProvider>
-        <Toaster />
+        <ClientLayout account={account}>{children}</ClientLayout>
       </body>
     </html>
   );

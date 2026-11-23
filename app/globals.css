@@ -4,6 +4,9 @@
 
 @layer base {
   :root {
+    --site-header-height: 4rem;
+    --layer-content: 0;
+    --layer-sidebar: 20;
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
@@ -99,11 +102,6 @@
   opacity: 1;
   transform: rotate(3deg) translate(0, -4px);
   box-shadow: 0 0 10px hsl(var(--primary)), 0 0 5px hsl(var(--primary));
-}
-
-/* The sidebar's built-in viewport spacer sits below the app header in this layout. */
-.app-frame .peer > div:first-child {
-  height: 0;
 }
 
 @layer base {
