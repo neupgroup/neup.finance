@@ -1,5 +1,4 @@
 diff --git a/account/self.ts b/account/self.ts
-index f046e18..e7c3dfb 100644
 --- a/account/self.ts
 +++ b/account/self.ts
 @@ -28,7 +28,7 @@ import {
@@ -11,18 +10,20 @@ index f046e18..e7c3dfb 100644
  
  export type AccountSelfAuthenticationCheckType = 'local' | 'remote';
  
-@@ -245,12 +245,12 @@ export async function ensureRecord(authToken?: string | null) {
-       id: accountId,
-       displayName: basics?.displayName ?? '',
-       displayImage: basics?.displayImage ?? '',
--      neupId: basics?.neupid ?? null,
-+      neupid: basics?.neupid ?? '',
-     },
-     update: {
-       ...(basics?.displayName !== undefined ? { displayName: basics.displayName ?? '' } : {}),
-       ...(basics?.displayImage !== undefined ? { displayImage: basics.displayImage ?? '' } : {}),
--      ...(basics?.neupid !== undefined ? { neupId: basics.neupid ?? null } : {}),
-+      ...(basics?.neupid !== undefined ? { neupid: basics.neupid ?? '' } : {}),
-     },
-   });
- }
+@@ -263,14 +263,14 @@ export async function ensureAccount(authToken?: string | null) {
+         type: accountType,
+         displayName,
+         displayImage: basics.displayImage ?? null,
+-        neupId: basics.neupid ?? null,
++        neupid: basics.neupid ?? '',
+         status: 'active',
+       },
+       update: {
+         type: accountType,
+         displayName,
+         displayImage: basics.displayImage ?? existingAccount?.displayImage ?? null,
+-        neupId: basics.neupid ?? existingAccount?.neupId ?? null,
++        neupid: basics.neupid ?? existingAccount?.neupid ?? '',
+       },
+     });
+   } catch {

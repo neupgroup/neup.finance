@@ -4,7 +4,7 @@ import logica from '@neup/logica';
 import { OWNER_ROLE_ID } from '@/server/roles';
 
 export async function GET(req: NextRequest) {
-  const account = await logica.account.self.ensureRecord(req.cookies.get('auth_account')?.value);
+  const account = await logica.account.self.ensureRecord(req.cookies.get('auth')?.value);
   if (!account) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const grants = await prisma.access.findMany({
@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const account = await logica.account.self.ensureRecord(req.cookies.get('auth_account')?.value);
+  const account = await logica.account.self.ensureRecord(req.cookies.get('auth')?.value);
   if (!account) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const body = await req.json().catch(() => null);

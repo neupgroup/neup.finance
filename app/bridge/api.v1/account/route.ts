@@ -10,7 +10,7 @@ function defaultId(accountId: string, kind: string) {
 }
 
 export async function GET(req: NextRequest) {
-  const token = req.cookies.get('auth_account')?.value?.trim();
+  const token = req.cookies.get('auth')?.value?.trim();
   const authentication = token ? await logica.account.self.isAuthenticated('local', token) : null;
   const account = authentication?.authenticated
     ? await logica.account.self.ensureRecord(token)
@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
-  const token = req.cookies.get('auth_account')?.value;
+  const token = req.cookies.get('auth')?.value;
   const account = await logica.account.self.ensureRecord(token);
   if (!account || !token) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

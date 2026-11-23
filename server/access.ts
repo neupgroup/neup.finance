@@ -10,7 +10,7 @@ export type ProjectAccess = {
 
 export async function getProjectAccess(req: NextRequest): Promise<ProjectAccess | null> {
   return getProjectAccessForToken(
-    req.cookies.get('auth_account')?.value,
+    req.cookies.get('auth')?.value,
     req.nextUrl.searchParams.get('project')?.trim(),
   );
 }

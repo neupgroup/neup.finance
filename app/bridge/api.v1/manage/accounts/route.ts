@@ -3,7 +3,7 @@ import logica from '@neup/logica';
 import { prisma } from '@/server/db';
 
 export async function GET(req: NextRequest) {
-  const account = await logica.account.self.ensureRecord(req.cookies.get('auth_account')?.value);
+  const account = await logica.account.self.ensureRecord(req.cookies.get('auth')?.value);
   if (!account) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const accounts = await prisma.account.findMany({

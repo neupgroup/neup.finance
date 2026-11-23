@@ -3,7 +3,7 @@ import { prisma } from '@/server/db';
 import logica from '@neup/logica';
 
 export async function POST(req: NextRequest) {
-  const account = await logica.account.self.ensureRecord(req.cookies.get('auth_account')?.value);
+  const account = await logica.account.self.ensureRecord(req.cookies.get('auth')?.value);
   if (!account) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const body = await req.json().catch(() => null);

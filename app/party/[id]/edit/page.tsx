@@ -29,7 +29,7 @@ export default async function PartyEditPage({ params, searchParams }: PartyEditP
   const { id } = await params;
   const query = await searchParams;
   const cookieStore = await cookies();
-  const authToken = cookieStore.get('auth_account')?.value?.trim() || null;
+  const authToken = cookieStore.get('auth')?.value?.trim() || null;
 
   if (!authToken) {
     redirect('/switch');

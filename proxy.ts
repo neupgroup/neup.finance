@@ -10,7 +10,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const authToken = request.cookies.get('auth_account')?.value?.trim();
+  const authToken = request.cookies.get('auth')?.value?.trim();
   const account = authToken
     ? await logica.account.self.ensureRecord(authToken)
     : null;
