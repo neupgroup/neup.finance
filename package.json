@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "neup.cloner": "(test -d ./@neup/setup || (mkdir -p ./@neup && cd ./@neup && git clone --depth 1 --single-branch --branch main https://github.com/neupgroup/nextjs.setup.git nextjs.setup && mv nextjs.setup setup)) && (test -d ./@neup/shared || git clone --depth 1 --single-branch --branch main https://github.com/neupgroup/next.shared.git ./@neup/shared)",
-    "neup.shared.patch": "git -C ./@neup/shared apply --reverse --check ../../patches/next-shared-account-self.patch >/dev/null 2>&1 || git -C ./@neup/shared apply ../../patches/next-shared-account-self.patch",
-    "setup": "npm run neup.cloner && npm run neup.shared.patch && cd ./@neup && chmod +x ./setup/index.sh && ./setup/index.sh",
+    "setup": "npm run neup.cloner && cd ./@neup && chmod +x ./setup/index.sh && ./setup/index.sh",
     "preinstall": "npm run setup -- --mode preinstall",
     "postinstall": "npm run setup -- --mode postinstall",
     "prebuild": "npm run setup -- --mode prebuild",
@@ -52,7 +51,6 @@
     "next": "16.4.6",
     "next-themes": "^0.4.0",
     "nprogress": "^0.2.0",
-    "patch-package": "^8.0.0",
     "react": "^19.3.0",
     "react-day-picker": "^9.11.3",
     "react-dom": "^19.3.0",
