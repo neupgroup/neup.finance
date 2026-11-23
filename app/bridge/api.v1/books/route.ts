@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/server/db'
+import { prisma } from '@neup/core/database/prisma'
 import { getProjectAccess, canAccess } from '@/server/access'
 
 /*

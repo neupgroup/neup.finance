@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@neup/components/ui/button';
 import { Input } from '@neup/components/ui/input';
 import { Label } from '@neup/components/ui/label';
-import { useToast } from '@neup/components/ui/toast';
+import { useToast } from '@neup/core/hooks/useToast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@neup/components/ui/select';
 import { Textarea } from '@neup/components/ui/textarea';
 import { PlusCircle } from 'lucide-react';

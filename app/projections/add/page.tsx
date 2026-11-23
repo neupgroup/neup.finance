@@ -8,7 +8,7 @@ import { Input } from '@neup/components/ui/input';
 import { Label } from '@neup/components/ui/label';
 import { Combobox } from '@/components/ui/combobox';
 import { CurrencyAmountInput } from '@/components/ui/currency-amount-input';
-import { useToast } from '@neup/components/ui/toast';
+import { useToast } from '@neup/core/hooks/useToast';
 import {
   projectionCertaintyOptions,
   projectionRecurrenceOptions,

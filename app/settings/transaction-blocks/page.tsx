@@ -31,7 +31,7 @@ import {
   TableRow,
 } from '@neup/components/ui/table';
 import { useParties, useSelectedProject } from '@/core/hooks/api';
-import { useToast } from '@neup/components/ui/toast';
+import { useToast } from '@neup/core/hooks/useToast';
 import type { Party } from '@/core/lib/ledger';
 import { transactionBlocksStorageKey } from '@/services/transactions/blocks';
 

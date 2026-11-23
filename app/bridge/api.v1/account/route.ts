@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/server/db';
+import { prisma } from '@neup/core/database/prisma';
 import logica from '@neup/logica';
 import { createHash } from 'node:crypto';
 import { OWNER_ROLE_ID } from '@/server/roles';
+import { ensureAccountRecord } from '@/server/account';
 
 function defaultId(accountId: string, kind: string) {
   const hex = createHash('md5').update(`${accountId}:finance-${kind}`).digest('hex');
@@ -13,7 +14,7 @@ export async function GET(req: NextRequest) {
   const token = req.cookies.get('auth')?.value?.trim();
   const authentication = token ? await logica.account.self.isAuthenticated('local', token) : null;
   const account = authentication?.authenticated
-    ? await logica.account.self.ensureRecord(token)
+    ? await ensureAccountRecord(token)
     : null;
   if (!account) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -21,14 +22,14 @@ export async function GET(req: NextRequest) {
   const payload = authentication && 'payload' in authentication ? authentication.payload : {};
   return NextResponse.json({
     ...account,
-    aid: payload.aid ?? account.id,
-    expiry: payload.exp ?? null,
+    aid: payload?.aid ?? account.id,
+    expiry: payload?.exp ?? null,
   });
 }
 
 export async function PUT(req: NextRequest) {
   const token = req.cookies.get('auth')?.value;
-  const account = await logica.account.self.ensureRecord(token);
+  const account = await ensureAccountRecord(token);
   if (!account || !token) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }

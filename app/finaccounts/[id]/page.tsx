@@ -23,7 +23,7 @@ import { Label } from '@neup/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@neup/components/ui/select';
 import { useUser } from '@/core/providers/auth';
 import { createTransaction, useTransactionsList, useProjectBooks } from '@/core/hooks/api';
-import { useToast } from '@neup/components/ui/toast';
+import { useToast } from '@neup/core/hooks/useToast';
 import { Textarea } from '@neup/components/ui/textarea';
 import {
   currencyOptions,

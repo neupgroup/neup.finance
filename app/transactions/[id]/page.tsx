@@ -21,7 +21,7 @@ import { Label } from '@neup/components/ui/label';
 import { Textarea } from '@neup/components/ui/textarea';
 import { Combobox } from '@/components/ui/combobox';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@neup/components/ui/table';
-import { useToast } from '@neup/components/ui/toast';
+import { useToast } from '@neup/core/hooks/useToast';
 import { Card } from '@neup/components/ui/card';
 import { addTransactionLine, useTransactionById, useTransactionLines, useProjectBooks } from '@/core/hooks/api';
 

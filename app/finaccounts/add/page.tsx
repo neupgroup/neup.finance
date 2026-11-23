@@ -20,7 +20,7 @@ import { Input } from '@neup/components/ui/input';
 import { Label } from '@neup/components/ui/label';
 import { SnappyCardSelect, type SnappyCardSelectOption } from '@/components/ui/snappy-card-select';
 import { createFinBook, type FinBook } from '@/core/hooks/api';
-import { useToast } from '@neup/components/ui/toast';
+import { useToast } from '@neup/core/hooks/useToast';
 
 type AccountType = FinBook['type'];
 type CurrencyCode = 'USD' | 'EUR' | 'GBP' | 'JPY' | 'INR' | 'NPR';

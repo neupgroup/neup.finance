@@ -17,7 +17,7 @@ import {
   type TransactionStatus,
   type TransactionType,
 } from '@/core/lib/ledger';
-import { useToast } from '@neup/components/ui/toast';
+import { useToast } from '@neup/core/hooks/useToast';
 import { Textarea } from '@neup/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@neup/components/ui/card';
 import { ArrowLeft, ArrowDownLeft, ArrowUpRight, Loader } from 'lucide-react';

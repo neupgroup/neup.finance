@@ -13,7 +13,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, Pagi
 import { useUser } from '@/core/providers/auth';
 import { useProjections } from '@/core/hooks/api';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@neup/components/ui/alert-dialog';
-import { useToast } from '@neup/components/ui/toast';
+import { useToast } from '@neup/core/hooks/useToast';
 import { YearlyProjectionChart } from '@/components/charts/yearly-projection-chart';
 import { stackedCardClassName } from '@/components/ui/stacked-card';
 import { StackedEmptyStateRow } from '@/components/ui/stacked-empty-state';

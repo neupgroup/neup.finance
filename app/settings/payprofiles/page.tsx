@@ -24,7 +24,7 @@ import {
 } from '@neup/components/ui/table';
 import { Badge } from '@neup/components/ui/badge';
 import { Checkbox } from '@neup/components/ui/checkbox';
-import { useToast } from '@neup/components/ui/toast';
+import { useToast } from '@neup/core/hooks/useToast';
 import {
   currencyOptions,
   transactionCategoryOptions,

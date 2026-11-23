@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@neup/core/database/prisma';
 
 /*
 ::neup.documentation::transaction-record-helpers

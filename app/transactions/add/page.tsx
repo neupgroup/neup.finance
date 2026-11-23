@@ -20,7 +20,7 @@ import {
   type TransactionStatus,
   type TransactionType,
 } from '@/core/lib/ledger';
-import { useToast } from '@neup/components/ui/toast';
+import { useToast } from '@neup/core/hooks/useToast';
 import { Textarea } from '@neup/components/ui/textarea';
 import { useUser } from '@/core/providers/auth';
 import { createTransaction, useParties, useTransactionsList, useProjectBooks, useSelectedProject } from '@/core/hooks/api';

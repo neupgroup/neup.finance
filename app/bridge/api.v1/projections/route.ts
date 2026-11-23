@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/server/db'
+import { Prisma, prisma, type ProjectionStatus } from '@neup/core/database/prisma'
 import { getProjectAccess, canAccess } from '@/server/access'
-import { Prisma, ProjectionCertainty, ProjectionRecurrence, ProjectionStatus, ProjectionType } from '@prisma/client'
 
 export async function GET(req: NextRequest) {
   const access = await getProjectAccess(req)

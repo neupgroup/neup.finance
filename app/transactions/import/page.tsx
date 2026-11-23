@@ -10,7 +10,7 @@ import { Input } from '@neup/components/ui/input';
 import { Label } from '@neup/components/ui/label';
 import { Textarea } from '@neup/components/ui/textarea';
 import { Badge } from '@neup/components/ui/badge';
-import { useToast } from '@neup/components/ui/toast';
+import { useToast } from '@neup/core/hooks/useToast';
 import { useUser } from '@/core/providers/auth';
 import { importTransactions } from '@/core/hooks/api';
 import { cn } from '@neup/core/utils';

@@ -13,7 +13,7 @@ import {
 import { Label } from '@neup/components/ui/label';
 import { Button } from '@neup/components/ui/button';
 import { Combobox } from '@/components/ui/combobox';
-import { useToast } from '@neup/components/ui/toast';
+import { useToast } from '@neup/core/hooks/useToast';
 import { currencyOptions, transactionTypeOptions } from '@/core/lib/ledger';
 
 export default function DefaultsSettingsPage() {

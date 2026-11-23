@@ -1,0 +1,337 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// ::neup.documentation::finance-ledger-schema
+/// ::title Finance Ledger Schema
+///
+/// Defines the Prisma models for the finance ledger, including the physical
+/// `fin_book` and `fin_account` tables used by transaction lines.
+///
+/// ::end
+
+model Account {
+  id                       String        @id
+  connection_id            String?       @unique
+  displayName              String        @default("")
+  neupid                   String        @default("")
+  displayImage             String        @default("")
+  assetGroups              AssetGroup[]
+  parties                  Party[]
+  organizationTransactions Transaction[] @relation("TransactionOrganization")
+  accesses                 Access[]
+
+  @@map("accounts")
+}
+
+model Project {
+  id           String        @id @default(uuid())
+  name         String
+  status       String
+  createdOn    DateTime      @default(now())
+  accesses     Access[]
+  parties      Party[]
+  books        AssetGroup[]
+  transactions Transaction[]
+  projections  Projection[]
+  finAccounts  FinAccount[]
+  products     Product[]
+
+  @@map("projects")
+}
+
+model Product {
+  id          String      @id @default(uuid())
+  projectId   String
+  type        ProductType
+  name        String
+  code        String
+  category    String
+  tax         String
+  unit        String
+  currency    String
+  price       Decimal
+  moreDetails Json?
+  createdOn   DateTime    @default(now())
+  project     Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  movements   Movement[]
+
+  @@index([projectId])
+  @@map("products")
+}
+
+model Movement {
+  id          String       @id @default(uuid())
+  productId   String
+  type        MovementType
+  amount      Int
+  by          String       @db.VarChar(12)
+  referenceId String       @db.VarChar(128)
+  on          DateTime
+  product     Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@index([on])
+  @@map("movements")
+}
+
+enum ProductType {
+  goods
+  services
+}
+
+enum MovementType {
+  incoming
+  outgoing
+  balancing
+}
+
+model Role {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  permissions Json     @db.JsonB
+  accesses    Access[]
+
+  @@map("roles")
+}
+
+model Access {
+  id          String   @id @default(uuid())
+  accountId   String
+  roleId      String
+  projectId   String
+  status      String
+  permittedOn DateTime
+  account     Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  role        Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([accountId, roleId, projectId])
+  @@index([accountId])
+  @@index([roleId])
+  @@index([projectId])
+  @@map("access")
+}
+
+model Party {
+  id             String               @id @default(uuid())
+  accountId      String               @map("account_id")
+  projectId      String
+  name           String
+  type           String
+  taxinfo        Json?
+  account        Account              @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  project        Project              @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  contacts       PartyContact[]
+  paymentMethods PartyPaymentMethod[]
+
+  @@index([accountId])
+  @@index([projectId])
+  @@map("party")
+}
+
+model PartyContact {
+  id      String   @id @default(uuid())
+  partyId String   @map("party_id")
+  type    String
+  value   String
+  addedOn DateTime @default(now()) @map("added_on")
+  details Json?
+  party   Party    @relation(fields: [partyId], references: [id], onDelete: Cascade)
+
+  @@index([partyId])
+  @@map("party_contact")
+}
+
+model PartyPaymentMethod {
+  id      String   @id @default(uuid())
+  partyId String   @map("party_id")
+  type    String
+  value   String
+  addedOn DateTime @default(now()) @map("added_on")
+  details Json?
+  party   Party    @relation(fields: [partyId], references: [id], onDelete: Cascade)
+
+  @@index([partyId])
+  @@map("party_payment_method")
+}
+
+model AssetGroup {
+  id               String            @id @default(uuid())
+  name             String
+  type             AccountType
+  currency         String
+  accountId        String
+  projectId        String
+  createdAt        DateTime          @default(now())
+  account          Account           @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  project          Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  activityStock    ActivityStock[]
+  transactionLines TransactionLine[]
+
+  @@index([accountId])
+  @@index([projectId])
+  @@map("fin_book")
+}
+
+model FinAccount {
+  id                String    @id @default(uuid())
+  profile_id        String
+  projectId         String
+  name              String
+  description       String?
+  type              String
+  currency          String
+  is_multi_currency Boolean   @default(false)
+  status            String
+  notes             String?
+  opened_on         DateTime?
+  created_on        DateTime  @default(now())
+  project           Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([profile_id])
+  @@index([projectId])
+  @@index([status])
+  @@map("fin_account")
+}
+
+model Transaction {
+  id                String            @id @default(uuid())
+  organizationId    String            @map("organization_id")
+  projectId         String
+  transactionTypeId String            @map("transaction_type_id")
+  title             String
+  description       String?
+  transactionDate   DateTime          @map("transaction_date")
+  status            String
+  referenceNumber   String?           @map("reference_number")
+  externalReference String?           @map("external_reference")
+  currency          String
+  finalAmount       Decimal           @default(0) @map("final_amount")
+  createdBy         String?           @map("created_by")
+  createdAt         DateTime          @default(now()) @map("created_at")
+  tags              Json?
+  notes             Json?
+  details           Json?
+  organization      Account           @relation("TransactionOrganization", fields: [organizationId], references: [id], onDelete: Cascade)
+  project           Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  lines             TransactionLine[]
+
+  @@index([organizationId])
+  @@index([projectId])
+  @@index([createdBy])
+  @@index([transactionDate])
+  @@map("transaction")
+}
+
+model TransactionLine {
+  id            String      @id @default(uuid())
+  transactionId String      @map("transaction_id")
+  lineTypeId    String?     @map("line_type_id")
+  title         String
+  description   String?
+  referenceType String?     @map("reference_type")
+  referenceId   String?     @map("reference_id")
+  currency      String
+  baseAmount    Decimal     @default(0) @map("base_amount")
+  sortOrder     Int         @default(0) @map("sort_order")
+  metadata      Json?
+  finBook       String?     @map("fin_book")
+  finAccount    String?     @map("fin_account")
+  tags          Json?
+  details       Json?
+  transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  book          AssetGroup? @relation(fields: [finBook], references: [id], onDelete: SetNull)
+
+  @@index([transactionId])
+  @@index([referenceType, referenceId])
+  @@index([finBook])
+  @@index([finAccount])
+  @@map("transaction_line")
+}
+
+model Projection {
+  id          String               @id @default(uuid())
+  title       String
+  type        ProjectionType
+  certainty   ProjectionCertainty
+  amount      Decimal
+  currency    String
+  date        DateTime
+  userId      String
+  projectId   String
+  status      ProjectionStatus
+  recipient   String?
+  isRecurring Boolean              @default(false)
+  recurrence  ProjectionRecurrence
+  endsOn      DateTime?
+  createdAt   DateTime             @default(now())
+  project     Project              @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([projectId])
+}
+
+enum AccountType {
+  Bank
+  Cash
+  Investment
+  Stock
+  Other
+}
+
+model ActivityStock {
+  id            String            @id @default(uuid())
+  assetGroupId  String            @map("asset_group_id")
+  stockName     String            @map("stock_name")
+  activityType  ActivityStockType @map("activity_type")
+  cost          Decimal
+  balance       Decimal
+  recordedOn    DateTime          @map("recorded_on")
+  transactionOn DateTime          @map("transaction_on")
+  assetGroup    AssetGroup        @relation(fields: [assetGroupId], references: [id], onDelete: Cascade)
+
+  @@index([assetGroupId])
+  @@index([recordedOn])
+  @@map("activity_stock")
+}
+
+enum ProjectionType {
+  Income
+  Expense
+}
+
+enum ProjectionCertainty {
+  Fixed
+  Probable
+  Possible
+}
+
+enum ProjectionStatus {
+  Active
+  Canceled
+}
+
+enum ProjectionRecurrence {
+  Once
+  Daily
+  Weekly
+  Monthly
+  Yearly
+  Custom
+}
+
+enum ActivityStockType {
+  purchase_in
+  sale_out
+  transfer_in
+  transfer_out
+  dividend_in
+  calculation
+}

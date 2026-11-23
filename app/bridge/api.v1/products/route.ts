@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/server/db';
+import { prisma } from '@neup/core/database/prisma';
 import { canAccess, getProjectAccess } from '@/server/access';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@neup/core/database/prisma';
 
 export async function GET(req: NextRequest) {
   const access = await getProjectAccess(req);

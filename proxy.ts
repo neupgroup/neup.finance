@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import logica from '@neup/logica';
+import { ensureAccountRecord } from '@/server/account';
 
 export async function proxy(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
@@ -12,7 +13,7 @@ export async function proxy(request: NextRequest) {
 
   const authToken = request.cookies.get('auth')?.value?.trim();
   const account = authToken
-    ? await logica.account.self.ensureRecord(authToken)
+    ? await ensureAccountRecord(authToken)
     : null;
 
   // User is not authenticated.

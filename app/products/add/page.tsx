@@ -7,7 +7,7 @@ import { Button } from '@neup/components/ui/button';
 import { Input } from '@neup/components/ui/input';
 import { Label } from '@neup/components/ui/label';
 import { LinkButton } from '@neup/components/ui/link-button';
-import { useToast } from '@neup/components/ui/toast';
+import { useToast } from '@neup/core/hooks/useToast';
 
 export default function AddProductPage() {
   const router = useRouter();

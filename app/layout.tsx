@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { cn } from '@neup/core/utils';
 import { Suspense } from 'react';
-import { Toaster } from '@neup/components/ui/toaster';
+import { Toaster } from '@neup/components/ui/toast';
 import { ProgressBar } from '@neup/components/element/progressbar';
 import { ThemeProvider } from '@/components/theme-provider';
 import { AuthProvider } from '@/core/providers/auth';
@@ -13,6 +13,7 @@ import { MainNav } from '@/components/layout/main-nav';
 import { cookies } from 'next/headers';
 import logica from '@neup/logica';
 import type { HeaderAccount } from '@/components/layout/header';
+import { ensureAccountRecord } from '@/server/account';
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -35,7 +36,7 @@ export default async function RootLayout({
 
   if (authToken) {
     try {
-      const record = await logica.account.self.ensureRecord(authToken);
+      const record = await ensureAccountRecord(authToken);
       if (record) {
         account = {
           displayName: record.displayName,

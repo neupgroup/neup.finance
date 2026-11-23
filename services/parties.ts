@@ -7,8 +7,7 @@ Shared lookup and creation helpers for account-scoped party data.
 ::end
 */
 
-import { Prisma } from '@prisma/client';
-import { prisma } from '@/server/db';
+import { Prisma, prisma } from '@neup/core/database/prisma';
 import { getProjectAccessForToken, canAccess } from '@/server/access';
 import { parseTransactionCompatibilityDetails } from '@/services/transactions/records';
 

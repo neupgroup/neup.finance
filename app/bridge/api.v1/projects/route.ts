@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/server/db';
-import logica from '@neup/logica';
+import { prisma } from '@neup/core/database/prisma';
 import { OWNER_ROLE_ID } from '@/server/roles';
+import { ensureAccountRecord } from '@/server/account';
 
 export async function GET(req: NextRequest) {
-  const account = await logica.account.self.ensureRecord(req.cookies.get('auth')?.value);
+  const account = await ensureAccountRecord(req.cookies.get('auth')?.value);
   if (!account) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const grants = await prisma.access.findMany({
@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const account = await logica.account.self.ensureRecord(req.cookies.get('auth')?.value);
+  const account = await ensureAccountRecord(req.cookies.get('auth')?.value);
   if (!account) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const body = await req.json().catch(() => null);

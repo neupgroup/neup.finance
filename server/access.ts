@@ -1,6 +1,6 @@
 import type { NextRequest } from 'next/server';
-import { prisma } from '@/server/db';
-import logica from '@neup/logica';
+import { prisma } from '@neup/core/database/prisma';
+import { ensureAccountRecord } from '@/server/account';
 
 export type ProjectAccess = {
   accountId: string;
@@ -17,7 +17,7 @@ export async function getProjectAccess(req: NextRequest): Promise<ProjectAccess 
 
 export async function getProjectAccessForToken(authToken?: string, projectId?: string): Promise<ProjectAccess | null> {
   if (!authToken) return null;
-  const account = await logica.account.self.ensureRecord(authToken);
+  const account = await ensureAccountRecord(authToken);
   if (!account) return null;
 
   const grants = projectId

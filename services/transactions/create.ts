@@ -1,5 +1,4 @@
-import { Prisma } from '@prisma/client';
-import { prisma } from '@/server/db';
+import { Prisma, prisma } from '@neup/core/database/prisma';
 import {
   buildTransactionCompatibilityDetails,
   computeTransactionFinalAmount,

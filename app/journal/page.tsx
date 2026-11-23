@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { TransactionLineCategory, type Transaction, type TransactionLine } from '@/core/lib/ledger';
 import { Loader } from 'lucide-react';
-import { useToast } from '@neup/components/ui/toast';
+import { useToast } from '@neup/core/hooks/useToast';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@neup/components/ui/table';
 import { Separator } from '@neup/components/ui/separator';
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationLink } from '@/components/ui/pagination';

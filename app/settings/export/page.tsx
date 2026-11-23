@@ -5,7 +5,7 @@ import { Download, FileJson, FolderArchive, Loader2 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@neup/components/ui/card';
 import { Button } from '@neup/components/ui/button';
 import { Badge } from '@neup/components/ui/badge';
-import { useToast } from '@neup/components/ui/toast';
+import { useToast } from '@neup/core/hooks/useToast';
 import { useParties, useProjections, useTransactionsList, useProjectBooks, useSelectedProject } from '@/core/hooks/api';
 
 /*
