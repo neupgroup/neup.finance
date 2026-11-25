@@ -382,6 +382,58 @@ exports.Prisma.InvoiceItemScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ProformaScalarFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  counter: 'counter',
+  referenceNumber: 'referenceNumber',
+  subject: 'subject',
+  currency: 'currency',
+  exchangeRate: 'exchangeRate',
+  subtotal: 'subtotal',
+  discountType: 'discountType',
+  discountValue: 'discountValue',
+  discountAmount: 'discountAmount',
+  taxTotal: 'taxTotal',
+  hasAdjustments: 'hasAdjustments',
+  total: 'total',
+  status: 'status',
+  date: 'date',
+  dueDate: 'dueDate',
+  details: 'details',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ProformaAdjustmentScalarFieldEnum = {
+  id: 'id',
+  proformaId: 'proformaId',
+  adjustmentName: 'adjustmentName',
+  adjustmentValue: 'adjustmentValue',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ProformaItemScalarFieldEnum = {
+  id: 'id',
+  proformaId: 'proformaId',
+  productId: 'productId',
+  name: 'name',
+  description: 'description',
+  quantity: 'quantity',
+  unit: 'unit',
+  rate: 'rate',
+  discountType: 'discountType',
+  discountValue: 'discountValue',
+  discountAmount: 'discountAmount',
+  taxRate: 'taxRate',
+  taxAmount: 'taxAmount',
+  amount: 'amount',
+  sortIndex: 'sortIndex',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -473,7 +525,10 @@ exports.Prisma.ModelName = {
   DocumentAdjustmentItem: 'DocumentAdjustmentItem',
   Invoice: 'Invoice',
   InvoiceAdjustment: 'InvoiceAdjustment',
-  InvoiceItem: 'InvoiceItem'
+  InvoiceItem: 'InvoiceItem',
+  Proforma: 'Proforma',
+  ProformaAdjustment: 'ProformaAdjustment',
+  ProformaItem: 'ProformaItem'
 };
 
 /**

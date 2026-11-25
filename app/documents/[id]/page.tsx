@@ -22,6 +22,6 @@ export default function DocumentViewPage() {
 
   if (!params.id || !documentTypes.has(type)) notFound();
 
-  if (type === 'quotation' || type === 'invoice') return <SalesDocumentView id={params.id} type={type} />;
+  if (type === 'quotation' || type === 'invoice' || type === 'proforma-invoice') return <SalesDocumentView id={params.id} type={type} />;
   return <TransactionPrintPage id={params.id} type={type} />;
 }

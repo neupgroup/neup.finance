@@ -9,5 +9,6 @@ export default function NewSalesDocumentPage() {
   const searchParams = useSearchParams();
   if (searchParams.get('type') === 'quotation') return <QuotationForm />;
   if (searchParams.get('type') === 'invoice') return <SalesDocumentForm type="invoice" />;
+  if (searchParams.get('type') === 'proforma-invoice') return <SalesDocumentForm type="proforma-invoice" />;
   return <AddTransactionPage />;
 }

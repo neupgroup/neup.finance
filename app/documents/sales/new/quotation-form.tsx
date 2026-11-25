@@ -13,7 +13,7 @@ import { QuantityUnitUnderlined } from '@neup/elements/ui/quantity_unit_underlin
 import { Label } from '@neup/components/ui/label';
 import { Textarea } from '@neup/components/ui/textarea';
 import { Combobox } from '@/components/ui/combobox';
-import { createDocumentInvoice, createDocumentQuotation, useParties } from '@/core/hooks/api';
+import { createDocumentInvoice, createDocumentProforma, createDocumentQuotation, useParties } from '@/core/hooks/api';
 import { useToast } from '@neup/core/hooks/useToast';
 
 type QuotationLine = { id: string; product: string; quantity: string; unit: string; rate: string; discount: string; tax: string };
@@ -48,20 +48,20 @@ function calculateQuotationLine(line: QuotationLine) {
 }
 
 // Render and save a quotation or invoice using the shared sales-document layout.
-export function SalesDocumentForm({ type }: { type: 'quotation' | 'invoice' }) {
+export function SalesDocumentForm({ type }: { type: 'quotation' | 'invoice' | 'proforma-invoice' }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { toast } = useToast();
   const { data: parties } = useParties();
   const projectId = searchParams.get('project')?.trim();
-  const isInvoice = type === 'invoice';
-  const documentLabel = isInvoice ? 'Invoice' : 'Quotation';
-  const dateLabel = isInvoice ? 'Due Date' : 'Expiry Date';
+  const isQuotation = type === 'quotation';
+  const documentLabel = isQuotation ? 'Quotation' : type === 'invoice' ? 'Invoice' : 'Proforma Invoice';
+  const dateLabel = isQuotation ? 'Expiry Date' : 'Due Date';
   const [partyId, setPartyId] = useState('');
   const [date, setDate] = useState(() => toLocalDate(new Date()));
   const [expiryDate, setExpiryDate] = useState(() => {
     const date = new Date();
-    date.setDate(date.getDate() + (isInvoice ? 30 : 6));
+    date.setDate(date.getDate() + (isQuotation ? 6 : 30));
     return toLocalDate(date);
   });
   const [terms, setTerms] = useState('');
@@ -165,9 +165,11 @@ export function SalesDocumentForm({ type }: { type: 'quotation' | 'invoice' }) {
         },
         items: quotationItems,
       };
-      const saved = isInvoice
-        ? await createDocumentInvoice({ ...documentData, dueDate: expiryDate })
-        : await createDocumentQuotation({ ...documentData, expires: expiryDate });
+      const saved = isQuotation
+        ? await createDocumentQuotation({ ...documentData, expires: expiryDate })
+        : type === 'invoice'
+          ? await createDocumentInvoice({ ...documentData, dueDate: expiryDate })
+          : await createDocumentProforma({ ...documentData, dueDate: expiryDate });
       toast({ name: 'app', title: `${documentLabel} saved`, description: `${documentLabel} for ${selectedParty.name} has been saved.` });
       router.push(`/documents/${saved.id}?type=${type}${projectId ? `&project=${encodeURIComponent(projectId)}` : ''}`);
     } catch (error) {

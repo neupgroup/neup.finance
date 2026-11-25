@@ -15,104 +15,119 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
 
 /**
  * Model Account
- * 
+ *
  */
 export type Account = $Result.DefaultSelection<Prisma.$AccountPayload>
 /**
  * Model Project
- * 
+ *
  */
 export type Project = $Result.DefaultSelection<Prisma.$ProjectPayload>
 /**
  * Model Role
- * 
+ *
  */
 export type Role = $Result.DefaultSelection<Prisma.$RolePayload>
 /**
  * Model Access
- * 
+ *
  */
 export type Access = $Result.DefaultSelection<Prisma.$AccessPayload>
 /**
  * Model Party
- * 
+ *
  */
 export type Party = $Result.DefaultSelection<Prisma.$PartyPayload>
 /**
  * Model PartyContact
- * 
+ *
  */
 export type PartyContact = $Result.DefaultSelection<Prisma.$PartyContactPayload>
 /**
  * Model PartyPaymentMethod
- * 
+ *
  */
 export type PartyPaymentMethod = $Result.DefaultSelection<Prisma.$PartyPaymentMethodPayload>
 /**
  * Model AssetGroup
- * 
+ *
  */
 export type AssetGroup = $Result.DefaultSelection<Prisma.$AssetGroupPayload>
 /**
  * Model FinAccount
- * 
+ *
  */
 export type FinAccount = $Result.DefaultSelection<Prisma.$FinAccountPayload>
 /**
  * Model Transaction
- * 
+ *
  */
 export type Transaction = $Result.DefaultSelection<Prisma.$TransactionPayload>
 /**
  * Model TransactionLine
- * 
+ *
  */
 export type TransactionLine = $Result.DefaultSelection<Prisma.$TransactionLinePayload>
 /**
  * Model Projection
- * 
+ *
  */
 export type Projection = $Result.DefaultSelection<Prisma.$ProjectionPayload>
 /**
  * Model ActivityStock
- * 
+ *
  */
 export type ActivityStock = $Result.DefaultSelection<Prisma.$ActivityStockPayload>
 /**
  * Model Document
- * 
+ *
  */
 export type Document = $Result.DefaultSelection<Prisma.$DocumentPayload>
 /**
  * Model DocumentQuotation
- * 
+ *
  */
 export type DocumentQuotation = $Result.DefaultSelection<Prisma.$DocumentQuotationPayload>
 /**
  * Model DocumentQuotationAdjustment
- * 
+ *
  */
 export type DocumentQuotationAdjustment = $Result.DefaultSelection<Prisma.$DocumentQuotationAdjustmentPayload>
 /**
  * Model DocumentAdjustmentItem
- * 
+ *
  */
 export type DocumentAdjustmentItem = $Result.DefaultSelection<Prisma.$DocumentAdjustmentItemPayload>
 /**
  * Model Invoice
- * 
+ *
  */
 export type Invoice = $Result.DefaultSelection<Prisma.$InvoicePayload>
 /**
  * Model InvoiceAdjustment
- * 
+ *
  */
 export type InvoiceAdjustment = $Result.DefaultSelection<Prisma.$InvoiceAdjustmentPayload>
 /**
  * Model InvoiceItem
- * 
+ *
  */
 export type InvoiceItem = $Result.DefaultSelection<Prisma.$InvoiceItemPayload>
+/**
+ * Model Proforma
+ *
+ */
+export type Proforma = $Result.DefaultSelection<Prisma.$ProformaPayload>
+/**
+ * Model ProformaAdjustment
+ *
+ */
+export type ProformaAdjustment = $Result.DefaultSelection<Prisma.$ProformaAdjustmentPayload>
+/**
+ * Model ProformaItem
+ *
+ */
+export type ProformaItem = $Result.DefaultSelection<Prisma.$ProformaItemPayload>
 
 /**
  * Enums
@@ -313,7 +328,7 @@ export class PrismaClient<
    *   prisma.user.create({ data: { name: 'Alice' } }),
    * ])
    * ```
-   * 
+   *
    * Read more in our [docs](https://www.prisma.io/docs/orm/prisma-client/queries/transactions).
    */
   $transaction<P extends Prisma.PrismaPromise<any>[]>(arg: [...P], options?: { maxWait?: number, timeout?: number, isolationLevel?: Prisma.TransactionIsolationLevel }): $Utils.JsPromise<runtime.Types.Utils.UnwrapTuple<P>>
@@ -523,6 +538,36 @@ export class PrismaClient<
     * ```
     */
   get invoiceItem(): Prisma.InvoiceItemDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.proforma`: Exposes CRUD operations for the **Proforma** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Proformas
+    * const proformas = await prisma.proforma.findMany()
+    * ```
+    */
+  get proforma(): Prisma.ProformaDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.proformaAdjustment`: Exposes CRUD operations for the **ProformaAdjustment** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ProformaAdjustments
+    * const proformaAdjustments = await prisma.proformaAdjustment.findMany()
+    * ```
+    */
+  get proformaAdjustment(): Prisma.ProformaAdjustmentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.proformaItem`: Exposes CRUD operations for the **ProformaItem** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ProformaItems
+    * const proformaItems = await prisma.proformaItem.findMany()
+    * ```
+    */
+  get proformaItem(): Prisma.ProformaItemDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -989,7 +1034,10 @@ export namespace Prisma {
     DocumentAdjustmentItem: 'DocumentAdjustmentItem',
     Invoice: 'Invoice',
     InvoiceAdjustment: 'InvoiceAdjustment',
-    InvoiceItem: 'InvoiceItem'
+    InvoiceItem: 'InvoiceItem',
+    Proforma: 'Proforma',
+    ProformaAdjustment: 'ProformaAdjustment',
+    ProformaItem: 'ProformaItem'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1005,7 +1053,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "account" | "project" | "role" | "access" | "party" | "partyContact" | "partyPaymentMethod" | "assetGroup" | "finAccount" | "transaction" | "transactionLine" | "projection" | "activityStock" | "document" | "documentQuotation" | "documentQuotationAdjustment" | "documentAdjustmentItem" | "invoice" | "invoiceAdjustment" | "invoiceItem"
+      modelProps: "account" | "project" | "role" | "access" | "party" | "partyContact" | "partyPaymentMethod" | "assetGroup" | "finAccount" | "transaction" | "transactionLine" | "projection" | "activityStock" | "document" | "documentQuotation" | "documentQuotationAdjustment" | "documentAdjustmentItem" | "invoice" | "invoiceAdjustment" | "invoiceItem" | "proforma" | "proformaAdjustment" | "proformaItem"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2489,6 +2537,228 @@ export namespace Prisma {
           }
         }
       }
+      Proforma: {
+        payload: Prisma.$ProformaPayload<ExtArgs>
+        fields: Prisma.ProformaFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ProformaFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ProformaFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaPayload>
+          }
+          findFirst: {
+            args: Prisma.ProformaFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ProformaFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaPayload>
+          }
+          findMany: {
+            args: Prisma.ProformaFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaPayload>[]
+          }
+          create: {
+            args: Prisma.ProformaCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaPayload>
+          }
+          createMany: {
+            args: Prisma.ProformaCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ProformaCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaPayload>[]
+          }
+          delete: {
+            args: Prisma.ProformaDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaPayload>
+          }
+          update: {
+            args: Prisma.ProformaUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaPayload>
+          }
+          deleteMany: {
+            args: Prisma.ProformaDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ProformaUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ProformaUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaPayload>[]
+          }
+          upsert: {
+            args: Prisma.ProformaUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaPayload>
+          }
+          aggregate: {
+            args: Prisma.ProformaAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateProforma>
+          }
+          groupBy: {
+            args: Prisma.ProformaGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ProformaGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ProformaCountArgs<ExtArgs>
+            result: $Utils.Optional<ProformaCountAggregateOutputType> | number
+          }
+        }
+      }
+      ProformaAdjustment: {
+        payload: Prisma.$ProformaAdjustmentPayload<ExtArgs>
+        fields: Prisma.ProformaAdjustmentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ProformaAdjustmentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaAdjustmentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ProformaAdjustmentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaAdjustmentPayload>
+          }
+          findFirst: {
+            args: Prisma.ProformaAdjustmentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaAdjustmentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ProformaAdjustmentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaAdjustmentPayload>
+          }
+          findMany: {
+            args: Prisma.ProformaAdjustmentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaAdjustmentPayload>[]
+          }
+          create: {
+            args: Prisma.ProformaAdjustmentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaAdjustmentPayload>
+          }
+          createMany: {
+            args: Prisma.ProformaAdjustmentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ProformaAdjustmentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaAdjustmentPayload>[]
+          }
+          delete: {
+            args: Prisma.ProformaAdjustmentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaAdjustmentPayload>
+          }
+          update: {
+            args: Prisma.ProformaAdjustmentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaAdjustmentPayload>
+          }
+          deleteMany: {
+            args: Prisma.ProformaAdjustmentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ProformaAdjustmentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ProformaAdjustmentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaAdjustmentPayload>[]
+          }
+          upsert: {
+            args: Prisma.ProformaAdjustmentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaAdjustmentPayload>
+          }
+          aggregate: {
+            args: Prisma.ProformaAdjustmentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateProformaAdjustment>
+          }
+          groupBy: {
+            args: Prisma.ProformaAdjustmentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ProformaAdjustmentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ProformaAdjustmentCountArgs<ExtArgs>
+            result: $Utils.Optional<ProformaAdjustmentCountAggregateOutputType> | number
+          }
+        }
+      }
+      ProformaItem: {
+        payload: Prisma.$ProformaItemPayload<ExtArgs>
+        fields: Prisma.ProformaItemFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ProformaItemFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaItemPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ProformaItemFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaItemPayload>
+          }
+          findFirst: {
+            args: Prisma.ProformaItemFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaItemPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ProformaItemFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaItemPayload>
+          }
+          findMany: {
+            args: Prisma.ProformaItemFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaItemPayload>[]
+          }
+          create: {
+            args: Prisma.ProformaItemCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaItemPayload>
+          }
+          createMany: {
+            args: Prisma.ProformaItemCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ProformaItemCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaItemPayload>[]
+          }
+          delete: {
+            args: Prisma.ProformaItemDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaItemPayload>
+          }
+          update: {
+            args: Prisma.ProformaItemUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaItemPayload>
+          }
+          deleteMany: {
+            args: Prisma.ProformaItemDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ProformaItemUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ProformaItemUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaItemPayload>[]
+          }
+          upsert: {
+            args: Prisma.ProformaItemUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProformaItemPayload>
+          }
+          aggregate: {
+            args: Prisma.ProformaItemAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateProformaItem>
+          }
+          groupBy: {
+            args: Prisma.ProformaItemGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ProformaItemGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ProformaItemCountArgs<ExtArgs>
+            result: $Utils.Optional<ProformaItemCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2526,7 +2796,7 @@ export namespace Prisma {
      * ```
      * // Shorthand for `emit: 'stdout'`
      * log: ['query', 'info', 'warn', 'error']
-     * 
+     *
      * // Emit as events only
      * log: [
      *   { emit: 'event', level: 'query' },
@@ -2534,14 +2804,14 @@ export namespace Prisma {
      *   { emit: 'event', level: 'warn' }
      *   { emit: 'event', level: 'error' }
      * ]
-     * 
+     *
      * / Emit as events and log to stdout
      * og: [
      *  { emit: 'stdout', level: 'query' },
      *  { emit: 'stdout', level: 'info' },
      *  { emit: 'stdout', level: 'warn' }
      *  { emit: 'stdout', level: 'error' }
-     * 
+     *
      * ```
      * Read more in our [docs](https://pris.ly/d/logging).
      */
@@ -2558,16 +2828,16 @@ export namespace Prisma {
     }
     /**
      * A driver adapter that PrismaClient uses to connect to your database, such as the ones provided by `@prisma/adapter-pg`, `@prisma/adapter-libsql`, `@prisma/adapter-planetscale`, etc.
-     * 
+     *
      * A driver adapter is **required** unless you connect to your database through Prisma Accelerate (in which case use `accelerateUrl` instead).
-     * 
+     *
      * Learn more: https://pris.ly/d/driver-adapters
-     * 
+     *
      * @example
      * ```ts
      * import { PrismaPg } from '@prisma/adapter-pg'
      * import { PrismaClient } from './generated/prisma/client'
-     * 
+     *
      * const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
      * const prisma = new PrismaClient({ adapter })
      * ```
@@ -2575,13 +2845,13 @@ export namespace Prisma {
     adapter?: runtime.SqlDriverAdapterFactory
     /**
      * The Prisma Accelerate connection URL. Use this option to connect to your database through Prisma Accelerate instead of using a driver adapter to connect directly.
-     * 
+     *
      * Learn more: https://pris.ly/d/accelerate
      */
     accelerateUrl?: string
     /**
      * Global configuration for omitting model fields by default.
-     * 
+     *
      * @example
      * ```
      * const prisma = new PrismaClient({
@@ -2597,7 +2867,7 @@ export namespace Prisma {
     /**
      * SQL commenter plugins that add metadata to SQL queries as comments.
      * Comments follow the sqlcommenter format: https://google.github.io/sqlcommenter/
-     * 
+     *
      * @example
      * ```
      * const prisma = new PrismaClient({
@@ -2632,6 +2902,9 @@ export namespace Prisma {
     invoice?: InvoiceOmit
     invoiceAdjustment?: InvoiceAdjustmentOmit
     invoiceItem?: InvoiceItemOmit
+    proforma?: ProformaOmit
+    proformaAdjustment?: ProformaAdjustmentOmit
+    proformaItem?: ProformaItemOmit
   }
 
   /* Types for Logging */
@@ -2890,6 +3163,7 @@ export namespace Prisma {
     paymentMethods: number
     quotations: number
     invoices: number
+    proformas: number
   }
 
   export type PartyCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2897,6 +3171,7 @@ export namespace Prisma {
     paymentMethods?: boolean | PartyCountOutputTypeCountPaymentMethodsArgs
     quotations?: boolean | PartyCountOutputTypeCountQuotationsArgs
     invoices?: boolean | PartyCountOutputTypeCountInvoicesArgs
+    proformas?: boolean | PartyCountOutputTypeCountProformasArgs
   }
 
   // Custom InputTypes
@@ -2936,6 +3211,13 @@ export namespace Prisma {
    */
   export type PartyCountOutputTypeCountInvoicesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: InvoiceWhereInput
+  }
+
+  /**
+   * PartyCountOutputType without action
+   */
+  export type PartyCountOutputTypeCountProformasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProformaWhereInput
   }
 
 
@@ -3091,6 +3373,46 @@ export namespace Prisma {
 
 
   /**
+   * Count Type ProformaCountOutputType
+   */
+
+  export type ProformaCountOutputType = {
+    adjustments: number
+    items: number
+  }
+
+  export type ProformaCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    adjustments?: boolean | ProformaCountOutputTypeCountAdjustmentsArgs
+    items?: boolean | ProformaCountOutputTypeCountItemsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ProformaCountOutputType without action
+   */
+  export type ProformaCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProformaCountOutputType
+     */
+    select?: ProformaCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ProformaCountOutputType without action
+   */
+  export type ProformaCountOutputTypeCountAdjustmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProformaAdjustmentWhereInput
+  }
+
+  /**
+   * ProformaCountOutputType without action
+   */
+  export type ProformaCountOutputTypeCountItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProformaItemWhereInput
+  }
+
+
+  /**
    * Models
    */
 
@@ -3162,43 +3484,43 @@ export namespace Prisma {
     where?: AccountWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Accounts to fetch.
      */
     orderBy?: AccountOrderByWithRelationInput | AccountOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the start position
      */
     cursor?: AccountWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Accounts from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Accounts.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Count returned Accounts
     **/
     _count?: true | AccountCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the minimum value
     **/
     _min?: AccountMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the maximum value
     **/
     _max?: AccountMaxAggregateInputType
@@ -3393,13 +3715,13 @@ export namespace Prisma {
      * @example
      * // Get all Accounts
      * const accounts = await prisma.account.findMany()
-     * 
+     *
      * // Get first 10 Accounts
      * const accounts = await prisma.account.findMany({ take: 10 })
-     * 
+     *
      * // Only select the `id`
      * const accountWithIdOnly = await prisma.account.findMany({ select: { id: true } })
-     * 
+     *
      */
     findMany<T extends AccountFindManyArgs>(args?: SelectSubset<T, AccountFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
@@ -3413,7 +3735,7 @@ export namespace Prisma {
      *     // ... data to create a Account
      *   }
      * })
-     * 
+     *
      */
     create<T extends AccountCreateArgs>(args: SelectSubset<T, AccountCreateArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -3427,7 +3749,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *     
+     *
      */
     createMany<T extends AccountCreateManyArgs>(args?: SelectSubset<T, AccountCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -3441,7 +3763,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Create many Accounts and only return the `id`
      * const accountWithIdOnly = await prisma.account.createManyAndReturn({
      *   select: { id: true },
@@ -3451,7 +3773,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     createManyAndReturn<T extends AccountCreateManyAndReturnArgs>(args?: SelectSubset<T, AccountCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
@@ -3465,7 +3787,7 @@ export namespace Prisma {
      *     // ... filter to delete one Account
      *   }
      * })
-     * 
+     *
      */
     delete<T extends AccountDeleteArgs>(args: SelectSubset<T, AccountDeleteArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -3482,7 +3804,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     update<T extends AccountUpdateArgs>(args: SelectSubset<T, AccountUpdateArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -3496,7 +3818,7 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     * 
+     *
      */
     deleteMany<T extends AccountDeleteManyArgs>(args?: SelectSubset<T, AccountDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -3515,7 +3837,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     updateMany<T extends AccountUpdateManyArgs>(args: SelectSubset<T, AccountUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -3532,7 +3854,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Update zero or more Accounts and only return the `id`
      * const accountWithIdOnly = await prisma.account.updateManyAndReturn({
      *   select: { id: true },
@@ -3545,7 +3867,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     updateManyAndReturn<T extends AccountUpdateManyAndReturnArgs>(args: SelectSubset<T, AccountUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
@@ -3634,7 +3956,7 @@ export namespace Prisma {
      *     _all: true
      *   },
      * })
-     * 
+     *
     **/
     groupBy<
       T extends AccountGroupByArgs,
@@ -3747,7 +4069,7 @@ export namespace Prisma {
     readonly neupid: FieldRef<"Account", 'String'>
     readonly displayImage: FieldRef<"Account", 'String'>
   }
-    
+
 
   // Custom InputTypes
   /**
@@ -3816,31 +4138,31 @@ export namespace Prisma {
     where?: AccountWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Accounts to fetch.
      */
     orderBy?: AccountOrderByWithRelationInput | AccountOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for Accounts.
      */
     cursor?: AccountWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Accounts from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Accounts.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of Accounts.
      */
     distinct?: AccountScalarFieldEnum | AccountScalarFieldEnum[]
@@ -3868,31 +4190,31 @@ export namespace Prisma {
     where?: AccountWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Accounts to fetch.
      */
     orderBy?: AccountOrderByWithRelationInput | AccountOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for Accounts.
      */
     cursor?: AccountWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Accounts from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Accounts.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of Accounts.
      */
     distinct?: AccountScalarFieldEnum | AccountScalarFieldEnum[]
@@ -3920,31 +4242,31 @@ export namespace Prisma {
     where?: AccountWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Accounts to fetch.
      */
     orderBy?: AccountOrderByWithRelationInput | AccountOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for listing Accounts.
      */
     cursor?: AccountWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Accounts from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Accounts.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of Accounts.
      */
     distinct?: AccountScalarFieldEnum | AccountScalarFieldEnum[]
@@ -4315,43 +4637,43 @@ export namespace Prisma {
     where?: ProjectWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Projects to fetch.
      */
     orderBy?: ProjectOrderByWithRelationInput | ProjectOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the start position
      */
     cursor?: ProjectWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Projects from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Projects.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Count returned Projects
     **/
     _count?: true | ProjectCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the minimum value
     **/
     _min?: ProjectMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the maximum value
     **/
     _max?: ProjectMaxAggregateInputType
@@ -4549,13 +4871,13 @@ export namespace Prisma {
      * @example
      * // Get all Projects
      * const projects = await prisma.project.findMany()
-     * 
+     *
      * // Get first 10 Projects
      * const projects = await prisma.project.findMany({ take: 10 })
-     * 
+     *
      * // Only select the `id`
      * const projectWithIdOnly = await prisma.project.findMany({ select: { id: true } })
-     * 
+     *
      */
     findMany<T extends ProjectFindManyArgs>(args?: SelectSubset<T, ProjectFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
@@ -4569,7 +4891,7 @@ export namespace Prisma {
      *     // ... data to create a Project
      *   }
      * })
-     * 
+     *
      */
     create<T extends ProjectCreateArgs>(args: SelectSubset<T, ProjectCreateArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -4583,7 +4905,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *     
+     *
      */
     createMany<T extends ProjectCreateManyArgs>(args?: SelectSubset<T, ProjectCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -4597,7 +4919,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Create many Projects and only return the `id`
      * const projectWithIdOnly = await prisma.project.createManyAndReturn({
      *   select: { id: true },
@@ -4607,7 +4929,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     createManyAndReturn<T extends ProjectCreateManyAndReturnArgs>(args?: SelectSubset<T, ProjectCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
@@ -4621,7 +4943,7 @@ export namespace Prisma {
      *     // ... filter to delete one Project
      *   }
      * })
-     * 
+     *
      */
     delete<T extends ProjectDeleteArgs>(args: SelectSubset<T, ProjectDeleteArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -4638,7 +4960,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     update<T extends ProjectUpdateArgs>(args: SelectSubset<T, ProjectUpdateArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -4652,7 +4974,7 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     * 
+     *
      */
     deleteMany<T extends ProjectDeleteManyArgs>(args?: SelectSubset<T, ProjectDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -4671,7 +4993,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     updateMany<T extends ProjectUpdateManyArgs>(args: SelectSubset<T, ProjectUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -4688,7 +5010,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Update zero or more Projects and only return the `id`
      * const projectWithIdOnly = await prisma.project.updateManyAndReturn({
      *   select: { id: true },
@@ -4701,7 +5023,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     updateManyAndReturn<T extends ProjectUpdateManyAndReturnArgs>(args: SelectSubset<T, ProjectUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
@@ -4790,7 +5112,7 @@ export namespace Prisma {
      *     _all: true
      *   },
      * })
-     * 
+     *
     **/
     groupBy<
       T extends ProjectGroupByArgs,
@@ -4905,7 +5227,7 @@ export namespace Prisma {
     readonly status: FieldRef<"Project", 'String'>
     readonly createdOn: FieldRef<"Project", 'DateTime'>
   }
-    
+
 
   // Custom InputTypes
   /**
@@ -4974,31 +5296,31 @@ export namespace Prisma {
     where?: ProjectWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Projects to fetch.
      */
     orderBy?: ProjectOrderByWithRelationInput | ProjectOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for Projects.
      */
     cursor?: ProjectWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Projects from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Projects.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of Projects.
      */
     distinct?: ProjectScalarFieldEnum | ProjectScalarFieldEnum[]
@@ -5026,31 +5348,31 @@ export namespace Prisma {
     where?: ProjectWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Projects to fetch.
      */
     orderBy?: ProjectOrderByWithRelationInput | ProjectOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for Projects.
      */
     cursor?: ProjectWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Projects from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Projects.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of Projects.
      */
     distinct?: ProjectScalarFieldEnum | ProjectScalarFieldEnum[]
@@ -5078,31 +5400,31 @@ export namespace Prisma {
     where?: ProjectWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Projects to fetch.
      */
     orderBy?: ProjectOrderByWithRelationInput | ProjectOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for listing Projects.
      */
     cursor?: ProjectWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Projects from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Projects.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of Projects.
      */
     distinct?: ProjectScalarFieldEnum | ProjectScalarFieldEnum[]
@@ -5541,43 +5863,43 @@ export namespace Prisma {
     where?: RoleWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Roles to fetch.
      */
     orderBy?: RoleOrderByWithRelationInput | RoleOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the start position
      */
     cursor?: RoleWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Roles from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Roles.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Count returned Roles
     **/
     _count?: true | RoleCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the minimum value
     **/
     _min?: RoleMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the maximum value
     **/
     _max?: RoleMaxAggregateInputType
@@ -5757,13 +6079,13 @@ export namespace Prisma {
      * @example
      * // Get all Roles
      * const roles = await prisma.role.findMany()
-     * 
+     *
      * // Get first 10 Roles
      * const roles = await prisma.role.findMany({ take: 10 })
-     * 
+     *
      * // Only select the `id`
      * const roleWithIdOnly = await prisma.role.findMany({ select: { id: true } })
-     * 
+     *
      */
     findMany<T extends RoleFindManyArgs>(args?: SelectSubset<T, RoleFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
@@ -5777,7 +6099,7 @@ export namespace Prisma {
      *     // ... data to create a Role
      *   }
      * })
-     * 
+     *
      */
     create<T extends RoleCreateArgs>(args: SelectSubset<T, RoleCreateArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -5791,7 +6113,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *     
+     *
      */
     createMany<T extends RoleCreateManyArgs>(args?: SelectSubset<T, RoleCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -5805,7 +6127,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Create many Roles and only return the `id`
      * const roleWithIdOnly = await prisma.role.createManyAndReturn({
      *   select: { id: true },
@@ -5815,7 +6137,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     createManyAndReturn<T extends RoleCreateManyAndReturnArgs>(args?: SelectSubset<T, RoleCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
@@ -5829,7 +6151,7 @@ export namespace Prisma {
      *     // ... filter to delete one Role
      *   }
      * })
-     * 
+     *
      */
     delete<T extends RoleDeleteArgs>(args: SelectSubset<T, RoleDeleteArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -5846,7 +6168,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     update<T extends RoleUpdateArgs>(args: SelectSubset<T, RoleUpdateArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -5860,7 +6182,7 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     * 
+     *
      */
     deleteMany<T extends RoleDeleteManyArgs>(args?: SelectSubset<T, RoleDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -5879,7 +6201,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     updateMany<T extends RoleUpdateManyArgs>(args: SelectSubset<T, RoleUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -5896,7 +6218,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Update zero or more Roles and only return the `id`
      * const roleWithIdOnly = await prisma.role.updateManyAndReturn({
      *   select: { id: true },
@@ -5909,7 +6231,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     updateManyAndReturn<T extends RoleUpdateManyAndReturnArgs>(args: SelectSubset<T, RoleUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
@@ -5998,7 +6320,7 @@ export namespace Prisma {
      *     _all: true
      *   },
      * })
-     * 
+     *
     **/
     groupBy<
       T extends RoleGroupByArgs,
@@ -6107,7 +6429,7 @@ export namespace Prisma {
     readonly description: FieldRef<"Role", 'String'>
     readonly permissions: FieldRef<"Role", 'Json'>
   }
-    
+
 
   // Custom InputTypes
   /**
@@ -6176,31 +6498,31 @@ export namespace Prisma {
     where?: RoleWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Roles to fetch.
      */
     orderBy?: RoleOrderByWithRelationInput | RoleOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for Roles.
      */
     cursor?: RoleWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Roles from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Roles.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of Roles.
      */
     distinct?: RoleScalarFieldEnum | RoleScalarFieldEnum[]
@@ -6228,31 +6550,31 @@ export namespace Prisma {
     where?: RoleWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Roles to fetch.
      */
     orderBy?: RoleOrderByWithRelationInput | RoleOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for Roles.
      */
     cursor?: RoleWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Roles from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Roles.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of Roles.
      */
     distinct?: RoleScalarFieldEnum | RoleScalarFieldEnum[]
@@ -6280,31 +6602,31 @@ export namespace Prisma {
     where?: RoleWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Roles to fetch.
      */
     orderBy?: RoleOrderByWithRelationInput | RoleOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for listing Roles.
      */
     cursor?: RoleWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Roles from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Roles.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of Roles.
      */
     distinct?: RoleScalarFieldEnum | RoleScalarFieldEnum[]
@@ -6615,43 +6937,43 @@ export namespace Prisma {
     where?: AccessWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Accesses to fetch.
      */
     orderBy?: AccessOrderByWithRelationInput | AccessOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the start position
      */
     cursor?: AccessWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Accesses from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Accesses.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Count returned Accesses
     **/
     _count?: true | AccessCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the minimum value
     **/
     _min?: AccessMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the maximum value
     **/
     _max?: AccessMaxAggregateInputType
@@ -6861,13 +7183,13 @@ export namespace Prisma {
      * @example
      * // Get all Accesses
      * const accesses = await prisma.access.findMany()
-     * 
+     *
      * // Get first 10 Accesses
      * const accesses = await prisma.access.findMany({ take: 10 })
-     * 
+     *
      * // Only select the `id`
      * const accessWithIdOnly = await prisma.access.findMany({ select: { id: true } })
-     * 
+     *
      */
     findMany<T extends AccessFindManyArgs>(args?: SelectSubset<T, AccessFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccessPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
@@ -6881,7 +7203,7 @@ export namespace Prisma {
      *     // ... data to create a Access
      *   }
      * })
-     * 
+     *
      */
     create<T extends AccessCreateArgs>(args: SelectSubset<T, AccessCreateArgs<ExtArgs>>): Prisma__AccessClient<$Result.GetResult<Prisma.$AccessPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -6895,7 +7217,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *     
+     *
      */
     createMany<T extends AccessCreateManyArgs>(args?: SelectSubset<T, AccessCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -6909,7 +7231,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Create many Accesses and only return the `id`
      * const accessWithIdOnly = await prisma.access.createManyAndReturn({
      *   select: { id: true },
@@ -6919,7 +7241,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     createManyAndReturn<T extends AccessCreateManyAndReturnArgs>(args?: SelectSubset<T, AccessCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccessPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
@@ -6933,7 +7255,7 @@ export namespace Prisma {
      *     // ... filter to delete one Access
      *   }
      * })
-     * 
+     *
      */
     delete<T extends AccessDeleteArgs>(args: SelectSubset<T, AccessDeleteArgs<ExtArgs>>): Prisma__AccessClient<$Result.GetResult<Prisma.$AccessPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -6950,7 +7272,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     update<T extends AccessUpdateArgs>(args: SelectSubset<T, AccessUpdateArgs<ExtArgs>>): Prisma__AccessClient<$Result.GetResult<Prisma.$AccessPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -6964,7 +7286,7 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     * 
+     *
      */
     deleteMany<T extends AccessDeleteManyArgs>(args?: SelectSubset<T, AccessDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -6983,7 +7305,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     updateMany<T extends AccessUpdateManyArgs>(args: SelectSubset<T, AccessUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -7000,7 +7322,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Update zero or more Accesses and only return the `id`
      * const accessWithIdOnly = await prisma.access.updateManyAndReturn({
      *   select: { id: true },
@@ -7013,7 +7335,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     updateManyAndReturn<T extends AccessUpdateManyAndReturnArgs>(args: SelectSubset<T, AccessUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccessPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
@@ -7102,7 +7424,7 @@ export namespace Prisma {
      *     _all: true
      *   },
      * })
-     * 
+     *
     **/
     groupBy<
       T extends AccessGroupByArgs,
@@ -7215,7 +7537,7 @@ export namespace Prisma {
     readonly status: FieldRef<"Access", 'String'>
     readonly permittedOn: FieldRef<"Access", 'DateTime'>
   }
-    
+
 
   // Custom InputTypes
   /**
@@ -7284,31 +7606,31 @@ export namespace Prisma {
     where?: AccessWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Accesses to fetch.
      */
     orderBy?: AccessOrderByWithRelationInput | AccessOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for Accesses.
      */
     cursor?: AccessWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Accesses from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Accesses.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of Accesses.
      */
     distinct?: AccessScalarFieldEnum | AccessScalarFieldEnum[]
@@ -7336,31 +7658,31 @@ export namespace Prisma {
     where?: AccessWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Accesses to fetch.
      */
     orderBy?: AccessOrderByWithRelationInput | AccessOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for Accesses.
      */
     cursor?: AccessWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Accesses from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Accesses.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of Accesses.
      */
     distinct?: AccessScalarFieldEnum | AccessScalarFieldEnum[]
@@ -7388,31 +7710,31 @@ export namespace Prisma {
     where?: AccessWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Accesses to fetch.
      */
     orderBy?: AccessOrderByWithRelationInput | AccessOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for listing Accesses.
      */
     cursor?: AccessWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Accesses from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Accesses.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of Accesses.
      */
     distinct?: AccessScalarFieldEnum | AccessScalarFieldEnum[]
@@ -7703,43 +8025,43 @@ export namespace Prisma {
     where?: PartyWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Parties to fetch.
      */
     orderBy?: PartyOrderByWithRelationInput | PartyOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the start position
      */
     cursor?: PartyWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Parties from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Parties.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Count returned Parties
     **/
     _count?: true | PartyCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the minimum value
     **/
     _min?: PartyMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the maximum value
     **/
     _max?: PartyMaxAggregateInputType
@@ -7807,6 +8129,7 @@ export namespace Prisma {
     paymentMethods?: boolean | Party$paymentMethodsArgs<ExtArgs>
     quotations?: boolean | Party$quotationsArgs<ExtArgs>
     invoices?: boolean | Party$invoicesArgs<ExtArgs>
+    proformas?: boolean | Party$proformasArgs<ExtArgs>
     _count?: boolean | PartyCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["party"]>
 
@@ -7849,6 +8172,7 @@ export namespace Prisma {
     paymentMethods?: boolean | Party$paymentMethodsArgs<ExtArgs>
     quotations?: boolean | Party$quotationsArgs<ExtArgs>
     invoices?: boolean | Party$invoicesArgs<ExtArgs>
+    proformas?: boolean | Party$proformasArgs<ExtArgs>
     _count?: boolean | PartyCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type PartyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7869,6 +8193,7 @@ export namespace Prisma {
       paymentMethods: Prisma.$PartyPaymentMethodPayload<ExtArgs>[]
       quotations: Prisma.$DocumentQuotationPayload<ExtArgs>[]
       invoices: Prisma.$InvoicePayload<ExtArgs>[]
+      proformas: Prisma.$ProformaPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -7956,13 +8281,13 @@ export namespace Prisma {
      * @example
      * // Get all Parties
      * const parties = await prisma.party.findMany()
-     * 
+     *
      * // Get first 10 Parties
      * const parties = await prisma.party.findMany({ take: 10 })
-     * 
+     *
      * // Only select the `id`
      * const partyWithIdOnly = await prisma.party.findMany({ select: { id: true } })
-     * 
+     *
      */
     findMany<T extends PartyFindManyArgs>(args?: SelectSubset<T, PartyFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PartyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
@@ -7976,7 +8301,7 @@ export namespace Prisma {
      *     // ... data to create a Party
      *   }
      * })
-     * 
+     *
      */
     create<T extends PartyCreateArgs>(args: SelectSubset<T, PartyCreateArgs<ExtArgs>>): Prisma__PartyClient<$Result.GetResult<Prisma.$PartyPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -7990,7 +8315,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *     
+     *
      */
     createMany<T extends PartyCreateManyArgs>(args?: SelectSubset<T, PartyCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -8004,7 +8329,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Create many Parties and only return the `id`
      * const partyWithIdOnly = await prisma.party.createManyAndReturn({
      *   select: { id: true },
@@ -8014,7 +8339,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     createManyAndReturn<T extends PartyCreateManyAndReturnArgs>(args?: SelectSubset<T, PartyCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PartyPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
@@ -8028,7 +8353,7 @@ export namespace Prisma {
      *     // ... filter to delete one Party
      *   }
      * })
-     * 
+     *
      */
     delete<T extends PartyDeleteArgs>(args: SelectSubset<T, PartyDeleteArgs<ExtArgs>>): Prisma__PartyClient<$Result.GetResult<Prisma.$PartyPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -8045,7 +8370,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     update<T extends PartyUpdateArgs>(args: SelectSubset<T, PartyUpdateArgs<ExtArgs>>): Prisma__PartyClient<$Result.GetResult<Prisma.$PartyPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -8059,7 +8384,7 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     * 
+     *
      */
     deleteMany<T extends PartyDeleteManyArgs>(args?: SelectSubset<T, PartyDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -8078,7 +8403,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     updateMany<T extends PartyUpdateManyArgs>(args: SelectSubset<T, PartyUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -8095,7 +8420,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Update zero or more Parties and only return the `id`
      * const partyWithIdOnly = await prisma.party.updateManyAndReturn({
      *   select: { id: true },
@@ -8108,7 +8433,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     updateManyAndReturn<T extends PartyUpdateManyAndReturnArgs>(args: SelectSubset<T, PartyUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PartyPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
@@ -8197,7 +8522,7 @@ export namespace Prisma {
      *     _all: true
      *   },
      * })
-     * 
+     *
     **/
     groupBy<
       T extends PartyGroupByArgs,
@@ -8277,6 +8602,7 @@ export namespace Prisma {
     paymentMethods<T extends Party$paymentMethodsArgs<ExtArgs> = {}>(args?: Subset<T, Party$paymentMethodsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PartyPaymentMethodPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     quotations<T extends Party$quotationsArgs<ExtArgs> = {}>(args?: Subset<T, Party$quotationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentQuotationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     invoices<T extends Party$invoicesArgs<ExtArgs> = {}>(args?: Subset<T, Party$invoicesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    proformas<T extends Party$proformasArgs<ExtArgs> = {}>(args?: Subset<T, Party$proformasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProformaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8313,7 +8639,7 @@ export namespace Prisma {
     readonly type: FieldRef<"Party", 'String'>
     readonly taxinfo: FieldRef<"Party", 'Json'>
   }
-    
+
 
   // Custom InputTypes
   /**
@@ -8382,31 +8708,31 @@ export namespace Prisma {
     where?: PartyWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Parties to fetch.
      */
     orderBy?: PartyOrderByWithRelationInput | PartyOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for Parties.
      */
     cursor?: PartyWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Parties from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Parties.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of Parties.
      */
     distinct?: PartyScalarFieldEnum | PartyScalarFieldEnum[]
@@ -8434,31 +8760,31 @@ export namespace Prisma {
     where?: PartyWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Parties to fetch.
      */
     orderBy?: PartyOrderByWithRelationInput | PartyOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for Parties.
      */
     cursor?: PartyWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Parties from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Parties.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of Parties.
      */
     distinct?: PartyScalarFieldEnum | PartyScalarFieldEnum[]
@@ -8486,31 +8812,31 @@ export namespace Prisma {
     where?: PartyWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Parties to fetch.
      */
     orderBy?: PartyOrderByWithRelationInput | PartyOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for listing Parties.
      */
     cursor?: PartyWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Parties from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Parties.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of Parties.
      */
     distinct?: PartyScalarFieldEnum | PartyScalarFieldEnum[]
@@ -8809,6 +9135,30 @@ export namespace Prisma {
   }
 
   /**
+   * Party.proformas
+   */
+  export type Party$proformasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Proforma
+     */
+    select?: ProformaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Proforma
+     */
+    omit?: ProformaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaInclude<ExtArgs> | null
+    where?: ProformaWhereInput
+    orderBy?: ProformaOrderByWithRelationInput | ProformaOrderByWithRelationInput[]
+    cursor?: ProformaWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProformaScalarFieldEnum | ProformaScalarFieldEnum[]
+  }
+
+  /**
    * Party without action
    */
   export type PartyDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8897,43 +9247,43 @@ export namespace Prisma {
     where?: PartyContactWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of PartyContacts to fetch.
      */
     orderBy?: PartyContactOrderByWithRelationInput | PartyContactOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the start position
      */
     cursor?: PartyContactWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` PartyContacts from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` PartyContacts.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Count returned PartyContacts
     **/
     _count?: true | PartyContactCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the minimum value
     **/
     _min?: PartyContactMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the maximum value
     **/
     _max?: PartyContactMaxAggregateInputType
@@ -9129,13 +9479,13 @@ export namespace Prisma {
      * @example
      * // Get all PartyContacts
      * const partyContacts = await prisma.partyContact.findMany()
-     * 
+     *
      * // Get first 10 PartyContacts
      * const partyContacts = await prisma.partyContact.findMany({ take: 10 })
-     * 
+     *
      * // Only select the `id`
      * const partyContactWithIdOnly = await prisma.partyContact.findMany({ select: { id: true } })
-     * 
+     *
      */
     findMany<T extends PartyContactFindManyArgs>(args?: SelectSubset<T, PartyContactFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PartyContactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
@@ -9149,7 +9499,7 @@ export namespace Prisma {
      *     // ... data to create a PartyContact
      *   }
      * })
-     * 
+     *
      */
     create<T extends PartyContactCreateArgs>(args: SelectSubset<T, PartyContactCreateArgs<ExtArgs>>): Prisma__PartyContactClient<$Result.GetResult<Prisma.$PartyContactPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -9163,7 +9513,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *     
+     *
      */
     createMany<T extends PartyContactCreateManyArgs>(args?: SelectSubset<T, PartyContactCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -9177,7 +9527,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Create many PartyContacts and only return the `id`
      * const partyContactWithIdOnly = await prisma.partyContact.createManyAndReturn({
      *   select: { id: true },
@@ -9187,7 +9537,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     createManyAndReturn<T extends PartyContactCreateManyAndReturnArgs>(args?: SelectSubset<T, PartyContactCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PartyContactPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
@@ -9201,7 +9551,7 @@ export namespace Prisma {
      *     // ... filter to delete one PartyContact
      *   }
      * })
-     * 
+     *
      */
     delete<T extends PartyContactDeleteArgs>(args: SelectSubset<T, PartyContactDeleteArgs<ExtArgs>>): Prisma__PartyContactClient<$Result.GetResult<Prisma.$PartyContactPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -9218,7 +9568,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     update<T extends PartyContactUpdateArgs>(args: SelectSubset<T, PartyContactUpdateArgs<ExtArgs>>): Prisma__PartyContactClient<$Result.GetResult<Prisma.$PartyContactPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -9232,7 +9582,7 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     * 
+     *
      */
     deleteMany<T extends PartyContactDeleteManyArgs>(args?: SelectSubset<T, PartyContactDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -9251,7 +9601,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     updateMany<T extends PartyContactUpdateManyArgs>(args: SelectSubset<T, PartyContactUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -9268,7 +9618,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Update zero or more PartyContacts and only return the `id`
      * const partyContactWithIdOnly = await prisma.partyContact.updateManyAndReturn({
      *   select: { id: true },
@@ -9281,7 +9631,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     updateManyAndReturn<T extends PartyContactUpdateManyAndReturnArgs>(args: SelectSubset<T, PartyContactUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PartyContactPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
@@ -9370,7 +9720,7 @@ export namespace Prisma {
      *     _all: true
      *   },
      * })
-     * 
+     *
     **/
     groupBy<
       T extends PartyContactGroupByArgs,
@@ -9481,7 +9831,7 @@ export namespace Prisma {
     readonly addedOn: FieldRef<"PartyContact", 'DateTime'>
     readonly details: FieldRef<"PartyContact", 'Json'>
   }
-    
+
 
   // Custom InputTypes
   /**
@@ -9550,31 +9900,31 @@ export namespace Prisma {
     where?: PartyContactWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of PartyContacts to fetch.
      */
     orderBy?: PartyContactOrderByWithRelationInput | PartyContactOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for PartyContacts.
      */
     cursor?: PartyContactWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` PartyContacts from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` PartyContacts.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of PartyContacts.
      */
     distinct?: PartyContactScalarFieldEnum | PartyContactScalarFieldEnum[]
@@ -9602,31 +9952,31 @@ export namespace Prisma {
     where?: PartyContactWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of PartyContacts to fetch.
      */
     orderBy?: PartyContactOrderByWithRelationInput | PartyContactOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for PartyContacts.
      */
     cursor?: PartyContactWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` PartyContacts from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` PartyContacts.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of PartyContacts.
      */
     distinct?: PartyContactScalarFieldEnum | PartyContactScalarFieldEnum[]
@@ -9654,31 +10004,31 @@ export namespace Prisma {
     where?: PartyContactWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of PartyContacts to fetch.
      */
     orderBy?: PartyContactOrderByWithRelationInput | PartyContactOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for listing PartyContacts.
      */
     cursor?: PartyContactWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` PartyContacts from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` PartyContacts.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of PartyContacts.
      */
     distinct?: PartyContactScalarFieldEnum | PartyContactScalarFieldEnum[]
@@ -9969,43 +10319,43 @@ export namespace Prisma {
     where?: PartyPaymentMethodWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of PartyPaymentMethods to fetch.
      */
     orderBy?: PartyPaymentMethodOrderByWithRelationInput | PartyPaymentMethodOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the start position
      */
     cursor?: PartyPaymentMethodWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` PartyPaymentMethods from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` PartyPaymentMethods.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Count returned PartyPaymentMethods
     **/
     _count?: true | PartyPaymentMethodCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the minimum value
     **/
     _min?: PartyPaymentMethodMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the maximum value
     **/
     _max?: PartyPaymentMethodMaxAggregateInputType
@@ -10201,13 +10551,13 @@ export namespace Prisma {
      * @example
      * // Get all PartyPaymentMethods
      * const partyPaymentMethods = await prisma.partyPaymentMethod.findMany()
-     * 
+     *
      * // Get first 10 PartyPaymentMethods
      * const partyPaymentMethods = await prisma.partyPaymentMethod.findMany({ take: 10 })
-     * 
+     *
      * // Only select the `id`
      * const partyPaymentMethodWithIdOnly = await prisma.partyPaymentMethod.findMany({ select: { id: true } })
-     * 
+     *
      */
     findMany<T extends PartyPaymentMethodFindManyArgs>(args?: SelectSubset<T, PartyPaymentMethodFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PartyPaymentMethodPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
@@ -10221,7 +10571,7 @@ export namespace Prisma {
      *     // ... data to create a PartyPaymentMethod
      *   }
      * })
-     * 
+     *
      */
     create<T extends PartyPaymentMethodCreateArgs>(args: SelectSubset<T, PartyPaymentMethodCreateArgs<ExtArgs>>): Prisma__PartyPaymentMethodClient<$Result.GetResult<Prisma.$PartyPaymentMethodPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -10235,7 +10585,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *     
+     *
      */
     createMany<T extends PartyPaymentMethodCreateManyArgs>(args?: SelectSubset<T, PartyPaymentMethodCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -10249,7 +10599,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Create many PartyPaymentMethods and only return the `id`
      * const partyPaymentMethodWithIdOnly = await prisma.partyPaymentMethod.createManyAndReturn({
      *   select: { id: true },
@@ -10259,7 +10609,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     createManyAndReturn<T extends PartyPaymentMethodCreateManyAndReturnArgs>(args?: SelectSubset<T, PartyPaymentMethodCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PartyPaymentMethodPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
@@ -10273,7 +10623,7 @@ export namespace Prisma {
      *     // ... filter to delete one PartyPaymentMethod
      *   }
      * })
-     * 
+     *
      */
     delete<T extends PartyPaymentMethodDeleteArgs>(args: SelectSubset<T, PartyPaymentMethodDeleteArgs<ExtArgs>>): Prisma__PartyPaymentMethodClient<$Result.GetResult<Prisma.$PartyPaymentMethodPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -10290,7 +10640,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     update<T extends PartyPaymentMethodUpdateArgs>(args: SelectSubset<T, PartyPaymentMethodUpdateArgs<ExtArgs>>): Prisma__PartyPaymentMethodClient<$Result.GetResult<Prisma.$PartyPaymentMethodPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -10304,7 +10654,7 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     * 
+     *
      */
     deleteMany<T extends PartyPaymentMethodDeleteManyArgs>(args?: SelectSubset<T, PartyPaymentMethodDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -10323,7 +10673,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     updateMany<T extends PartyPaymentMethodUpdateManyArgs>(args: SelectSubset<T, PartyPaymentMethodUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -10340,7 +10690,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Update zero or more PartyPaymentMethods and only return the `id`
      * const partyPaymentMethodWithIdOnly = await prisma.partyPaymentMethod.updateManyAndReturn({
      *   select: { id: true },
@@ -10353,7 +10703,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     updateManyAndReturn<T extends PartyPaymentMethodUpdateManyAndReturnArgs>(args: SelectSubset<T, PartyPaymentMethodUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PartyPaymentMethodPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
@@ -10442,7 +10792,7 @@ export namespace Prisma {
      *     _all: true
      *   },
      * })
-     * 
+     *
     **/
     groupBy<
       T extends PartyPaymentMethodGroupByArgs,
@@ -10553,7 +10903,7 @@ export namespace Prisma {
     readonly addedOn: FieldRef<"PartyPaymentMethod", 'DateTime'>
     readonly details: FieldRef<"PartyPaymentMethod", 'Json'>
   }
-    
+
 
   // Custom InputTypes
   /**
@@ -10622,31 +10972,31 @@ export namespace Prisma {
     where?: PartyPaymentMethodWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of PartyPaymentMethods to fetch.
      */
     orderBy?: PartyPaymentMethodOrderByWithRelationInput | PartyPaymentMethodOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for PartyPaymentMethods.
      */
     cursor?: PartyPaymentMethodWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` PartyPaymentMethods from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` PartyPaymentMethods.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of PartyPaymentMethods.
      */
     distinct?: PartyPaymentMethodScalarFieldEnum | PartyPaymentMethodScalarFieldEnum[]
@@ -10674,31 +11024,31 @@ export namespace Prisma {
     where?: PartyPaymentMethodWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of PartyPaymentMethods to fetch.
      */
     orderBy?: PartyPaymentMethodOrderByWithRelationInput | PartyPaymentMethodOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for PartyPaymentMethods.
      */
     cursor?: PartyPaymentMethodWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` PartyPaymentMethods from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` PartyPaymentMethods.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of PartyPaymentMethods.
      */
     distinct?: PartyPaymentMethodScalarFieldEnum | PartyPaymentMethodScalarFieldEnum[]
@@ -10726,31 +11076,31 @@ export namespace Prisma {
     where?: PartyPaymentMethodWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of PartyPaymentMethods to fetch.
      */
     orderBy?: PartyPaymentMethodOrderByWithRelationInput | PartyPaymentMethodOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for listing PartyPaymentMethods.
      */
     cursor?: PartyPaymentMethodWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` PartyPaymentMethods from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` PartyPaymentMethods.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of PartyPaymentMethods.
      */
     distinct?: PartyPaymentMethodScalarFieldEnum | PartyPaymentMethodScalarFieldEnum[]
@@ -11051,43 +11401,43 @@ export namespace Prisma {
     where?: AssetGroupWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of AssetGroups to fetch.
      */
     orderBy?: AssetGroupOrderByWithRelationInput | AssetGroupOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the start position
      */
     cursor?: AssetGroupWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` AssetGroups from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` AssetGroups.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Count returned AssetGroups
     **/
     _count?: true | AssetGroupCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the minimum value
     **/
     _min?: AssetGroupMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the maximum value
     **/
     _max?: AssetGroupMaxAggregateInputType
@@ -11304,13 +11654,13 @@ export namespace Prisma {
      * @example
      * // Get all AssetGroups
      * const assetGroups = await prisma.assetGroup.findMany()
-     * 
+     *
      * // Get first 10 AssetGroups
      * const assetGroups = await prisma.assetGroup.findMany({ take: 10 })
-     * 
+     *
      * // Only select the `id`
      * const assetGroupWithIdOnly = await prisma.assetGroup.findMany({ select: { id: true } })
-     * 
+     *
      */
     findMany<T extends AssetGroupFindManyArgs>(args?: SelectSubset<T, AssetGroupFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AssetGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
@@ -11324,7 +11674,7 @@ export namespace Prisma {
      *     // ... data to create a AssetGroup
      *   }
      * })
-     * 
+     *
      */
     create<T extends AssetGroupCreateArgs>(args: SelectSubset<T, AssetGroupCreateArgs<ExtArgs>>): Prisma__AssetGroupClient<$Result.GetResult<Prisma.$AssetGroupPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -11338,7 +11688,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *     
+     *
      */
     createMany<T extends AssetGroupCreateManyArgs>(args?: SelectSubset<T, AssetGroupCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -11352,7 +11702,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Create many AssetGroups and only return the `id`
      * const assetGroupWithIdOnly = await prisma.assetGroup.createManyAndReturn({
      *   select: { id: true },
@@ -11362,7 +11712,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     createManyAndReturn<T extends AssetGroupCreateManyAndReturnArgs>(args?: SelectSubset<T, AssetGroupCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AssetGroupPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
@@ -11376,7 +11726,7 @@ export namespace Prisma {
      *     // ... filter to delete one AssetGroup
      *   }
      * })
-     * 
+     *
      */
     delete<T extends AssetGroupDeleteArgs>(args: SelectSubset<T, AssetGroupDeleteArgs<ExtArgs>>): Prisma__AssetGroupClient<$Result.GetResult<Prisma.$AssetGroupPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -11393,7 +11743,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     update<T extends AssetGroupUpdateArgs>(args: SelectSubset<T, AssetGroupUpdateArgs<ExtArgs>>): Prisma__AssetGroupClient<$Result.GetResult<Prisma.$AssetGroupPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -11407,7 +11757,7 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     * 
+     *
      */
     deleteMany<T extends AssetGroupDeleteManyArgs>(args?: SelectSubset<T, AssetGroupDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -11426,7 +11776,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     updateMany<T extends AssetGroupUpdateManyArgs>(args: SelectSubset<T, AssetGroupUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -11443,7 +11793,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Update zero or more AssetGroups and only return the `id`
      * const assetGroupWithIdOnly = await prisma.assetGroup.updateManyAndReturn({
      *   select: { id: true },
@@ -11456,7 +11806,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     updateManyAndReturn<T extends AssetGroupUpdateManyAndReturnArgs>(args: SelectSubset<T, AssetGroupUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AssetGroupPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
@@ -11545,7 +11895,7 @@ export namespace Prisma {
      *     _all: true
      *   },
      * })
-     * 
+     *
     **/
     groupBy<
       T extends AssetGroupGroupByArgs,
@@ -11660,7 +12010,7 @@ export namespace Prisma {
     readonly projectId: FieldRef<"AssetGroup", 'String'>
     readonly createdAt: FieldRef<"AssetGroup", 'DateTime'>
   }
-    
+
 
   // Custom InputTypes
   /**
@@ -11729,31 +12079,31 @@ export namespace Prisma {
     where?: AssetGroupWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of AssetGroups to fetch.
      */
     orderBy?: AssetGroupOrderByWithRelationInput | AssetGroupOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for AssetGroups.
      */
     cursor?: AssetGroupWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` AssetGroups from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` AssetGroups.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of AssetGroups.
      */
     distinct?: AssetGroupScalarFieldEnum | AssetGroupScalarFieldEnum[]
@@ -11781,31 +12131,31 @@ export namespace Prisma {
     where?: AssetGroupWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of AssetGroups to fetch.
      */
     orderBy?: AssetGroupOrderByWithRelationInput | AssetGroupOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for AssetGroups.
      */
     cursor?: AssetGroupWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` AssetGroups from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` AssetGroups.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of AssetGroups.
      */
     distinct?: AssetGroupScalarFieldEnum | AssetGroupScalarFieldEnum[]
@@ -11833,31 +12183,31 @@ export namespace Prisma {
     where?: AssetGroupWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of AssetGroups to fetch.
      */
     orderBy?: AssetGroupOrderByWithRelationInput | AssetGroupOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for listing AssetGroups.
      */
     cursor?: AssetGroupWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` AssetGroups from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` AssetGroups.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of AssetGroups.
      */
     distinct?: AssetGroupScalarFieldEnum | AssetGroupScalarFieldEnum[]
@@ -12236,43 +12586,43 @@ export namespace Prisma {
     where?: FinAccountWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of FinAccounts to fetch.
      */
     orderBy?: FinAccountOrderByWithRelationInput | FinAccountOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the start position
      */
     cursor?: FinAccountWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` FinAccounts from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` FinAccounts.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Count returned FinAccounts
     **/
     _count?: true | FinAccountCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the minimum value
     **/
     _min?: FinAccountMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the maximum value
     **/
     _max?: FinAccountMaxAggregateInputType
@@ -12504,13 +12854,13 @@ export namespace Prisma {
      * @example
      * // Get all FinAccounts
      * const finAccounts = await prisma.finAccount.findMany()
-     * 
+     *
      * // Get first 10 FinAccounts
      * const finAccounts = await prisma.finAccount.findMany({ take: 10 })
-     * 
+     *
      * // Only select the `id`
      * const finAccountWithIdOnly = await prisma.finAccount.findMany({ select: { id: true } })
-     * 
+     *
      */
     findMany<T extends FinAccountFindManyArgs>(args?: SelectSubset<T, FinAccountFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FinAccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
@@ -12524,7 +12874,7 @@ export namespace Prisma {
      *     // ... data to create a FinAccount
      *   }
      * })
-     * 
+     *
      */
     create<T extends FinAccountCreateArgs>(args: SelectSubset<T, FinAccountCreateArgs<ExtArgs>>): Prisma__FinAccountClient<$Result.GetResult<Prisma.$FinAccountPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -12538,7 +12888,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *     
+     *
      */
     createMany<T extends FinAccountCreateManyArgs>(args?: SelectSubset<T, FinAccountCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -12552,7 +12902,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Create many FinAccounts and only return the `id`
      * const finAccountWithIdOnly = await prisma.finAccount.createManyAndReturn({
      *   select: { id: true },
@@ -12562,7 +12912,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     createManyAndReturn<T extends FinAccountCreateManyAndReturnArgs>(args?: SelectSubset<T, FinAccountCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FinAccountPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
@@ -12576,7 +12926,7 @@ export namespace Prisma {
      *     // ... filter to delete one FinAccount
      *   }
      * })
-     * 
+     *
      */
     delete<T extends FinAccountDeleteArgs>(args: SelectSubset<T, FinAccountDeleteArgs<ExtArgs>>): Prisma__FinAccountClient<$Result.GetResult<Prisma.$FinAccountPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -12593,7 +12943,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     update<T extends FinAccountUpdateArgs>(args: SelectSubset<T, FinAccountUpdateArgs<ExtArgs>>): Prisma__FinAccountClient<$Result.GetResult<Prisma.$FinAccountPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -12607,7 +12957,7 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     * 
+     *
      */
     deleteMany<T extends FinAccountDeleteManyArgs>(args?: SelectSubset<T, FinAccountDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -12626,7 +12976,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     updateMany<T extends FinAccountUpdateManyArgs>(args: SelectSubset<T, FinAccountUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -12643,7 +12993,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Update zero or more FinAccounts and only return the `id`
      * const finAccountWithIdOnly = await prisma.finAccount.updateManyAndReturn({
      *   select: { id: true },
@@ -12656,7 +13006,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     updateManyAndReturn<T extends FinAccountUpdateManyAndReturnArgs>(args: SelectSubset<T, FinAccountUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FinAccountPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
@@ -12745,7 +13095,7 @@ export namespace Prisma {
      *     _all: true
      *   },
      * })
-     * 
+     *
     **/
     groupBy<
       T extends FinAccountGroupByArgs,
@@ -12862,7 +13212,7 @@ export namespace Prisma {
     readonly opened_on: FieldRef<"FinAccount", 'DateTime'>
     readonly created_on: FieldRef<"FinAccount", 'DateTime'>
   }
-    
+
 
   // Custom InputTypes
   /**
@@ -12931,31 +13281,31 @@ export namespace Prisma {
     where?: FinAccountWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of FinAccounts to fetch.
      */
     orderBy?: FinAccountOrderByWithRelationInput | FinAccountOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for FinAccounts.
      */
     cursor?: FinAccountWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` FinAccounts from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` FinAccounts.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of FinAccounts.
      */
     distinct?: FinAccountScalarFieldEnum | FinAccountScalarFieldEnum[]
@@ -12983,31 +13333,31 @@ export namespace Prisma {
     where?: FinAccountWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of FinAccounts to fetch.
      */
     orderBy?: FinAccountOrderByWithRelationInput | FinAccountOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for FinAccounts.
      */
     cursor?: FinAccountWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` FinAccounts from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` FinAccounts.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of FinAccounts.
      */
     distinct?: FinAccountScalarFieldEnum | FinAccountScalarFieldEnum[]
@@ -13035,31 +13385,31 @@ export namespace Prisma {
     where?: FinAccountWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of FinAccounts to fetch.
      */
     orderBy?: FinAccountOrderByWithRelationInput | FinAccountOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for listing FinAccounts.
      */
     cursor?: FinAccountWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` FinAccounts from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` FinAccounts.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of FinAccounts.
      */
     distinct?: FinAccountScalarFieldEnum | FinAccountScalarFieldEnum[]
@@ -13426,55 +13776,55 @@ export namespace Prisma {
     where?: TransactionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Transactions to fetch.
      */
     orderBy?: TransactionOrderByWithRelationInput | TransactionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the start position
      */
     cursor?: TransactionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Transactions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Transactions.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Count returned Transactions
     **/
     _count?: true | TransactionCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to average
     **/
     _avg?: TransactionAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to sum
     **/
     _sum?: TransactionSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the minimum value
     **/
     _min?: TransactionMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the maximum value
     **/
     _max?: TransactionMaxAggregateInputType
@@ -13752,13 +14102,13 @@ export namespace Prisma {
      * @example
      * // Get all Transactions
      * const transactions = await prisma.transaction.findMany()
-     * 
+     *
      * // Get first 10 Transactions
      * const transactions = await prisma.transaction.findMany({ take: 10 })
-     * 
+     *
      * // Only select the `id`
      * const transactionWithIdOnly = await prisma.transaction.findMany({ select: { id: true } })
-     * 
+     *
      */
     findMany<T extends TransactionFindManyArgs>(args?: SelectSubset<T, TransactionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
@@ -13772,7 +14122,7 @@ export namespace Prisma {
      *     // ... data to create a Transaction
      *   }
      * })
-     * 
+     *
      */
     create<T extends TransactionCreateArgs>(args: SelectSubset<T, TransactionCreateArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -13786,7 +14136,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *     
+     *
      */
     createMany<T extends TransactionCreateManyArgs>(args?: SelectSubset<T, TransactionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -13800,7 +14150,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Create many Transactions and only return the `id`
      * const transactionWithIdOnly = await prisma.transaction.createManyAndReturn({
      *   select: { id: true },
@@ -13810,7 +14160,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     createManyAndReturn<T extends TransactionCreateManyAndReturnArgs>(args?: SelectSubset<T, TransactionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
@@ -13824,7 +14174,7 @@ export namespace Prisma {
      *     // ... filter to delete one Transaction
      *   }
      * })
-     * 
+     *
      */
     delete<T extends TransactionDeleteArgs>(args: SelectSubset<T, TransactionDeleteArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -13841,7 +14191,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     update<T extends TransactionUpdateArgs>(args: SelectSubset<T, TransactionUpdateArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -13855,7 +14205,7 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     * 
+     *
      */
     deleteMany<T extends TransactionDeleteManyArgs>(args?: SelectSubset<T, TransactionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -13874,7 +14224,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     updateMany<T extends TransactionUpdateManyArgs>(args: SelectSubset<T, TransactionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -13891,7 +14241,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Update zero or more Transactions and only return the `id`
      * const transactionWithIdOnly = await prisma.transaction.updateManyAndReturn({
      *   select: { id: true },
@@ -13904,7 +14254,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     updateManyAndReturn<T extends TransactionUpdateManyAndReturnArgs>(args: SelectSubset<T, TransactionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
@@ -13993,7 +14343,7 @@ export namespace Prisma {
      *     _all: true
      *   },
      * })
-     * 
+     *
     **/
     groupBy<
       T extends TransactionGroupByArgs,
@@ -14117,7 +14467,7 @@ export namespace Prisma {
     readonly notes: FieldRef<"Transaction", 'Json'>
     readonly details: FieldRef<"Transaction", 'Json'>
   }
-    
+
 
   // Custom InputTypes
   /**
@@ -14186,31 +14536,31 @@ export namespace Prisma {
     where?: TransactionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Transactions to fetch.
      */
     orderBy?: TransactionOrderByWithRelationInput | TransactionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for Transactions.
      */
     cursor?: TransactionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Transactions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Transactions.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of Transactions.
      */
     distinct?: TransactionScalarFieldEnum | TransactionScalarFieldEnum[]
@@ -14238,31 +14588,31 @@ export namespace Prisma {
     where?: TransactionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Transactions to fetch.
      */
     orderBy?: TransactionOrderByWithRelationInput | TransactionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for Transactions.
      */
     cursor?: TransactionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Transactions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Transactions.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of Transactions.
      */
     distinct?: TransactionScalarFieldEnum | TransactionScalarFieldEnum[]
@@ -14290,31 +14640,31 @@ export namespace Prisma {
     where?: TransactionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Transactions to fetch.
      */
     orderBy?: TransactionOrderByWithRelationInput | TransactionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for listing Transactions.
      */
     cursor?: TransactionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Transactions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Transactions.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of Transactions.
      */
     distinct?: TransactionScalarFieldEnum | TransactionScalarFieldEnum[]
@@ -14697,55 +15047,55 @@ export namespace Prisma {
     where?: TransactionLineWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of TransactionLines to fetch.
      */
     orderBy?: TransactionLineOrderByWithRelationInput | TransactionLineOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the start position
      */
     cursor?: TransactionLineWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` TransactionLines from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` TransactionLines.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Count returned TransactionLines
     **/
     _count?: true | TransactionLineCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to average
     **/
     _avg?: TransactionLineAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to sum
     **/
     _sum?: TransactionLineSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the minimum value
     **/
     _min?: TransactionLineMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the maximum value
     **/
     _max?: TransactionLineMaxAggregateInputType
@@ -15006,13 +15356,13 @@ export namespace Prisma {
      * @example
      * // Get all TransactionLines
      * const transactionLines = await prisma.transactionLine.findMany()
-     * 
+     *
      * // Get first 10 TransactionLines
      * const transactionLines = await prisma.transactionLine.findMany({ take: 10 })
-     * 
+     *
      * // Only select the `id`
      * const transactionLineWithIdOnly = await prisma.transactionLine.findMany({ select: { id: true } })
-     * 
+     *
      */
     findMany<T extends TransactionLineFindManyArgs>(args?: SelectSubset<T, TransactionLineFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionLinePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
@@ -15026,7 +15376,7 @@ export namespace Prisma {
      *     // ... data to create a TransactionLine
      *   }
      * })
-     * 
+     *
      */
     create<T extends TransactionLineCreateArgs>(args: SelectSubset<T, TransactionLineCreateArgs<ExtArgs>>): Prisma__TransactionLineClient<$Result.GetResult<Prisma.$TransactionLinePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -15040,7 +15390,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *     
+     *
      */
     createMany<T extends TransactionLineCreateManyArgs>(args?: SelectSubset<T, TransactionLineCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -15054,7 +15404,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Create many TransactionLines and only return the `id`
      * const transactionLineWithIdOnly = await prisma.transactionLine.createManyAndReturn({
      *   select: { id: true },
@@ -15064,7 +15414,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     createManyAndReturn<T extends TransactionLineCreateManyAndReturnArgs>(args?: SelectSubset<T, TransactionLineCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionLinePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
@@ -15078,7 +15428,7 @@ export namespace Prisma {
      *     // ... filter to delete one TransactionLine
      *   }
      * })
-     * 
+     *
      */
     delete<T extends TransactionLineDeleteArgs>(args: SelectSubset<T, TransactionLineDeleteArgs<ExtArgs>>): Prisma__TransactionLineClient<$Result.GetResult<Prisma.$TransactionLinePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -15095,7 +15445,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     update<T extends TransactionLineUpdateArgs>(args: SelectSubset<T, TransactionLineUpdateArgs<ExtArgs>>): Prisma__TransactionLineClient<$Result.GetResult<Prisma.$TransactionLinePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -15109,7 +15459,7 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     * 
+     *
      */
     deleteMany<T extends TransactionLineDeleteManyArgs>(args?: SelectSubset<T, TransactionLineDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -15128,7 +15478,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     updateMany<T extends TransactionLineUpdateManyArgs>(args: SelectSubset<T, TransactionLineUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -15145,7 +15495,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Update zero or more TransactionLines and only return the `id`
      * const transactionLineWithIdOnly = await prisma.transactionLine.updateManyAndReturn({
      *   select: { id: true },
@@ -15158,7 +15508,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     updateManyAndReturn<T extends TransactionLineUpdateManyAndReturnArgs>(args: SelectSubset<T, TransactionLineUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionLinePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
@@ -15247,7 +15597,7 @@ export namespace Prisma {
      *     _all: true
      *   },
      * })
-     * 
+     *
     **/
     groupBy<
       T extends TransactionLineGroupByArgs,
@@ -15368,7 +15718,7 @@ export namespace Prisma {
     readonly tags: FieldRef<"TransactionLine", 'Json'>
     readonly details: FieldRef<"TransactionLine", 'Json'>
   }
-    
+
 
   // Custom InputTypes
   /**
@@ -15437,31 +15787,31 @@ export namespace Prisma {
     where?: TransactionLineWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of TransactionLines to fetch.
      */
     orderBy?: TransactionLineOrderByWithRelationInput | TransactionLineOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for TransactionLines.
      */
     cursor?: TransactionLineWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` TransactionLines from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` TransactionLines.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of TransactionLines.
      */
     distinct?: TransactionLineScalarFieldEnum | TransactionLineScalarFieldEnum[]
@@ -15489,31 +15839,31 @@ export namespace Prisma {
     where?: TransactionLineWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of TransactionLines to fetch.
      */
     orderBy?: TransactionLineOrderByWithRelationInput | TransactionLineOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for TransactionLines.
      */
     cursor?: TransactionLineWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` TransactionLines from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` TransactionLines.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of TransactionLines.
      */
     distinct?: TransactionLineScalarFieldEnum | TransactionLineScalarFieldEnum[]
@@ -15541,31 +15891,31 @@ export namespace Prisma {
     where?: TransactionLineWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of TransactionLines to fetch.
      */
     orderBy?: TransactionLineOrderByWithRelationInput | TransactionLineOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for listing TransactionLines.
      */
     cursor?: TransactionLineWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` TransactionLines from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` TransactionLines.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of TransactionLines.
      */
     distinct?: TransactionLineScalarFieldEnum | TransactionLineScalarFieldEnum[]
@@ -15951,55 +16301,55 @@ export namespace Prisma {
     where?: ProjectionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Projections to fetch.
      */
     orderBy?: ProjectionOrderByWithRelationInput | ProjectionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the start position
      */
     cursor?: ProjectionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Projections from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Projections.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Count returned Projections
     **/
     _count?: true | ProjectionCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to average
     **/
     _avg?: ProjectionAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to sum
     **/
     _sum?: ProjectionSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the minimum value
     **/
     _min?: ProjectionMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the maximum value
     **/
     _max?: ProjectionMaxAggregateInputType
@@ -16253,13 +16603,13 @@ export namespace Prisma {
      * @example
      * // Get all Projections
      * const projections = await prisma.projection.findMany()
-     * 
+     *
      * // Get first 10 Projections
      * const projections = await prisma.projection.findMany({ take: 10 })
-     * 
+     *
      * // Only select the `id`
      * const projectionWithIdOnly = await prisma.projection.findMany({ select: { id: true } })
-     * 
+     *
      */
     findMany<T extends ProjectionFindManyArgs>(args?: SelectSubset<T, ProjectionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
@@ -16273,7 +16623,7 @@ export namespace Prisma {
      *     // ... data to create a Projection
      *   }
      * })
-     * 
+     *
      */
     create<T extends ProjectionCreateArgs>(args: SelectSubset<T, ProjectionCreateArgs<ExtArgs>>): Prisma__ProjectionClient<$Result.GetResult<Prisma.$ProjectionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -16287,7 +16637,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *     
+     *
      */
     createMany<T extends ProjectionCreateManyArgs>(args?: SelectSubset<T, ProjectionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -16301,7 +16651,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Create many Projections and only return the `id`
      * const projectionWithIdOnly = await prisma.projection.createManyAndReturn({
      *   select: { id: true },
@@ -16311,7 +16661,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     createManyAndReturn<T extends ProjectionCreateManyAndReturnArgs>(args?: SelectSubset<T, ProjectionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
@@ -16325,7 +16675,7 @@ export namespace Prisma {
      *     // ... filter to delete one Projection
      *   }
      * })
-     * 
+     *
      */
     delete<T extends ProjectionDeleteArgs>(args: SelectSubset<T, ProjectionDeleteArgs<ExtArgs>>): Prisma__ProjectionClient<$Result.GetResult<Prisma.$ProjectionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -16342,7 +16692,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     update<T extends ProjectionUpdateArgs>(args: SelectSubset<T, ProjectionUpdateArgs<ExtArgs>>): Prisma__ProjectionClient<$Result.GetResult<Prisma.$ProjectionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -16356,7 +16706,7 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     * 
+     *
      */
     deleteMany<T extends ProjectionDeleteManyArgs>(args?: SelectSubset<T, ProjectionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -16375,7 +16725,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     updateMany<T extends ProjectionUpdateManyArgs>(args: SelectSubset<T, ProjectionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -16392,7 +16742,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Update zero or more Projections and only return the `id`
      * const projectionWithIdOnly = await prisma.projection.updateManyAndReturn({
      *   select: { id: true },
@@ -16405,7 +16755,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     updateManyAndReturn<T extends ProjectionUpdateManyAndReturnArgs>(args: SelectSubset<T, ProjectionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
@@ -16494,7 +16844,7 @@ export namespace Prisma {
      *     _all: true
      *   },
      * })
-     * 
+     *
     **/
     groupBy<
       T extends ProjectionGroupByArgs,
@@ -16614,7 +16964,7 @@ export namespace Prisma {
     readonly endsOn: FieldRef<"Projection", 'DateTime'>
     readonly createdAt: FieldRef<"Projection", 'DateTime'>
   }
-    
+
 
   // Custom InputTypes
   /**
@@ -16683,31 +17033,31 @@ export namespace Prisma {
     where?: ProjectionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Projections to fetch.
      */
     orderBy?: ProjectionOrderByWithRelationInput | ProjectionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for Projections.
      */
     cursor?: ProjectionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Projections from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Projections.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of Projections.
      */
     distinct?: ProjectionScalarFieldEnum | ProjectionScalarFieldEnum[]
@@ -16735,31 +17085,31 @@ export namespace Prisma {
     where?: ProjectionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Projections to fetch.
      */
     orderBy?: ProjectionOrderByWithRelationInput | ProjectionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for Projections.
      */
     cursor?: ProjectionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Projections from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Projections.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of Projections.
      */
     distinct?: ProjectionScalarFieldEnum | ProjectionScalarFieldEnum[]
@@ -16787,31 +17137,31 @@ export namespace Prisma {
     where?: ProjectionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Projections to fetch.
      */
     orderBy?: ProjectionOrderByWithRelationInput | ProjectionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for listing Projections.
      */
     cursor?: ProjectionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Projections from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Projections.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of Projections.
      */
     distinct?: ProjectionScalarFieldEnum | ProjectionScalarFieldEnum[]
@@ -17140,55 +17490,55 @@ export namespace Prisma {
     where?: ActivityStockWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of ActivityStocks to fetch.
      */
     orderBy?: ActivityStockOrderByWithRelationInput | ActivityStockOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the start position
      */
     cursor?: ActivityStockWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` ActivityStocks from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` ActivityStocks.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Count returned ActivityStocks
     **/
     _count?: true | ActivityStockCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to average
     **/
     _avg?: ActivityStockAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to sum
     **/
     _sum?: ActivityStockSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the minimum value
     **/
     _min?: ActivityStockMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the maximum value
     **/
     _max?: ActivityStockMaxAggregateInputType
@@ -17400,13 +17750,13 @@ export namespace Prisma {
      * @example
      * // Get all ActivityStocks
      * const activityStocks = await prisma.activityStock.findMany()
-     * 
+     *
      * // Get first 10 ActivityStocks
      * const activityStocks = await prisma.activityStock.findMany({ take: 10 })
-     * 
+     *
      * // Only select the `id`
      * const activityStockWithIdOnly = await prisma.activityStock.findMany({ select: { id: true } })
-     * 
+     *
      */
     findMany<T extends ActivityStockFindManyArgs>(args?: SelectSubset<T, ActivityStockFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityStockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
@@ -17420,7 +17770,7 @@ export namespace Prisma {
      *     // ... data to create a ActivityStock
      *   }
      * })
-     * 
+     *
      */
     create<T extends ActivityStockCreateArgs>(args: SelectSubset<T, ActivityStockCreateArgs<ExtArgs>>): Prisma__ActivityStockClient<$Result.GetResult<Prisma.$ActivityStockPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -17434,7 +17784,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *     
+     *
      */
     createMany<T extends ActivityStockCreateManyArgs>(args?: SelectSubset<T, ActivityStockCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -17448,7 +17798,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Create many ActivityStocks and only return the `id`
      * const activityStockWithIdOnly = await prisma.activityStock.createManyAndReturn({
      *   select: { id: true },
@@ -17458,7 +17808,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     createManyAndReturn<T extends ActivityStockCreateManyAndReturnArgs>(args?: SelectSubset<T, ActivityStockCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityStockPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
@@ -17472,7 +17822,7 @@ export namespace Prisma {
      *     // ... filter to delete one ActivityStock
      *   }
      * })
-     * 
+     *
      */
     delete<T extends ActivityStockDeleteArgs>(args: SelectSubset<T, ActivityStockDeleteArgs<ExtArgs>>): Prisma__ActivityStockClient<$Result.GetResult<Prisma.$ActivityStockPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -17489,7 +17839,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     update<T extends ActivityStockUpdateArgs>(args: SelectSubset<T, ActivityStockUpdateArgs<ExtArgs>>): Prisma__ActivityStockClient<$Result.GetResult<Prisma.$ActivityStockPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -17503,7 +17853,7 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     * 
+     *
      */
     deleteMany<T extends ActivityStockDeleteManyArgs>(args?: SelectSubset<T, ActivityStockDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -17522,7 +17872,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     updateMany<T extends ActivityStockUpdateManyArgs>(args: SelectSubset<T, ActivityStockUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -17539,7 +17889,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Update zero or more ActivityStocks and only return the `id`
      * const activityStockWithIdOnly = await prisma.activityStock.updateManyAndReturn({
      *   select: { id: true },
@@ -17552,7 +17902,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     updateManyAndReturn<T extends ActivityStockUpdateManyAndReturnArgs>(args: SelectSubset<T, ActivityStockUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityStockPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
@@ -17641,7 +17991,7 @@ export namespace Prisma {
      *     _all: true
      *   },
      * })
-     * 
+     *
     **/
     groupBy<
       T extends ActivityStockGroupByArgs,
@@ -17754,7 +18104,7 @@ export namespace Prisma {
     readonly recordedOn: FieldRef<"ActivityStock", 'DateTime'>
     readonly transactionOn: FieldRef<"ActivityStock", 'DateTime'>
   }
-    
+
 
   // Custom InputTypes
   /**
@@ -17823,31 +18173,31 @@ export namespace Prisma {
     where?: ActivityStockWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of ActivityStocks to fetch.
      */
     orderBy?: ActivityStockOrderByWithRelationInput | ActivityStockOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for ActivityStocks.
      */
     cursor?: ActivityStockWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` ActivityStocks from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` ActivityStocks.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of ActivityStocks.
      */
     distinct?: ActivityStockScalarFieldEnum | ActivityStockScalarFieldEnum[]
@@ -17875,31 +18225,31 @@ export namespace Prisma {
     where?: ActivityStockWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of ActivityStocks to fetch.
      */
     orderBy?: ActivityStockOrderByWithRelationInput | ActivityStockOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for ActivityStocks.
      */
     cursor?: ActivityStockWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` ActivityStocks from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` ActivityStocks.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of ActivityStocks.
      */
     distinct?: ActivityStockScalarFieldEnum | ActivityStockScalarFieldEnum[]
@@ -17927,31 +18277,31 @@ export namespace Prisma {
     where?: ActivityStockWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of ActivityStocks to fetch.
      */
     orderBy?: ActivityStockOrderByWithRelationInput | ActivityStockOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for listing ActivityStocks.
      */
     cursor?: ActivityStockWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` ActivityStocks from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` ActivityStocks.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of ActivityStocks.
      */
     distinct?: ActivityStockScalarFieldEnum | ActivityStockScalarFieldEnum[]
@@ -18240,43 +18590,43 @@ export namespace Prisma {
     where?: DocumentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Documents to fetch.
      */
     orderBy?: DocumentOrderByWithRelationInput | DocumentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the start position
      */
     cursor?: DocumentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Documents from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Documents.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Count returned Documents
     **/
     _count?: true | DocumentCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the minimum value
     **/
     _min?: DocumentMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the maximum value
     **/
     _max?: DocumentMaxAggregateInputType
@@ -18339,6 +18689,7 @@ export namespace Prisma {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     quotation?: boolean | Document$quotationArgs<ExtArgs>
     invoice?: boolean | Document$invoiceArgs<ExtArgs>
+    proforma?: boolean | Document$proformaArgs<ExtArgs>
   }, ExtArgs["result"]["document"]>
 
   export type DocumentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -18372,6 +18723,7 @@ export namespace Prisma {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     quotation?: boolean | Document$quotationArgs<ExtArgs>
     invoice?: boolean | Document$invoiceArgs<ExtArgs>
+    proforma?: boolean | Document$proformaArgs<ExtArgs>
   }
   export type DocumentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
@@ -18386,6 +18738,7 @@ export namespace Prisma {
       project: Prisma.$ProjectPayload<ExtArgs>
       quotation: Prisma.$DocumentQuotationPayload<ExtArgs> | null
       invoice: Prisma.$InvoicePayload<ExtArgs> | null
+      proforma: Prisma.$ProformaPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -18472,13 +18825,13 @@ export namespace Prisma {
      * @example
      * // Get all Documents
      * const documents = await prisma.document.findMany()
-     * 
+     *
      * // Get first 10 Documents
      * const documents = await prisma.document.findMany({ take: 10 })
-     * 
+     *
      * // Only select the `id`
      * const documentWithIdOnly = await prisma.document.findMany({ select: { id: true } })
-     * 
+     *
      */
     findMany<T extends DocumentFindManyArgs>(args?: SelectSubset<T, DocumentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
@@ -18492,7 +18845,7 @@ export namespace Prisma {
      *     // ... data to create a Document
      *   }
      * })
-     * 
+     *
      */
     create<T extends DocumentCreateArgs>(args: SelectSubset<T, DocumentCreateArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -18506,7 +18859,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *     
+     *
      */
     createMany<T extends DocumentCreateManyArgs>(args?: SelectSubset<T, DocumentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -18520,7 +18873,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Create many Documents and only return the `id`
      * const documentWithIdOnly = await prisma.document.createManyAndReturn({
      *   select: { id: true },
@@ -18530,7 +18883,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     createManyAndReturn<T extends DocumentCreateManyAndReturnArgs>(args?: SelectSubset<T, DocumentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
@@ -18544,7 +18897,7 @@ export namespace Prisma {
      *     // ... filter to delete one Document
      *   }
      * })
-     * 
+     *
      */
     delete<T extends DocumentDeleteArgs>(args: SelectSubset<T, DocumentDeleteArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -18561,7 +18914,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     update<T extends DocumentUpdateArgs>(args: SelectSubset<T, DocumentUpdateArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -18575,7 +18928,7 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     * 
+     *
      */
     deleteMany<T extends DocumentDeleteManyArgs>(args?: SelectSubset<T, DocumentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -18594,7 +18947,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     updateMany<T extends DocumentUpdateManyArgs>(args: SelectSubset<T, DocumentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -18611,7 +18964,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Update zero or more Documents and only return the `id`
      * const documentWithIdOnly = await prisma.document.updateManyAndReturn({
      *   select: { id: true },
@@ -18624,7 +18977,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     updateManyAndReturn<T extends DocumentUpdateManyAndReturnArgs>(args: SelectSubset<T, DocumentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
@@ -18713,7 +19066,7 @@ export namespace Prisma {
      *     _all: true
      *   },
      * })
-     * 
+     *
     **/
     groupBy<
       T extends DocumentGroupByArgs,
@@ -18790,6 +19143,7 @@ export namespace Prisma {
     project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     quotation<T extends Document$quotationArgs<ExtArgs> = {}>(args?: Subset<T, Document$quotationArgs<ExtArgs>>): Prisma__DocumentQuotationClient<$Result.GetResult<Prisma.$DocumentQuotationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     invoice<T extends Document$invoiceArgs<ExtArgs> = {}>(args?: Subset<T, Document$invoiceArgs<ExtArgs>>): Prisma__InvoiceClient<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    proforma<T extends Document$proformaArgs<ExtArgs> = {}>(args?: Subset<T, Document$proformaArgs<ExtArgs>>): Prisma__ProformaClient<$Result.GetResult<Prisma.$ProformaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -18825,7 +19179,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"Document", 'DateTime'>
     readonly updatedAt: FieldRef<"Document", 'DateTime'>
   }
-    
+
 
   // Custom InputTypes
   /**
@@ -18894,31 +19248,31 @@ export namespace Prisma {
     where?: DocumentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Documents to fetch.
      */
     orderBy?: DocumentOrderByWithRelationInput | DocumentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for Documents.
      */
     cursor?: DocumentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Documents from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Documents.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of Documents.
      */
     distinct?: DocumentScalarFieldEnum | DocumentScalarFieldEnum[]
@@ -18946,31 +19300,31 @@ export namespace Prisma {
     where?: DocumentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Documents to fetch.
      */
     orderBy?: DocumentOrderByWithRelationInput | DocumentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for Documents.
      */
     cursor?: DocumentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Documents from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Documents.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of Documents.
      */
     distinct?: DocumentScalarFieldEnum | DocumentScalarFieldEnum[]
@@ -18998,31 +19352,31 @@ export namespace Prisma {
     where?: DocumentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Documents to fetch.
      */
     orderBy?: DocumentOrderByWithRelationInput | DocumentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for listing Documents.
      */
     cursor?: DocumentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Documents from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Documents.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of Documents.
      */
     distinct?: DocumentScalarFieldEnum | DocumentScalarFieldEnum[]
@@ -19263,6 +19617,25 @@ export namespace Prisma {
   }
 
   /**
+   * Document.proforma
+   */
+  export type Document$proformaArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Proforma
+     */
+    select?: ProformaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Proforma
+     */
+    omit?: ProformaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaInclude<ExtArgs> | null
+    where?: ProformaWhereInput
+  }
+
+  /**
    * Document without action
    */
   export type DocumentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -19477,55 +19850,55 @@ export namespace Prisma {
     where?: DocumentQuotationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of DocumentQuotations to fetch.
      */
     orderBy?: DocumentQuotationOrderByWithRelationInput | DocumentQuotationOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the start position
      */
     cursor?: DocumentQuotationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` DocumentQuotations from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` DocumentQuotations.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Count returned DocumentQuotations
     **/
     _count?: true | DocumentQuotationCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to average
     **/
     _avg?: DocumentQuotationAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to sum
     **/
     _sum?: DocumentQuotationSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the minimum value
     **/
     _min?: DocumentQuotationMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the maximum value
     **/
     _max?: DocumentQuotationMaxAggregateInputType
@@ -19824,13 +20197,13 @@ export namespace Prisma {
      * @example
      * // Get all DocumentQuotations
      * const documentQuotations = await prisma.documentQuotation.findMany()
-     * 
+     *
      * // Get first 10 DocumentQuotations
      * const documentQuotations = await prisma.documentQuotation.findMany({ take: 10 })
-     * 
+     *
      * // Only select the `id`
      * const documentQuotationWithIdOnly = await prisma.documentQuotation.findMany({ select: { id: true } })
-     * 
+     *
      */
     findMany<T extends DocumentQuotationFindManyArgs>(args?: SelectSubset<T, DocumentQuotationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentQuotationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
@@ -19844,7 +20217,7 @@ export namespace Prisma {
      *     // ... data to create a DocumentQuotation
      *   }
      * })
-     * 
+     *
      */
     create<T extends DocumentQuotationCreateArgs>(args: SelectSubset<T, DocumentQuotationCreateArgs<ExtArgs>>): Prisma__DocumentQuotationClient<$Result.GetResult<Prisma.$DocumentQuotationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -19858,7 +20231,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *     
+     *
      */
     createMany<T extends DocumentQuotationCreateManyArgs>(args?: SelectSubset<T, DocumentQuotationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -19872,7 +20245,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Create many DocumentQuotations and only return the `id`
      * const documentQuotationWithIdOnly = await prisma.documentQuotation.createManyAndReturn({
      *   select: { id: true },
@@ -19882,7 +20255,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     createManyAndReturn<T extends DocumentQuotationCreateManyAndReturnArgs>(args?: SelectSubset<T, DocumentQuotationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentQuotationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
@@ -19896,7 +20269,7 @@ export namespace Prisma {
      *     // ... filter to delete one DocumentQuotation
      *   }
      * })
-     * 
+     *
      */
     delete<T extends DocumentQuotationDeleteArgs>(args: SelectSubset<T, DocumentQuotationDeleteArgs<ExtArgs>>): Prisma__DocumentQuotationClient<$Result.GetResult<Prisma.$DocumentQuotationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -19913,7 +20286,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     update<T extends DocumentQuotationUpdateArgs>(args: SelectSubset<T, DocumentQuotationUpdateArgs<ExtArgs>>): Prisma__DocumentQuotationClient<$Result.GetResult<Prisma.$DocumentQuotationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -19927,7 +20300,7 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     * 
+     *
      */
     deleteMany<T extends DocumentQuotationDeleteManyArgs>(args?: SelectSubset<T, DocumentQuotationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -19946,7 +20319,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     updateMany<T extends DocumentQuotationUpdateManyArgs>(args: SelectSubset<T, DocumentQuotationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -19963,7 +20336,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Update zero or more DocumentQuotations and only return the `id`
      * const documentQuotationWithIdOnly = await prisma.documentQuotation.updateManyAndReturn({
      *   select: { id: true },
@@ -19976,7 +20349,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     updateManyAndReturn<T extends DocumentQuotationUpdateManyAndReturnArgs>(args: SelectSubset<T, DocumentQuotationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentQuotationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
@@ -20065,7 +20438,7 @@ export namespace Prisma {
      *     _all: true
      *   },
      * })
-     * 
+     *
     **/
     groupBy<
       T extends DocumentQuotationGroupByArgs,
@@ -20193,7 +20566,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"DocumentQuotation", 'DateTime'>
     readonly updatedAt: FieldRef<"DocumentQuotation", 'DateTime'>
   }
-    
+
 
   // Custom InputTypes
   /**
@@ -20262,31 +20635,31 @@ export namespace Prisma {
     where?: DocumentQuotationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of DocumentQuotations to fetch.
      */
     orderBy?: DocumentQuotationOrderByWithRelationInput | DocumentQuotationOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for DocumentQuotations.
      */
     cursor?: DocumentQuotationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` DocumentQuotations from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` DocumentQuotations.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of DocumentQuotations.
      */
     distinct?: DocumentQuotationScalarFieldEnum | DocumentQuotationScalarFieldEnum[]
@@ -20314,31 +20687,31 @@ export namespace Prisma {
     where?: DocumentQuotationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of DocumentQuotations to fetch.
      */
     orderBy?: DocumentQuotationOrderByWithRelationInput | DocumentQuotationOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for DocumentQuotations.
      */
     cursor?: DocumentQuotationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` DocumentQuotations from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` DocumentQuotations.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of DocumentQuotations.
      */
     distinct?: DocumentQuotationScalarFieldEnum | DocumentQuotationScalarFieldEnum[]
@@ -20366,31 +20739,31 @@ export namespace Prisma {
     where?: DocumentQuotationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of DocumentQuotations to fetch.
      */
     orderBy?: DocumentQuotationOrderByWithRelationInput | DocumentQuotationOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for listing DocumentQuotations.
      */
     cursor?: DocumentQuotationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` DocumentQuotations from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` DocumentQuotations.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of DocumentQuotations.
      */
     distinct?: DocumentQuotationScalarFieldEnum | DocumentQuotationScalarFieldEnum[]
@@ -20751,55 +21124,55 @@ export namespace Prisma {
     where?: DocumentQuotationAdjustmentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of DocumentQuotationAdjustments to fetch.
      */
     orderBy?: DocumentQuotationAdjustmentOrderByWithRelationInput | DocumentQuotationAdjustmentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the start position
      */
     cursor?: DocumentQuotationAdjustmentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` DocumentQuotationAdjustments from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` DocumentQuotationAdjustments.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Count returned DocumentQuotationAdjustments
     **/
     _count?: true | DocumentQuotationAdjustmentCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to average
     **/
     _avg?: DocumentQuotationAdjustmentAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to sum
     **/
     _sum?: DocumentQuotationAdjustmentSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the minimum value
     **/
     _min?: DocumentQuotationAdjustmentMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the maximum value
     **/
     _max?: DocumentQuotationAdjustmentMaxAggregateInputType
@@ -20999,13 +21372,13 @@ export namespace Prisma {
      * @example
      * // Get all DocumentQuotationAdjustments
      * const documentQuotationAdjustments = await prisma.documentQuotationAdjustment.findMany()
-     * 
+     *
      * // Get first 10 DocumentQuotationAdjustments
      * const documentQuotationAdjustments = await prisma.documentQuotationAdjustment.findMany({ take: 10 })
-     * 
+     *
      * // Only select the `id`
      * const documentQuotationAdjustmentWithIdOnly = await prisma.documentQuotationAdjustment.findMany({ select: { id: true } })
-     * 
+     *
      */
     findMany<T extends DocumentQuotationAdjustmentFindManyArgs>(args?: SelectSubset<T, DocumentQuotationAdjustmentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentQuotationAdjustmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
@@ -21019,7 +21392,7 @@ export namespace Prisma {
      *     // ... data to create a DocumentQuotationAdjustment
      *   }
      * })
-     * 
+     *
      */
     create<T extends DocumentQuotationAdjustmentCreateArgs>(args: SelectSubset<T, DocumentQuotationAdjustmentCreateArgs<ExtArgs>>): Prisma__DocumentQuotationAdjustmentClient<$Result.GetResult<Prisma.$DocumentQuotationAdjustmentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -21033,7 +21406,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *     
+     *
      */
     createMany<T extends DocumentQuotationAdjustmentCreateManyArgs>(args?: SelectSubset<T, DocumentQuotationAdjustmentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -21047,7 +21420,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Create many DocumentQuotationAdjustments and only return the `id`
      * const documentQuotationAdjustmentWithIdOnly = await prisma.documentQuotationAdjustment.createManyAndReturn({
      *   select: { id: true },
@@ -21057,7 +21430,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     createManyAndReturn<T extends DocumentQuotationAdjustmentCreateManyAndReturnArgs>(args?: SelectSubset<T, DocumentQuotationAdjustmentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentQuotationAdjustmentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
@@ -21071,7 +21444,7 @@ export namespace Prisma {
      *     // ... filter to delete one DocumentQuotationAdjustment
      *   }
      * })
-     * 
+     *
      */
     delete<T extends DocumentQuotationAdjustmentDeleteArgs>(args: SelectSubset<T, DocumentQuotationAdjustmentDeleteArgs<ExtArgs>>): Prisma__DocumentQuotationAdjustmentClient<$Result.GetResult<Prisma.$DocumentQuotationAdjustmentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -21088,7 +21461,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     update<T extends DocumentQuotationAdjustmentUpdateArgs>(args: SelectSubset<T, DocumentQuotationAdjustmentUpdateArgs<ExtArgs>>): Prisma__DocumentQuotationAdjustmentClient<$Result.GetResult<Prisma.$DocumentQuotationAdjustmentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -21102,7 +21475,7 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     * 
+     *
      */
     deleteMany<T extends DocumentQuotationAdjustmentDeleteManyArgs>(args?: SelectSubset<T, DocumentQuotationAdjustmentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -21121,7 +21494,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     updateMany<T extends DocumentQuotationAdjustmentUpdateManyArgs>(args: SelectSubset<T, DocumentQuotationAdjustmentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -21138,7 +21511,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Update zero or more DocumentQuotationAdjustments and only return the `id`
      * const documentQuotationAdjustmentWithIdOnly = await prisma.documentQuotationAdjustment.updateManyAndReturn({
      *   select: { id: true },
@@ -21151,7 +21524,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     updateManyAndReturn<T extends DocumentQuotationAdjustmentUpdateManyAndReturnArgs>(args: SelectSubset<T, DocumentQuotationAdjustmentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentQuotationAdjustmentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
@@ -21240,7 +21613,7 @@ export namespace Prisma {
      *     _all: true
      *   },
      * })
-     * 
+     *
     **/
     groupBy<
       T extends DocumentQuotationAdjustmentGroupByArgs,
@@ -21351,7 +21724,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"DocumentQuotationAdjustment", 'DateTime'>
     readonly updatedAt: FieldRef<"DocumentQuotationAdjustment", 'DateTime'>
   }
-    
+
 
   // Custom InputTypes
   /**
@@ -21420,31 +21793,31 @@ export namespace Prisma {
     where?: DocumentQuotationAdjustmentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of DocumentQuotationAdjustments to fetch.
      */
     orderBy?: DocumentQuotationAdjustmentOrderByWithRelationInput | DocumentQuotationAdjustmentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for DocumentQuotationAdjustments.
      */
     cursor?: DocumentQuotationAdjustmentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` DocumentQuotationAdjustments from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` DocumentQuotationAdjustments.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of DocumentQuotationAdjustments.
      */
     distinct?: DocumentQuotationAdjustmentScalarFieldEnum | DocumentQuotationAdjustmentScalarFieldEnum[]
@@ -21472,31 +21845,31 @@ export namespace Prisma {
     where?: DocumentQuotationAdjustmentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of DocumentQuotationAdjustments to fetch.
      */
     orderBy?: DocumentQuotationAdjustmentOrderByWithRelationInput | DocumentQuotationAdjustmentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for DocumentQuotationAdjustments.
      */
     cursor?: DocumentQuotationAdjustmentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` DocumentQuotationAdjustments from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` DocumentQuotationAdjustments.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of DocumentQuotationAdjustments.
      */
     distinct?: DocumentQuotationAdjustmentScalarFieldEnum | DocumentQuotationAdjustmentScalarFieldEnum[]
@@ -21524,31 +21897,31 @@ export namespace Prisma {
     where?: DocumentQuotationAdjustmentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of DocumentQuotationAdjustments to fetch.
      */
     orderBy?: DocumentQuotationAdjustmentOrderByWithRelationInput | DocumentQuotationAdjustmentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for listing DocumentQuotationAdjustments.
      */
     cursor?: DocumentQuotationAdjustmentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` DocumentQuotationAdjustments from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` DocumentQuotationAdjustments.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of DocumentQuotationAdjustments.
      */
     distinct?: DocumentQuotationAdjustmentScalarFieldEnum | DocumentQuotationAdjustmentScalarFieldEnum[]
@@ -21955,55 +22328,55 @@ export namespace Prisma {
     where?: DocumentAdjustmentItemWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of DocumentAdjustmentItems to fetch.
      */
     orderBy?: DocumentAdjustmentItemOrderByWithRelationInput | DocumentAdjustmentItemOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the start position
      */
     cursor?: DocumentAdjustmentItemWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` DocumentAdjustmentItems from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` DocumentAdjustmentItems.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Count returned DocumentAdjustmentItems
     **/
     _count?: true | DocumentAdjustmentItemCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to average
     **/
     _avg?: DocumentAdjustmentItemAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to sum
     **/
     _sum?: DocumentAdjustmentItemSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the minimum value
     **/
     _min?: DocumentAdjustmentItemMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the maximum value
     **/
     _max?: DocumentAdjustmentItemMaxAggregateInputType
@@ -22269,13 +22642,13 @@ export namespace Prisma {
      * @example
      * // Get all DocumentAdjustmentItems
      * const documentAdjustmentItems = await prisma.documentAdjustmentItem.findMany()
-     * 
+     *
      * // Get first 10 DocumentAdjustmentItems
      * const documentAdjustmentItems = await prisma.documentAdjustmentItem.findMany({ take: 10 })
-     * 
+     *
      * // Only select the `id`
      * const documentAdjustmentItemWithIdOnly = await prisma.documentAdjustmentItem.findMany({ select: { id: true } })
-     * 
+     *
      */
     findMany<T extends DocumentAdjustmentItemFindManyArgs>(args?: SelectSubset<T, DocumentAdjustmentItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentAdjustmentItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
@@ -22289,7 +22662,7 @@ export namespace Prisma {
      *     // ... data to create a DocumentAdjustmentItem
      *   }
      * })
-     * 
+     *
      */
     create<T extends DocumentAdjustmentItemCreateArgs>(args: SelectSubset<T, DocumentAdjustmentItemCreateArgs<ExtArgs>>): Prisma__DocumentAdjustmentItemClient<$Result.GetResult<Prisma.$DocumentAdjustmentItemPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -22303,7 +22676,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *     
+     *
      */
     createMany<T extends DocumentAdjustmentItemCreateManyArgs>(args?: SelectSubset<T, DocumentAdjustmentItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -22317,7 +22690,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Create many DocumentAdjustmentItems and only return the `id`
      * const documentAdjustmentItemWithIdOnly = await prisma.documentAdjustmentItem.createManyAndReturn({
      *   select: { id: true },
@@ -22327,7 +22700,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     createManyAndReturn<T extends DocumentAdjustmentItemCreateManyAndReturnArgs>(args?: SelectSubset<T, DocumentAdjustmentItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentAdjustmentItemPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
@@ -22341,7 +22714,7 @@ export namespace Prisma {
      *     // ... filter to delete one DocumentAdjustmentItem
      *   }
      * })
-     * 
+     *
      */
     delete<T extends DocumentAdjustmentItemDeleteArgs>(args: SelectSubset<T, DocumentAdjustmentItemDeleteArgs<ExtArgs>>): Prisma__DocumentAdjustmentItemClient<$Result.GetResult<Prisma.$DocumentAdjustmentItemPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -22358,7 +22731,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     update<T extends DocumentAdjustmentItemUpdateArgs>(args: SelectSubset<T, DocumentAdjustmentItemUpdateArgs<ExtArgs>>): Prisma__DocumentAdjustmentItemClient<$Result.GetResult<Prisma.$DocumentAdjustmentItemPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -22372,7 +22745,7 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     * 
+     *
      */
     deleteMany<T extends DocumentAdjustmentItemDeleteManyArgs>(args?: SelectSubset<T, DocumentAdjustmentItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -22391,7 +22764,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     updateMany<T extends DocumentAdjustmentItemUpdateManyArgs>(args: SelectSubset<T, DocumentAdjustmentItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -22408,7 +22781,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Update zero or more DocumentAdjustmentItems and only return the `id`
      * const documentAdjustmentItemWithIdOnly = await prisma.documentAdjustmentItem.updateManyAndReturn({
      *   select: { id: true },
@@ -22421,7 +22794,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     updateManyAndReturn<T extends DocumentAdjustmentItemUpdateManyAndReturnArgs>(args: SelectSubset<T, DocumentAdjustmentItemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentAdjustmentItemPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
@@ -22510,7 +22883,7 @@ export namespace Prisma {
      *     _all: true
      *   },
      * })
-     * 
+     *
     **/
     groupBy<
       T extends DocumentAdjustmentItemGroupByArgs,
@@ -22632,7 +23005,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"DocumentAdjustmentItem", 'DateTime'>
     readonly updatedAt: FieldRef<"DocumentAdjustmentItem", 'DateTime'>
   }
-    
+
 
   // Custom InputTypes
   /**
@@ -22701,31 +23074,31 @@ export namespace Prisma {
     where?: DocumentAdjustmentItemWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of DocumentAdjustmentItems to fetch.
      */
     orderBy?: DocumentAdjustmentItemOrderByWithRelationInput | DocumentAdjustmentItemOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for DocumentAdjustmentItems.
      */
     cursor?: DocumentAdjustmentItemWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` DocumentAdjustmentItems from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` DocumentAdjustmentItems.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of DocumentAdjustmentItems.
      */
     distinct?: DocumentAdjustmentItemScalarFieldEnum | DocumentAdjustmentItemScalarFieldEnum[]
@@ -22753,31 +23126,31 @@ export namespace Prisma {
     where?: DocumentAdjustmentItemWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of DocumentAdjustmentItems to fetch.
      */
     orderBy?: DocumentAdjustmentItemOrderByWithRelationInput | DocumentAdjustmentItemOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for DocumentAdjustmentItems.
      */
     cursor?: DocumentAdjustmentItemWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` DocumentAdjustmentItems from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` DocumentAdjustmentItems.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of DocumentAdjustmentItems.
      */
     distinct?: DocumentAdjustmentItemScalarFieldEnum | DocumentAdjustmentItemScalarFieldEnum[]
@@ -22805,31 +23178,31 @@ export namespace Prisma {
     where?: DocumentAdjustmentItemWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of DocumentAdjustmentItems to fetch.
      */
     orderBy?: DocumentAdjustmentItemOrderByWithRelationInput | DocumentAdjustmentItemOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for listing DocumentAdjustmentItems.
      */
     cursor?: DocumentAdjustmentItemWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` DocumentAdjustmentItems from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` DocumentAdjustmentItems.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of DocumentAdjustmentItems.
      */
     distinct?: DocumentAdjustmentItemScalarFieldEnum | DocumentAdjustmentItemScalarFieldEnum[]
@@ -23246,55 +23619,55 @@ export namespace Prisma {
     where?: InvoiceWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Invoices to fetch.
      */
     orderBy?: InvoiceOrderByWithRelationInput | InvoiceOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the start position
      */
     cursor?: InvoiceWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Invoices from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Invoices.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Count returned Invoices
     **/
     _count?: true | InvoiceCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to average
     **/
     _avg?: InvoiceAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to sum
     **/
     _sum?: InvoiceSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the minimum value
     **/
     _min?: InvoiceMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the maximum value
     **/
     _max?: InvoiceMaxAggregateInputType
@@ -23593,13 +23966,13 @@ export namespace Prisma {
      * @example
      * // Get all Invoices
      * const invoices = await prisma.invoice.findMany()
-     * 
+     *
      * // Get first 10 Invoices
      * const invoices = await prisma.invoice.findMany({ take: 10 })
-     * 
+     *
      * // Only select the `id`
      * const invoiceWithIdOnly = await prisma.invoice.findMany({ select: { id: true } })
-     * 
+     *
      */
     findMany<T extends InvoiceFindManyArgs>(args?: SelectSubset<T, InvoiceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
@@ -23613,7 +23986,7 @@ export namespace Prisma {
      *     // ... data to create a Invoice
      *   }
      * })
-     * 
+     *
      */
     create<T extends InvoiceCreateArgs>(args: SelectSubset<T, InvoiceCreateArgs<ExtArgs>>): Prisma__InvoiceClient<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -23627,7 +24000,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *     
+     *
      */
     createMany<T extends InvoiceCreateManyArgs>(args?: SelectSubset<T, InvoiceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -23641,7 +24014,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Create many Invoices and only return the `id`
      * const invoiceWithIdOnly = await prisma.invoice.createManyAndReturn({
      *   select: { id: true },
@@ -23651,7 +24024,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     createManyAndReturn<T extends InvoiceCreateManyAndReturnArgs>(args?: SelectSubset<T, InvoiceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
@@ -23665,7 +24038,7 @@ export namespace Prisma {
      *     // ... filter to delete one Invoice
      *   }
      * })
-     * 
+     *
      */
     delete<T extends InvoiceDeleteArgs>(args: SelectSubset<T, InvoiceDeleteArgs<ExtArgs>>): Prisma__InvoiceClient<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -23682,7 +24055,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     update<T extends InvoiceUpdateArgs>(args: SelectSubset<T, InvoiceUpdateArgs<ExtArgs>>): Prisma__InvoiceClient<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -23696,7 +24069,7 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     * 
+     *
      */
     deleteMany<T extends InvoiceDeleteManyArgs>(args?: SelectSubset<T, InvoiceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -23715,7 +24088,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     updateMany<T extends InvoiceUpdateManyArgs>(args: SelectSubset<T, InvoiceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -23732,7 +24105,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Update zero or more Invoices and only return the `id`
      * const invoiceWithIdOnly = await prisma.invoice.updateManyAndReturn({
      *   select: { id: true },
@@ -23745,7 +24118,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     updateManyAndReturn<T extends InvoiceUpdateManyAndReturnArgs>(args: SelectSubset<T, InvoiceUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
@@ -23834,7 +24207,7 @@ export namespace Prisma {
      *     _all: true
      *   },
      * })
-     * 
+     *
     **/
     groupBy<
       T extends InvoiceGroupByArgs,
@@ -23962,7 +24335,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"Invoice", 'DateTime'>
     readonly updatedAt: FieldRef<"Invoice", 'DateTime'>
   }
-    
+
 
   // Custom InputTypes
   /**
@@ -24031,31 +24404,31 @@ export namespace Prisma {
     where?: InvoiceWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Invoices to fetch.
      */
     orderBy?: InvoiceOrderByWithRelationInput | InvoiceOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for Invoices.
      */
     cursor?: InvoiceWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Invoices from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Invoices.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of Invoices.
      */
     distinct?: InvoiceScalarFieldEnum | InvoiceScalarFieldEnum[]
@@ -24083,31 +24456,31 @@ export namespace Prisma {
     where?: InvoiceWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Invoices to fetch.
      */
     orderBy?: InvoiceOrderByWithRelationInput | InvoiceOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for Invoices.
      */
     cursor?: InvoiceWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Invoices from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Invoices.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of Invoices.
      */
     distinct?: InvoiceScalarFieldEnum | InvoiceScalarFieldEnum[]
@@ -24135,31 +24508,31 @@ export namespace Prisma {
     where?: InvoiceWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of Invoices to fetch.
      */
     orderBy?: InvoiceOrderByWithRelationInput | InvoiceOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for listing Invoices.
      */
     cursor?: InvoiceWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` Invoices from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` Invoices.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of Invoices.
      */
     distinct?: InvoiceScalarFieldEnum | InvoiceScalarFieldEnum[]
@@ -24520,55 +24893,55 @@ export namespace Prisma {
     where?: InvoiceAdjustmentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of InvoiceAdjustments to fetch.
      */
     orderBy?: InvoiceAdjustmentOrderByWithRelationInput | InvoiceAdjustmentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the start position
      */
     cursor?: InvoiceAdjustmentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` InvoiceAdjustments from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` InvoiceAdjustments.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Count returned InvoiceAdjustments
     **/
     _count?: true | InvoiceAdjustmentCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to average
     **/
     _avg?: InvoiceAdjustmentAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to sum
     **/
     _sum?: InvoiceAdjustmentSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the minimum value
     **/
     _min?: InvoiceAdjustmentMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the maximum value
     **/
     _max?: InvoiceAdjustmentMaxAggregateInputType
@@ -24768,13 +25141,13 @@ export namespace Prisma {
      * @example
      * // Get all InvoiceAdjustments
      * const invoiceAdjustments = await prisma.invoiceAdjustment.findMany()
-     * 
+     *
      * // Get first 10 InvoiceAdjustments
      * const invoiceAdjustments = await prisma.invoiceAdjustment.findMany({ take: 10 })
-     * 
+     *
      * // Only select the `id`
      * const invoiceAdjustmentWithIdOnly = await prisma.invoiceAdjustment.findMany({ select: { id: true } })
-     * 
+     *
      */
     findMany<T extends InvoiceAdjustmentFindManyArgs>(args?: SelectSubset<T, InvoiceAdjustmentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoiceAdjustmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
@@ -24788,7 +25161,7 @@ export namespace Prisma {
      *     // ... data to create a InvoiceAdjustment
      *   }
      * })
-     * 
+     *
      */
     create<T extends InvoiceAdjustmentCreateArgs>(args: SelectSubset<T, InvoiceAdjustmentCreateArgs<ExtArgs>>): Prisma__InvoiceAdjustmentClient<$Result.GetResult<Prisma.$InvoiceAdjustmentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -24802,7 +25175,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *     
+     *
      */
     createMany<T extends InvoiceAdjustmentCreateManyArgs>(args?: SelectSubset<T, InvoiceAdjustmentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -24816,7 +25189,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Create many InvoiceAdjustments and only return the `id`
      * const invoiceAdjustmentWithIdOnly = await prisma.invoiceAdjustment.createManyAndReturn({
      *   select: { id: true },
@@ -24826,7 +25199,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     createManyAndReturn<T extends InvoiceAdjustmentCreateManyAndReturnArgs>(args?: SelectSubset<T, InvoiceAdjustmentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoiceAdjustmentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
@@ -24840,7 +25213,7 @@ export namespace Prisma {
      *     // ... filter to delete one InvoiceAdjustment
      *   }
      * })
-     * 
+     *
      */
     delete<T extends InvoiceAdjustmentDeleteArgs>(args: SelectSubset<T, InvoiceAdjustmentDeleteArgs<ExtArgs>>): Prisma__InvoiceAdjustmentClient<$Result.GetResult<Prisma.$InvoiceAdjustmentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -24857,7 +25230,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     update<T extends InvoiceAdjustmentUpdateArgs>(args: SelectSubset<T, InvoiceAdjustmentUpdateArgs<ExtArgs>>): Prisma__InvoiceAdjustmentClient<$Result.GetResult<Prisma.$InvoiceAdjustmentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -24871,7 +25244,7 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     * 
+     *
      */
     deleteMany<T extends InvoiceAdjustmentDeleteManyArgs>(args?: SelectSubset<T, InvoiceAdjustmentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -24890,7 +25263,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     updateMany<T extends InvoiceAdjustmentUpdateManyArgs>(args: SelectSubset<T, InvoiceAdjustmentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -24907,7 +25280,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Update zero or more InvoiceAdjustments and only return the `id`
      * const invoiceAdjustmentWithIdOnly = await prisma.invoiceAdjustment.updateManyAndReturn({
      *   select: { id: true },
@@ -24920,7 +25293,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     updateManyAndReturn<T extends InvoiceAdjustmentUpdateManyAndReturnArgs>(args: SelectSubset<T, InvoiceAdjustmentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoiceAdjustmentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
@@ -25009,7 +25382,7 @@ export namespace Prisma {
      *     _all: true
      *   },
      * })
-     * 
+     *
     **/
     groupBy<
       T extends InvoiceAdjustmentGroupByArgs,
@@ -25120,7 +25493,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"InvoiceAdjustment", 'DateTime'>
     readonly updatedAt: FieldRef<"InvoiceAdjustment", 'DateTime'>
   }
-    
+
 
   // Custom InputTypes
   /**
@@ -25189,31 +25562,31 @@ export namespace Prisma {
     where?: InvoiceAdjustmentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of InvoiceAdjustments to fetch.
      */
     orderBy?: InvoiceAdjustmentOrderByWithRelationInput | InvoiceAdjustmentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for InvoiceAdjustments.
      */
     cursor?: InvoiceAdjustmentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` InvoiceAdjustments from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` InvoiceAdjustments.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of InvoiceAdjustments.
      */
     distinct?: InvoiceAdjustmentScalarFieldEnum | InvoiceAdjustmentScalarFieldEnum[]
@@ -25241,31 +25614,31 @@ export namespace Prisma {
     where?: InvoiceAdjustmentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of InvoiceAdjustments to fetch.
      */
     orderBy?: InvoiceAdjustmentOrderByWithRelationInput | InvoiceAdjustmentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for InvoiceAdjustments.
      */
     cursor?: InvoiceAdjustmentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` InvoiceAdjustments from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` InvoiceAdjustments.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of InvoiceAdjustments.
      */
     distinct?: InvoiceAdjustmentScalarFieldEnum | InvoiceAdjustmentScalarFieldEnum[]
@@ -25293,31 +25666,31 @@ export namespace Prisma {
     where?: InvoiceAdjustmentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of InvoiceAdjustments to fetch.
      */
     orderBy?: InvoiceAdjustmentOrderByWithRelationInput | InvoiceAdjustmentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for listing InvoiceAdjustments.
      */
     cursor?: InvoiceAdjustmentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` InvoiceAdjustments from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` InvoiceAdjustments.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of InvoiceAdjustments.
      */
     distinct?: InvoiceAdjustmentScalarFieldEnum | InvoiceAdjustmentScalarFieldEnum[]
@@ -25724,55 +26097,55 @@ export namespace Prisma {
     where?: InvoiceItemWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of InvoiceItems to fetch.
      */
     orderBy?: InvoiceItemOrderByWithRelationInput | InvoiceItemOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the start position
      */
     cursor?: InvoiceItemWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` InvoiceItems from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` InvoiceItems.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Count returned InvoiceItems
     **/
     _count?: true | InvoiceItemCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to average
     **/
     _avg?: InvoiceItemAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to sum
     **/
     _sum?: InvoiceItemSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the minimum value
     **/
     _min?: InvoiceItemMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
+     *
      * Select which fields to find the maximum value
     **/
     _max?: InvoiceItemMaxAggregateInputType
@@ -26038,13 +26411,13 @@ export namespace Prisma {
      * @example
      * // Get all InvoiceItems
      * const invoiceItems = await prisma.invoiceItem.findMany()
-     * 
+     *
      * // Get first 10 InvoiceItems
      * const invoiceItems = await prisma.invoiceItem.findMany({ take: 10 })
-     * 
+     *
      * // Only select the `id`
      * const invoiceItemWithIdOnly = await prisma.invoiceItem.findMany({ select: { id: true } })
-     * 
+     *
      */
     findMany<T extends InvoiceItemFindManyArgs>(args?: SelectSubset<T, InvoiceItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoiceItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
@@ -26058,7 +26431,7 @@ export namespace Prisma {
      *     // ... data to create a InvoiceItem
      *   }
      * })
-     * 
+     *
      */
     create<T extends InvoiceItemCreateArgs>(args: SelectSubset<T, InvoiceItemCreateArgs<ExtArgs>>): Prisma__InvoiceItemClient<$Result.GetResult<Prisma.$InvoiceItemPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -26072,7 +26445,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *     
+     *
      */
     createMany<T extends InvoiceItemCreateManyArgs>(args?: SelectSubset<T, InvoiceItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -26086,7 +26459,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Create many InvoiceItems and only return the `id`
      * const invoiceItemWithIdOnly = await prisma.invoiceItem.createManyAndReturn({
      *   select: { id: true },
@@ -26096,7 +26469,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     createManyAndReturn<T extends InvoiceItemCreateManyAndReturnArgs>(args?: SelectSubset<T, InvoiceItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoiceItemPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
@@ -26110,7 +26483,7 @@ export namespace Prisma {
      *     // ... filter to delete one InvoiceItem
      *   }
      * })
-     * 
+     *
      */
     delete<T extends InvoiceItemDeleteArgs>(args: SelectSubset<T, InvoiceItemDeleteArgs<ExtArgs>>): Prisma__InvoiceItemClient<$Result.GetResult<Prisma.$InvoiceItemPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -26127,7 +26500,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     update<T extends InvoiceItemUpdateArgs>(args: SelectSubset<T, InvoiceItemUpdateArgs<ExtArgs>>): Prisma__InvoiceItemClient<$Result.GetResult<Prisma.$InvoiceItemPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -26141,7 +26514,7 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     * 
+     *
      */
     deleteMany<T extends InvoiceItemDeleteManyArgs>(args?: SelectSubset<T, InvoiceItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -26160,7 +26533,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     * 
+     *
      */
     updateMany<T extends InvoiceItemUpdateManyArgs>(args: SelectSubset<T, InvoiceItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -26177,7 +26550,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     * 
+     *
      * // Update zero or more InvoiceItems and only return the `id`
      * const invoiceItemWithIdOnly = await prisma.invoiceItem.updateManyAndReturn({
      *   select: { id: true },
@@ -26190,7 +26563,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * 
+     *
      */
     updateManyAndReturn<T extends InvoiceItemUpdateManyAndReturnArgs>(args: SelectSubset<T, InvoiceItemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoiceItemPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
@@ -26279,7 +26652,7 @@ export namespace Prisma {
      *     _all: true
      *   },
      * })
-     * 
+     *
     **/
     groupBy<
       T extends InvoiceItemGroupByArgs,
@@ -26401,7 +26774,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"InvoiceItem", 'DateTime'>
     readonly updatedAt: FieldRef<"InvoiceItem", 'DateTime'>
   }
-    
+
 
   // Custom InputTypes
   /**
@@ -26470,31 +26843,31 @@ export namespace Prisma {
     where?: InvoiceItemWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of InvoiceItems to fetch.
      */
     orderBy?: InvoiceItemOrderByWithRelationInput | InvoiceItemOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for InvoiceItems.
      */
     cursor?: InvoiceItemWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` InvoiceItems from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` InvoiceItems.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of InvoiceItems.
      */
     distinct?: InvoiceItemScalarFieldEnum | InvoiceItemScalarFieldEnum[]
@@ -26522,31 +26895,31 @@ export namespace Prisma {
     where?: InvoiceItemWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of InvoiceItems to fetch.
      */
     orderBy?: InvoiceItemOrderByWithRelationInput | InvoiceItemOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for searching for InvoiceItems.
      */
     cursor?: InvoiceItemWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` InvoiceItems from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` InvoiceItems.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of InvoiceItems.
      */
     distinct?: InvoiceItemScalarFieldEnum | InvoiceItemScalarFieldEnum[]
@@ -26574,31 +26947,31 @@ export namespace Prisma {
     where?: InvoiceItemWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
+     *
      * Determine the order of InvoiceItems to fetch.
      */
     orderBy?: InvoiceItemOrderByWithRelationInput | InvoiceItemOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
+     *
      * Sets the position for listing InvoiceItems.
      */
     cursor?: InvoiceItemWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Take `±n` InvoiceItems from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
+     *
      * Skip the first `n` InvoiceItems.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
+     *
      * Filter by unique combinations of InvoiceItems.
      */
     distinct?: InvoiceItemScalarFieldEnum | InvoiceItemScalarFieldEnum[]
@@ -26816,6 +27189,3775 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: InvoiceItemInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Proforma
+   */
+
+  export type AggregateProforma = {
+    _count: ProformaCountAggregateOutputType | null
+    _avg: ProformaAvgAggregateOutputType | null
+    _sum: ProformaSumAggregateOutputType | null
+    _min: ProformaMinAggregateOutputType | null
+    _max: ProformaMaxAggregateOutputType | null
+  }
+
+  export type ProformaAvgAggregateOutputType = {
+    counter: number | null
+    exchangeRate: Decimal | null
+    subtotal: Decimal | null
+    discountValue: Decimal | null
+    discountAmount: Decimal | null
+    taxTotal: Decimal | null
+    total: Decimal | null
+  }
+
+  export type ProformaSumAggregateOutputType = {
+    counter: number | null
+    exchangeRate: Decimal | null
+    subtotal: Decimal | null
+    discountValue: Decimal | null
+    discountAmount: Decimal | null
+    taxTotal: Decimal | null
+    total: Decimal | null
+  }
+
+  export type ProformaMinAggregateOutputType = {
+    id: string | null
+    customerId: string | null
+    counter: number | null
+    referenceNumber: string | null
+    subject: string | null
+    currency: string | null
+    exchangeRate: Decimal | null
+    subtotal: Decimal | null
+    discountType: string | null
+    discountValue: Decimal | null
+    discountAmount: Decimal | null
+    taxTotal: Decimal | null
+    hasAdjustments: boolean | null
+    total: Decimal | null
+    status: string | null
+    date: Date | null
+    dueDate: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProformaMaxAggregateOutputType = {
+    id: string | null
+    customerId: string | null
+    counter: number | null
+    referenceNumber: string | null
+    subject: string | null
+    currency: string | null
+    exchangeRate: Decimal | null
+    subtotal: Decimal | null
+    discountType: string | null
+    discountValue: Decimal | null
+    discountAmount: Decimal | null
+    taxTotal: Decimal | null
+    hasAdjustments: boolean | null
+    total: Decimal | null
+    status: string | null
+    date: Date | null
+    dueDate: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProformaCountAggregateOutputType = {
+    id: number
+    customerId: number
+    counter: number
+    referenceNumber: number
+    subject: number
+    currency: number
+    exchangeRate: number
+    subtotal: number
+    discountType: number
+    discountValue: number
+    discountAmount: number
+    taxTotal: number
+    hasAdjustments: number
+    total: number
+    status: number
+    date: number
+    dueDate: number
+    details: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ProformaAvgAggregateInputType = {
+    counter?: true
+    exchangeRate?: true
+    subtotal?: true
+    discountValue?: true
+    discountAmount?: true
+    taxTotal?: true
+    total?: true
+  }
+
+  export type ProformaSumAggregateInputType = {
+    counter?: true
+    exchangeRate?: true
+    subtotal?: true
+    discountValue?: true
+    discountAmount?: true
+    taxTotal?: true
+    total?: true
+  }
+
+  export type ProformaMinAggregateInputType = {
+    id?: true
+    customerId?: true
+    counter?: true
+    referenceNumber?: true
+    subject?: true
+    currency?: true
+    exchangeRate?: true
+    subtotal?: true
+    discountType?: true
+    discountValue?: true
+    discountAmount?: true
+    taxTotal?: true
+    hasAdjustments?: true
+    total?: true
+    status?: true
+    date?: true
+    dueDate?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProformaMaxAggregateInputType = {
+    id?: true
+    customerId?: true
+    counter?: true
+    referenceNumber?: true
+    subject?: true
+    currency?: true
+    exchangeRate?: true
+    subtotal?: true
+    discountType?: true
+    discountValue?: true
+    discountAmount?: true
+    taxTotal?: true
+    hasAdjustments?: true
+    total?: true
+    status?: true
+    date?: true
+    dueDate?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProformaCountAggregateInputType = {
+    id?: true
+    customerId?: true
+    counter?: true
+    referenceNumber?: true
+    subject?: true
+    currency?: true
+    exchangeRate?: true
+    subtotal?: true
+    discountType?: true
+    discountValue?: true
+    discountAmount?: true
+    taxTotal?: true
+    hasAdjustments?: true
+    total?: true
+    status?: true
+    date?: true
+    dueDate?: true
+    details?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ProformaAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Proforma to aggregate.
+     */
+    where?: ProformaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     *
+     * Determine the order of Proformas to fetch.
+     */
+    orderBy?: ProformaOrderByWithRelationInput | ProformaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     *
+     * Sets the start position
+     */
+    cursor?: ProformaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Take `±n` Proformas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Skip the first `n` Proformas.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Count returned Proformas
+    **/
+    _count?: true | ProformaCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Select which fields to average
+    **/
+    _avg?: ProformaAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Select which fields to sum
+    **/
+    _sum?: ProformaSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProformaMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProformaMaxAggregateInputType
+  }
+
+  export type GetProformaAggregateType<T extends ProformaAggregateArgs> = {
+        [P in keyof T & keyof AggregateProforma]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProforma[P]>
+      : GetScalarType<T[P], AggregateProforma[P]>
+  }
+
+
+
+
+  export type ProformaGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProformaWhereInput
+    orderBy?: ProformaOrderByWithAggregationInput | ProformaOrderByWithAggregationInput[]
+    by: ProformaScalarFieldEnum[] | ProformaScalarFieldEnum
+    having?: ProformaScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProformaCountAggregateInputType | true
+    _avg?: ProformaAvgAggregateInputType
+    _sum?: ProformaSumAggregateInputType
+    _min?: ProformaMinAggregateInputType
+    _max?: ProformaMaxAggregateInputType
+  }
+
+  export type ProformaGroupByOutputType = {
+    id: string
+    customerId: string
+    counter: number
+    referenceNumber: string
+    subject: string
+    currency: string
+    exchangeRate: Decimal
+    subtotal: Decimal
+    discountType: string
+    discountValue: Decimal
+    discountAmount: Decimal
+    taxTotal: Decimal
+    hasAdjustments: boolean
+    total: Decimal
+    status: string
+    date: Date
+    dueDate: Date
+    details: JsonValue | null
+    createdAt: Date
+    updatedAt: Date
+    _count: ProformaCountAggregateOutputType | null
+    _avg: ProformaAvgAggregateOutputType | null
+    _sum: ProformaSumAggregateOutputType | null
+    _min: ProformaMinAggregateOutputType | null
+    _max: ProformaMaxAggregateOutputType | null
+  }
+
+  type GetProformaGroupByPayload<T extends ProformaGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ProformaGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProformaGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProformaGroupByOutputType[P]>
+            : GetScalarType<T[P], ProformaGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProformaSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    customerId?: boolean
+    counter?: boolean
+    referenceNumber?: boolean
+    subject?: boolean
+    currency?: boolean
+    exchangeRate?: boolean
+    subtotal?: boolean
+    discountType?: boolean
+    discountValue?: boolean
+    discountAmount?: boolean
+    taxTotal?: boolean
+    hasAdjustments?: boolean
+    total?: boolean
+    status?: boolean
+    date?: boolean
+    dueDate?: boolean
+    details?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    document?: boolean | DocumentDefaultArgs<ExtArgs>
+    customer?: boolean | PartyDefaultArgs<ExtArgs>
+    adjustments?: boolean | Proforma$adjustmentsArgs<ExtArgs>
+    items?: boolean | Proforma$itemsArgs<ExtArgs>
+    _count?: boolean | ProformaCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["proforma"]>
+
+  export type ProformaSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    customerId?: boolean
+    counter?: boolean
+    referenceNumber?: boolean
+    subject?: boolean
+    currency?: boolean
+    exchangeRate?: boolean
+    subtotal?: boolean
+    discountType?: boolean
+    discountValue?: boolean
+    discountAmount?: boolean
+    taxTotal?: boolean
+    hasAdjustments?: boolean
+    total?: boolean
+    status?: boolean
+    date?: boolean
+    dueDate?: boolean
+    details?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    document?: boolean | DocumentDefaultArgs<ExtArgs>
+    customer?: boolean | PartyDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["proforma"]>
+
+  export type ProformaSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    customerId?: boolean
+    counter?: boolean
+    referenceNumber?: boolean
+    subject?: boolean
+    currency?: boolean
+    exchangeRate?: boolean
+    subtotal?: boolean
+    discountType?: boolean
+    discountValue?: boolean
+    discountAmount?: boolean
+    taxTotal?: boolean
+    hasAdjustments?: boolean
+    total?: boolean
+    status?: boolean
+    date?: boolean
+    dueDate?: boolean
+    details?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    document?: boolean | DocumentDefaultArgs<ExtArgs>
+    customer?: boolean | PartyDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["proforma"]>
+
+  export type ProformaSelectScalar = {
+    id?: boolean
+    customerId?: boolean
+    counter?: boolean
+    referenceNumber?: boolean
+    subject?: boolean
+    currency?: boolean
+    exchangeRate?: boolean
+    subtotal?: boolean
+    discountType?: boolean
+    discountValue?: boolean
+    discountAmount?: boolean
+    taxTotal?: boolean
+    hasAdjustments?: boolean
+    total?: boolean
+    status?: boolean
+    date?: boolean
+    dueDate?: boolean
+    details?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ProformaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "customerId" | "counter" | "referenceNumber" | "subject" | "currency" | "exchangeRate" | "subtotal" | "discountType" | "discountValue" | "discountAmount" | "taxTotal" | "hasAdjustments" | "total" | "status" | "date" | "dueDate" | "details" | "createdAt" | "updatedAt", ExtArgs["result"]["proforma"]>
+  export type ProformaInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    document?: boolean | DocumentDefaultArgs<ExtArgs>
+    customer?: boolean | PartyDefaultArgs<ExtArgs>
+    adjustments?: boolean | Proforma$adjustmentsArgs<ExtArgs>
+    items?: boolean | Proforma$itemsArgs<ExtArgs>
+    _count?: boolean | ProformaCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ProformaIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    document?: boolean | DocumentDefaultArgs<ExtArgs>
+    customer?: boolean | PartyDefaultArgs<ExtArgs>
+  }
+  export type ProformaIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    document?: boolean | DocumentDefaultArgs<ExtArgs>
+    customer?: boolean | PartyDefaultArgs<ExtArgs>
+  }
+
+  export type $ProformaPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Proforma"
+    objects: {
+      document: Prisma.$DocumentPayload<ExtArgs>
+      customer: Prisma.$PartyPayload<ExtArgs>
+      adjustments: Prisma.$ProformaAdjustmentPayload<ExtArgs>[]
+      items: Prisma.$ProformaItemPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      customerId: string
+      counter: number
+      referenceNumber: string
+      subject: string
+      currency: string
+      exchangeRate: Prisma.Decimal
+      subtotal: Prisma.Decimal
+      discountType: string
+      discountValue: Prisma.Decimal
+      discountAmount: Prisma.Decimal
+      taxTotal: Prisma.Decimal
+      hasAdjustments: boolean
+      total: Prisma.Decimal
+      status: string
+      date: Date
+      dueDate: Date
+      details: Prisma.JsonValue | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["proforma"]>
+    composites: {}
+  }
+
+  type ProformaGetPayload<S extends boolean | null | undefined | ProformaDefaultArgs> = $Result.GetResult<Prisma.$ProformaPayload, S>
+
+  type ProformaCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ProformaFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ProformaCountAggregateInputType | true
+    }
+
+  export interface ProformaDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Proforma'], meta: { name: 'Proforma' } }
+    /**
+     * Find zero or one Proforma that matches the filter.
+     * @param {ProformaFindUniqueArgs} args - Arguments to find a Proforma
+     * @example
+     * // Get one Proforma
+     * const proforma = await prisma.proforma.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ProformaFindUniqueArgs>(args: SelectSubset<T, ProformaFindUniqueArgs<ExtArgs>>): Prisma__ProformaClient<$Result.GetResult<Prisma.$ProformaPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Proforma that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ProformaFindUniqueOrThrowArgs} args - Arguments to find a Proforma
+     * @example
+     * // Get one Proforma
+     * const proforma = await prisma.proforma.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ProformaFindUniqueOrThrowArgs>(args: SelectSubset<T, ProformaFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProformaClient<$Result.GetResult<Prisma.$ProformaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Proforma that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProformaFindFirstArgs} args - Arguments to find a Proforma
+     * @example
+     * // Get one Proforma
+     * const proforma = await prisma.proforma.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ProformaFindFirstArgs>(args?: SelectSubset<T, ProformaFindFirstArgs<ExtArgs>>): Prisma__ProformaClient<$Result.GetResult<Prisma.$ProformaPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Proforma that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProformaFindFirstOrThrowArgs} args - Arguments to find a Proforma
+     * @example
+     * // Get one Proforma
+     * const proforma = await prisma.proforma.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ProformaFindFirstOrThrowArgs>(args?: SelectSubset<T, ProformaFindFirstOrThrowArgs<ExtArgs>>): Prisma__ProformaClient<$Result.GetResult<Prisma.$ProformaPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Proformas that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProformaFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Proformas
+     * const proformas = await prisma.proforma.findMany()
+     *
+     * // Get first 10 Proformas
+     * const proformas = await prisma.proforma.findMany({ take: 10 })
+     *
+     * // Only select the `id`
+     * const proformaWithIdOnly = await prisma.proforma.findMany({ select: { id: true } })
+     *
+     */
+    findMany<T extends ProformaFindManyArgs>(args?: SelectSubset<T, ProformaFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProformaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Proforma.
+     * @param {ProformaCreateArgs} args - Arguments to create a Proforma.
+     * @example
+     * // Create one Proforma
+     * const Proforma = await prisma.proforma.create({
+     *   data: {
+     *     // ... data to create a Proforma
+     *   }
+     * })
+     *
+     */
+    create<T extends ProformaCreateArgs>(args: SelectSubset<T, ProformaCreateArgs<ExtArgs>>): Prisma__ProformaClient<$Result.GetResult<Prisma.$ProformaPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Proformas.
+     * @param {ProformaCreateManyArgs} args - Arguments to create many Proformas.
+     * @example
+     * // Create many Proformas
+     * const proforma = await prisma.proforma.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *
+     */
+    createMany<T extends ProformaCreateManyArgs>(args?: SelectSubset<T, ProformaCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Proformas and returns the data saved in the database.
+     * @param {ProformaCreateManyAndReturnArgs} args - Arguments to create many Proformas.
+     * @example
+     * // Create many Proformas
+     * const proforma = await prisma.proforma.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *
+     * // Create many Proformas and only return the `id`
+     * const proformaWithIdOnly = await prisma.proforma.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     *
+     */
+    createManyAndReturn<T extends ProformaCreateManyAndReturnArgs>(args?: SelectSubset<T, ProformaCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProformaPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Proforma.
+     * @param {ProformaDeleteArgs} args - Arguments to delete one Proforma.
+     * @example
+     * // Delete one Proforma
+     * const Proforma = await prisma.proforma.delete({
+     *   where: {
+     *     // ... filter to delete one Proforma
+     *   }
+     * })
+     *
+     */
+    delete<T extends ProformaDeleteArgs>(args: SelectSubset<T, ProformaDeleteArgs<ExtArgs>>): Prisma__ProformaClient<$Result.GetResult<Prisma.$ProformaPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Proforma.
+     * @param {ProformaUpdateArgs} args - Arguments to update one Proforma.
+     * @example
+     * // Update one Proforma
+     * const proforma = await prisma.proforma.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     *
+     */
+    update<T extends ProformaUpdateArgs>(args: SelectSubset<T, ProformaUpdateArgs<ExtArgs>>): Prisma__ProformaClient<$Result.GetResult<Prisma.$ProformaPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Proformas.
+     * @param {ProformaDeleteManyArgs} args - Arguments to filter Proformas to delete.
+     * @example
+     * // Delete a few Proformas
+     * const { count } = await prisma.proforma.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     *
+     */
+    deleteMany<T extends ProformaDeleteManyArgs>(args?: SelectSubset<T, ProformaDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Proformas.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProformaUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Proformas
+     * const proforma = await prisma.proforma.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     *
+     */
+    updateMany<T extends ProformaUpdateManyArgs>(args: SelectSubset<T, ProformaUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Proformas and returns the data updated in the database.
+     * @param {ProformaUpdateManyAndReturnArgs} args - Arguments to update many Proformas.
+     * @example
+     * // Update many Proformas
+     * const proforma = await prisma.proforma.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *
+     * // Update zero or more Proformas and only return the `id`
+     * const proformaWithIdOnly = await prisma.proforma.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     *
+     */
+    updateManyAndReturn<T extends ProformaUpdateManyAndReturnArgs>(args: SelectSubset<T, ProformaUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProformaPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Proforma.
+     * @param {ProformaUpsertArgs} args - Arguments to update or create a Proforma.
+     * @example
+     * // Update or create a Proforma
+     * const proforma = await prisma.proforma.upsert({
+     *   create: {
+     *     // ... data to create a Proforma
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Proforma we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ProformaUpsertArgs>(args: SelectSubset<T, ProformaUpsertArgs<ExtArgs>>): Prisma__ProformaClient<$Result.GetResult<Prisma.$ProformaPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Proformas.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProformaCountArgs} args - Arguments to filter Proformas to count.
+     * @example
+     * // Count the number of Proformas
+     * const count = await prisma.proforma.count({
+     *   where: {
+     *     // ... the filter for the Proformas we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProformaCountArgs>(
+      args?: Subset<T, ProformaCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProformaCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Proforma.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProformaAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProformaAggregateArgs>(args: Subset<T, ProformaAggregateArgs>): Prisma.PrismaPromise<GetProformaAggregateType<T>>
+
+    /**
+     * Group by Proforma.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProformaGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     *
+    **/
+    groupBy<
+      T extends ProformaGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProformaGroupByArgs['orderBy'] }
+        : { orderBy?: ProformaGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProformaGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProformaGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Proforma model
+   */
+  readonly fields: ProformaFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Proforma.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ProformaClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    document<T extends DocumentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DocumentDefaultArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    customer<T extends PartyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PartyDefaultArgs<ExtArgs>>): Prisma__PartyClient<$Result.GetResult<Prisma.$PartyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    adjustments<T extends Proforma$adjustmentsArgs<ExtArgs> = {}>(args?: Subset<T, Proforma$adjustmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProformaAdjustmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    items<T extends Proforma$itemsArgs<ExtArgs> = {}>(args?: Subset<T, Proforma$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProformaItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Proforma model
+   */
+  interface ProformaFieldRefs {
+    readonly id: FieldRef<"Proforma", 'String'>
+    readonly customerId: FieldRef<"Proforma", 'String'>
+    readonly counter: FieldRef<"Proforma", 'Int'>
+    readonly referenceNumber: FieldRef<"Proforma", 'String'>
+    readonly subject: FieldRef<"Proforma", 'String'>
+    readonly currency: FieldRef<"Proforma", 'String'>
+    readonly exchangeRate: FieldRef<"Proforma", 'Decimal'>
+    readonly subtotal: FieldRef<"Proforma", 'Decimal'>
+    readonly discountType: FieldRef<"Proforma", 'String'>
+    readonly discountValue: FieldRef<"Proforma", 'Decimal'>
+    readonly discountAmount: FieldRef<"Proforma", 'Decimal'>
+    readonly taxTotal: FieldRef<"Proforma", 'Decimal'>
+    readonly hasAdjustments: FieldRef<"Proforma", 'Boolean'>
+    readonly total: FieldRef<"Proforma", 'Decimal'>
+    readonly status: FieldRef<"Proforma", 'String'>
+    readonly date: FieldRef<"Proforma", 'DateTime'>
+    readonly dueDate: FieldRef<"Proforma", 'DateTime'>
+    readonly details: FieldRef<"Proforma", 'Json'>
+    readonly createdAt: FieldRef<"Proforma", 'DateTime'>
+    readonly updatedAt: FieldRef<"Proforma", 'DateTime'>
+  }
+
+
+  // Custom InputTypes
+  /**
+   * Proforma findUnique
+   */
+  export type ProformaFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Proforma
+     */
+    select?: ProformaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Proforma
+     */
+    omit?: ProformaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaInclude<ExtArgs> | null
+    /**
+     * Filter, which Proforma to fetch.
+     */
+    where: ProformaWhereUniqueInput
+  }
+
+  /**
+   * Proforma findUniqueOrThrow
+   */
+  export type ProformaFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Proforma
+     */
+    select?: ProformaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Proforma
+     */
+    omit?: ProformaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaInclude<ExtArgs> | null
+    /**
+     * Filter, which Proforma to fetch.
+     */
+    where: ProformaWhereUniqueInput
+  }
+
+  /**
+   * Proforma findFirst
+   */
+  export type ProformaFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Proforma
+     */
+    select?: ProformaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Proforma
+     */
+    omit?: ProformaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaInclude<ExtArgs> | null
+    /**
+     * Filter, which Proforma to fetch.
+     */
+    where?: ProformaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     *
+     * Determine the order of Proformas to fetch.
+     */
+    orderBy?: ProformaOrderByWithRelationInput | ProformaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     *
+     * Sets the position for searching for Proformas.
+     */
+    cursor?: ProformaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Take `±n` Proformas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Skip the first `n` Proformas.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     *
+     * Filter by unique combinations of Proformas.
+     */
+    distinct?: ProformaScalarFieldEnum | ProformaScalarFieldEnum[]
+  }
+
+  /**
+   * Proforma findFirstOrThrow
+   */
+  export type ProformaFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Proforma
+     */
+    select?: ProformaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Proforma
+     */
+    omit?: ProformaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaInclude<ExtArgs> | null
+    /**
+     * Filter, which Proforma to fetch.
+     */
+    where?: ProformaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     *
+     * Determine the order of Proformas to fetch.
+     */
+    orderBy?: ProformaOrderByWithRelationInput | ProformaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     *
+     * Sets the position for searching for Proformas.
+     */
+    cursor?: ProformaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Take `±n` Proformas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Skip the first `n` Proformas.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     *
+     * Filter by unique combinations of Proformas.
+     */
+    distinct?: ProformaScalarFieldEnum | ProformaScalarFieldEnum[]
+  }
+
+  /**
+   * Proforma findMany
+   */
+  export type ProformaFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Proforma
+     */
+    select?: ProformaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Proforma
+     */
+    omit?: ProformaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaInclude<ExtArgs> | null
+    /**
+     * Filter, which Proformas to fetch.
+     */
+    where?: ProformaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     *
+     * Determine the order of Proformas to fetch.
+     */
+    orderBy?: ProformaOrderByWithRelationInput | ProformaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     *
+     * Sets the position for listing Proformas.
+     */
+    cursor?: ProformaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Take `±n` Proformas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Skip the first `n` Proformas.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     *
+     * Filter by unique combinations of Proformas.
+     */
+    distinct?: ProformaScalarFieldEnum | ProformaScalarFieldEnum[]
+  }
+
+  /**
+   * Proforma create
+   */
+  export type ProformaCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Proforma
+     */
+    select?: ProformaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Proforma
+     */
+    omit?: ProformaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Proforma.
+     */
+    data: XOR<ProformaCreateInput, ProformaUncheckedCreateInput>
+  }
+
+  /**
+   * Proforma createMany
+   */
+  export type ProformaCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Proformas.
+     */
+    data: ProformaCreateManyInput | ProformaCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Proforma createManyAndReturn
+   */
+  export type ProformaCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Proforma
+     */
+    select?: ProformaSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Proforma
+     */
+    omit?: ProformaOmit<ExtArgs> | null
+    /**
+     * The data used to create many Proformas.
+     */
+    data: ProformaCreateManyInput | ProformaCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Proforma update
+   */
+  export type ProformaUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Proforma
+     */
+    select?: ProformaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Proforma
+     */
+    omit?: ProformaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Proforma.
+     */
+    data: XOR<ProformaUpdateInput, ProformaUncheckedUpdateInput>
+    /**
+     * Choose, which Proforma to update.
+     */
+    where: ProformaWhereUniqueInput
+  }
+
+  /**
+   * Proforma updateMany
+   */
+  export type ProformaUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Proformas.
+     */
+    data: XOR<ProformaUpdateManyMutationInput, ProformaUncheckedUpdateManyInput>
+    /**
+     * Filter which Proformas to update
+     */
+    where?: ProformaWhereInput
+    /**
+     * Limit how many Proformas to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Proforma updateManyAndReturn
+   */
+  export type ProformaUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Proforma
+     */
+    select?: ProformaSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Proforma
+     */
+    omit?: ProformaOmit<ExtArgs> | null
+    /**
+     * The data used to update Proformas.
+     */
+    data: XOR<ProformaUpdateManyMutationInput, ProformaUncheckedUpdateManyInput>
+    /**
+     * Filter which Proformas to update
+     */
+    where?: ProformaWhereInput
+    /**
+     * Limit how many Proformas to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Proforma upsert
+   */
+  export type ProformaUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Proforma
+     */
+    select?: ProformaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Proforma
+     */
+    omit?: ProformaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Proforma to update in case it exists.
+     */
+    where: ProformaWhereUniqueInput
+    /**
+     * In case the Proforma found by the `where` argument doesn't exist, create a new Proforma with this data.
+     */
+    create: XOR<ProformaCreateInput, ProformaUncheckedCreateInput>
+    /**
+     * In case the Proforma was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ProformaUpdateInput, ProformaUncheckedUpdateInput>
+  }
+
+  /**
+   * Proforma delete
+   */
+  export type ProformaDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Proforma
+     */
+    select?: ProformaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Proforma
+     */
+    omit?: ProformaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaInclude<ExtArgs> | null
+    /**
+     * Filter which Proforma to delete.
+     */
+    where: ProformaWhereUniqueInput
+  }
+
+  /**
+   * Proforma deleteMany
+   */
+  export type ProformaDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Proformas to delete
+     */
+    where?: ProformaWhereInput
+    /**
+     * Limit how many Proformas to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Proforma.adjustments
+   */
+  export type Proforma$adjustmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProformaAdjustment
+     */
+    select?: ProformaAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProformaAdjustment
+     */
+    omit?: ProformaAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaAdjustmentInclude<ExtArgs> | null
+    where?: ProformaAdjustmentWhereInput
+    orderBy?: ProformaAdjustmentOrderByWithRelationInput | ProformaAdjustmentOrderByWithRelationInput[]
+    cursor?: ProformaAdjustmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProformaAdjustmentScalarFieldEnum | ProformaAdjustmentScalarFieldEnum[]
+  }
+
+  /**
+   * Proforma.items
+   */
+  export type Proforma$itemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProformaItem
+     */
+    select?: ProformaItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProformaItem
+     */
+    omit?: ProformaItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaItemInclude<ExtArgs> | null
+    where?: ProformaItemWhereInput
+    orderBy?: ProformaItemOrderByWithRelationInput | ProformaItemOrderByWithRelationInput[]
+    cursor?: ProformaItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProformaItemScalarFieldEnum | ProformaItemScalarFieldEnum[]
+  }
+
+  /**
+   * Proforma without action
+   */
+  export type ProformaDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Proforma
+     */
+    select?: ProformaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Proforma
+     */
+    omit?: ProformaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ProformaAdjustment
+   */
+
+  export type AggregateProformaAdjustment = {
+    _count: ProformaAdjustmentCountAggregateOutputType | null
+    _avg: ProformaAdjustmentAvgAggregateOutputType | null
+    _sum: ProformaAdjustmentSumAggregateOutputType | null
+    _min: ProformaAdjustmentMinAggregateOutputType | null
+    _max: ProformaAdjustmentMaxAggregateOutputType | null
+  }
+
+  export type ProformaAdjustmentAvgAggregateOutputType = {
+    adjustmentValue: Decimal | null
+  }
+
+  export type ProformaAdjustmentSumAggregateOutputType = {
+    adjustmentValue: Decimal | null
+  }
+
+  export type ProformaAdjustmentMinAggregateOutputType = {
+    id: string | null
+    proformaId: string | null
+    adjustmentName: string | null
+    adjustmentValue: Decimal | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProformaAdjustmentMaxAggregateOutputType = {
+    id: string | null
+    proformaId: string | null
+    adjustmentName: string | null
+    adjustmentValue: Decimal | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProformaAdjustmentCountAggregateOutputType = {
+    id: number
+    proformaId: number
+    adjustmentName: number
+    adjustmentValue: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ProformaAdjustmentAvgAggregateInputType = {
+    adjustmentValue?: true
+  }
+
+  export type ProformaAdjustmentSumAggregateInputType = {
+    adjustmentValue?: true
+  }
+
+  export type ProformaAdjustmentMinAggregateInputType = {
+    id?: true
+    proformaId?: true
+    adjustmentName?: true
+    adjustmentValue?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProformaAdjustmentMaxAggregateInputType = {
+    id?: true
+    proformaId?: true
+    adjustmentName?: true
+    adjustmentValue?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProformaAdjustmentCountAggregateInputType = {
+    id?: true
+    proformaId?: true
+    adjustmentName?: true
+    adjustmentValue?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ProformaAdjustmentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProformaAdjustment to aggregate.
+     */
+    where?: ProformaAdjustmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     *
+     * Determine the order of ProformaAdjustments to fetch.
+     */
+    orderBy?: ProformaAdjustmentOrderByWithRelationInput | ProformaAdjustmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     *
+     * Sets the start position
+     */
+    cursor?: ProformaAdjustmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Take `±n` ProformaAdjustments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Skip the first `n` ProformaAdjustments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Count returned ProformaAdjustments
+    **/
+    _count?: true | ProformaAdjustmentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Select which fields to average
+    **/
+    _avg?: ProformaAdjustmentAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Select which fields to sum
+    **/
+    _sum?: ProformaAdjustmentSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProformaAdjustmentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProformaAdjustmentMaxAggregateInputType
+  }
+
+  export type GetProformaAdjustmentAggregateType<T extends ProformaAdjustmentAggregateArgs> = {
+        [P in keyof T & keyof AggregateProformaAdjustment]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProformaAdjustment[P]>
+      : GetScalarType<T[P], AggregateProformaAdjustment[P]>
+  }
+
+
+
+
+  export type ProformaAdjustmentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProformaAdjustmentWhereInput
+    orderBy?: ProformaAdjustmentOrderByWithAggregationInput | ProformaAdjustmentOrderByWithAggregationInput[]
+    by: ProformaAdjustmentScalarFieldEnum[] | ProformaAdjustmentScalarFieldEnum
+    having?: ProformaAdjustmentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProformaAdjustmentCountAggregateInputType | true
+    _avg?: ProformaAdjustmentAvgAggregateInputType
+    _sum?: ProformaAdjustmentSumAggregateInputType
+    _min?: ProformaAdjustmentMinAggregateInputType
+    _max?: ProformaAdjustmentMaxAggregateInputType
+  }
+
+  export type ProformaAdjustmentGroupByOutputType = {
+    id: string
+    proformaId: string
+    adjustmentName: string
+    adjustmentValue: Decimal
+    createdAt: Date
+    updatedAt: Date
+    _count: ProformaAdjustmentCountAggregateOutputType | null
+    _avg: ProformaAdjustmentAvgAggregateOutputType | null
+    _sum: ProformaAdjustmentSumAggregateOutputType | null
+    _min: ProformaAdjustmentMinAggregateOutputType | null
+    _max: ProformaAdjustmentMaxAggregateOutputType | null
+  }
+
+  type GetProformaAdjustmentGroupByPayload<T extends ProformaAdjustmentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ProformaAdjustmentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProformaAdjustmentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProformaAdjustmentGroupByOutputType[P]>
+            : GetScalarType<T[P], ProformaAdjustmentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProformaAdjustmentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    proformaId?: boolean
+    adjustmentName?: boolean
+    adjustmentValue?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    proforma?: boolean | ProformaDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["proformaAdjustment"]>
+
+  export type ProformaAdjustmentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    proformaId?: boolean
+    adjustmentName?: boolean
+    adjustmentValue?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    proforma?: boolean | ProformaDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["proformaAdjustment"]>
+
+  export type ProformaAdjustmentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    proformaId?: boolean
+    adjustmentName?: boolean
+    adjustmentValue?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    proforma?: boolean | ProformaDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["proformaAdjustment"]>
+
+  export type ProformaAdjustmentSelectScalar = {
+    id?: boolean
+    proformaId?: boolean
+    adjustmentName?: boolean
+    adjustmentValue?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ProformaAdjustmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "proformaId" | "adjustmentName" | "adjustmentValue" | "createdAt" | "updatedAt", ExtArgs["result"]["proformaAdjustment"]>
+  export type ProformaAdjustmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    proforma?: boolean | ProformaDefaultArgs<ExtArgs>
+  }
+  export type ProformaAdjustmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    proforma?: boolean | ProformaDefaultArgs<ExtArgs>
+  }
+  export type ProformaAdjustmentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    proforma?: boolean | ProformaDefaultArgs<ExtArgs>
+  }
+
+  export type $ProformaAdjustmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ProformaAdjustment"
+    objects: {
+      proforma: Prisma.$ProformaPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      proformaId: string
+      adjustmentName: string
+      adjustmentValue: Prisma.Decimal
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["proformaAdjustment"]>
+    composites: {}
+  }
+
+  type ProformaAdjustmentGetPayload<S extends boolean | null | undefined | ProformaAdjustmentDefaultArgs> = $Result.GetResult<Prisma.$ProformaAdjustmentPayload, S>
+
+  type ProformaAdjustmentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ProformaAdjustmentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ProformaAdjustmentCountAggregateInputType | true
+    }
+
+  export interface ProformaAdjustmentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ProformaAdjustment'], meta: { name: 'ProformaAdjustment' } }
+    /**
+     * Find zero or one ProformaAdjustment that matches the filter.
+     * @param {ProformaAdjustmentFindUniqueArgs} args - Arguments to find a ProformaAdjustment
+     * @example
+     * // Get one ProformaAdjustment
+     * const proformaAdjustment = await prisma.proformaAdjustment.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ProformaAdjustmentFindUniqueArgs>(args: SelectSubset<T, ProformaAdjustmentFindUniqueArgs<ExtArgs>>): Prisma__ProformaAdjustmentClient<$Result.GetResult<Prisma.$ProformaAdjustmentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ProformaAdjustment that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ProformaAdjustmentFindUniqueOrThrowArgs} args - Arguments to find a ProformaAdjustment
+     * @example
+     * // Get one ProformaAdjustment
+     * const proformaAdjustment = await prisma.proformaAdjustment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ProformaAdjustmentFindUniqueOrThrowArgs>(args: SelectSubset<T, ProformaAdjustmentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProformaAdjustmentClient<$Result.GetResult<Prisma.$ProformaAdjustmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ProformaAdjustment that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProformaAdjustmentFindFirstArgs} args - Arguments to find a ProformaAdjustment
+     * @example
+     * // Get one ProformaAdjustment
+     * const proformaAdjustment = await prisma.proformaAdjustment.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ProformaAdjustmentFindFirstArgs>(args?: SelectSubset<T, ProformaAdjustmentFindFirstArgs<ExtArgs>>): Prisma__ProformaAdjustmentClient<$Result.GetResult<Prisma.$ProformaAdjustmentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ProformaAdjustment that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProformaAdjustmentFindFirstOrThrowArgs} args - Arguments to find a ProformaAdjustment
+     * @example
+     * // Get one ProformaAdjustment
+     * const proformaAdjustment = await prisma.proformaAdjustment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ProformaAdjustmentFindFirstOrThrowArgs>(args?: SelectSubset<T, ProformaAdjustmentFindFirstOrThrowArgs<ExtArgs>>): Prisma__ProformaAdjustmentClient<$Result.GetResult<Prisma.$ProformaAdjustmentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ProformaAdjustments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProformaAdjustmentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ProformaAdjustments
+     * const proformaAdjustments = await prisma.proformaAdjustment.findMany()
+     *
+     * // Get first 10 ProformaAdjustments
+     * const proformaAdjustments = await prisma.proformaAdjustment.findMany({ take: 10 })
+     *
+     * // Only select the `id`
+     * const proformaAdjustmentWithIdOnly = await prisma.proformaAdjustment.findMany({ select: { id: true } })
+     *
+     */
+    findMany<T extends ProformaAdjustmentFindManyArgs>(args?: SelectSubset<T, ProformaAdjustmentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProformaAdjustmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ProformaAdjustment.
+     * @param {ProformaAdjustmentCreateArgs} args - Arguments to create a ProformaAdjustment.
+     * @example
+     * // Create one ProformaAdjustment
+     * const ProformaAdjustment = await prisma.proformaAdjustment.create({
+     *   data: {
+     *     // ... data to create a ProformaAdjustment
+     *   }
+     * })
+     *
+     */
+    create<T extends ProformaAdjustmentCreateArgs>(args: SelectSubset<T, ProformaAdjustmentCreateArgs<ExtArgs>>): Prisma__ProformaAdjustmentClient<$Result.GetResult<Prisma.$ProformaAdjustmentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ProformaAdjustments.
+     * @param {ProformaAdjustmentCreateManyArgs} args - Arguments to create many ProformaAdjustments.
+     * @example
+     * // Create many ProformaAdjustments
+     * const proformaAdjustment = await prisma.proformaAdjustment.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *
+     */
+    createMany<T extends ProformaAdjustmentCreateManyArgs>(args?: SelectSubset<T, ProformaAdjustmentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ProformaAdjustments and returns the data saved in the database.
+     * @param {ProformaAdjustmentCreateManyAndReturnArgs} args - Arguments to create many ProformaAdjustments.
+     * @example
+     * // Create many ProformaAdjustments
+     * const proformaAdjustment = await prisma.proformaAdjustment.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *
+     * // Create many ProformaAdjustments and only return the `id`
+     * const proformaAdjustmentWithIdOnly = await prisma.proformaAdjustment.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     *
+     */
+    createManyAndReturn<T extends ProformaAdjustmentCreateManyAndReturnArgs>(args?: SelectSubset<T, ProformaAdjustmentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProformaAdjustmentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ProformaAdjustment.
+     * @param {ProformaAdjustmentDeleteArgs} args - Arguments to delete one ProformaAdjustment.
+     * @example
+     * // Delete one ProformaAdjustment
+     * const ProformaAdjustment = await prisma.proformaAdjustment.delete({
+     *   where: {
+     *     // ... filter to delete one ProformaAdjustment
+     *   }
+     * })
+     *
+     */
+    delete<T extends ProformaAdjustmentDeleteArgs>(args: SelectSubset<T, ProformaAdjustmentDeleteArgs<ExtArgs>>): Prisma__ProformaAdjustmentClient<$Result.GetResult<Prisma.$ProformaAdjustmentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ProformaAdjustment.
+     * @param {ProformaAdjustmentUpdateArgs} args - Arguments to update one ProformaAdjustment.
+     * @example
+     * // Update one ProformaAdjustment
+     * const proformaAdjustment = await prisma.proformaAdjustment.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     *
+     */
+    update<T extends ProformaAdjustmentUpdateArgs>(args: SelectSubset<T, ProformaAdjustmentUpdateArgs<ExtArgs>>): Prisma__ProformaAdjustmentClient<$Result.GetResult<Prisma.$ProformaAdjustmentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ProformaAdjustments.
+     * @param {ProformaAdjustmentDeleteManyArgs} args - Arguments to filter ProformaAdjustments to delete.
+     * @example
+     * // Delete a few ProformaAdjustments
+     * const { count } = await prisma.proformaAdjustment.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     *
+     */
+    deleteMany<T extends ProformaAdjustmentDeleteManyArgs>(args?: SelectSubset<T, ProformaAdjustmentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProformaAdjustments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProformaAdjustmentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ProformaAdjustments
+     * const proformaAdjustment = await prisma.proformaAdjustment.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     *
+     */
+    updateMany<T extends ProformaAdjustmentUpdateManyArgs>(args: SelectSubset<T, ProformaAdjustmentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProformaAdjustments and returns the data updated in the database.
+     * @param {ProformaAdjustmentUpdateManyAndReturnArgs} args - Arguments to update many ProformaAdjustments.
+     * @example
+     * // Update many ProformaAdjustments
+     * const proformaAdjustment = await prisma.proformaAdjustment.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *
+     * // Update zero or more ProformaAdjustments and only return the `id`
+     * const proformaAdjustmentWithIdOnly = await prisma.proformaAdjustment.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     *
+     */
+    updateManyAndReturn<T extends ProformaAdjustmentUpdateManyAndReturnArgs>(args: SelectSubset<T, ProformaAdjustmentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProformaAdjustmentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ProformaAdjustment.
+     * @param {ProformaAdjustmentUpsertArgs} args - Arguments to update or create a ProformaAdjustment.
+     * @example
+     * // Update or create a ProformaAdjustment
+     * const proformaAdjustment = await prisma.proformaAdjustment.upsert({
+     *   create: {
+     *     // ... data to create a ProformaAdjustment
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ProformaAdjustment we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ProformaAdjustmentUpsertArgs>(args: SelectSubset<T, ProformaAdjustmentUpsertArgs<ExtArgs>>): Prisma__ProformaAdjustmentClient<$Result.GetResult<Prisma.$ProformaAdjustmentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ProformaAdjustments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProformaAdjustmentCountArgs} args - Arguments to filter ProformaAdjustments to count.
+     * @example
+     * // Count the number of ProformaAdjustments
+     * const count = await prisma.proformaAdjustment.count({
+     *   where: {
+     *     // ... the filter for the ProformaAdjustments we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProformaAdjustmentCountArgs>(
+      args?: Subset<T, ProformaAdjustmentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProformaAdjustmentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ProformaAdjustment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProformaAdjustmentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProformaAdjustmentAggregateArgs>(args: Subset<T, ProformaAdjustmentAggregateArgs>): Prisma.PrismaPromise<GetProformaAdjustmentAggregateType<T>>
+
+    /**
+     * Group by ProformaAdjustment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProformaAdjustmentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     *
+    **/
+    groupBy<
+      T extends ProformaAdjustmentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProformaAdjustmentGroupByArgs['orderBy'] }
+        : { orderBy?: ProformaAdjustmentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProformaAdjustmentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProformaAdjustmentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ProformaAdjustment model
+   */
+  readonly fields: ProformaAdjustmentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ProformaAdjustment.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ProformaAdjustmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    proforma<T extends ProformaDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProformaDefaultArgs<ExtArgs>>): Prisma__ProformaClient<$Result.GetResult<Prisma.$ProformaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ProformaAdjustment model
+   */
+  interface ProformaAdjustmentFieldRefs {
+    readonly id: FieldRef<"ProformaAdjustment", 'String'>
+    readonly proformaId: FieldRef<"ProformaAdjustment", 'String'>
+    readonly adjustmentName: FieldRef<"ProformaAdjustment", 'String'>
+    readonly adjustmentValue: FieldRef<"ProformaAdjustment", 'Decimal'>
+    readonly createdAt: FieldRef<"ProformaAdjustment", 'DateTime'>
+    readonly updatedAt: FieldRef<"ProformaAdjustment", 'DateTime'>
+  }
+
+
+  // Custom InputTypes
+  /**
+   * ProformaAdjustment findUnique
+   */
+  export type ProformaAdjustmentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProformaAdjustment
+     */
+    select?: ProformaAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProformaAdjustment
+     */
+    omit?: ProformaAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaAdjustmentInclude<ExtArgs> | null
+    /**
+     * Filter, which ProformaAdjustment to fetch.
+     */
+    where: ProformaAdjustmentWhereUniqueInput
+  }
+
+  /**
+   * ProformaAdjustment findUniqueOrThrow
+   */
+  export type ProformaAdjustmentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProformaAdjustment
+     */
+    select?: ProformaAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProformaAdjustment
+     */
+    omit?: ProformaAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaAdjustmentInclude<ExtArgs> | null
+    /**
+     * Filter, which ProformaAdjustment to fetch.
+     */
+    where: ProformaAdjustmentWhereUniqueInput
+  }
+
+  /**
+   * ProformaAdjustment findFirst
+   */
+  export type ProformaAdjustmentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProformaAdjustment
+     */
+    select?: ProformaAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProformaAdjustment
+     */
+    omit?: ProformaAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaAdjustmentInclude<ExtArgs> | null
+    /**
+     * Filter, which ProformaAdjustment to fetch.
+     */
+    where?: ProformaAdjustmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     *
+     * Determine the order of ProformaAdjustments to fetch.
+     */
+    orderBy?: ProformaAdjustmentOrderByWithRelationInput | ProformaAdjustmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     *
+     * Sets the position for searching for ProformaAdjustments.
+     */
+    cursor?: ProformaAdjustmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Take `±n` ProformaAdjustments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Skip the first `n` ProformaAdjustments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     *
+     * Filter by unique combinations of ProformaAdjustments.
+     */
+    distinct?: ProformaAdjustmentScalarFieldEnum | ProformaAdjustmentScalarFieldEnum[]
+  }
+
+  /**
+   * ProformaAdjustment findFirstOrThrow
+   */
+  export type ProformaAdjustmentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProformaAdjustment
+     */
+    select?: ProformaAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProformaAdjustment
+     */
+    omit?: ProformaAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaAdjustmentInclude<ExtArgs> | null
+    /**
+     * Filter, which ProformaAdjustment to fetch.
+     */
+    where?: ProformaAdjustmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     *
+     * Determine the order of ProformaAdjustments to fetch.
+     */
+    orderBy?: ProformaAdjustmentOrderByWithRelationInput | ProformaAdjustmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     *
+     * Sets the position for searching for ProformaAdjustments.
+     */
+    cursor?: ProformaAdjustmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Take `±n` ProformaAdjustments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Skip the first `n` ProformaAdjustments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     *
+     * Filter by unique combinations of ProformaAdjustments.
+     */
+    distinct?: ProformaAdjustmentScalarFieldEnum | ProformaAdjustmentScalarFieldEnum[]
+  }
+
+  /**
+   * ProformaAdjustment findMany
+   */
+  export type ProformaAdjustmentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProformaAdjustment
+     */
+    select?: ProformaAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProformaAdjustment
+     */
+    omit?: ProformaAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaAdjustmentInclude<ExtArgs> | null
+    /**
+     * Filter, which ProformaAdjustments to fetch.
+     */
+    where?: ProformaAdjustmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     *
+     * Determine the order of ProformaAdjustments to fetch.
+     */
+    orderBy?: ProformaAdjustmentOrderByWithRelationInput | ProformaAdjustmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     *
+     * Sets the position for listing ProformaAdjustments.
+     */
+    cursor?: ProformaAdjustmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Take `±n` ProformaAdjustments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Skip the first `n` ProformaAdjustments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     *
+     * Filter by unique combinations of ProformaAdjustments.
+     */
+    distinct?: ProformaAdjustmentScalarFieldEnum | ProformaAdjustmentScalarFieldEnum[]
+  }
+
+  /**
+   * ProformaAdjustment create
+   */
+  export type ProformaAdjustmentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProformaAdjustment
+     */
+    select?: ProformaAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProformaAdjustment
+     */
+    omit?: ProformaAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaAdjustmentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ProformaAdjustment.
+     */
+    data: XOR<ProformaAdjustmentCreateInput, ProformaAdjustmentUncheckedCreateInput>
+  }
+
+  /**
+   * ProformaAdjustment createMany
+   */
+  export type ProformaAdjustmentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ProformaAdjustments.
+     */
+    data: ProformaAdjustmentCreateManyInput | ProformaAdjustmentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ProformaAdjustment createManyAndReturn
+   */
+  export type ProformaAdjustmentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProformaAdjustment
+     */
+    select?: ProformaAdjustmentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProformaAdjustment
+     */
+    omit?: ProformaAdjustmentOmit<ExtArgs> | null
+    /**
+     * The data used to create many ProformaAdjustments.
+     */
+    data: ProformaAdjustmentCreateManyInput | ProformaAdjustmentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaAdjustmentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProformaAdjustment update
+   */
+  export type ProformaAdjustmentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProformaAdjustment
+     */
+    select?: ProformaAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProformaAdjustment
+     */
+    omit?: ProformaAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaAdjustmentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ProformaAdjustment.
+     */
+    data: XOR<ProformaAdjustmentUpdateInput, ProformaAdjustmentUncheckedUpdateInput>
+    /**
+     * Choose, which ProformaAdjustment to update.
+     */
+    where: ProformaAdjustmentWhereUniqueInput
+  }
+
+  /**
+   * ProformaAdjustment updateMany
+   */
+  export type ProformaAdjustmentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ProformaAdjustments.
+     */
+    data: XOR<ProformaAdjustmentUpdateManyMutationInput, ProformaAdjustmentUncheckedUpdateManyInput>
+    /**
+     * Filter which ProformaAdjustments to update
+     */
+    where?: ProformaAdjustmentWhereInput
+    /**
+     * Limit how many ProformaAdjustments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ProformaAdjustment updateManyAndReturn
+   */
+  export type ProformaAdjustmentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProformaAdjustment
+     */
+    select?: ProformaAdjustmentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProformaAdjustment
+     */
+    omit?: ProformaAdjustmentOmit<ExtArgs> | null
+    /**
+     * The data used to update ProformaAdjustments.
+     */
+    data: XOR<ProformaAdjustmentUpdateManyMutationInput, ProformaAdjustmentUncheckedUpdateManyInput>
+    /**
+     * Filter which ProformaAdjustments to update
+     */
+    where?: ProformaAdjustmentWhereInput
+    /**
+     * Limit how many ProformaAdjustments to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaAdjustmentIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProformaAdjustment upsert
+   */
+  export type ProformaAdjustmentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProformaAdjustment
+     */
+    select?: ProformaAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProformaAdjustment
+     */
+    omit?: ProformaAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaAdjustmentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ProformaAdjustment to update in case it exists.
+     */
+    where: ProformaAdjustmentWhereUniqueInput
+    /**
+     * In case the ProformaAdjustment found by the `where` argument doesn't exist, create a new ProformaAdjustment with this data.
+     */
+    create: XOR<ProformaAdjustmentCreateInput, ProformaAdjustmentUncheckedCreateInput>
+    /**
+     * In case the ProformaAdjustment was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ProformaAdjustmentUpdateInput, ProformaAdjustmentUncheckedUpdateInput>
+  }
+
+  /**
+   * ProformaAdjustment delete
+   */
+  export type ProformaAdjustmentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProformaAdjustment
+     */
+    select?: ProformaAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProformaAdjustment
+     */
+    omit?: ProformaAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaAdjustmentInclude<ExtArgs> | null
+    /**
+     * Filter which ProformaAdjustment to delete.
+     */
+    where: ProformaAdjustmentWhereUniqueInput
+  }
+
+  /**
+   * ProformaAdjustment deleteMany
+   */
+  export type ProformaAdjustmentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProformaAdjustments to delete
+     */
+    where?: ProformaAdjustmentWhereInput
+    /**
+     * Limit how many ProformaAdjustments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ProformaAdjustment without action
+   */
+  export type ProformaAdjustmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProformaAdjustment
+     */
+    select?: ProformaAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProformaAdjustment
+     */
+    omit?: ProformaAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaAdjustmentInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ProformaItem
+   */
+
+  export type AggregateProformaItem = {
+    _count: ProformaItemCountAggregateOutputType | null
+    _avg: ProformaItemAvgAggregateOutputType | null
+    _sum: ProformaItemSumAggregateOutputType | null
+    _min: ProformaItemMinAggregateOutputType | null
+    _max: ProformaItemMaxAggregateOutputType | null
+  }
+
+  export type ProformaItemAvgAggregateOutputType = {
+    quantity: Decimal | null
+    rate: Decimal | null
+    discountValue: Decimal | null
+    discountAmount: Decimal | null
+    taxRate: Decimal | null
+    taxAmount: Decimal | null
+    amount: Decimal | null
+    sortIndex: number | null
+  }
+
+  export type ProformaItemSumAggregateOutputType = {
+    quantity: Decimal | null
+    rate: Decimal | null
+    discountValue: Decimal | null
+    discountAmount: Decimal | null
+    taxRate: Decimal | null
+    taxAmount: Decimal | null
+    amount: Decimal | null
+    sortIndex: number | null
+  }
+
+  export type ProformaItemMinAggregateOutputType = {
+    id: string | null
+    proformaId: string | null
+    productId: string | null
+    name: string | null
+    description: string | null
+    quantity: Decimal | null
+    unit: string | null
+    rate: Decimal | null
+    discountType: string | null
+    discountValue: Decimal | null
+    discountAmount: Decimal | null
+    taxRate: Decimal | null
+    taxAmount: Decimal | null
+    amount: Decimal | null
+    sortIndex: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProformaItemMaxAggregateOutputType = {
+    id: string | null
+    proformaId: string | null
+    productId: string | null
+    name: string | null
+    description: string | null
+    quantity: Decimal | null
+    unit: string | null
+    rate: Decimal | null
+    discountType: string | null
+    discountValue: Decimal | null
+    discountAmount: Decimal | null
+    taxRate: Decimal | null
+    taxAmount: Decimal | null
+    amount: Decimal | null
+    sortIndex: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProformaItemCountAggregateOutputType = {
+    id: number
+    proformaId: number
+    productId: number
+    name: number
+    description: number
+    quantity: number
+    unit: number
+    rate: number
+    discountType: number
+    discountValue: number
+    discountAmount: number
+    taxRate: number
+    taxAmount: number
+    amount: number
+    sortIndex: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ProformaItemAvgAggregateInputType = {
+    quantity?: true
+    rate?: true
+    discountValue?: true
+    discountAmount?: true
+    taxRate?: true
+    taxAmount?: true
+    amount?: true
+    sortIndex?: true
+  }
+
+  export type ProformaItemSumAggregateInputType = {
+    quantity?: true
+    rate?: true
+    discountValue?: true
+    discountAmount?: true
+    taxRate?: true
+    taxAmount?: true
+    amount?: true
+    sortIndex?: true
+  }
+
+  export type ProformaItemMinAggregateInputType = {
+    id?: true
+    proformaId?: true
+    productId?: true
+    name?: true
+    description?: true
+    quantity?: true
+    unit?: true
+    rate?: true
+    discountType?: true
+    discountValue?: true
+    discountAmount?: true
+    taxRate?: true
+    taxAmount?: true
+    amount?: true
+    sortIndex?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProformaItemMaxAggregateInputType = {
+    id?: true
+    proformaId?: true
+    productId?: true
+    name?: true
+    description?: true
+    quantity?: true
+    unit?: true
+    rate?: true
+    discountType?: true
+    discountValue?: true
+    discountAmount?: true
+    taxRate?: true
+    taxAmount?: true
+    amount?: true
+    sortIndex?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProformaItemCountAggregateInputType = {
+    id?: true
+    proformaId?: true
+    productId?: true
+    name?: true
+    description?: true
+    quantity?: true
+    unit?: true
+    rate?: true
+    discountType?: true
+    discountValue?: true
+    discountAmount?: true
+    taxRate?: true
+    taxAmount?: true
+    amount?: true
+    sortIndex?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ProformaItemAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProformaItem to aggregate.
+     */
+    where?: ProformaItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     *
+     * Determine the order of ProformaItems to fetch.
+     */
+    orderBy?: ProformaItemOrderByWithRelationInput | ProformaItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     *
+     * Sets the start position
+     */
+    cursor?: ProformaItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Take `±n` ProformaItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Skip the first `n` ProformaItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Count returned ProformaItems
+    **/
+    _count?: true | ProformaItemCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Select which fields to average
+    **/
+    _avg?: ProformaItemAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Select which fields to sum
+    **/
+    _sum?: ProformaItemSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProformaItemMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProformaItemMaxAggregateInputType
+  }
+
+  export type GetProformaItemAggregateType<T extends ProformaItemAggregateArgs> = {
+        [P in keyof T & keyof AggregateProformaItem]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProformaItem[P]>
+      : GetScalarType<T[P], AggregateProformaItem[P]>
+  }
+
+
+
+
+  export type ProformaItemGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProformaItemWhereInput
+    orderBy?: ProformaItemOrderByWithAggregationInput | ProformaItemOrderByWithAggregationInput[]
+    by: ProformaItemScalarFieldEnum[] | ProformaItemScalarFieldEnum
+    having?: ProformaItemScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProformaItemCountAggregateInputType | true
+    _avg?: ProformaItemAvgAggregateInputType
+    _sum?: ProformaItemSumAggregateInputType
+    _min?: ProformaItemMinAggregateInputType
+    _max?: ProformaItemMaxAggregateInputType
+  }
+
+  export type ProformaItemGroupByOutputType = {
+    id: string
+    proformaId: string
+    productId: string | null
+    name: string
+    description: string | null
+    quantity: Decimal
+    unit: string
+    rate: Decimal
+    discountType: string
+    discountValue: Decimal
+    discountAmount: Decimal
+    taxRate: Decimal
+    taxAmount: Decimal
+    amount: Decimal
+    sortIndex: number
+    createdAt: Date
+    updatedAt: Date
+    _count: ProformaItemCountAggregateOutputType | null
+    _avg: ProformaItemAvgAggregateOutputType | null
+    _sum: ProformaItemSumAggregateOutputType | null
+    _min: ProformaItemMinAggregateOutputType | null
+    _max: ProformaItemMaxAggregateOutputType | null
+  }
+
+  type GetProformaItemGroupByPayload<T extends ProformaItemGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ProformaItemGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProformaItemGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProformaItemGroupByOutputType[P]>
+            : GetScalarType<T[P], ProformaItemGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProformaItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    proformaId?: boolean
+    productId?: boolean
+    name?: boolean
+    description?: boolean
+    quantity?: boolean
+    unit?: boolean
+    rate?: boolean
+    discountType?: boolean
+    discountValue?: boolean
+    discountAmount?: boolean
+    taxRate?: boolean
+    taxAmount?: boolean
+    amount?: boolean
+    sortIndex?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    proforma?: boolean | ProformaDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["proformaItem"]>
+
+  export type ProformaItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    proformaId?: boolean
+    productId?: boolean
+    name?: boolean
+    description?: boolean
+    quantity?: boolean
+    unit?: boolean
+    rate?: boolean
+    discountType?: boolean
+    discountValue?: boolean
+    discountAmount?: boolean
+    taxRate?: boolean
+    taxAmount?: boolean
+    amount?: boolean
+    sortIndex?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    proforma?: boolean | ProformaDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["proformaItem"]>
+
+  export type ProformaItemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    proformaId?: boolean
+    productId?: boolean
+    name?: boolean
+    description?: boolean
+    quantity?: boolean
+    unit?: boolean
+    rate?: boolean
+    discountType?: boolean
+    discountValue?: boolean
+    discountAmount?: boolean
+    taxRate?: boolean
+    taxAmount?: boolean
+    amount?: boolean
+    sortIndex?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    proforma?: boolean | ProformaDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["proformaItem"]>
+
+  export type ProformaItemSelectScalar = {
+    id?: boolean
+    proformaId?: boolean
+    productId?: boolean
+    name?: boolean
+    description?: boolean
+    quantity?: boolean
+    unit?: boolean
+    rate?: boolean
+    discountType?: boolean
+    discountValue?: boolean
+    discountAmount?: boolean
+    taxRate?: boolean
+    taxAmount?: boolean
+    amount?: boolean
+    sortIndex?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ProformaItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "proformaId" | "productId" | "name" | "description" | "quantity" | "unit" | "rate" | "discountType" | "discountValue" | "discountAmount" | "taxRate" | "taxAmount" | "amount" | "sortIndex" | "createdAt" | "updatedAt", ExtArgs["result"]["proformaItem"]>
+  export type ProformaItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    proforma?: boolean | ProformaDefaultArgs<ExtArgs>
+  }
+  export type ProformaItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    proforma?: boolean | ProformaDefaultArgs<ExtArgs>
+  }
+  export type ProformaItemIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    proforma?: boolean | ProformaDefaultArgs<ExtArgs>
+  }
+
+  export type $ProformaItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ProformaItem"
+    objects: {
+      proforma: Prisma.$ProformaPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      proformaId: string
+      productId: string | null
+      name: string
+      description: string | null
+      quantity: Prisma.Decimal
+      unit: string
+      rate: Prisma.Decimal
+      discountType: string
+      discountValue: Prisma.Decimal
+      discountAmount: Prisma.Decimal
+      taxRate: Prisma.Decimal
+      taxAmount: Prisma.Decimal
+      amount: Prisma.Decimal
+      sortIndex: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["proformaItem"]>
+    composites: {}
+  }
+
+  type ProformaItemGetPayload<S extends boolean | null | undefined | ProformaItemDefaultArgs> = $Result.GetResult<Prisma.$ProformaItemPayload, S>
+
+  type ProformaItemCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ProformaItemFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ProformaItemCountAggregateInputType | true
+    }
+
+  export interface ProformaItemDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ProformaItem'], meta: { name: 'ProformaItem' } }
+    /**
+     * Find zero or one ProformaItem that matches the filter.
+     * @param {ProformaItemFindUniqueArgs} args - Arguments to find a ProformaItem
+     * @example
+     * // Get one ProformaItem
+     * const proformaItem = await prisma.proformaItem.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ProformaItemFindUniqueArgs>(args: SelectSubset<T, ProformaItemFindUniqueArgs<ExtArgs>>): Prisma__ProformaItemClient<$Result.GetResult<Prisma.$ProformaItemPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ProformaItem that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ProformaItemFindUniqueOrThrowArgs} args - Arguments to find a ProformaItem
+     * @example
+     * // Get one ProformaItem
+     * const proformaItem = await prisma.proformaItem.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ProformaItemFindUniqueOrThrowArgs>(args: SelectSubset<T, ProformaItemFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProformaItemClient<$Result.GetResult<Prisma.$ProformaItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ProformaItem that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProformaItemFindFirstArgs} args - Arguments to find a ProformaItem
+     * @example
+     * // Get one ProformaItem
+     * const proformaItem = await prisma.proformaItem.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ProformaItemFindFirstArgs>(args?: SelectSubset<T, ProformaItemFindFirstArgs<ExtArgs>>): Prisma__ProformaItemClient<$Result.GetResult<Prisma.$ProformaItemPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ProformaItem that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProformaItemFindFirstOrThrowArgs} args - Arguments to find a ProformaItem
+     * @example
+     * // Get one ProformaItem
+     * const proformaItem = await prisma.proformaItem.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ProformaItemFindFirstOrThrowArgs>(args?: SelectSubset<T, ProformaItemFindFirstOrThrowArgs<ExtArgs>>): Prisma__ProformaItemClient<$Result.GetResult<Prisma.$ProformaItemPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ProformaItems that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProformaItemFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ProformaItems
+     * const proformaItems = await prisma.proformaItem.findMany()
+     *
+     * // Get first 10 ProformaItems
+     * const proformaItems = await prisma.proformaItem.findMany({ take: 10 })
+     *
+     * // Only select the `id`
+     * const proformaItemWithIdOnly = await prisma.proformaItem.findMany({ select: { id: true } })
+     *
+     */
+    findMany<T extends ProformaItemFindManyArgs>(args?: SelectSubset<T, ProformaItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProformaItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ProformaItem.
+     * @param {ProformaItemCreateArgs} args - Arguments to create a ProformaItem.
+     * @example
+     * // Create one ProformaItem
+     * const ProformaItem = await prisma.proformaItem.create({
+     *   data: {
+     *     // ... data to create a ProformaItem
+     *   }
+     * })
+     *
+     */
+    create<T extends ProformaItemCreateArgs>(args: SelectSubset<T, ProformaItemCreateArgs<ExtArgs>>): Prisma__ProformaItemClient<$Result.GetResult<Prisma.$ProformaItemPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ProformaItems.
+     * @param {ProformaItemCreateManyArgs} args - Arguments to create many ProformaItems.
+     * @example
+     * // Create many ProformaItems
+     * const proformaItem = await prisma.proformaItem.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *
+     */
+    createMany<T extends ProformaItemCreateManyArgs>(args?: SelectSubset<T, ProformaItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ProformaItems and returns the data saved in the database.
+     * @param {ProformaItemCreateManyAndReturnArgs} args - Arguments to create many ProformaItems.
+     * @example
+     * // Create many ProformaItems
+     * const proformaItem = await prisma.proformaItem.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *
+     * // Create many ProformaItems and only return the `id`
+     * const proformaItemWithIdOnly = await prisma.proformaItem.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     *
+     */
+    createManyAndReturn<T extends ProformaItemCreateManyAndReturnArgs>(args?: SelectSubset<T, ProformaItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProformaItemPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ProformaItem.
+     * @param {ProformaItemDeleteArgs} args - Arguments to delete one ProformaItem.
+     * @example
+     * // Delete one ProformaItem
+     * const ProformaItem = await prisma.proformaItem.delete({
+     *   where: {
+     *     // ... filter to delete one ProformaItem
+     *   }
+     * })
+     *
+     */
+    delete<T extends ProformaItemDeleteArgs>(args: SelectSubset<T, ProformaItemDeleteArgs<ExtArgs>>): Prisma__ProformaItemClient<$Result.GetResult<Prisma.$ProformaItemPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ProformaItem.
+     * @param {ProformaItemUpdateArgs} args - Arguments to update one ProformaItem.
+     * @example
+     * // Update one ProformaItem
+     * const proformaItem = await prisma.proformaItem.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     *
+     */
+    update<T extends ProformaItemUpdateArgs>(args: SelectSubset<T, ProformaItemUpdateArgs<ExtArgs>>): Prisma__ProformaItemClient<$Result.GetResult<Prisma.$ProformaItemPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ProformaItems.
+     * @param {ProformaItemDeleteManyArgs} args - Arguments to filter ProformaItems to delete.
+     * @example
+     * // Delete a few ProformaItems
+     * const { count } = await prisma.proformaItem.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     *
+     */
+    deleteMany<T extends ProformaItemDeleteManyArgs>(args?: SelectSubset<T, ProformaItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProformaItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProformaItemUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ProformaItems
+     * const proformaItem = await prisma.proformaItem.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     *
+     */
+    updateMany<T extends ProformaItemUpdateManyArgs>(args: SelectSubset<T, ProformaItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProformaItems and returns the data updated in the database.
+     * @param {ProformaItemUpdateManyAndReturnArgs} args - Arguments to update many ProformaItems.
+     * @example
+     * // Update many ProformaItems
+     * const proformaItem = await prisma.proformaItem.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *
+     * // Update zero or more ProformaItems and only return the `id`
+     * const proformaItemWithIdOnly = await prisma.proformaItem.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     *
+     */
+    updateManyAndReturn<T extends ProformaItemUpdateManyAndReturnArgs>(args: SelectSubset<T, ProformaItemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProformaItemPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ProformaItem.
+     * @param {ProformaItemUpsertArgs} args - Arguments to update or create a ProformaItem.
+     * @example
+     * // Update or create a ProformaItem
+     * const proformaItem = await prisma.proformaItem.upsert({
+     *   create: {
+     *     // ... data to create a ProformaItem
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ProformaItem we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ProformaItemUpsertArgs>(args: SelectSubset<T, ProformaItemUpsertArgs<ExtArgs>>): Prisma__ProformaItemClient<$Result.GetResult<Prisma.$ProformaItemPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ProformaItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProformaItemCountArgs} args - Arguments to filter ProformaItems to count.
+     * @example
+     * // Count the number of ProformaItems
+     * const count = await prisma.proformaItem.count({
+     *   where: {
+     *     // ... the filter for the ProformaItems we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProformaItemCountArgs>(
+      args?: Subset<T, ProformaItemCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProformaItemCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ProformaItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProformaItemAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProformaItemAggregateArgs>(args: Subset<T, ProformaItemAggregateArgs>): Prisma.PrismaPromise<GetProformaItemAggregateType<T>>
+
+    /**
+     * Group by ProformaItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProformaItemGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     *
+    **/
+    groupBy<
+      T extends ProformaItemGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProformaItemGroupByArgs['orderBy'] }
+        : { orderBy?: ProformaItemGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProformaItemGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProformaItemGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ProformaItem model
+   */
+  readonly fields: ProformaItemFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ProformaItem.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ProformaItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    proforma<T extends ProformaDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProformaDefaultArgs<ExtArgs>>): Prisma__ProformaClient<$Result.GetResult<Prisma.$ProformaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ProformaItem model
+   */
+  interface ProformaItemFieldRefs {
+    readonly id: FieldRef<"ProformaItem", 'String'>
+    readonly proformaId: FieldRef<"ProformaItem", 'String'>
+    readonly productId: FieldRef<"ProformaItem", 'String'>
+    readonly name: FieldRef<"ProformaItem", 'String'>
+    readonly description: FieldRef<"ProformaItem", 'String'>
+    readonly quantity: FieldRef<"ProformaItem", 'Decimal'>
+    readonly unit: FieldRef<"ProformaItem", 'String'>
+    readonly rate: FieldRef<"ProformaItem", 'Decimal'>
+    readonly discountType: FieldRef<"ProformaItem", 'String'>
+    readonly discountValue: FieldRef<"ProformaItem", 'Decimal'>
+    readonly discountAmount: FieldRef<"ProformaItem", 'Decimal'>
+    readonly taxRate: FieldRef<"ProformaItem", 'Decimal'>
+    readonly taxAmount: FieldRef<"ProformaItem", 'Decimal'>
+    readonly amount: FieldRef<"ProformaItem", 'Decimal'>
+    readonly sortIndex: FieldRef<"ProformaItem", 'Int'>
+    readonly createdAt: FieldRef<"ProformaItem", 'DateTime'>
+    readonly updatedAt: FieldRef<"ProformaItem", 'DateTime'>
+  }
+
+
+  // Custom InputTypes
+  /**
+   * ProformaItem findUnique
+   */
+  export type ProformaItemFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProformaItem
+     */
+    select?: ProformaItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProformaItem
+     */
+    omit?: ProformaItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ProformaItem to fetch.
+     */
+    where: ProformaItemWhereUniqueInput
+  }
+
+  /**
+   * ProformaItem findUniqueOrThrow
+   */
+  export type ProformaItemFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProformaItem
+     */
+    select?: ProformaItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProformaItem
+     */
+    omit?: ProformaItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ProformaItem to fetch.
+     */
+    where: ProformaItemWhereUniqueInput
+  }
+
+  /**
+   * ProformaItem findFirst
+   */
+  export type ProformaItemFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProformaItem
+     */
+    select?: ProformaItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProformaItem
+     */
+    omit?: ProformaItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ProformaItem to fetch.
+     */
+    where?: ProformaItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     *
+     * Determine the order of ProformaItems to fetch.
+     */
+    orderBy?: ProformaItemOrderByWithRelationInput | ProformaItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     *
+     * Sets the position for searching for ProformaItems.
+     */
+    cursor?: ProformaItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Take `±n` ProformaItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Skip the first `n` ProformaItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     *
+     * Filter by unique combinations of ProformaItems.
+     */
+    distinct?: ProformaItemScalarFieldEnum | ProformaItemScalarFieldEnum[]
+  }
+
+  /**
+   * ProformaItem findFirstOrThrow
+   */
+  export type ProformaItemFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProformaItem
+     */
+    select?: ProformaItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProformaItem
+     */
+    omit?: ProformaItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ProformaItem to fetch.
+     */
+    where?: ProformaItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     *
+     * Determine the order of ProformaItems to fetch.
+     */
+    orderBy?: ProformaItemOrderByWithRelationInput | ProformaItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     *
+     * Sets the position for searching for ProformaItems.
+     */
+    cursor?: ProformaItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Take `±n` ProformaItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Skip the first `n` ProformaItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     *
+     * Filter by unique combinations of ProformaItems.
+     */
+    distinct?: ProformaItemScalarFieldEnum | ProformaItemScalarFieldEnum[]
+  }
+
+  /**
+   * ProformaItem findMany
+   */
+  export type ProformaItemFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProformaItem
+     */
+    select?: ProformaItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProformaItem
+     */
+    omit?: ProformaItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ProformaItems to fetch.
+     */
+    where?: ProformaItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     *
+     * Determine the order of ProformaItems to fetch.
+     */
+    orderBy?: ProformaItemOrderByWithRelationInput | ProformaItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     *
+     * Sets the position for listing ProformaItems.
+     */
+    cursor?: ProformaItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Take `±n` ProformaItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Skip the first `n` ProformaItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     *
+     * Filter by unique combinations of ProformaItems.
+     */
+    distinct?: ProformaItemScalarFieldEnum | ProformaItemScalarFieldEnum[]
+  }
+
+  /**
+   * ProformaItem create
+   */
+  export type ProformaItemCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProformaItem
+     */
+    select?: ProformaItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProformaItem
+     */
+    omit?: ProformaItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaItemInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ProformaItem.
+     */
+    data: XOR<ProformaItemCreateInput, ProformaItemUncheckedCreateInput>
+  }
+
+  /**
+   * ProformaItem createMany
+   */
+  export type ProformaItemCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ProformaItems.
+     */
+    data: ProformaItemCreateManyInput | ProformaItemCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ProformaItem createManyAndReturn
+   */
+  export type ProformaItemCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProformaItem
+     */
+    select?: ProformaItemSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProformaItem
+     */
+    omit?: ProformaItemOmit<ExtArgs> | null
+    /**
+     * The data used to create many ProformaItems.
+     */
+    data: ProformaItemCreateManyInput | ProformaItemCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaItemIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProformaItem update
+   */
+  export type ProformaItemUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProformaItem
+     */
+    select?: ProformaItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProformaItem
+     */
+    omit?: ProformaItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaItemInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ProformaItem.
+     */
+    data: XOR<ProformaItemUpdateInput, ProformaItemUncheckedUpdateInput>
+    /**
+     * Choose, which ProformaItem to update.
+     */
+    where: ProformaItemWhereUniqueInput
+  }
+
+  /**
+   * ProformaItem updateMany
+   */
+  export type ProformaItemUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ProformaItems.
+     */
+    data: XOR<ProformaItemUpdateManyMutationInput, ProformaItemUncheckedUpdateManyInput>
+    /**
+     * Filter which ProformaItems to update
+     */
+    where?: ProformaItemWhereInput
+    /**
+     * Limit how many ProformaItems to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ProformaItem updateManyAndReturn
+   */
+  export type ProformaItemUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProformaItem
+     */
+    select?: ProformaItemSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProformaItem
+     */
+    omit?: ProformaItemOmit<ExtArgs> | null
+    /**
+     * The data used to update ProformaItems.
+     */
+    data: XOR<ProformaItemUpdateManyMutationInput, ProformaItemUncheckedUpdateManyInput>
+    /**
+     * Filter which ProformaItems to update
+     */
+    where?: ProformaItemWhereInput
+    /**
+     * Limit how many ProformaItems to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaItemIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProformaItem upsert
+   */
+  export type ProformaItemUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProformaItem
+     */
+    select?: ProformaItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProformaItem
+     */
+    omit?: ProformaItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaItemInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ProformaItem to update in case it exists.
+     */
+    where: ProformaItemWhereUniqueInput
+    /**
+     * In case the ProformaItem found by the `where` argument doesn't exist, create a new ProformaItem with this data.
+     */
+    create: XOR<ProformaItemCreateInput, ProformaItemUncheckedCreateInput>
+    /**
+     * In case the ProformaItem was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ProformaItemUpdateInput, ProformaItemUncheckedUpdateInput>
+  }
+
+  /**
+   * ProformaItem delete
+   */
+  export type ProformaItemDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProformaItem
+     */
+    select?: ProformaItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProformaItem
+     */
+    omit?: ProformaItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaItemInclude<ExtArgs> | null
+    /**
+     * Filter which ProformaItem to delete.
+     */
+    where: ProformaItemWhereUniqueInput
+  }
+
+  /**
+   * ProformaItem deleteMany
+   */
+  export type ProformaItemDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProformaItems to delete
+     */
+    where?: ProformaItemWhereInput
+    /**
+     * Limit how many ProformaItems to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ProformaItem without action
+   */
+  export type ProformaItemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProformaItem
+     */
+    select?: ProformaItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProformaItem
+     */
+    omit?: ProformaItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProformaItemInclude<ExtArgs> | null
   }
 
 
@@ -27155,6 +31297,67 @@ export namespace Prisma {
   export type InvoiceItemScalarFieldEnum = (typeof InvoiceItemScalarFieldEnum)[keyof typeof InvoiceItemScalarFieldEnum]
 
 
+  export const ProformaScalarFieldEnum: {
+    id: 'id',
+    customerId: 'customerId',
+    counter: 'counter',
+    referenceNumber: 'referenceNumber',
+    subject: 'subject',
+    currency: 'currency',
+    exchangeRate: 'exchangeRate',
+    subtotal: 'subtotal',
+    discountType: 'discountType',
+    discountValue: 'discountValue',
+    discountAmount: 'discountAmount',
+    taxTotal: 'taxTotal',
+    hasAdjustments: 'hasAdjustments',
+    total: 'total',
+    status: 'status',
+    date: 'date',
+    dueDate: 'dueDate',
+    details: 'details',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ProformaScalarFieldEnum = (typeof ProformaScalarFieldEnum)[keyof typeof ProformaScalarFieldEnum]
+
+
+  export const ProformaAdjustmentScalarFieldEnum: {
+    id: 'id',
+    proformaId: 'proformaId',
+    adjustmentName: 'adjustmentName',
+    adjustmentValue: 'adjustmentValue',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ProformaAdjustmentScalarFieldEnum = (typeof ProformaAdjustmentScalarFieldEnum)[keyof typeof ProformaAdjustmentScalarFieldEnum]
+
+
+  export const ProformaItemScalarFieldEnum: {
+    id: 'id',
+    proformaId: 'proformaId',
+    productId: 'productId',
+    name: 'name',
+    description: 'description',
+    quantity: 'quantity',
+    unit: 'unit',
+    rate: 'rate',
+    discountType: 'discountType',
+    discountValue: 'discountValue',
+    discountAmount: 'discountAmount',
+    taxRate: 'taxRate',
+    taxAmount: 'taxAmount',
+    amount: 'amount',
+    sortIndex: 'sortIndex',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ProformaItemScalarFieldEnum = (typeof ProformaItemScalarFieldEnum)[keyof typeof ProformaItemScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -27212,175 +31415,175 @@ export namespace Prisma {
    * Reference to a field of type 'String'
    */
   export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String'>
-    
+
 
 
   /**
    * Reference to a field of type 'String[]'
    */
   export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
-    
+
 
 
   /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
-    
+
 
 
   /**
    * Reference to a field of type 'DateTime[]'
    */
   export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
-    
+
 
 
   /**
    * Reference to a field of type 'Json'
    */
   export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
+
 
 
   /**
    * Reference to a field of type 'QueryMode'
    */
   export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
+
 
 
   /**
    * Reference to a field of type 'AccountType'
    */
   export type EnumAccountTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AccountType'>
-    
+
 
 
   /**
    * Reference to a field of type 'AccountType[]'
    */
   export type ListEnumAccountTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AccountType[]'>
-    
+
 
 
   /**
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
+
 
 
   /**
    * Reference to a field of type 'Decimal'
    */
   export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
-    
+
 
 
   /**
    * Reference to a field of type 'Decimal[]'
    */
   export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
-    
+
 
 
   /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
+
 
 
   /**
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
+
 
 
   /**
    * Reference to a field of type 'ProjectionType'
    */
   export type EnumProjectionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectionType'>
-    
+
 
 
   /**
    * Reference to a field of type 'ProjectionType[]'
    */
   export type ListEnumProjectionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectionType[]'>
-    
+
 
 
   /**
    * Reference to a field of type 'ProjectionCertainty'
    */
   export type EnumProjectionCertaintyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectionCertainty'>
-    
+
 
 
   /**
    * Reference to a field of type 'ProjectionCertainty[]'
    */
   export type ListEnumProjectionCertaintyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectionCertainty[]'>
-    
+
 
 
   /**
    * Reference to a field of type 'ProjectionStatus'
    */
   export type EnumProjectionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectionStatus'>
-    
+
 
 
   /**
    * Reference to a field of type 'ProjectionStatus[]'
    */
   export type ListEnumProjectionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectionStatus[]'>
-    
+
 
 
   /**
    * Reference to a field of type 'ProjectionRecurrence'
    */
   export type EnumProjectionRecurrenceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectionRecurrence'>
-    
+
 
 
   /**
    * Reference to a field of type 'ProjectionRecurrence[]'
    */
   export type ListEnumProjectionRecurrenceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectionRecurrence[]'>
-    
+
 
 
   /**
    * Reference to a field of type 'ActivityStockType'
    */
   export type EnumActivityStockTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ActivityStockType'>
-    
+
 
 
   /**
    * Reference to a field of type 'ActivityStockType[]'
    */
   export type ListEnumActivityStockTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ActivityStockType[]'>
-    
+
 
 
   /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
+
 
 
   /**
    * Reference to a field of type 'Float[]'
    */
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
-    
+
   /**
    * Deep Input Types
    */
@@ -27651,6 +31854,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodListRelationFilter
     quotations?: DocumentQuotationListRelationFilter
     invoices?: InvoiceListRelationFilter
+    proformas?: ProformaListRelationFilter
   }
 
   export type PartyOrderByWithRelationInput = {
@@ -27666,6 +31870,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodOrderByRelationAggregateInput
     quotations?: DocumentQuotationOrderByRelationAggregateInput
     invoices?: InvoiceOrderByRelationAggregateInput
+    proformas?: ProformaOrderByRelationAggregateInput
   }
 
   export type PartyWhereUniqueInput = Prisma.AtLeast<{
@@ -27684,6 +31889,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodListRelationFilter
     quotations?: DocumentQuotationListRelationFilter
     invoices?: InvoiceListRelationFilter
+    proformas?: ProformaListRelationFilter
   }, "id">
 
   export type PartyOrderByWithAggregationInput = {
@@ -28418,6 +32624,7 @@ export namespace Prisma {
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
     quotation?: XOR<DocumentQuotationNullableScalarRelationFilter, DocumentQuotationWhereInput> | null
     invoice?: XOR<InvoiceNullableScalarRelationFilter, InvoiceWhereInput> | null
+    proforma?: XOR<ProformaNullableScalarRelationFilter, ProformaWhereInput> | null
   }
 
   export type DocumentOrderByWithRelationInput = {
@@ -28429,6 +32636,7 @@ export namespace Prisma {
     project?: ProjectOrderByWithRelationInput
     quotation?: DocumentQuotationOrderByWithRelationInput
     invoice?: InvoiceOrderByWithRelationInput
+    proforma?: ProformaOrderByWithRelationInput
   }
 
   export type DocumentWhereUniqueInput = Prisma.AtLeast<{
@@ -28443,6 +32651,7 @@ export namespace Prisma {
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
     quotation?: XOR<DocumentQuotationNullableScalarRelationFilter, DocumentQuotationWhereInput> | null
     invoice?: XOR<InvoiceNullableScalarRelationFilter, InvoiceWhereInput> | null
+    proforma?: XOR<ProformaNullableScalarRelationFilter, ProformaWhereInput> | null
   }, "id">
 
   export type DocumentOrderByWithAggregationInput = {
@@ -29107,6 +33316,326 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"InvoiceItem"> | Date | string
   }
 
+  export type ProformaWhereInput = {
+    AND?: ProformaWhereInput | ProformaWhereInput[]
+    OR?: ProformaWhereInput[]
+    NOT?: ProformaWhereInput | ProformaWhereInput[]
+    id?: UuidFilter<"Proforma"> | string
+    customerId?: UuidFilter<"Proforma"> | string
+    counter?: IntFilter<"Proforma"> | number
+    referenceNumber?: StringFilter<"Proforma"> | string
+    subject?: StringFilter<"Proforma"> | string
+    currency?: StringFilter<"Proforma"> | string
+    exchangeRate?: DecimalFilter<"Proforma"> | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFilter<"Proforma"> | Decimal | DecimalJsLike | number | string
+    discountType?: StringFilter<"Proforma"> | string
+    discountValue?: DecimalFilter<"Proforma"> | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFilter<"Proforma"> | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFilter<"Proforma"> | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFilter<"Proforma"> | boolean
+    total?: DecimalFilter<"Proforma"> | Decimal | DecimalJsLike | number | string
+    status?: StringFilter<"Proforma"> | string
+    date?: DateTimeFilter<"Proforma"> | Date | string
+    dueDate?: DateTimeFilter<"Proforma"> | Date | string
+    details?: JsonNullableFilter<"Proforma">
+    createdAt?: DateTimeFilter<"Proforma"> | Date | string
+    updatedAt?: DateTimeFilter<"Proforma"> | Date | string
+    document?: XOR<DocumentScalarRelationFilter, DocumentWhereInput>
+    customer?: XOR<PartyScalarRelationFilter, PartyWhereInput>
+    adjustments?: ProformaAdjustmentListRelationFilter
+    items?: ProformaItemListRelationFilter
+  }
+
+  export type ProformaOrderByWithRelationInput = {
+    id?: SortOrder
+    customerId?: SortOrder
+    counter?: SortOrder
+    referenceNumber?: SortOrder
+    subject?: SortOrder
+    currency?: SortOrder
+    exchangeRate?: SortOrder
+    subtotal?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
+    discountAmount?: SortOrder
+    taxTotal?: SortOrder
+    hasAdjustments?: SortOrder
+    total?: SortOrder
+    status?: SortOrder
+    date?: SortOrder
+    dueDate?: SortOrder
+    details?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    document?: DocumentOrderByWithRelationInput
+    customer?: PartyOrderByWithRelationInput
+    adjustments?: ProformaAdjustmentOrderByRelationAggregateInput
+    items?: ProformaItemOrderByRelationAggregateInput
+  }
+
+  export type ProformaWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ProformaWhereInput | ProformaWhereInput[]
+    OR?: ProformaWhereInput[]
+    NOT?: ProformaWhereInput | ProformaWhereInput[]
+    customerId?: UuidFilter<"Proforma"> | string
+    counter?: IntFilter<"Proforma"> | number
+    referenceNumber?: StringFilter<"Proforma"> | string
+    subject?: StringFilter<"Proforma"> | string
+    currency?: StringFilter<"Proforma"> | string
+    exchangeRate?: DecimalFilter<"Proforma"> | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFilter<"Proforma"> | Decimal | DecimalJsLike | number | string
+    discountType?: StringFilter<"Proforma"> | string
+    discountValue?: DecimalFilter<"Proforma"> | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFilter<"Proforma"> | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFilter<"Proforma"> | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFilter<"Proforma"> | boolean
+    total?: DecimalFilter<"Proforma"> | Decimal | DecimalJsLike | number | string
+    status?: StringFilter<"Proforma"> | string
+    date?: DateTimeFilter<"Proforma"> | Date | string
+    dueDate?: DateTimeFilter<"Proforma"> | Date | string
+    details?: JsonNullableFilter<"Proforma">
+    createdAt?: DateTimeFilter<"Proforma"> | Date | string
+    updatedAt?: DateTimeFilter<"Proforma"> | Date | string
+    document?: XOR<DocumentScalarRelationFilter, DocumentWhereInput>
+    customer?: XOR<PartyScalarRelationFilter, PartyWhereInput>
+    adjustments?: ProformaAdjustmentListRelationFilter
+    items?: ProformaItemListRelationFilter
+  }, "id">
+
+  export type ProformaOrderByWithAggregationInput = {
+    id?: SortOrder
+    customerId?: SortOrder
+    counter?: SortOrder
+    referenceNumber?: SortOrder
+    subject?: SortOrder
+    currency?: SortOrder
+    exchangeRate?: SortOrder
+    subtotal?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
+    discountAmount?: SortOrder
+    taxTotal?: SortOrder
+    hasAdjustments?: SortOrder
+    total?: SortOrder
+    status?: SortOrder
+    date?: SortOrder
+    dueDate?: SortOrder
+    details?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ProformaCountOrderByAggregateInput
+    _avg?: ProformaAvgOrderByAggregateInput
+    _max?: ProformaMaxOrderByAggregateInput
+    _min?: ProformaMinOrderByAggregateInput
+    _sum?: ProformaSumOrderByAggregateInput
+  }
+
+  export type ProformaScalarWhereWithAggregatesInput = {
+    AND?: ProformaScalarWhereWithAggregatesInput | ProformaScalarWhereWithAggregatesInput[]
+    OR?: ProformaScalarWhereWithAggregatesInput[]
+    NOT?: ProformaScalarWhereWithAggregatesInput | ProformaScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"Proforma"> | string
+    customerId?: UuidWithAggregatesFilter<"Proforma"> | string
+    counter?: IntWithAggregatesFilter<"Proforma"> | number
+    referenceNumber?: StringWithAggregatesFilter<"Proforma"> | string
+    subject?: StringWithAggregatesFilter<"Proforma"> | string
+    currency?: StringWithAggregatesFilter<"Proforma"> | string
+    exchangeRate?: DecimalWithAggregatesFilter<"Proforma"> | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalWithAggregatesFilter<"Proforma"> | Decimal | DecimalJsLike | number | string
+    discountType?: StringWithAggregatesFilter<"Proforma"> | string
+    discountValue?: DecimalWithAggregatesFilter<"Proforma"> | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalWithAggregatesFilter<"Proforma"> | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalWithAggregatesFilter<"Proforma"> | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolWithAggregatesFilter<"Proforma"> | boolean
+    total?: DecimalWithAggregatesFilter<"Proforma"> | Decimal | DecimalJsLike | number | string
+    status?: StringWithAggregatesFilter<"Proforma"> | string
+    date?: DateTimeWithAggregatesFilter<"Proforma"> | Date | string
+    dueDate?: DateTimeWithAggregatesFilter<"Proforma"> | Date | string
+    details?: JsonNullableWithAggregatesFilter<"Proforma">
+    createdAt?: DateTimeWithAggregatesFilter<"Proforma"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Proforma"> | Date | string
+  }
+
+  export type ProformaAdjustmentWhereInput = {
+    AND?: ProformaAdjustmentWhereInput | ProformaAdjustmentWhereInput[]
+    OR?: ProformaAdjustmentWhereInput[]
+    NOT?: ProformaAdjustmentWhereInput | ProformaAdjustmentWhereInput[]
+    id?: UuidFilter<"ProformaAdjustment"> | string
+    proformaId?: UuidFilter<"ProformaAdjustment"> | string
+    adjustmentName?: StringFilter<"ProformaAdjustment"> | string
+    adjustmentValue?: DecimalFilter<"ProformaAdjustment"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFilter<"ProformaAdjustment"> | Date | string
+    updatedAt?: DateTimeFilter<"ProformaAdjustment"> | Date | string
+    proforma?: XOR<ProformaScalarRelationFilter, ProformaWhereInput>
+  }
+
+  export type ProformaAdjustmentOrderByWithRelationInput = {
+    id?: SortOrder
+    proformaId?: SortOrder
+    adjustmentName?: SortOrder
+    adjustmentValue?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    proforma?: ProformaOrderByWithRelationInput
+  }
+
+  export type ProformaAdjustmentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ProformaAdjustmentWhereInput | ProformaAdjustmentWhereInput[]
+    OR?: ProformaAdjustmentWhereInput[]
+    NOT?: ProformaAdjustmentWhereInput | ProformaAdjustmentWhereInput[]
+    proformaId?: UuidFilter<"ProformaAdjustment"> | string
+    adjustmentName?: StringFilter<"ProformaAdjustment"> | string
+    adjustmentValue?: DecimalFilter<"ProformaAdjustment"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFilter<"ProformaAdjustment"> | Date | string
+    updatedAt?: DateTimeFilter<"ProformaAdjustment"> | Date | string
+    proforma?: XOR<ProformaScalarRelationFilter, ProformaWhereInput>
+  }, "id">
+
+  export type ProformaAdjustmentOrderByWithAggregationInput = {
+    id?: SortOrder
+    proformaId?: SortOrder
+    adjustmentName?: SortOrder
+    adjustmentValue?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ProformaAdjustmentCountOrderByAggregateInput
+    _avg?: ProformaAdjustmentAvgOrderByAggregateInput
+    _max?: ProformaAdjustmentMaxOrderByAggregateInput
+    _min?: ProformaAdjustmentMinOrderByAggregateInput
+    _sum?: ProformaAdjustmentSumOrderByAggregateInput
+  }
+
+  export type ProformaAdjustmentScalarWhereWithAggregatesInput = {
+    AND?: ProformaAdjustmentScalarWhereWithAggregatesInput | ProformaAdjustmentScalarWhereWithAggregatesInput[]
+    OR?: ProformaAdjustmentScalarWhereWithAggregatesInput[]
+    NOT?: ProformaAdjustmentScalarWhereWithAggregatesInput | ProformaAdjustmentScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"ProformaAdjustment"> | string
+    proformaId?: UuidWithAggregatesFilter<"ProformaAdjustment"> | string
+    adjustmentName?: StringWithAggregatesFilter<"ProformaAdjustment"> | string
+    adjustmentValue?: DecimalWithAggregatesFilter<"ProformaAdjustment"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeWithAggregatesFilter<"ProformaAdjustment"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ProformaAdjustment"> | Date | string
+  }
+
+  export type ProformaItemWhereInput = {
+    AND?: ProformaItemWhereInput | ProformaItemWhereInput[]
+    OR?: ProformaItemWhereInput[]
+    NOT?: ProformaItemWhereInput | ProformaItemWhereInput[]
+    id?: UuidFilter<"ProformaItem"> | string
+    proformaId?: UuidFilter<"ProformaItem"> | string
+    productId?: UuidNullableFilter<"ProformaItem"> | string | null
+    name?: StringFilter<"ProformaItem"> | string
+    description?: StringNullableFilter<"ProformaItem"> | string | null
+    quantity?: DecimalFilter<"ProformaItem"> | Decimal | DecimalJsLike | number | string
+    unit?: StringFilter<"ProformaItem"> | string
+    rate?: DecimalFilter<"ProformaItem"> | Decimal | DecimalJsLike | number | string
+    discountType?: StringFilter<"ProformaItem"> | string
+    discountValue?: DecimalFilter<"ProformaItem"> | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFilter<"ProformaItem"> | Decimal | DecimalJsLike | number | string
+    taxRate?: DecimalFilter<"ProformaItem"> | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFilter<"ProformaItem"> | Decimal | DecimalJsLike | number | string
+    amount?: DecimalFilter<"ProformaItem"> | Decimal | DecimalJsLike | number | string
+    sortIndex?: IntFilter<"ProformaItem"> | number
+    createdAt?: DateTimeFilter<"ProformaItem"> | Date | string
+    updatedAt?: DateTimeFilter<"ProformaItem"> | Date | string
+    proforma?: XOR<ProformaScalarRelationFilter, ProformaWhereInput>
+  }
+
+  export type ProformaItemOrderByWithRelationInput = {
+    id?: SortOrder
+    proformaId?: SortOrder
+    productId?: SortOrderInput | SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    quantity?: SortOrder
+    unit?: SortOrder
+    rate?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
+    discountAmount?: SortOrder
+    taxRate?: SortOrder
+    taxAmount?: SortOrder
+    amount?: SortOrder
+    sortIndex?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    proforma?: ProformaOrderByWithRelationInput
+  }
+
+  export type ProformaItemWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ProformaItemWhereInput | ProformaItemWhereInput[]
+    OR?: ProformaItemWhereInput[]
+    NOT?: ProformaItemWhereInput | ProformaItemWhereInput[]
+    proformaId?: UuidFilter<"ProformaItem"> | string
+    productId?: UuidNullableFilter<"ProformaItem"> | string | null
+    name?: StringFilter<"ProformaItem"> | string
+    description?: StringNullableFilter<"ProformaItem"> | string | null
+    quantity?: DecimalFilter<"ProformaItem"> | Decimal | DecimalJsLike | number | string
+    unit?: StringFilter<"ProformaItem"> | string
+    rate?: DecimalFilter<"ProformaItem"> | Decimal | DecimalJsLike | number | string
+    discountType?: StringFilter<"ProformaItem"> | string
+    discountValue?: DecimalFilter<"ProformaItem"> | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFilter<"ProformaItem"> | Decimal | DecimalJsLike | number | string
+    taxRate?: DecimalFilter<"ProformaItem"> | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFilter<"ProformaItem"> | Decimal | DecimalJsLike | number | string
+    amount?: DecimalFilter<"ProformaItem"> | Decimal | DecimalJsLike | number | string
+    sortIndex?: IntFilter<"ProformaItem"> | number
+    createdAt?: DateTimeFilter<"ProformaItem"> | Date | string
+    updatedAt?: DateTimeFilter<"ProformaItem"> | Date | string
+    proforma?: XOR<ProformaScalarRelationFilter, ProformaWhereInput>
+  }, "id">
+
+  export type ProformaItemOrderByWithAggregationInput = {
+    id?: SortOrder
+    proformaId?: SortOrder
+    productId?: SortOrderInput | SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    quantity?: SortOrder
+    unit?: SortOrder
+    rate?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
+    discountAmount?: SortOrder
+    taxRate?: SortOrder
+    taxAmount?: SortOrder
+    amount?: SortOrder
+    sortIndex?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ProformaItemCountOrderByAggregateInput
+    _avg?: ProformaItemAvgOrderByAggregateInput
+    _max?: ProformaItemMaxOrderByAggregateInput
+    _min?: ProformaItemMinOrderByAggregateInput
+    _sum?: ProformaItemSumOrderByAggregateInput
+  }
+
+  export type ProformaItemScalarWhereWithAggregatesInput = {
+    AND?: ProformaItemScalarWhereWithAggregatesInput | ProformaItemScalarWhereWithAggregatesInput[]
+    OR?: ProformaItemScalarWhereWithAggregatesInput[]
+    NOT?: ProformaItemScalarWhereWithAggregatesInput | ProformaItemScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"ProformaItem"> | string
+    proformaId?: UuidWithAggregatesFilter<"ProformaItem"> | string
+    productId?: UuidNullableWithAggregatesFilter<"ProformaItem"> | string | null
+    name?: StringWithAggregatesFilter<"ProformaItem"> | string
+    description?: StringNullableWithAggregatesFilter<"ProformaItem"> | string | null
+    quantity?: DecimalWithAggregatesFilter<"ProformaItem"> | Decimal | DecimalJsLike | number | string
+    unit?: StringWithAggregatesFilter<"ProformaItem"> | string
+    rate?: DecimalWithAggregatesFilter<"ProformaItem"> | Decimal | DecimalJsLike | number | string
+    discountType?: StringWithAggregatesFilter<"ProformaItem"> | string
+    discountValue?: DecimalWithAggregatesFilter<"ProformaItem"> | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalWithAggregatesFilter<"ProformaItem"> | Decimal | DecimalJsLike | number | string
+    taxRate?: DecimalWithAggregatesFilter<"ProformaItem"> | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalWithAggregatesFilter<"ProformaItem"> | Decimal | DecimalJsLike | number | string
+    amount?: DecimalWithAggregatesFilter<"ProformaItem"> | Decimal | DecimalJsLike | number | string
+    sortIndex?: IntWithAggregatesFilter<"ProformaItem"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"ProformaItem"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ProformaItem"> | Date | string
+  }
+
   export type AccountCreateInput = {
     id: string
     connection_id?: string | null
@@ -29380,6 +33909,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodCreateNestedManyWithoutPartyInput
     quotations?: DocumentQuotationCreateNestedManyWithoutCustomerInput
     invoices?: InvoiceCreateNestedManyWithoutCustomerInput
+    proformas?: ProformaCreateNestedManyWithoutCustomerInput
   }
 
   export type PartyUncheckedCreateInput = {
@@ -29393,6 +33923,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodUncheckedCreateNestedManyWithoutPartyInput
     quotations?: DocumentQuotationUncheckedCreateNestedManyWithoutCustomerInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutCustomerInput
+    proformas?: ProformaUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type PartyUpdateInput = {
@@ -29406,6 +33937,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodUpdateManyWithoutPartyNestedInput
     quotations?: DocumentQuotationUpdateManyWithoutCustomerNestedInput
     invoices?: InvoiceUpdateManyWithoutCustomerNestedInput
+    proformas?: ProformaUpdateManyWithoutCustomerNestedInput
   }
 
   export type PartyUncheckedUpdateInput = {
@@ -29419,6 +33951,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodUncheckedUpdateManyWithoutPartyNestedInput
     quotations?: DocumentQuotationUncheckedUpdateManyWithoutCustomerNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutCustomerNestedInput
+    proformas?: ProformaUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type PartyCreateManyInput = {
@@ -30225,6 +34758,7 @@ export namespace Prisma {
     project: ProjectCreateNestedOneWithoutDocumentsInput
     quotation?: DocumentQuotationCreateNestedOneWithoutDocumentInput
     invoice?: InvoiceCreateNestedOneWithoutDocumentInput
+    proforma?: ProformaCreateNestedOneWithoutDocumentInput
   }
 
   export type DocumentUncheckedCreateInput = {
@@ -30235,6 +34769,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     quotation?: DocumentQuotationUncheckedCreateNestedOneWithoutDocumentInput
     invoice?: InvoiceUncheckedCreateNestedOneWithoutDocumentInput
+    proforma?: ProformaUncheckedCreateNestedOneWithoutDocumentInput
   }
 
   export type DocumentUpdateInput = {
@@ -30245,6 +34780,7 @@ export namespace Prisma {
     project?: ProjectUpdateOneRequiredWithoutDocumentsNestedInput
     quotation?: DocumentQuotationUpdateOneWithoutDocumentNestedInput
     invoice?: InvoiceUpdateOneWithoutDocumentNestedInput
+    proforma?: ProformaUpdateOneWithoutDocumentNestedInput
   }
 
   export type DocumentUncheckedUpdateInput = {
@@ -30255,6 +34791,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     quotation?: DocumentQuotationUncheckedUpdateOneWithoutDocumentNestedInput
     invoice?: InvoiceUncheckedUpdateOneWithoutDocumentNestedInput
+    proforma?: ProformaUncheckedUpdateOneWithoutDocumentNestedInput
   }
 
   export type DocumentCreateManyInput = {
@@ -31016,6 +35553,374 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ProformaCreateInput = {
+    counter: number
+    referenceNumber: string
+    subject: string
+    currency: string
+    exchangeRate: Decimal | DecimalJsLike | number | string
+    subtotal: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    hasAdjustments?: boolean
+    total: Decimal | DecimalJsLike | number | string
+    status: string
+    date: Date | string
+    dueDate: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    document: DocumentCreateNestedOneWithoutProformaInput
+    customer: PartyCreateNestedOneWithoutProformasInput
+    adjustments?: ProformaAdjustmentCreateNestedManyWithoutProformaInput
+    items?: ProformaItemCreateNestedManyWithoutProformaInput
+  }
+
+  export type ProformaUncheckedCreateInput = {
+    id: string
+    customerId: string
+    counter: number
+    referenceNumber: string
+    subject: string
+    currency: string
+    exchangeRate: Decimal | DecimalJsLike | number | string
+    subtotal: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    hasAdjustments?: boolean
+    total: Decimal | DecimalJsLike | number | string
+    status: string
+    date: Date | string
+    dueDate: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    adjustments?: ProformaAdjustmentUncheckedCreateNestedManyWithoutProformaInput
+    items?: ProformaItemUncheckedCreateNestedManyWithoutProformaInput
+  }
+
+  export type ProformaUpdateInput = {
+    counter?: IntFieldUpdateOperationsInput | number
+    referenceNumber?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFieldUpdateOperationsInput | boolean
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    document?: DocumentUpdateOneRequiredWithoutProformaNestedInput
+    customer?: PartyUpdateOneRequiredWithoutProformasNestedInput
+    adjustments?: ProformaAdjustmentUpdateManyWithoutProformaNestedInput
+    items?: ProformaItemUpdateManyWithoutProformaNestedInput
+  }
+
+  export type ProformaUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    counter?: IntFieldUpdateOperationsInput | number
+    referenceNumber?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFieldUpdateOperationsInput | boolean
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    adjustments?: ProformaAdjustmentUncheckedUpdateManyWithoutProformaNestedInput
+    items?: ProformaItemUncheckedUpdateManyWithoutProformaNestedInput
+  }
+
+  export type ProformaCreateManyInput = {
+    id: string
+    customerId: string
+    counter: number
+    referenceNumber: string
+    subject: string
+    currency: string
+    exchangeRate: Decimal | DecimalJsLike | number | string
+    subtotal: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    hasAdjustments?: boolean
+    total: Decimal | DecimalJsLike | number | string
+    status: string
+    date: Date | string
+    dueDate: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProformaUpdateManyMutationInput = {
+    counter?: IntFieldUpdateOperationsInput | number
+    referenceNumber?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFieldUpdateOperationsInput | boolean
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProformaUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    counter?: IntFieldUpdateOperationsInput | number
+    referenceNumber?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFieldUpdateOperationsInput | boolean
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProformaAdjustmentCreateInput = {
+    id?: string
+    adjustmentName: string
+    adjustmentValue: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    proforma: ProformaCreateNestedOneWithoutAdjustmentsInput
+  }
+
+  export type ProformaAdjustmentUncheckedCreateInput = {
+    id?: string
+    proformaId: string
+    adjustmentName: string
+    adjustmentValue: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProformaAdjustmentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    adjustmentName?: StringFieldUpdateOperationsInput | string
+    adjustmentValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    proforma?: ProformaUpdateOneRequiredWithoutAdjustmentsNestedInput
+  }
+
+  export type ProformaAdjustmentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    proformaId?: StringFieldUpdateOperationsInput | string
+    adjustmentName?: StringFieldUpdateOperationsInput | string
+    adjustmentValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProformaAdjustmentCreateManyInput = {
+    id?: string
+    proformaId: string
+    adjustmentName: string
+    adjustmentValue: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProformaAdjustmentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    adjustmentName?: StringFieldUpdateOperationsInput | string
+    adjustmentValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProformaAdjustmentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    proformaId?: StringFieldUpdateOperationsInput | string
+    adjustmentName?: StringFieldUpdateOperationsInput | string
+    adjustmentValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProformaItemCreateInput = {
+    id?: string
+    productId?: string | null
+    name: string
+    description?: string | null
+    quantity: Decimal | DecimalJsLike | number | string
+    unit: string
+    rate: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxRate: Decimal | DecimalJsLike | number | string
+    taxAmount: Decimal | DecimalJsLike | number | string
+    amount: Decimal | DecimalJsLike | number | string
+    sortIndex: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    proforma: ProformaCreateNestedOneWithoutItemsInput
+  }
+
+  export type ProformaItemUncheckedCreateInput = {
+    id?: string
+    proformaId: string
+    productId?: string | null
+    name: string
+    description?: string | null
+    quantity: Decimal | DecimalJsLike | number | string
+    unit: string
+    rate: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxRate: Decimal | DecimalJsLike | number | string
+    taxAmount: Decimal | DecimalJsLike | number | string
+    amount: Decimal | DecimalJsLike | number | string
+    sortIndex: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProformaItemUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    sortIndex?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    proforma?: ProformaUpdateOneRequiredWithoutItemsNestedInput
+  }
+
+  export type ProformaItemUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    proformaId?: StringFieldUpdateOperationsInput | string
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    sortIndex?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProformaItemCreateManyInput = {
+    id?: string
+    proformaId: string
+    productId?: string | null
+    name: string
+    description?: string | null
+    quantity: Decimal | DecimalJsLike | number | string
+    unit: string
+    rate: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxRate: Decimal | DecimalJsLike | number | string
+    taxAmount: Decimal | DecimalJsLike | number | string
+    amount: Decimal | DecimalJsLike | number | string
+    sortIndex: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProformaItemUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    sortIndex?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProformaItemUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    proformaId?: StringFieldUpdateOperationsInput | string
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    sortIndex?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -31417,6 +36322,12 @@ export namespace Prisma {
     none?: InvoiceWhereInput
   }
 
+  export type ProformaListRelationFilter = {
+    every?: ProformaWhereInput
+    some?: ProformaWhereInput
+    none?: ProformaWhereInput
+  }
+
   export type PartyContactOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -31430,6 +36341,10 @@ export namespace Prisma {
   }
 
   export type InvoiceOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ProformaOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -32078,6 +36993,11 @@ export namespace Prisma {
     isNot?: InvoiceWhereInput | null
   }
 
+  export type ProformaNullableScalarRelationFilter = {
+    is?: ProformaWhereInput | null
+    isNot?: ProformaWhereInput | null
+  }
+
   export type DocumentCountOrderByAggregateInput = {
     id?: SortOrder
     projectId?: SortOrder
@@ -32582,6 +37502,235 @@ export namespace Prisma {
   }
 
   export type InvoiceItemSumOrderByAggregateInput = {
+    quantity?: SortOrder
+    rate?: SortOrder
+    discountValue?: SortOrder
+    discountAmount?: SortOrder
+    taxRate?: SortOrder
+    taxAmount?: SortOrder
+    amount?: SortOrder
+    sortIndex?: SortOrder
+  }
+
+  export type ProformaAdjustmentListRelationFilter = {
+    every?: ProformaAdjustmentWhereInput
+    some?: ProformaAdjustmentWhereInput
+    none?: ProformaAdjustmentWhereInput
+  }
+
+  export type ProformaItemListRelationFilter = {
+    every?: ProformaItemWhereInput
+    some?: ProformaItemWhereInput
+    none?: ProformaItemWhereInput
+  }
+
+  export type ProformaAdjustmentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ProformaItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ProformaCountOrderByAggregateInput = {
+    id?: SortOrder
+    customerId?: SortOrder
+    counter?: SortOrder
+    referenceNumber?: SortOrder
+    subject?: SortOrder
+    currency?: SortOrder
+    exchangeRate?: SortOrder
+    subtotal?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
+    discountAmount?: SortOrder
+    taxTotal?: SortOrder
+    hasAdjustments?: SortOrder
+    total?: SortOrder
+    status?: SortOrder
+    date?: SortOrder
+    dueDate?: SortOrder
+    details?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProformaAvgOrderByAggregateInput = {
+    counter?: SortOrder
+    exchangeRate?: SortOrder
+    subtotal?: SortOrder
+    discountValue?: SortOrder
+    discountAmount?: SortOrder
+    taxTotal?: SortOrder
+    total?: SortOrder
+  }
+
+  export type ProformaMaxOrderByAggregateInput = {
+    id?: SortOrder
+    customerId?: SortOrder
+    counter?: SortOrder
+    referenceNumber?: SortOrder
+    subject?: SortOrder
+    currency?: SortOrder
+    exchangeRate?: SortOrder
+    subtotal?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
+    discountAmount?: SortOrder
+    taxTotal?: SortOrder
+    hasAdjustments?: SortOrder
+    total?: SortOrder
+    status?: SortOrder
+    date?: SortOrder
+    dueDate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProformaMinOrderByAggregateInput = {
+    id?: SortOrder
+    customerId?: SortOrder
+    counter?: SortOrder
+    referenceNumber?: SortOrder
+    subject?: SortOrder
+    currency?: SortOrder
+    exchangeRate?: SortOrder
+    subtotal?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
+    discountAmount?: SortOrder
+    taxTotal?: SortOrder
+    hasAdjustments?: SortOrder
+    total?: SortOrder
+    status?: SortOrder
+    date?: SortOrder
+    dueDate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProformaSumOrderByAggregateInput = {
+    counter?: SortOrder
+    exchangeRate?: SortOrder
+    subtotal?: SortOrder
+    discountValue?: SortOrder
+    discountAmount?: SortOrder
+    taxTotal?: SortOrder
+    total?: SortOrder
+  }
+
+  export type ProformaScalarRelationFilter = {
+    is?: ProformaWhereInput
+    isNot?: ProformaWhereInput
+  }
+
+  export type ProformaAdjustmentCountOrderByAggregateInput = {
+    id?: SortOrder
+    proformaId?: SortOrder
+    adjustmentName?: SortOrder
+    adjustmentValue?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProformaAdjustmentAvgOrderByAggregateInput = {
+    adjustmentValue?: SortOrder
+  }
+
+  export type ProformaAdjustmentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    proformaId?: SortOrder
+    adjustmentName?: SortOrder
+    adjustmentValue?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProformaAdjustmentMinOrderByAggregateInput = {
+    id?: SortOrder
+    proformaId?: SortOrder
+    adjustmentName?: SortOrder
+    adjustmentValue?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProformaAdjustmentSumOrderByAggregateInput = {
+    adjustmentValue?: SortOrder
+  }
+
+  export type ProformaItemCountOrderByAggregateInput = {
+    id?: SortOrder
+    proformaId?: SortOrder
+    productId?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    quantity?: SortOrder
+    unit?: SortOrder
+    rate?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
+    discountAmount?: SortOrder
+    taxRate?: SortOrder
+    taxAmount?: SortOrder
+    amount?: SortOrder
+    sortIndex?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProformaItemAvgOrderByAggregateInput = {
+    quantity?: SortOrder
+    rate?: SortOrder
+    discountValue?: SortOrder
+    discountAmount?: SortOrder
+    taxRate?: SortOrder
+    taxAmount?: SortOrder
+    amount?: SortOrder
+    sortIndex?: SortOrder
+  }
+
+  export type ProformaItemMaxOrderByAggregateInput = {
+    id?: SortOrder
+    proformaId?: SortOrder
+    productId?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    quantity?: SortOrder
+    unit?: SortOrder
+    rate?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
+    discountAmount?: SortOrder
+    taxRate?: SortOrder
+    taxAmount?: SortOrder
+    amount?: SortOrder
+    sortIndex?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProformaItemMinOrderByAggregateInput = {
+    id?: SortOrder
+    proformaId?: SortOrder
+    productId?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    quantity?: SortOrder
+    unit?: SortOrder
+    rate?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
+    discountAmount?: SortOrder
+    taxRate?: SortOrder
+    taxAmount?: SortOrder
+    amount?: SortOrder
+    sortIndex?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProformaItemSumOrderByAggregateInput = {
     quantity?: SortOrder
     rate?: SortOrder
     discountValue?: SortOrder
@@ -33190,6 +38339,13 @@ export namespace Prisma {
     connect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
   }
 
+  export type ProformaCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<ProformaCreateWithoutCustomerInput, ProformaUncheckedCreateWithoutCustomerInput> | ProformaCreateWithoutCustomerInput[] | ProformaUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: ProformaCreateOrConnectWithoutCustomerInput | ProformaCreateOrConnectWithoutCustomerInput[]
+    createMany?: ProformaCreateManyCustomerInputEnvelope
+    connect?: ProformaWhereUniqueInput | ProformaWhereUniqueInput[]
+  }
+
   export type PartyContactUncheckedCreateNestedManyWithoutPartyInput = {
     create?: XOR<PartyContactCreateWithoutPartyInput, PartyContactUncheckedCreateWithoutPartyInput> | PartyContactCreateWithoutPartyInput[] | PartyContactUncheckedCreateWithoutPartyInput[]
     connectOrCreate?: PartyContactCreateOrConnectWithoutPartyInput | PartyContactCreateOrConnectWithoutPartyInput[]
@@ -33216,6 +38372,13 @@ export namespace Prisma {
     connectOrCreate?: InvoiceCreateOrConnectWithoutCustomerInput | InvoiceCreateOrConnectWithoutCustomerInput[]
     createMany?: InvoiceCreateManyCustomerInputEnvelope
     connect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+  }
+
+  export type ProformaUncheckedCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<ProformaCreateWithoutCustomerInput, ProformaUncheckedCreateWithoutCustomerInput> | ProformaCreateWithoutCustomerInput[] | ProformaUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: ProformaCreateOrConnectWithoutCustomerInput | ProformaCreateOrConnectWithoutCustomerInput[]
+    createMany?: ProformaCreateManyCustomerInputEnvelope
+    connect?: ProformaWhereUniqueInput | ProformaWhereUniqueInput[]
   }
 
   export type AccountUpdateOneRequiredWithoutPartiesNestedInput = {
@@ -33290,6 +38453,20 @@ export namespace Prisma {
     deleteMany?: InvoiceScalarWhereInput | InvoiceScalarWhereInput[]
   }
 
+  export type ProformaUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<ProformaCreateWithoutCustomerInput, ProformaUncheckedCreateWithoutCustomerInput> | ProformaCreateWithoutCustomerInput[] | ProformaUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: ProformaCreateOrConnectWithoutCustomerInput | ProformaCreateOrConnectWithoutCustomerInput[]
+    upsert?: ProformaUpsertWithWhereUniqueWithoutCustomerInput | ProformaUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: ProformaCreateManyCustomerInputEnvelope
+    set?: ProformaWhereUniqueInput | ProformaWhereUniqueInput[]
+    disconnect?: ProformaWhereUniqueInput | ProformaWhereUniqueInput[]
+    delete?: ProformaWhereUniqueInput | ProformaWhereUniqueInput[]
+    connect?: ProformaWhereUniqueInput | ProformaWhereUniqueInput[]
+    update?: ProformaUpdateWithWhereUniqueWithoutCustomerInput | ProformaUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: ProformaUpdateManyWithWhereWithoutCustomerInput | ProformaUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: ProformaScalarWhereInput | ProformaScalarWhereInput[]
+  }
+
   export type PartyContactUncheckedUpdateManyWithoutPartyNestedInput = {
     create?: XOR<PartyContactCreateWithoutPartyInput, PartyContactUncheckedCreateWithoutPartyInput> | PartyContactCreateWithoutPartyInput[] | PartyContactUncheckedCreateWithoutPartyInput[]
     connectOrCreate?: PartyContactCreateOrConnectWithoutPartyInput | PartyContactCreateOrConnectWithoutPartyInput[]
@@ -33344,6 +38521,20 @@ export namespace Prisma {
     update?: InvoiceUpdateWithWhereUniqueWithoutCustomerInput | InvoiceUpdateWithWhereUniqueWithoutCustomerInput[]
     updateMany?: InvoiceUpdateManyWithWhereWithoutCustomerInput | InvoiceUpdateManyWithWhereWithoutCustomerInput[]
     deleteMany?: InvoiceScalarWhereInput | InvoiceScalarWhereInput[]
+  }
+
+  export type ProformaUncheckedUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<ProformaCreateWithoutCustomerInput, ProformaUncheckedCreateWithoutCustomerInput> | ProformaCreateWithoutCustomerInput[] | ProformaUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: ProformaCreateOrConnectWithoutCustomerInput | ProformaCreateOrConnectWithoutCustomerInput[]
+    upsert?: ProformaUpsertWithWhereUniqueWithoutCustomerInput | ProformaUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: ProformaCreateManyCustomerInputEnvelope
+    set?: ProformaWhereUniqueInput | ProformaWhereUniqueInput[]
+    disconnect?: ProformaWhereUniqueInput | ProformaWhereUniqueInput[]
+    delete?: ProformaWhereUniqueInput | ProformaWhereUniqueInput[]
+    connect?: ProformaWhereUniqueInput | ProformaWhereUniqueInput[]
+    update?: ProformaUpdateWithWhereUniqueWithoutCustomerInput | ProformaUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: ProformaUpdateManyWithWhereWithoutCustomerInput | ProformaUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: ProformaScalarWhereInput | ProformaScalarWhereInput[]
   }
 
   export type PartyCreateNestedOneWithoutContactsInput = {
@@ -33694,6 +38885,12 @@ export namespace Prisma {
     connect?: InvoiceWhereUniqueInput
   }
 
+  export type ProformaCreateNestedOneWithoutDocumentInput = {
+    create?: XOR<ProformaCreateWithoutDocumentInput, ProformaUncheckedCreateWithoutDocumentInput>
+    connectOrCreate?: ProformaCreateOrConnectWithoutDocumentInput
+    connect?: ProformaWhereUniqueInput
+  }
+
   export type DocumentQuotationUncheckedCreateNestedOneWithoutDocumentInput = {
     create?: XOR<DocumentQuotationCreateWithoutDocumentInput, DocumentQuotationUncheckedCreateWithoutDocumentInput>
     connectOrCreate?: DocumentQuotationCreateOrConnectWithoutDocumentInput
@@ -33704,6 +38901,12 @@ export namespace Prisma {
     create?: XOR<InvoiceCreateWithoutDocumentInput, InvoiceUncheckedCreateWithoutDocumentInput>
     connectOrCreate?: InvoiceCreateOrConnectWithoutDocumentInput
     connect?: InvoiceWhereUniqueInput
+  }
+
+  export type ProformaUncheckedCreateNestedOneWithoutDocumentInput = {
+    create?: XOR<ProformaCreateWithoutDocumentInput, ProformaUncheckedCreateWithoutDocumentInput>
+    connectOrCreate?: ProformaCreateOrConnectWithoutDocumentInput
+    connect?: ProformaWhereUniqueInput
   }
 
   export type ProjectUpdateOneRequiredWithoutDocumentsNestedInput = {
@@ -33734,6 +38937,16 @@ export namespace Prisma {
     update?: XOR<XOR<InvoiceUpdateToOneWithWhereWithoutDocumentInput, InvoiceUpdateWithoutDocumentInput>, InvoiceUncheckedUpdateWithoutDocumentInput>
   }
 
+  export type ProformaUpdateOneWithoutDocumentNestedInput = {
+    create?: XOR<ProformaCreateWithoutDocumentInput, ProformaUncheckedCreateWithoutDocumentInput>
+    connectOrCreate?: ProformaCreateOrConnectWithoutDocumentInput
+    upsert?: ProformaUpsertWithoutDocumentInput
+    disconnect?: ProformaWhereInput | boolean
+    delete?: ProformaWhereInput | boolean
+    connect?: ProformaWhereUniqueInput
+    update?: XOR<XOR<ProformaUpdateToOneWithWhereWithoutDocumentInput, ProformaUpdateWithoutDocumentInput>, ProformaUncheckedUpdateWithoutDocumentInput>
+  }
+
   export type DocumentQuotationUncheckedUpdateOneWithoutDocumentNestedInput = {
     create?: XOR<DocumentQuotationCreateWithoutDocumentInput, DocumentQuotationUncheckedCreateWithoutDocumentInput>
     connectOrCreate?: DocumentQuotationCreateOrConnectWithoutDocumentInput
@@ -33752,6 +38965,16 @@ export namespace Prisma {
     delete?: InvoiceWhereInput | boolean
     connect?: InvoiceWhereUniqueInput
     update?: XOR<XOR<InvoiceUpdateToOneWithWhereWithoutDocumentInput, InvoiceUpdateWithoutDocumentInput>, InvoiceUncheckedUpdateWithoutDocumentInput>
+  }
+
+  export type ProformaUncheckedUpdateOneWithoutDocumentNestedInput = {
+    create?: XOR<ProformaCreateWithoutDocumentInput, ProformaUncheckedCreateWithoutDocumentInput>
+    connectOrCreate?: ProformaCreateOrConnectWithoutDocumentInput
+    upsert?: ProformaUpsertWithoutDocumentInput
+    disconnect?: ProformaWhereInput | boolean
+    delete?: ProformaWhereInput | boolean
+    connect?: ProformaWhereUniqueInput
+    update?: XOR<XOR<ProformaUpdateToOneWithWhereWithoutDocumentInput, ProformaUpdateWithoutDocumentInput>, ProformaUncheckedUpdateWithoutDocumentInput>
   }
 
   export type DocumentCreateNestedOneWithoutQuotationInput = {
@@ -34032,6 +39255,146 @@ export namespace Prisma {
     upsert?: InvoiceUpsertWithoutItemsInput
     connect?: InvoiceWhereUniqueInput
     update?: XOR<XOR<InvoiceUpdateToOneWithWhereWithoutItemsInput, InvoiceUpdateWithoutItemsInput>, InvoiceUncheckedUpdateWithoutItemsInput>
+  }
+
+  export type DocumentCreateNestedOneWithoutProformaInput = {
+    create?: XOR<DocumentCreateWithoutProformaInput, DocumentUncheckedCreateWithoutProformaInput>
+    connectOrCreate?: DocumentCreateOrConnectWithoutProformaInput
+    connect?: DocumentWhereUniqueInput
+  }
+
+  export type PartyCreateNestedOneWithoutProformasInput = {
+    create?: XOR<PartyCreateWithoutProformasInput, PartyUncheckedCreateWithoutProformasInput>
+    connectOrCreate?: PartyCreateOrConnectWithoutProformasInput
+    connect?: PartyWhereUniqueInput
+  }
+
+  export type ProformaAdjustmentCreateNestedManyWithoutProformaInput = {
+    create?: XOR<ProformaAdjustmentCreateWithoutProformaInput, ProformaAdjustmentUncheckedCreateWithoutProformaInput> | ProformaAdjustmentCreateWithoutProformaInput[] | ProformaAdjustmentUncheckedCreateWithoutProformaInput[]
+    connectOrCreate?: ProformaAdjustmentCreateOrConnectWithoutProformaInput | ProformaAdjustmentCreateOrConnectWithoutProformaInput[]
+    createMany?: ProformaAdjustmentCreateManyProformaInputEnvelope
+    connect?: ProformaAdjustmentWhereUniqueInput | ProformaAdjustmentWhereUniqueInput[]
+  }
+
+  export type ProformaItemCreateNestedManyWithoutProformaInput = {
+    create?: XOR<ProformaItemCreateWithoutProformaInput, ProformaItemUncheckedCreateWithoutProformaInput> | ProformaItemCreateWithoutProformaInput[] | ProformaItemUncheckedCreateWithoutProformaInput[]
+    connectOrCreate?: ProformaItemCreateOrConnectWithoutProformaInput | ProformaItemCreateOrConnectWithoutProformaInput[]
+    createMany?: ProformaItemCreateManyProformaInputEnvelope
+    connect?: ProformaItemWhereUniqueInput | ProformaItemWhereUniqueInput[]
+  }
+
+  export type ProformaAdjustmentUncheckedCreateNestedManyWithoutProformaInput = {
+    create?: XOR<ProformaAdjustmentCreateWithoutProformaInput, ProformaAdjustmentUncheckedCreateWithoutProformaInput> | ProformaAdjustmentCreateWithoutProformaInput[] | ProformaAdjustmentUncheckedCreateWithoutProformaInput[]
+    connectOrCreate?: ProformaAdjustmentCreateOrConnectWithoutProformaInput | ProformaAdjustmentCreateOrConnectWithoutProformaInput[]
+    createMany?: ProformaAdjustmentCreateManyProformaInputEnvelope
+    connect?: ProformaAdjustmentWhereUniqueInput | ProformaAdjustmentWhereUniqueInput[]
+  }
+
+  export type ProformaItemUncheckedCreateNestedManyWithoutProformaInput = {
+    create?: XOR<ProformaItemCreateWithoutProformaInput, ProformaItemUncheckedCreateWithoutProformaInput> | ProformaItemCreateWithoutProformaInput[] | ProformaItemUncheckedCreateWithoutProformaInput[]
+    connectOrCreate?: ProformaItemCreateOrConnectWithoutProformaInput | ProformaItemCreateOrConnectWithoutProformaInput[]
+    createMany?: ProformaItemCreateManyProformaInputEnvelope
+    connect?: ProformaItemWhereUniqueInput | ProformaItemWhereUniqueInput[]
+  }
+
+  export type DocumentUpdateOneRequiredWithoutProformaNestedInput = {
+    create?: XOR<DocumentCreateWithoutProformaInput, DocumentUncheckedCreateWithoutProformaInput>
+    connectOrCreate?: DocumentCreateOrConnectWithoutProformaInput
+    upsert?: DocumentUpsertWithoutProformaInput
+    connect?: DocumentWhereUniqueInput
+    update?: XOR<XOR<DocumentUpdateToOneWithWhereWithoutProformaInput, DocumentUpdateWithoutProformaInput>, DocumentUncheckedUpdateWithoutProformaInput>
+  }
+
+  export type PartyUpdateOneRequiredWithoutProformasNestedInput = {
+    create?: XOR<PartyCreateWithoutProformasInput, PartyUncheckedCreateWithoutProformasInput>
+    connectOrCreate?: PartyCreateOrConnectWithoutProformasInput
+    upsert?: PartyUpsertWithoutProformasInput
+    connect?: PartyWhereUniqueInput
+    update?: XOR<XOR<PartyUpdateToOneWithWhereWithoutProformasInput, PartyUpdateWithoutProformasInput>, PartyUncheckedUpdateWithoutProformasInput>
+  }
+
+  export type ProformaAdjustmentUpdateManyWithoutProformaNestedInput = {
+    create?: XOR<ProformaAdjustmentCreateWithoutProformaInput, ProformaAdjustmentUncheckedCreateWithoutProformaInput> | ProformaAdjustmentCreateWithoutProformaInput[] | ProformaAdjustmentUncheckedCreateWithoutProformaInput[]
+    connectOrCreate?: ProformaAdjustmentCreateOrConnectWithoutProformaInput | ProformaAdjustmentCreateOrConnectWithoutProformaInput[]
+    upsert?: ProformaAdjustmentUpsertWithWhereUniqueWithoutProformaInput | ProformaAdjustmentUpsertWithWhereUniqueWithoutProformaInput[]
+    createMany?: ProformaAdjustmentCreateManyProformaInputEnvelope
+    set?: ProformaAdjustmentWhereUniqueInput | ProformaAdjustmentWhereUniqueInput[]
+    disconnect?: ProformaAdjustmentWhereUniqueInput | ProformaAdjustmentWhereUniqueInput[]
+    delete?: ProformaAdjustmentWhereUniqueInput | ProformaAdjustmentWhereUniqueInput[]
+    connect?: ProformaAdjustmentWhereUniqueInput | ProformaAdjustmentWhereUniqueInput[]
+    update?: ProformaAdjustmentUpdateWithWhereUniqueWithoutProformaInput | ProformaAdjustmentUpdateWithWhereUniqueWithoutProformaInput[]
+    updateMany?: ProformaAdjustmentUpdateManyWithWhereWithoutProformaInput | ProformaAdjustmentUpdateManyWithWhereWithoutProformaInput[]
+    deleteMany?: ProformaAdjustmentScalarWhereInput | ProformaAdjustmentScalarWhereInput[]
+  }
+
+  export type ProformaItemUpdateManyWithoutProformaNestedInput = {
+    create?: XOR<ProformaItemCreateWithoutProformaInput, ProformaItemUncheckedCreateWithoutProformaInput> | ProformaItemCreateWithoutProformaInput[] | ProformaItemUncheckedCreateWithoutProformaInput[]
+    connectOrCreate?: ProformaItemCreateOrConnectWithoutProformaInput | ProformaItemCreateOrConnectWithoutProformaInput[]
+    upsert?: ProformaItemUpsertWithWhereUniqueWithoutProformaInput | ProformaItemUpsertWithWhereUniqueWithoutProformaInput[]
+    createMany?: ProformaItemCreateManyProformaInputEnvelope
+    set?: ProformaItemWhereUniqueInput | ProformaItemWhereUniqueInput[]
+    disconnect?: ProformaItemWhereUniqueInput | ProformaItemWhereUniqueInput[]
+    delete?: ProformaItemWhereUniqueInput | ProformaItemWhereUniqueInput[]
+    connect?: ProformaItemWhereUniqueInput | ProformaItemWhereUniqueInput[]
+    update?: ProformaItemUpdateWithWhereUniqueWithoutProformaInput | ProformaItemUpdateWithWhereUniqueWithoutProformaInput[]
+    updateMany?: ProformaItemUpdateManyWithWhereWithoutProformaInput | ProformaItemUpdateManyWithWhereWithoutProformaInput[]
+    deleteMany?: ProformaItemScalarWhereInput | ProformaItemScalarWhereInput[]
+  }
+
+  export type ProformaAdjustmentUncheckedUpdateManyWithoutProformaNestedInput = {
+    create?: XOR<ProformaAdjustmentCreateWithoutProformaInput, ProformaAdjustmentUncheckedCreateWithoutProformaInput> | ProformaAdjustmentCreateWithoutProformaInput[] | ProformaAdjustmentUncheckedCreateWithoutProformaInput[]
+    connectOrCreate?: ProformaAdjustmentCreateOrConnectWithoutProformaInput | ProformaAdjustmentCreateOrConnectWithoutProformaInput[]
+    upsert?: ProformaAdjustmentUpsertWithWhereUniqueWithoutProformaInput | ProformaAdjustmentUpsertWithWhereUniqueWithoutProformaInput[]
+    createMany?: ProformaAdjustmentCreateManyProformaInputEnvelope
+    set?: ProformaAdjustmentWhereUniqueInput | ProformaAdjustmentWhereUniqueInput[]
+    disconnect?: ProformaAdjustmentWhereUniqueInput | ProformaAdjustmentWhereUniqueInput[]
+    delete?: ProformaAdjustmentWhereUniqueInput | ProformaAdjustmentWhereUniqueInput[]
+    connect?: ProformaAdjustmentWhereUniqueInput | ProformaAdjustmentWhereUniqueInput[]
+    update?: ProformaAdjustmentUpdateWithWhereUniqueWithoutProformaInput | ProformaAdjustmentUpdateWithWhereUniqueWithoutProformaInput[]
+    updateMany?: ProformaAdjustmentUpdateManyWithWhereWithoutProformaInput | ProformaAdjustmentUpdateManyWithWhereWithoutProformaInput[]
+    deleteMany?: ProformaAdjustmentScalarWhereInput | ProformaAdjustmentScalarWhereInput[]
+  }
+
+  export type ProformaItemUncheckedUpdateManyWithoutProformaNestedInput = {
+    create?: XOR<ProformaItemCreateWithoutProformaInput, ProformaItemUncheckedCreateWithoutProformaInput> | ProformaItemCreateWithoutProformaInput[] | ProformaItemUncheckedCreateWithoutProformaInput[]
+    connectOrCreate?: ProformaItemCreateOrConnectWithoutProformaInput | ProformaItemCreateOrConnectWithoutProformaInput[]
+    upsert?: ProformaItemUpsertWithWhereUniqueWithoutProformaInput | ProformaItemUpsertWithWhereUniqueWithoutProformaInput[]
+    createMany?: ProformaItemCreateManyProformaInputEnvelope
+    set?: ProformaItemWhereUniqueInput | ProformaItemWhereUniqueInput[]
+    disconnect?: ProformaItemWhereUniqueInput | ProformaItemWhereUniqueInput[]
+    delete?: ProformaItemWhereUniqueInput | ProformaItemWhereUniqueInput[]
+    connect?: ProformaItemWhereUniqueInput | ProformaItemWhereUniqueInput[]
+    update?: ProformaItemUpdateWithWhereUniqueWithoutProformaInput | ProformaItemUpdateWithWhereUniqueWithoutProformaInput[]
+    updateMany?: ProformaItemUpdateManyWithWhereWithoutProformaInput | ProformaItemUpdateManyWithWhereWithoutProformaInput[]
+    deleteMany?: ProformaItemScalarWhereInput | ProformaItemScalarWhereInput[]
+  }
+
+  export type ProformaCreateNestedOneWithoutAdjustmentsInput = {
+    create?: XOR<ProformaCreateWithoutAdjustmentsInput, ProformaUncheckedCreateWithoutAdjustmentsInput>
+    connectOrCreate?: ProformaCreateOrConnectWithoutAdjustmentsInput
+    connect?: ProformaWhereUniqueInput
+  }
+
+  export type ProformaUpdateOneRequiredWithoutAdjustmentsNestedInput = {
+    create?: XOR<ProformaCreateWithoutAdjustmentsInput, ProformaUncheckedCreateWithoutAdjustmentsInput>
+    connectOrCreate?: ProformaCreateOrConnectWithoutAdjustmentsInput
+    upsert?: ProformaUpsertWithoutAdjustmentsInput
+    connect?: ProformaWhereUniqueInput
+    update?: XOR<XOR<ProformaUpdateToOneWithWhereWithoutAdjustmentsInput, ProformaUpdateWithoutAdjustmentsInput>, ProformaUncheckedUpdateWithoutAdjustmentsInput>
+  }
+
+  export type ProformaCreateNestedOneWithoutItemsInput = {
+    create?: XOR<ProformaCreateWithoutItemsInput, ProformaUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: ProformaCreateOrConnectWithoutItemsInput
+    connect?: ProformaWhereUniqueInput
+  }
+
+  export type ProformaUpdateOneRequiredWithoutItemsNestedInput = {
+    create?: XOR<ProformaCreateWithoutItemsInput, ProformaUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: ProformaCreateOrConnectWithoutItemsInput
+    upsert?: ProformaUpsertWithoutItemsInput
+    connect?: ProformaWhereUniqueInput
+    update?: XOR<XOR<ProformaUpdateToOneWithWhereWithoutItemsInput, ProformaUpdateWithoutItemsInput>, ProformaUncheckedUpdateWithoutItemsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -34475,6 +39838,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodCreateNestedManyWithoutPartyInput
     quotations?: DocumentQuotationCreateNestedManyWithoutCustomerInput
     invoices?: InvoiceCreateNestedManyWithoutCustomerInput
+    proformas?: ProformaCreateNestedManyWithoutCustomerInput
   }
 
   export type PartyUncheckedCreateWithoutAccountInput = {
@@ -34487,6 +39851,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodUncheckedCreateNestedManyWithoutPartyInput
     quotations?: DocumentQuotationUncheckedCreateNestedManyWithoutCustomerInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutCustomerInput
+    proformas?: ProformaUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type PartyCreateOrConnectWithoutAccountInput = {
@@ -34735,6 +40100,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodCreateNestedManyWithoutPartyInput
     quotations?: DocumentQuotationCreateNestedManyWithoutCustomerInput
     invoices?: InvoiceCreateNestedManyWithoutCustomerInput
+    proformas?: ProformaCreateNestedManyWithoutCustomerInput
   }
 
   export type PartyUncheckedCreateWithoutProjectInput = {
@@ -34747,6 +40113,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodUncheckedCreateNestedManyWithoutPartyInput
     quotations?: DocumentQuotationUncheckedCreateNestedManyWithoutCustomerInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutCustomerInput
+    proformas?: ProformaUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type PartyCreateOrConnectWithoutProjectInput = {
@@ -34930,6 +40297,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     quotation?: DocumentQuotationCreateNestedOneWithoutDocumentInput
     invoice?: InvoiceCreateNestedOneWithoutDocumentInput
+    proforma?: ProformaCreateNestedOneWithoutDocumentInput
   }
 
   export type DocumentUncheckedCreateWithoutProjectInput = {
@@ -34939,6 +40307,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     quotation?: DocumentQuotationUncheckedCreateNestedOneWithoutDocumentInput
     invoice?: InvoiceUncheckedCreateNestedOneWithoutDocumentInput
+    proforma?: ProformaUncheckedCreateNestedOneWithoutDocumentInput
   }
 
   export type DocumentCreateOrConnectWithoutProjectInput = {
@@ -35553,6 +40922,64 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ProformaCreateWithoutCustomerInput = {
+    counter: number
+    referenceNumber: string
+    subject: string
+    currency: string
+    exchangeRate: Decimal | DecimalJsLike | number | string
+    subtotal: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    hasAdjustments?: boolean
+    total: Decimal | DecimalJsLike | number | string
+    status: string
+    date: Date | string
+    dueDate: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    document: DocumentCreateNestedOneWithoutProformaInput
+    adjustments?: ProformaAdjustmentCreateNestedManyWithoutProformaInput
+    items?: ProformaItemCreateNestedManyWithoutProformaInput
+  }
+
+  export type ProformaUncheckedCreateWithoutCustomerInput = {
+    id: string
+    counter: number
+    referenceNumber: string
+    subject: string
+    currency: string
+    exchangeRate: Decimal | DecimalJsLike | number | string
+    subtotal: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    hasAdjustments?: boolean
+    total: Decimal | DecimalJsLike | number | string
+    status: string
+    date: Date | string
+    dueDate: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    adjustments?: ProformaAdjustmentUncheckedCreateNestedManyWithoutProformaInput
+    items?: ProformaItemUncheckedCreateNestedManyWithoutProformaInput
+  }
+
+  export type ProformaCreateOrConnectWithoutCustomerInput = {
+    where: ProformaWhereUniqueInput
+    create: XOR<ProformaCreateWithoutCustomerInput, ProformaUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type ProformaCreateManyCustomerInputEnvelope = {
+    data: ProformaCreateManyCustomerInput | ProformaCreateManyCustomerInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AccountUpsertWithoutPartiesInput = {
     update: XOR<AccountUpdateWithoutPartiesInput, AccountUncheckedUpdateWithoutPartiesInput>
     create: XOR<AccountCreateWithoutPartiesInput, AccountUncheckedCreateWithoutPartiesInput>
@@ -35763,6 +41190,48 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Invoice"> | Date | string
   }
 
+  export type ProformaUpsertWithWhereUniqueWithoutCustomerInput = {
+    where: ProformaWhereUniqueInput
+    update: XOR<ProformaUpdateWithoutCustomerInput, ProformaUncheckedUpdateWithoutCustomerInput>
+    create: XOR<ProformaCreateWithoutCustomerInput, ProformaUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type ProformaUpdateWithWhereUniqueWithoutCustomerInput = {
+    where: ProformaWhereUniqueInput
+    data: XOR<ProformaUpdateWithoutCustomerInput, ProformaUncheckedUpdateWithoutCustomerInput>
+  }
+
+  export type ProformaUpdateManyWithWhereWithoutCustomerInput = {
+    where: ProformaScalarWhereInput
+    data: XOR<ProformaUpdateManyMutationInput, ProformaUncheckedUpdateManyWithoutCustomerInput>
+  }
+
+  export type ProformaScalarWhereInput = {
+    AND?: ProformaScalarWhereInput | ProformaScalarWhereInput[]
+    OR?: ProformaScalarWhereInput[]
+    NOT?: ProformaScalarWhereInput | ProformaScalarWhereInput[]
+    id?: UuidFilter<"Proforma"> | string
+    customerId?: UuidFilter<"Proforma"> | string
+    counter?: IntFilter<"Proforma"> | number
+    referenceNumber?: StringFilter<"Proforma"> | string
+    subject?: StringFilter<"Proforma"> | string
+    currency?: StringFilter<"Proforma"> | string
+    exchangeRate?: DecimalFilter<"Proforma"> | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFilter<"Proforma"> | Decimal | DecimalJsLike | number | string
+    discountType?: StringFilter<"Proforma"> | string
+    discountValue?: DecimalFilter<"Proforma"> | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFilter<"Proforma"> | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFilter<"Proforma"> | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFilter<"Proforma"> | boolean
+    total?: DecimalFilter<"Proforma"> | Decimal | DecimalJsLike | number | string
+    status?: StringFilter<"Proforma"> | string
+    date?: DateTimeFilter<"Proforma"> | Date | string
+    dueDate?: DateTimeFilter<"Proforma"> | Date | string
+    details?: JsonNullableFilter<"Proforma">
+    createdAt?: DateTimeFilter<"Proforma"> | Date | string
+    updatedAt?: DateTimeFilter<"Proforma"> | Date | string
+  }
+
   export type PartyCreateWithoutContactsInput = {
     id?: string
     name: string
@@ -35773,6 +41242,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodCreateNestedManyWithoutPartyInput
     quotations?: DocumentQuotationCreateNestedManyWithoutCustomerInput
     invoices?: InvoiceCreateNestedManyWithoutCustomerInput
+    proformas?: ProformaCreateNestedManyWithoutCustomerInput
   }
 
   export type PartyUncheckedCreateWithoutContactsInput = {
@@ -35785,6 +41255,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodUncheckedCreateNestedManyWithoutPartyInput
     quotations?: DocumentQuotationUncheckedCreateNestedManyWithoutCustomerInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutCustomerInput
+    proformas?: ProformaUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type PartyCreateOrConnectWithoutContactsInput = {
@@ -35813,6 +41284,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodUpdateManyWithoutPartyNestedInput
     quotations?: DocumentQuotationUpdateManyWithoutCustomerNestedInput
     invoices?: InvoiceUpdateManyWithoutCustomerNestedInput
+    proformas?: ProformaUpdateManyWithoutCustomerNestedInput
   }
 
   export type PartyUncheckedUpdateWithoutContactsInput = {
@@ -35825,6 +41297,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodUncheckedUpdateManyWithoutPartyNestedInput
     quotations?: DocumentQuotationUncheckedUpdateManyWithoutCustomerNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutCustomerNestedInput
+    proformas?: ProformaUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type PartyCreateWithoutPaymentMethodsInput = {
@@ -35837,6 +41310,7 @@ export namespace Prisma {
     contacts?: PartyContactCreateNestedManyWithoutPartyInput
     quotations?: DocumentQuotationCreateNestedManyWithoutCustomerInput
     invoices?: InvoiceCreateNestedManyWithoutCustomerInput
+    proformas?: ProformaCreateNestedManyWithoutCustomerInput
   }
 
   export type PartyUncheckedCreateWithoutPaymentMethodsInput = {
@@ -35849,6 +41323,7 @@ export namespace Prisma {
     contacts?: PartyContactUncheckedCreateNestedManyWithoutPartyInput
     quotations?: DocumentQuotationUncheckedCreateNestedManyWithoutCustomerInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutCustomerInput
+    proformas?: ProformaUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type PartyCreateOrConnectWithoutPaymentMethodsInput = {
@@ -35877,6 +41352,7 @@ export namespace Prisma {
     contacts?: PartyContactUpdateManyWithoutPartyNestedInput
     quotations?: DocumentQuotationUpdateManyWithoutCustomerNestedInput
     invoices?: InvoiceUpdateManyWithoutCustomerNestedInput
+    proformas?: ProformaUpdateManyWithoutCustomerNestedInput
   }
 
   export type PartyUncheckedUpdateWithoutPaymentMethodsInput = {
@@ -35889,6 +41365,7 @@ export namespace Prisma {
     contacts?: PartyContactUncheckedUpdateManyWithoutPartyNestedInput
     quotations?: DocumentQuotationUncheckedUpdateManyWithoutCustomerNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutCustomerNestedInput
+    proformas?: ProformaUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type AccountCreateWithoutAssetGroupsInput = {
@@ -36837,6 +42314,59 @@ export namespace Prisma {
     create: XOR<InvoiceCreateWithoutDocumentInput, InvoiceUncheckedCreateWithoutDocumentInput>
   }
 
+  export type ProformaCreateWithoutDocumentInput = {
+    counter: number
+    referenceNumber: string
+    subject: string
+    currency: string
+    exchangeRate: Decimal | DecimalJsLike | number | string
+    subtotal: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    hasAdjustments?: boolean
+    total: Decimal | DecimalJsLike | number | string
+    status: string
+    date: Date | string
+    dueDate: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customer: PartyCreateNestedOneWithoutProformasInput
+    adjustments?: ProformaAdjustmentCreateNestedManyWithoutProformaInput
+    items?: ProformaItemCreateNestedManyWithoutProformaInput
+  }
+
+  export type ProformaUncheckedCreateWithoutDocumentInput = {
+    customerId: string
+    counter: number
+    referenceNumber: string
+    subject: string
+    currency: string
+    exchangeRate: Decimal | DecimalJsLike | number | string
+    subtotal: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    hasAdjustments?: boolean
+    total: Decimal | DecimalJsLike | number | string
+    status: string
+    date: Date | string
+    dueDate: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    adjustments?: ProformaAdjustmentUncheckedCreateNestedManyWithoutProformaInput
+    items?: ProformaItemUncheckedCreateNestedManyWithoutProformaInput
+  }
+
+  export type ProformaCreateOrConnectWithoutDocumentInput = {
+    where: ProformaWhereUniqueInput
+    create: XOR<ProformaCreateWithoutDocumentInput, ProformaUncheckedCreateWithoutDocumentInput>
+  }
+
   export type ProjectUpsertWithoutDocumentsInput = {
     update: XOR<ProjectUpdateWithoutDocumentsInput, ProjectUncheckedUpdateWithoutDocumentsInput>
     create: XOR<ProjectCreateWithoutDocumentsInput, ProjectUncheckedCreateWithoutDocumentsInput>
@@ -36992,6 +42522,65 @@ export namespace Prisma {
     items?: InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput
   }
 
+  export type ProformaUpsertWithoutDocumentInput = {
+    update: XOR<ProformaUpdateWithoutDocumentInput, ProformaUncheckedUpdateWithoutDocumentInput>
+    create: XOR<ProformaCreateWithoutDocumentInput, ProformaUncheckedCreateWithoutDocumentInput>
+    where?: ProformaWhereInput
+  }
+
+  export type ProformaUpdateToOneWithWhereWithoutDocumentInput = {
+    where?: ProformaWhereInput
+    data: XOR<ProformaUpdateWithoutDocumentInput, ProformaUncheckedUpdateWithoutDocumentInput>
+  }
+
+  export type ProformaUpdateWithoutDocumentInput = {
+    counter?: IntFieldUpdateOperationsInput | number
+    referenceNumber?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFieldUpdateOperationsInput | boolean
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customer?: PartyUpdateOneRequiredWithoutProformasNestedInput
+    adjustments?: ProformaAdjustmentUpdateManyWithoutProformaNestedInput
+    items?: ProformaItemUpdateManyWithoutProformaNestedInput
+  }
+
+  export type ProformaUncheckedUpdateWithoutDocumentInput = {
+    customerId?: StringFieldUpdateOperationsInput | string
+    counter?: IntFieldUpdateOperationsInput | number
+    referenceNumber?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFieldUpdateOperationsInput | boolean
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    adjustments?: ProformaAdjustmentUncheckedUpdateManyWithoutProformaNestedInput
+    items?: ProformaItemUncheckedUpdateManyWithoutProformaNestedInput
+  }
+
   export type DocumentCreateWithoutQuotationInput = {
     id?: string
     type: string
@@ -36999,6 +42588,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutDocumentsInput
     invoice?: InvoiceCreateNestedOneWithoutDocumentInput
+    proforma?: ProformaCreateNestedOneWithoutDocumentInput
   }
 
   export type DocumentUncheckedCreateWithoutQuotationInput = {
@@ -37008,6 +42598,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     invoice?: InvoiceUncheckedCreateNestedOneWithoutDocumentInput
+    proforma?: ProformaUncheckedCreateNestedOneWithoutDocumentInput
   }
 
   export type DocumentCreateOrConnectWithoutQuotationInput = {
@@ -37025,6 +42616,7 @@ export namespace Prisma {
     contacts?: PartyContactCreateNestedManyWithoutPartyInput
     paymentMethods?: PartyPaymentMethodCreateNestedManyWithoutPartyInput
     invoices?: InvoiceCreateNestedManyWithoutCustomerInput
+    proformas?: ProformaCreateNestedManyWithoutCustomerInput
   }
 
   export type PartyUncheckedCreateWithoutQuotationsInput = {
@@ -37037,6 +42629,7 @@ export namespace Prisma {
     contacts?: PartyContactUncheckedCreateNestedManyWithoutPartyInput
     paymentMethods?: PartyPaymentMethodUncheckedCreateNestedManyWithoutPartyInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutCustomerInput
+    proformas?: ProformaUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type PartyCreateOrConnectWithoutQuotationsInput = {
@@ -37136,6 +42729,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutDocumentsNestedInput
     invoice?: InvoiceUpdateOneWithoutDocumentNestedInput
+    proforma?: ProformaUpdateOneWithoutDocumentNestedInput
   }
 
   export type DocumentUncheckedUpdateWithoutQuotationInput = {
@@ -37145,6 +42739,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     invoice?: InvoiceUncheckedUpdateOneWithoutDocumentNestedInput
+    proforma?: ProformaUncheckedUpdateOneWithoutDocumentNestedInput
   }
 
   export type PartyUpsertWithoutQuotationsInput = {
@@ -37168,6 +42763,7 @@ export namespace Prisma {
     contacts?: PartyContactUpdateManyWithoutPartyNestedInput
     paymentMethods?: PartyPaymentMethodUpdateManyWithoutPartyNestedInput
     invoices?: InvoiceUpdateManyWithoutCustomerNestedInput
+    proformas?: ProformaUpdateManyWithoutCustomerNestedInput
   }
 
   export type PartyUncheckedUpdateWithoutQuotationsInput = {
@@ -37180,6 +42776,7 @@ export namespace Prisma {
     contacts?: PartyContactUncheckedUpdateManyWithoutPartyNestedInput
     paymentMethods?: PartyPaymentMethodUncheckedUpdateManyWithoutPartyNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutCustomerNestedInput
+    proformas?: ProformaUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type DocumentQuotationAdjustmentUpsertWithWhereUniqueWithoutQuotationInput = {
@@ -37480,6 +43077,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutDocumentsInput
     quotation?: DocumentQuotationCreateNestedOneWithoutDocumentInput
+    proforma?: ProformaCreateNestedOneWithoutDocumentInput
   }
 
   export type DocumentUncheckedCreateWithoutInvoiceInput = {
@@ -37489,6 +43087,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     quotation?: DocumentQuotationUncheckedCreateNestedOneWithoutDocumentInput
+    proforma?: ProformaUncheckedCreateNestedOneWithoutDocumentInput
   }
 
   export type DocumentCreateOrConnectWithoutInvoiceInput = {
@@ -37506,6 +43105,7 @@ export namespace Prisma {
     contacts?: PartyContactCreateNestedManyWithoutPartyInput
     paymentMethods?: PartyPaymentMethodCreateNestedManyWithoutPartyInput
     quotations?: DocumentQuotationCreateNestedManyWithoutCustomerInput
+    proformas?: ProformaCreateNestedManyWithoutCustomerInput
   }
 
   export type PartyUncheckedCreateWithoutInvoicesInput = {
@@ -37518,6 +43118,7 @@ export namespace Prisma {
     contacts?: PartyContactUncheckedCreateNestedManyWithoutPartyInput
     paymentMethods?: PartyPaymentMethodUncheckedCreateNestedManyWithoutPartyInput
     quotations?: DocumentQuotationUncheckedCreateNestedManyWithoutCustomerInput
+    proformas?: ProformaUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type PartyCreateOrConnectWithoutInvoicesInput = {
@@ -37617,6 +43218,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutDocumentsNestedInput
     quotation?: DocumentQuotationUpdateOneWithoutDocumentNestedInput
+    proforma?: ProformaUpdateOneWithoutDocumentNestedInput
   }
 
   export type DocumentUncheckedUpdateWithoutInvoiceInput = {
@@ -37626,6 +43228,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     quotation?: DocumentQuotationUncheckedUpdateOneWithoutDocumentNestedInput
+    proforma?: ProformaUncheckedUpdateOneWithoutDocumentNestedInput
   }
 
   export type PartyUpsertWithoutInvoicesInput = {
@@ -37649,6 +43252,7 @@ export namespace Prisma {
     contacts?: PartyContactUpdateManyWithoutPartyNestedInput
     paymentMethods?: PartyPaymentMethodUpdateManyWithoutPartyNestedInput
     quotations?: DocumentQuotationUpdateManyWithoutCustomerNestedInput
+    proformas?: ProformaUpdateManyWithoutCustomerNestedInput
   }
 
   export type PartyUncheckedUpdateWithoutInvoicesInput = {
@@ -37661,6 +43265,7 @@ export namespace Prisma {
     contacts?: PartyContactUncheckedUpdateManyWithoutPartyNestedInput
     paymentMethods?: PartyPaymentMethodUncheckedUpdateManyWithoutPartyNestedInput
     quotations?: DocumentQuotationUncheckedUpdateManyWithoutCustomerNestedInput
+    proformas?: ProformaUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type InvoiceAdjustmentUpsertWithWhereUniqueWithoutInvoiceInput = {
@@ -37954,6 +43559,495 @@ export namespace Prisma {
     adjustments?: InvoiceAdjustmentUncheckedUpdateManyWithoutInvoiceNestedInput
   }
 
+  export type DocumentCreateWithoutProformaInput = {
+    id?: string
+    type: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutDocumentsInput
+    quotation?: DocumentQuotationCreateNestedOneWithoutDocumentInput
+    invoice?: InvoiceCreateNestedOneWithoutDocumentInput
+  }
+
+  export type DocumentUncheckedCreateWithoutProformaInput = {
+    id?: string
+    projectId: string
+    type: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    quotation?: DocumentQuotationUncheckedCreateNestedOneWithoutDocumentInput
+    invoice?: InvoiceUncheckedCreateNestedOneWithoutDocumentInput
+  }
+
+  export type DocumentCreateOrConnectWithoutProformaInput = {
+    where: DocumentWhereUniqueInput
+    create: XOR<DocumentCreateWithoutProformaInput, DocumentUncheckedCreateWithoutProformaInput>
+  }
+
+  export type PartyCreateWithoutProformasInput = {
+    id?: string
+    name: string
+    type: string
+    taxinfo?: NullableJsonNullValueInput | InputJsonValue
+    account: AccountCreateNestedOneWithoutPartiesInput
+    project: ProjectCreateNestedOneWithoutPartiesInput
+    contacts?: PartyContactCreateNestedManyWithoutPartyInput
+    paymentMethods?: PartyPaymentMethodCreateNestedManyWithoutPartyInput
+    quotations?: DocumentQuotationCreateNestedManyWithoutCustomerInput
+    invoices?: InvoiceCreateNestedManyWithoutCustomerInput
+  }
+
+  export type PartyUncheckedCreateWithoutProformasInput = {
+    id?: string
+    accountId: string
+    projectId: string
+    name: string
+    type: string
+    taxinfo?: NullableJsonNullValueInput | InputJsonValue
+    contacts?: PartyContactUncheckedCreateNestedManyWithoutPartyInput
+    paymentMethods?: PartyPaymentMethodUncheckedCreateNestedManyWithoutPartyInput
+    quotations?: DocumentQuotationUncheckedCreateNestedManyWithoutCustomerInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutCustomerInput
+  }
+
+  export type PartyCreateOrConnectWithoutProformasInput = {
+    where: PartyWhereUniqueInput
+    create: XOR<PartyCreateWithoutProformasInput, PartyUncheckedCreateWithoutProformasInput>
+  }
+
+  export type ProformaAdjustmentCreateWithoutProformaInput = {
+    id?: string
+    adjustmentName: string
+    adjustmentValue: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProformaAdjustmentUncheckedCreateWithoutProformaInput = {
+    id?: string
+    adjustmentName: string
+    adjustmentValue: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProformaAdjustmentCreateOrConnectWithoutProformaInput = {
+    where: ProformaAdjustmentWhereUniqueInput
+    create: XOR<ProformaAdjustmentCreateWithoutProformaInput, ProformaAdjustmentUncheckedCreateWithoutProformaInput>
+  }
+
+  export type ProformaAdjustmentCreateManyProformaInputEnvelope = {
+    data: ProformaAdjustmentCreateManyProformaInput | ProformaAdjustmentCreateManyProformaInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProformaItemCreateWithoutProformaInput = {
+    id?: string
+    productId?: string | null
+    name: string
+    description?: string | null
+    quantity: Decimal | DecimalJsLike | number | string
+    unit: string
+    rate: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxRate: Decimal | DecimalJsLike | number | string
+    taxAmount: Decimal | DecimalJsLike | number | string
+    amount: Decimal | DecimalJsLike | number | string
+    sortIndex: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProformaItemUncheckedCreateWithoutProformaInput = {
+    id?: string
+    productId?: string | null
+    name: string
+    description?: string | null
+    quantity: Decimal | DecimalJsLike | number | string
+    unit: string
+    rate: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxRate: Decimal | DecimalJsLike | number | string
+    taxAmount: Decimal | DecimalJsLike | number | string
+    amount: Decimal | DecimalJsLike | number | string
+    sortIndex: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProformaItemCreateOrConnectWithoutProformaInput = {
+    where: ProformaItemWhereUniqueInput
+    create: XOR<ProformaItemCreateWithoutProformaInput, ProformaItemUncheckedCreateWithoutProformaInput>
+  }
+
+  export type ProformaItemCreateManyProformaInputEnvelope = {
+    data: ProformaItemCreateManyProformaInput | ProformaItemCreateManyProformaInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DocumentUpsertWithoutProformaInput = {
+    update: XOR<DocumentUpdateWithoutProformaInput, DocumentUncheckedUpdateWithoutProformaInput>
+    create: XOR<DocumentCreateWithoutProformaInput, DocumentUncheckedCreateWithoutProformaInput>
+    where?: DocumentWhereInput
+  }
+
+  export type DocumentUpdateToOneWithWhereWithoutProformaInput = {
+    where?: DocumentWhereInput
+    data: XOR<DocumentUpdateWithoutProformaInput, DocumentUncheckedUpdateWithoutProformaInput>
+  }
+
+  export type DocumentUpdateWithoutProformaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutDocumentsNestedInput
+    quotation?: DocumentQuotationUpdateOneWithoutDocumentNestedInput
+    invoice?: InvoiceUpdateOneWithoutDocumentNestedInput
+  }
+
+  export type DocumentUncheckedUpdateWithoutProformaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    quotation?: DocumentQuotationUncheckedUpdateOneWithoutDocumentNestedInput
+    invoice?: InvoiceUncheckedUpdateOneWithoutDocumentNestedInput
+  }
+
+  export type PartyUpsertWithoutProformasInput = {
+    update: XOR<PartyUpdateWithoutProformasInput, PartyUncheckedUpdateWithoutProformasInput>
+    create: XOR<PartyCreateWithoutProformasInput, PartyUncheckedCreateWithoutProformasInput>
+    where?: PartyWhereInput
+  }
+
+  export type PartyUpdateToOneWithWhereWithoutProformasInput = {
+    where?: PartyWhereInput
+    data: XOR<PartyUpdateWithoutProformasInput, PartyUncheckedUpdateWithoutProformasInput>
+  }
+
+  export type PartyUpdateWithoutProformasInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    taxinfo?: NullableJsonNullValueInput | InputJsonValue
+    account?: AccountUpdateOneRequiredWithoutPartiesNestedInput
+    project?: ProjectUpdateOneRequiredWithoutPartiesNestedInput
+    contacts?: PartyContactUpdateManyWithoutPartyNestedInput
+    paymentMethods?: PartyPaymentMethodUpdateManyWithoutPartyNestedInput
+    quotations?: DocumentQuotationUpdateManyWithoutCustomerNestedInput
+    invoices?: InvoiceUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type PartyUncheckedUpdateWithoutProformasInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accountId?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    taxinfo?: NullableJsonNullValueInput | InputJsonValue
+    contacts?: PartyContactUncheckedUpdateManyWithoutPartyNestedInput
+    paymentMethods?: PartyPaymentMethodUncheckedUpdateManyWithoutPartyNestedInput
+    quotations?: DocumentQuotationUncheckedUpdateManyWithoutCustomerNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type ProformaAdjustmentUpsertWithWhereUniqueWithoutProformaInput = {
+    where: ProformaAdjustmentWhereUniqueInput
+    update: XOR<ProformaAdjustmentUpdateWithoutProformaInput, ProformaAdjustmentUncheckedUpdateWithoutProformaInput>
+    create: XOR<ProformaAdjustmentCreateWithoutProformaInput, ProformaAdjustmentUncheckedCreateWithoutProformaInput>
+  }
+
+  export type ProformaAdjustmentUpdateWithWhereUniqueWithoutProformaInput = {
+    where: ProformaAdjustmentWhereUniqueInput
+    data: XOR<ProformaAdjustmentUpdateWithoutProformaInput, ProformaAdjustmentUncheckedUpdateWithoutProformaInput>
+  }
+
+  export type ProformaAdjustmentUpdateManyWithWhereWithoutProformaInput = {
+    where: ProformaAdjustmentScalarWhereInput
+    data: XOR<ProformaAdjustmentUpdateManyMutationInput, ProformaAdjustmentUncheckedUpdateManyWithoutProformaInput>
+  }
+
+  export type ProformaAdjustmentScalarWhereInput = {
+    AND?: ProformaAdjustmentScalarWhereInput | ProformaAdjustmentScalarWhereInput[]
+    OR?: ProformaAdjustmentScalarWhereInput[]
+    NOT?: ProformaAdjustmentScalarWhereInput | ProformaAdjustmentScalarWhereInput[]
+    id?: UuidFilter<"ProformaAdjustment"> | string
+    proformaId?: UuidFilter<"ProformaAdjustment"> | string
+    adjustmentName?: StringFilter<"ProformaAdjustment"> | string
+    adjustmentValue?: DecimalFilter<"ProformaAdjustment"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFilter<"ProformaAdjustment"> | Date | string
+    updatedAt?: DateTimeFilter<"ProformaAdjustment"> | Date | string
+  }
+
+  export type ProformaItemUpsertWithWhereUniqueWithoutProformaInput = {
+    where: ProformaItemWhereUniqueInput
+    update: XOR<ProformaItemUpdateWithoutProformaInput, ProformaItemUncheckedUpdateWithoutProformaInput>
+    create: XOR<ProformaItemCreateWithoutProformaInput, ProformaItemUncheckedCreateWithoutProformaInput>
+  }
+
+  export type ProformaItemUpdateWithWhereUniqueWithoutProformaInput = {
+    where: ProformaItemWhereUniqueInput
+    data: XOR<ProformaItemUpdateWithoutProformaInput, ProformaItemUncheckedUpdateWithoutProformaInput>
+  }
+
+  export type ProformaItemUpdateManyWithWhereWithoutProformaInput = {
+    where: ProformaItemScalarWhereInput
+    data: XOR<ProformaItemUpdateManyMutationInput, ProformaItemUncheckedUpdateManyWithoutProformaInput>
+  }
+
+  export type ProformaItemScalarWhereInput = {
+    AND?: ProformaItemScalarWhereInput | ProformaItemScalarWhereInput[]
+    OR?: ProformaItemScalarWhereInput[]
+    NOT?: ProformaItemScalarWhereInput | ProformaItemScalarWhereInput[]
+    id?: UuidFilter<"ProformaItem"> | string
+    proformaId?: UuidFilter<"ProformaItem"> | string
+    productId?: UuidNullableFilter<"ProformaItem"> | string | null
+    name?: StringFilter<"ProformaItem"> | string
+    description?: StringNullableFilter<"ProformaItem"> | string | null
+    quantity?: DecimalFilter<"ProformaItem"> | Decimal | DecimalJsLike | number | string
+    unit?: StringFilter<"ProformaItem"> | string
+    rate?: DecimalFilter<"ProformaItem"> | Decimal | DecimalJsLike | number | string
+    discountType?: StringFilter<"ProformaItem"> | string
+    discountValue?: DecimalFilter<"ProformaItem"> | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFilter<"ProformaItem"> | Decimal | DecimalJsLike | number | string
+    taxRate?: DecimalFilter<"ProformaItem"> | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFilter<"ProformaItem"> | Decimal | DecimalJsLike | number | string
+    amount?: DecimalFilter<"ProformaItem"> | Decimal | DecimalJsLike | number | string
+    sortIndex?: IntFilter<"ProformaItem"> | number
+    createdAt?: DateTimeFilter<"ProformaItem"> | Date | string
+    updatedAt?: DateTimeFilter<"ProformaItem"> | Date | string
+  }
+
+  export type ProformaCreateWithoutAdjustmentsInput = {
+    counter: number
+    referenceNumber: string
+    subject: string
+    currency: string
+    exchangeRate: Decimal | DecimalJsLike | number | string
+    subtotal: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    hasAdjustments?: boolean
+    total: Decimal | DecimalJsLike | number | string
+    status: string
+    date: Date | string
+    dueDate: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    document: DocumentCreateNestedOneWithoutProformaInput
+    customer: PartyCreateNestedOneWithoutProformasInput
+    items?: ProformaItemCreateNestedManyWithoutProformaInput
+  }
+
+  export type ProformaUncheckedCreateWithoutAdjustmentsInput = {
+    id: string
+    customerId: string
+    counter: number
+    referenceNumber: string
+    subject: string
+    currency: string
+    exchangeRate: Decimal | DecimalJsLike | number | string
+    subtotal: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    hasAdjustments?: boolean
+    total: Decimal | DecimalJsLike | number | string
+    status: string
+    date: Date | string
+    dueDate: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: ProformaItemUncheckedCreateNestedManyWithoutProformaInput
+  }
+
+  export type ProformaCreateOrConnectWithoutAdjustmentsInput = {
+    where: ProformaWhereUniqueInput
+    create: XOR<ProformaCreateWithoutAdjustmentsInput, ProformaUncheckedCreateWithoutAdjustmentsInput>
+  }
+
+  export type ProformaUpsertWithoutAdjustmentsInput = {
+    update: XOR<ProformaUpdateWithoutAdjustmentsInput, ProformaUncheckedUpdateWithoutAdjustmentsInput>
+    create: XOR<ProformaCreateWithoutAdjustmentsInput, ProformaUncheckedCreateWithoutAdjustmentsInput>
+    where?: ProformaWhereInput
+  }
+
+  export type ProformaUpdateToOneWithWhereWithoutAdjustmentsInput = {
+    where?: ProformaWhereInput
+    data: XOR<ProformaUpdateWithoutAdjustmentsInput, ProformaUncheckedUpdateWithoutAdjustmentsInput>
+  }
+
+  export type ProformaUpdateWithoutAdjustmentsInput = {
+    counter?: IntFieldUpdateOperationsInput | number
+    referenceNumber?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFieldUpdateOperationsInput | boolean
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    document?: DocumentUpdateOneRequiredWithoutProformaNestedInput
+    customer?: PartyUpdateOneRequiredWithoutProformasNestedInput
+    items?: ProformaItemUpdateManyWithoutProformaNestedInput
+  }
+
+  export type ProformaUncheckedUpdateWithoutAdjustmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    counter?: IntFieldUpdateOperationsInput | number
+    referenceNumber?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFieldUpdateOperationsInput | boolean
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: ProformaItemUncheckedUpdateManyWithoutProformaNestedInput
+  }
+
+  export type ProformaCreateWithoutItemsInput = {
+    counter: number
+    referenceNumber: string
+    subject: string
+    currency: string
+    exchangeRate: Decimal | DecimalJsLike | number | string
+    subtotal: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    hasAdjustments?: boolean
+    total: Decimal | DecimalJsLike | number | string
+    status: string
+    date: Date | string
+    dueDate: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    document: DocumentCreateNestedOneWithoutProformaInput
+    customer: PartyCreateNestedOneWithoutProformasInput
+    adjustments?: ProformaAdjustmentCreateNestedManyWithoutProformaInput
+  }
+
+  export type ProformaUncheckedCreateWithoutItemsInput = {
+    id: string
+    customerId: string
+    counter: number
+    referenceNumber: string
+    subject: string
+    currency: string
+    exchangeRate: Decimal | DecimalJsLike | number | string
+    subtotal: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    hasAdjustments?: boolean
+    total: Decimal | DecimalJsLike | number | string
+    status: string
+    date: Date | string
+    dueDate: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    adjustments?: ProformaAdjustmentUncheckedCreateNestedManyWithoutProformaInput
+  }
+
+  export type ProformaCreateOrConnectWithoutItemsInput = {
+    where: ProformaWhereUniqueInput
+    create: XOR<ProformaCreateWithoutItemsInput, ProformaUncheckedCreateWithoutItemsInput>
+  }
+
+  export type ProformaUpsertWithoutItemsInput = {
+    update: XOR<ProformaUpdateWithoutItemsInput, ProformaUncheckedUpdateWithoutItemsInput>
+    create: XOR<ProformaCreateWithoutItemsInput, ProformaUncheckedCreateWithoutItemsInput>
+    where?: ProformaWhereInput
+  }
+
+  export type ProformaUpdateToOneWithWhereWithoutItemsInput = {
+    where?: ProformaWhereInput
+    data: XOR<ProformaUpdateWithoutItemsInput, ProformaUncheckedUpdateWithoutItemsInput>
+  }
+
+  export type ProformaUpdateWithoutItemsInput = {
+    counter?: IntFieldUpdateOperationsInput | number
+    referenceNumber?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFieldUpdateOperationsInput | boolean
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    document?: DocumentUpdateOneRequiredWithoutProformaNestedInput
+    customer?: PartyUpdateOneRequiredWithoutProformasNestedInput
+    adjustments?: ProformaAdjustmentUpdateManyWithoutProformaNestedInput
+  }
+
+  export type ProformaUncheckedUpdateWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    counter?: IntFieldUpdateOperationsInput | number
+    referenceNumber?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFieldUpdateOperationsInput | boolean
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    adjustments?: ProformaAdjustmentUncheckedUpdateManyWithoutProformaNestedInput
+  }
+
   export type AssetGroupCreateManyAccountInput = {
     id?: string
     name: string
@@ -38039,6 +44133,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodUpdateManyWithoutPartyNestedInput
     quotations?: DocumentQuotationUpdateManyWithoutCustomerNestedInput
     invoices?: InvoiceUpdateManyWithoutCustomerNestedInput
+    proformas?: ProformaUpdateManyWithoutCustomerNestedInput
   }
 
   export type PartyUncheckedUpdateWithoutAccountInput = {
@@ -38051,6 +44146,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodUncheckedUpdateManyWithoutPartyNestedInput
     quotations?: DocumentQuotationUncheckedUpdateManyWithoutCustomerNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutCustomerNestedInput
+    proformas?: ProformaUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type PartyUncheckedUpdateManyWithoutAccountInput = {
@@ -38260,6 +44356,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodUpdateManyWithoutPartyNestedInput
     quotations?: DocumentQuotationUpdateManyWithoutCustomerNestedInput
     invoices?: InvoiceUpdateManyWithoutCustomerNestedInput
+    proformas?: ProformaUpdateManyWithoutCustomerNestedInput
   }
 
   export type PartyUncheckedUpdateWithoutProjectInput = {
@@ -38272,6 +44369,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodUncheckedUpdateManyWithoutPartyNestedInput
     quotations?: DocumentQuotationUncheckedUpdateManyWithoutCustomerNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutCustomerNestedInput
+    proformas?: ProformaUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type PartyUncheckedUpdateManyWithoutProjectInput = {
@@ -38472,6 +44570,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     quotation?: DocumentQuotationUpdateOneWithoutDocumentNestedInput
     invoice?: InvoiceUpdateOneWithoutDocumentNestedInput
+    proforma?: ProformaUpdateOneWithoutDocumentNestedInput
   }
 
   export type DocumentUncheckedUpdateWithoutProjectInput = {
@@ -38481,6 +44580,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     quotation?: DocumentQuotationUncheckedUpdateOneWithoutDocumentNestedInput
     invoice?: InvoiceUncheckedUpdateOneWithoutDocumentNestedInput
+    proforma?: ProformaUncheckedUpdateOneWithoutDocumentNestedInput
   }
 
   export type DocumentUncheckedUpdateManyWithoutProjectInput = {
@@ -38561,6 +44661,28 @@ export namespace Prisma {
   }
 
   export type InvoiceCreateManyCustomerInput = {
+    id: string
+    counter: number
+    referenceNumber: string
+    subject: string
+    currency: string
+    exchangeRate: Decimal | DecimalJsLike | number | string
+    subtotal: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    hasAdjustments?: boolean
+    total: Decimal | DecimalJsLike | number | string
+    status: string
+    date: Date | string
+    dueDate: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProformaCreateManyCustomerInput = {
     id: string
     counter: number
     referenceNumber: string
@@ -38749,6 +44871,76 @@ export namespace Prisma {
   }
 
   export type InvoiceUncheckedUpdateManyWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    counter?: IntFieldUpdateOperationsInput | number
+    referenceNumber?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFieldUpdateOperationsInput | boolean
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProformaUpdateWithoutCustomerInput = {
+    counter?: IntFieldUpdateOperationsInput | number
+    referenceNumber?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFieldUpdateOperationsInput | boolean
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    document?: DocumentUpdateOneRequiredWithoutProformaNestedInput
+    adjustments?: ProformaAdjustmentUpdateManyWithoutProformaNestedInput
+    items?: ProformaItemUpdateManyWithoutProformaNestedInput
+  }
+
+  export type ProformaUncheckedUpdateWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    counter?: IntFieldUpdateOperationsInput | number
+    referenceNumber?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFieldUpdateOperationsInput | boolean
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    adjustments?: ProformaAdjustmentUncheckedUpdateManyWithoutProformaNestedInput
+    items?: ProformaItemUncheckedUpdateManyWithoutProformaNestedInput
+  }
+
+  export type ProformaUncheckedUpdateManyWithoutCustomerInput = {
     id?: StringFieldUpdateOperationsInput | string
     counter?: IntFieldUpdateOperationsInput | number
     referenceNumber?: StringFieldUpdateOperationsInput | string
@@ -39144,6 +45336,114 @@ export namespace Prisma {
   }
 
   export type InvoiceItemUncheckedUpdateManyWithoutInvoiceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    sortIndex?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProformaAdjustmentCreateManyProformaInput = {
+    id?: string
+    adjustmentName: string
+    adjustmentValue: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProformaItemCreateManyProformaInput = {
+    id?: string
+    productId?: string | null
+    name: string
+    description?: string | null
+    quantity: Decimal | DecimalJsLike | number | string
+    unit: string
+    rate: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxRate: Decimal | DecimalJsLike | number | string
+    taxAmount: Decimal | DecimalJsLike | number | string
+    amount: Decimal | DecimalJsLike | number | string
+    sortIndex: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProformaAdjustmentUpdateWithoutProformaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    adjustmentName?: StringFieldUpdateOperationsInput | string
+    adjustmentValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProformaAdjustmentUncheckedUpdateWithoutProformaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    adjustmentName?: StringFieldUpdateOperationsInput | string
+    adjustmentValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProformaAdjustmentUncheckedUpdateManyWithoutProformaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    adjustmentName?: StringFieldUpdateOperationsInput | string
+    adjustmentValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProformaItemUpdateWithoutProformaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    sortIndex?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProformaItemUncheckedUpdateWithoutProformaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    sortIndex?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProformaItemUncheckedUpdateManyWithoutProformaInput = {
     id?: StringFieldUpdateOperationsInput | string
     productId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string

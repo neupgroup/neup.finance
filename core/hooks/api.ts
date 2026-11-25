@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 type QueryResult<T> = { data: T | undefined; isLoading: boolean; error: Error | null };
+const basePath = process.env.NEXT_PUBLIC_APP_BASEPATH ?? '';
 
 async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
   const url = new URL(path, typeof window === 'undefined' ? 'http://localhost' : window.location.origin);
@@ -10,7 +11,9 @@ async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
     const projectId = new URLSearchParams(window.location.search).get('project');
     if (projectId && !url.searchParams.has('project')) url.searchParams.set('project', projectId);
   }
-  const requestPath = typeof window === 'undefined' ? path : `${url.pathname}${url.search}`;
+  const requestPath = typeof window === 'undefined'
+    ? `${basePath}${path}`
+    : `${basePath}${url.pathname}${url.search}`;
   const response = await fetch(requestPath, {
     ...init,
     credentials: "include",
@@ -184,6 +187,7 @@ export type DocumentQuotationRecord = {
 };
 
 export type DocumentInvoiceRecord = Omit<DocumentQuotationRecord, 'expires'> & { dueDate: string };
+export type DocumentProformaRecord = Omit<DocumentQuotationRecord, 'expires'> & { dueDate: string };
 
 type DocumentQuotationResponse = {
   status: boolean;
@@ -227,6 +231,25 @@ export function useDocumentInvoice(id: string | null) {
 export function useDocumentInvoices(enabled = true) {
   const query = useQuery<{ status: boolean; result?: DocumentInvoiceRecord[] }>(enabled ? '/bridge/api.v1/documents/invoices' : null);
   return { ...query, invoices: query.data?.result ?? [] };
+}
+
+export async function createDocumentProforma(data: Record<string, unknown>) {
+  const response = await requestJson<{ status: boolean; result?: DocumentProformaRecord; error?: { code: string; description: string } }>('/bridge/api.v1/documents/proformas', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+  if (!response.status || !response.result) throw new Error(response.error?.description ?? 'Could not save proforma invoice.');
+  return response.result;
+}
+
+export function useDocumentProforma(id: string | null) {
+  const query = useQuery<{ status: boolean; result?: DocumentProformaRecord }>(id ? `/bridge/api.v1/documents/proformas/${encodeURIComponent(id)}` : null);
+  return { ...query, proforma: query.data?.result };
+}
+
+export function useDocumentProformas(enabled = true) {
+  const query = useQuery<{ status: boolean; result?: DocumentProformaRecord[] }>(enabled ? '/bridge/api.v1/documents/proformas' : null);
+  return { ...query, proformas: query.data?.result ?? [] };
 }
 
 export async function addTransactionLine(id: string, data: Record<string, unknown>) {

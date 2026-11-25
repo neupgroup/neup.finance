@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { ArrowLeft, ArrowUpRight, Plus, ReceiptText } from 'lucide-react';
 import { Badge } from '@neup/components/ui/badge';
 import { Button } from '@neup/components/ui/button';
-import { useDocumentInvoices, useDocumentQuotations, useTransactionsList } from '@/core/hooks/api';
+import { useDocumentInvoices, useDocumentProformas, useDocumentQuotations, useTransactionsList } from '@/core/hooks/api';
 
 const salesDocumentTypes = [
   ['quotation', 'Quotation'],
@@ -25,6 +25,7 @@ export default function SalesDocumentsPage() {
   const { data: transactions, isLoading } = useTransactionsList();
   const { quotations, isLoading: areQuotationsLoading } = useDocumentQuotations(type === 'quotation');
   const { invoices, isLoading: areInvoicesLoading } = useDocumentInvoices(type === 'invoice');
+  const { proformas, isLoading: areProformasLoading } = useDocumentProformas(type === 'proforma-invoice');
   const salesTransactions = (transactions ?? []).filter((transaction) =>
     ['sales', 'receivable'].includes(String(transaction.category).toLowerCase()) ||
     ['sale', 'income', 'refund'].includes(String(transaction.transaction_type).toLowerCase())
@@ -95,6 +96,22 @@ export default function SalesDocumentsPage() {
         </div>
       ) : (
         <div className="rounded-lg border border-dashed px-6 py-12 text-center"><ReceiptText className="mx-auto h-8 w-8 text-muted-foreground" /><h2 className="mt-3 font-semibold">No invoices yet</h2><p className="mt-1 text-sm text-muted-foreground">Create an invoice to see it here.</p><Button asChild className="mt-4"><Link href={newHref}><Plus className="mr-2 h-4 w-4" />New Invoice</Link></Button></div>
+      )) : type === 'proforma-invoice' ? (areProformasLoading ? (
+        <p className="py-10 text-center text-sm text-muted-foreground">Loading proforma invoices…</p>
+      ) : proformas.length ? (
+        <div className="overflow-hidden divide-y rounded-lg border">
+          {proformas.map((proforma) => (
+            <Link key={proforma.id} href={withProject(`/documents/${encodeURIComponent(proforma.id)}?type=proforma-invoice`)} className="flex items-center justify-between gap-4 p-4 hover:bg-muted/40">
+              <span className="flex min-w-0 items-center gap-3">
+                <ReceiptText className="h-5 w-5 shrink-0 text-muted-foreground" />
+                <span className="min-w-0"><span className="block truncate font-medium">{proforma.subject}</span><span className="block text-sm text-muted-foreground">{proforma.referenceNumber} · {new Date(proforma.date).toLocaleDateString()} · {proforma.status}</span></span>
+              </span>
+              <span className="flex items-center gap-2 whitespace-nowrap font-medium">{new Intl.NumberFormat('en-US', { style: 'currency', currency: proforma.currency }).format(Number(proforma.total))}<ArrowUpRight className="h-4 w-4 text-muted-foreground" /></span>
+            </Link>
+          ))}
+        </div>
+      ) : (
+        <div className="rounded-lg border border-dashed px-6 py-12 text-center"><ReceiptText className="mx-auto h-8 w-8 text-muted-foreground" /><h2 className="mt-3 font-semibold">No proforma invoices yet</h2><p className="mt-1 text-sm text-muted-foreground">Create a proforma invoice to see it here.</p><Button asChild className="mt-4"><Link href={newHref}><Plus className="mr-2 h-4 w-4" />New Proforma Invoice</Link></Button></div>
       )) : isLoading ? (
         <p className="py-10 text-center text-sm text-muted-foreground">Loading sales records…</p>
       ) : salesTransactions.length ? (

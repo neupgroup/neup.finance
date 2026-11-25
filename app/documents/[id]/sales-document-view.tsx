@@ -4,28 +4,31 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { ArrowLeft, Loader, Printer } from 'lucide-react';
 import { Button } from '@neup/components/ui/button';
-import { useDocumentInvoice, useDocumentQuotation } from '@/core/hooks/api';
+import { useDocumentInvoice, useDocumentProforma, useDocumentQuotation } from '@/core/hooks/api';
 
 function money(value: number | string, currency: string) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency, minimumFractionDigits: 2 }).format(Number(value) || 0);
 }
 
 // Display a saved quotation or invoice with matching document styling.
-export default function SalesDocumentView({ id, type }: { id: string; type: 'quotation' | 'invoice' }) {
+export default function SalesDocumentView({ id, type }: { id: string; type: 'quotation' | 'invoice' | 'proforma-invoice' }) {
   const searchParams = useSearchParams();
   const projectId = searchParams.get('project')?.trim();
-  const documentLabel = type === 'invoice' ? 'Invoice' : 'Quotation';
+  const documentLabel = type === 'quotation' ? 'Quotation' : type === 'invoice' ? 'Invoice' : 'Proforma Invoice';
   const backHref = `/documents/sales?type=${type}${projectId ? `&project=${encodeURIComponent(projectId)}` : ''}`;
   const quotationQuery = useDocumentQuotation(type === 'quotation' ? id : null);
   const invoiceQuery = useDocumentInvoice(type === 'invoice' ? id : null);
+  const proformaQuery = useDocumentProforma(type === 'proforma-invoice' ? id : null);
   const { quotation } = quotationQuery;
   const { invoice } = invoiceQuery;
-  const isLoading = quotationQuery.isLoading || invoiceQuery.isLoading;
-  const error = quotationQuery.error ?? invoiceQuery.error;
-  const record = type === 'invoice' ? invoice : quotation;
+  const { proforma } = proformaQuery;
+  const isLoading = quotationQuery.isLoading || invoiceQuery.isLoading || proformaQuery.isLoading;
+  const error = quotationQuery.error ?? invoiceQuery.error ?? proformaQuery.error;
+  const record = type === 'invoice' ? invoice : type === 'proforma-invoice' ? proforma : quotation;
+  const listLabel = type === 'quotation' ? 'quotations' : type === 'invoice' ? 'invoices' : 'proforma invoices';
 
   if (isLoading) return <div className="flex min-h-72 items-center justify-center"><Loader className="h-7 w-7 animate-spin" /></div>;
-  if (error || !record) return <main className="mx-auto max-w-4xl py-12 text-center"><h1 className="text-2xl font-bold">{documentLabel} not found</h1><p className="mt-2 text-muted-foreground">This {documentLabel.toLowerCase()} could not be loaded for the current project.</p><Button asChild className="mt-5"><Link href={backHref}>Back to {type === 'invoice' ? 'invoices' : 'quotations'}</Link></Button></main>;
+  if (error || !record) return <main className="mx-auto max-w-4xl py-12 text-center"><h1 className="text-2xl font-bold">{documentLabel} not found</h1><p className="mt-2 text-muted-foreground">This {documentLabel.toLowerCase()} could not be loaded for the current project.</p><Button asChild className="mt-5"><Link href={backHref}>Back to {listLabel}</Link></Button></main>;
 
   const details = record.details ?? {};
   const currency = record.currency;
@@ -34,7 +37,7 @@ export default function SalesDocumentView({ id, type }: { id: string; type: 'quo
   return (
     <main className="mx-auto max-w-5xl space-y-5">
       <div className="flex items-center justify-between gap-3 print:hidden">
-        <Button variant="ghost" asChild><Link href={backHref}><ArrowLeft className="mr-2 h-4 w-4" />Back to {type === 'invoice' ? 'invoices' : 'quotations'}</Link></Button>
+        <Button variant="ghost" asChild><Link href={backHref}><ArrowLeft className="mr-2 h-4 w-4" />Back to {listLabel}</Link></Button>
         <Button onClick={() => window.print()}><Printer className="mr-2 h-4 w-4" />Print {documentLabel}</Button>
       </div>
       <article className="space-y-8 rounded-lg border bg-background p-6 shadow-sm md:p-10 print:border-0 print:shadow-none">
@@ -43,7 +46,7 @@ export default function SalesDocumentView({ id, type }: { id: string; type: 'quo
           <dl className="grid gap-x-8 gap-y-2 text-sm sm:grid-cols-2">
             <dt className="text-muted-foreground">Status</dt><dd className="font-medium capitalize">{record.status}</dd>
             <dt className="text-muted-foreground">Date</dt><dd>{new Date(record.date).toLocaleDateString()}</dd>
-            <dt className="text-muted-foreground">{type === 'invoice' ? 'Due Date' : 'Expires'}</dt><dd>{new Date(deadline).toLocaleDateString()}</dd>
+            <dt className="text-muted-foreground">{type === 'quotation' ? 'Expires' : 'Due Date'}</dt><dd>{new Date(deadline).toLocaleDateString()}</dd>
             <dt className="text-muted-foreground">Currency</dt><dd>{currency} · Rate to NPR {record.exchangeRate}</dd>
           </dl>
         </header>
