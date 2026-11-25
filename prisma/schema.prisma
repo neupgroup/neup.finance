@@ -120,20 +120,21 @@ model PartyPaymentMethod {
 }
 
 model AssetGroup {
-  id               String            @id @default(uuid())
-  name             String
-  type             AccountType
-  bankName         String?           @map("bank_name")
-  branch           String?
-  accountType      String?           @map("account_type")
-  currency         String
-  accountId        String
-  projectId        String            @db.Uuid
-  createdAt        DateTime          @default(now())
-  account          Account           @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  project          Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  activityStock    ActivityStock[]
-  transactionLines TransactionLine[]
+  id                  String                  @id @default(uuid())
+  name                String
+  type                AccountType
+  bankName            String?                 @map("bank_name")
+  branch              String?
+  accountType         String?                 @map("account_type")
+  currency            String
+  accountId           String
+  projectId           String                  @db.Uuid
+  createdAt           DateTime                @default(now())
+  account             Account                 @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  project             Project                 @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  activityStock       ActivityStock[]
+  transactionLines    TransactionLine[]
+  accountTransactions FinAccountTransaction[]
 
   @@index([accountId])
   @@index([projectId])
@@ -214,6 +215,22 @@ model TransactionLine {
   @@index([finBook])
   @@index([finAccount])
   @@map("transaction_line")
+}
+
+model FinAccountTransaction {
+  id           String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title        String
+  description  String?
+  finAccountId String     @map("fin_account_id")
+  currency     String
+  amount       Decimal    @db.Decimal(18, 2)
+  direction    String
+  details      Json?      @db.JsonB
+  activityOn   DateTime   @map("activity_on") @db.Date
+  finAccount   AssetGroup @relation(fields: [finAccountId], references: [id], onDelete: Cascade)
+
+  @@index([finAccountId, activityOn])
+  @@map("fin_accounts_transactions")
 }
 
 model Projection {

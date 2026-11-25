@@ -70,6 +70,18 @@ export type FinBook = {
   projectId: string;
 };
 
+export type FinAccountTransaction = {
+  id: string;
+  title: string;
+  description: string | null;
+  finAccountId: string;
+  currency: string;
+  amount: number;
+  direction: 'in' | 'out';
+  details: Record<string, unknown> | null;
+  activityOn: string;
+};
+
 export type ProjectOption = { id: string; name: string; roles: string[]; selected: boolean };
 
 export function useSelectedProject() {
@@ -86,6 +98,10 @@ export function useTransactionsList(limit?: number, assetGroupId?: string) {
 
 export function useProjectBooks() {
   return useQuery<FinBook[]>('/bridge/api.v1/books');
+}
+
+export function useFinAccountTransactions(accountId?: string) {
+  return useQuery<FinAccountTransaction[]>(accountId ? `/bridge/api.v1/books/${encodeURIComponent(accountId)}/transactions` : null);
 }
 
 export function useAccountProfile(enabled = true) {
@@ -137,6 +153,13 @@ export async function createProject(name: string) {
 export async function createFinBook(data: Pick<FinBook, "name" | "type" | "currency"> & { bankName?: string; branch?: string; accountType?: 'saving' | 'current' | 'fixed' }) {
   return requestJson<FinBook>('/bridge/api.v1/books', {
     method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function createFinAccountTransaction(accountId: string, data: Pick<FinAccountTransaction, 'title' | 'currency' | 'amount' | 'direction' | 'activityOn'> & Partial<Pick<FinAccountTransaction, 'description' | 'details'>>) {
+  return requestJson<FinAccountTransaction>(`/bridge/api.v1/books/${encodeURIComponent(accountId)}/transactions`, {
+    method: 'POST',
     body: JSON.stringify(data),
   });
 }

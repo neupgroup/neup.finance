@@ -135,6 +135,32 @@ export async function createTransactionForOwner(owner: TransactionOwner, payload
       ],
     });
 
+    const accountLines = savedLines.filter((line) => line.finBook && !new Prisma.Decimal(line.baseAmount).isZero());
+    if (accountLines.length > 0) {
+      await tx.finAccountTransaction.createMany({
+        data: accountLines.map((line) => {
+          const signedAmount = Number(line.baseAmount);
+          return {
+            title: line.title || transaction.title,
+            description: line.description ?? transaction.description,
+            finAccountId: line.finBook!,
+            currency: line.currency,
+            amount: new Prisma.Decimal(Math.abs(signedAmount)),
+            direction: signedAmount > 0 ? 'in' : 'out',
+            activityOn: transaction.transactionDate,
+            details: {
+              entryKind: 'ledger_transaction',
+              sourceTransactionId: transaction.id,
+              sourceTransactionLineId: line.id,
+              transactionType: transaction.transactionTypeId,
+              category: line.lineTypeId,
+              status: transaction.status,
+            },
+          };
+        }),
+      });
+    }
+
     return tx.transaction.update({
       where: { id: transaction.id },
       data: {

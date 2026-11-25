@@ -22,7 +22,7 @@ import { Input } from '@neup/components/ui/input';
 import { Label } from '@neup/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@neup/components/ui/select';
 import { useUser } from '@/core/providers/auth';
-import { createTransaction, useTransactionsList, useProjectBooks } from '@/core/hooks/api';
+import { createFinAccountTransaction, useFinAccountTransactions, useTransactionsList, useProjectBooks, type FinAccountTransaction } from '@/core/hooks/api';
 import { useToast } from '@neup/core/hooks/useToast';
 import { Textarea } from '@neup/components/ui/textarea';
 import {
@@ -54,7 +54,7 @@ function formatCurrency(value: number, currency: string) {
 }
 
 // Identify the special ledger transaction used to set an account's opening balance.
-function isOpeningBalanceTransaction(transaction: Transaction) {
+function isOpeningBalanceTransaction(transaction: Transaction | FinAccountTransaction) {
   return Boolean(
     transaction.details &&
     typeof transaction.details === 'object' &&
@@ -73,7 +73,8 @@ export default function FinAccountPage() {
   const { user, isUserLoading } = useUser();
   const { toast } = useToast();
   const { data: accounts, isLoading: areAccountsLoading } = useProjectBooks();
-  const { data: transactions, isLoading: areTransactionsLoading } = useTransactionsList(undefined, finAccountId);
+  const { data: legacyTransactions, isLoading: areLegacyTransactionsLoading } = useTransactionsList(undefined, finAccountId);
+  const { data: accountTransactions, isLoading: areAccountTransactionsLoading } = useFinAccountTransactions(finAccountId);
 
   const finAccount = accounts?.find((account) => account.id === finAccountId);
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -88,7 +89,7 @@ export default function FinAccountPage() {
   const [openingBalanceNote, setOpeningBalanceNote] = useState('');
   const [isSavingOpeningBalance, setIsSavingOpeningBalance] = useState(false);
   const [openingBalanceSaved, setOpeningBalanceSaved] = useState(false);
-  const [newTransactions, setNewTransactions] = useState<Transaction[]>([]);
+  const [newTransactions, setNewTransactions] = useState<FinAccountTransaction[]>([]);
   const [balanceAdjustment, setBalanceAdjustment] = useState(0);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -102,13 +103,27 @@ export default function FinAccountPage() {
   const [dueOn, setDueOn] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const hasOpeningBalance = openingBalanceSaved || Boolean(transactions?.some(isOpeningBalanceTransaction));
+  const hasOpeningBalance = openingBalanceSaved || Boolean(accountTransactions?.some(isOpeningBalanceTransaction)) || Boolean(legacyTransactions?.some(isOpeningBalanceTransaction));
+  const mirroredLegacyLineIds = new Set((accountTransactions ?? []).flatMap((transaction) => {
+    const details = transaction.details;
+    if (!details || typeof details !== 'object' || Array.isArray(details)) return [];
+    const sourceLineId = (details as Record<string, unknown>).sourceTransactionLineId;
+    return typeof sourceLineId === 'string' ? [sourceLineId] : [];
+  }));
   const visibleTransactions = [
+    ...(accountTransactions ?? []).filter((transaction) => !newTransactions.some((created) => created.id === transaction.id)),
     ...newTransactions,
-    ...(transactions ?? []).filter((transaction) => !newTransactions.some((created) => created.id === transaction.id)),
+    ...(legacyTransactions ?? []).filter((transaction) => !(transaction.lines ?? []).some((line: { fin_book?: string; id?: string }) => line.fin_book === finAccountId && mirroredLegacyLineIds.has(line.id ?? ''))).map((transaction) => ({
+      ...transaction,
+      direction: isCreditTransactionType(transaction.transaction_type) ? 'in' as const : 'out' as const,
+      amount: Math.abs(transaction.total_amount),
+      activityOn: transaction.date,
+      details: transaction.details as Record<string, unknown> | null,
+      legacy: true as const,
+    })),
   ];
 
-  // Save the initial balance as an opening entry in the account's ledger.
+  // Save the initial balance as an opening entry in the account transaction table.
   const handleAddOpeningBalance = async (event: FormEvent) => {
     event.preventDefault();
     const amount = Number(openingBalance);
@@ -119,35 +134,17 @@ export default function FinAccountPage() {
 
     setIsSavingOpeningBalance(true);
     try {
-      const saved = await createTransaction({
+      const saved = await createFinAccountTransaction(finAccountId, {
         title: 'Opening Balance',
         description: openingBalanceNote.trim() || undefined,
-        accountId: finAccount.name,
-        assetGroupId: finAccountId,
-        category: 'general',
-        transaction_type: 'other',
-        total_amount: amount,
-        total_paid: amount,
-        balance_due: 0,
-        status: 'paid',
-        date: openingBalanceDate,
         currency: finAccount.currency,
-        userId: user.uid,
+        amount,
+        direction: 'in',
+        activityOn: openingBalanceDate,
         details: { entryKind: 'opening_balance' },
-        lines: [{
-          title: 'Opening Balance',
-          description: openingBalanceNote.trim() || undefined,
-          line_type_id: 'opening_balance',
-          currency: finAccount.currency,
-          base_amount: amount,
-          sort_order: 0,
-          fin_book: finAccountId,
-          fin_account: finAccount.name,
-          details: { entryKind: 'opening_balance' },
-        }],
       });
 
-      setNewTransactions((current) => [saved as Transaction, ...current]);
+      setNewTransactions((current) => [saved, ...current]);
       setBalanceAdjustment((current) => current + amount);
       setOpeningBalanceSaved(true);
       setIsOpeningBalanceOpen(false);
@@ -183,29 +180,19 @@ export default function FinAccountPage() {
     setIsSubmitting(true);
 
     const total = typeof totalAmount === 'number' ? totalAmount : 0;
-    const totalPaid = status === 'paid' ? total : 0;
-    const balanceDue = Math.max(total - totalPaid, 0);
-
     try {
-      const saved = await createTransaction({
+      const direction = isCreditTransactionType(transactionType) ? 'in' : 'out';
+      const saved = await createFinAccountTransaction(finAccountId, {
         title,
         description: description || undefined,
-        accountId: finAccount?.name || finAccountId,
-        assetGroupId: finAccountId,
-        category,
-        transaction_type: transactionType,
-        total_amount: total,
-        total_paid: totalPaid,
-        balance_due: balanceDue,
-        status,
-        date,
         currency,
-        recipient: recipient || undefined,
-        due_on: dueOn || undefined,
-        userId: user.uid,
+        amount: total,
+        direction,
+        activityOn: date,
+        details: { transactionType, category, status, recipient: recipient || null, dueOn: dueOn || null },
       });
 
-      setNewTransactions((current) => [saved as Transaction, ...current]);
+      setNewTransactions((current) => [saved, ...current]);
       if (status !== 'canceled') {
         setBalanceAdjustment((current) => current + (isCreditTransactionType(transactionType) ? total : -total));
       }
@@ -239,7 +226,7 @@ export default function FinAccountPage() {
     }
   };
 
-  const isLoading = isUserLoading || areAccountsLoading || areTransactionsLoading;
+  const isLoading = isUserLoading || areAccountsLoading || areLegacyTransactionsLoading || areAccountTransactionsLoading;
 
   return (
 
@@ -440,8 +427,11 @@ export default function FinAccountPage() {
           <div className="space-y-3">
             {visibleTransactions.map((transaction) => {
               const isOpeningBalance = isOpeningBalanceTransaction(transaction);
-              const isCredit = isCreditTransactionType(transaction.transaction_type) || isOpeningBalance;
-              const amount = isCredit ? transaction.total_amount : Math.abs(transaction.total_amount);
+              const isCredit = transaction.direction === 'in';
+              const amount = Math.abs(transaction.amount);
+              const details = transaction.details && typeof transaction.details === 'object' ? transaction.details as Record<string, unknown> : {};
+              const activityLabel = isOpeningBalance ? 'Opening Balance' : String(details.transactionType ?? (transaction as FinAccountTransaction).direction ?? 'transaction');
+              const activityCategory = String(details.category ?? (isOpeningBalance ? 'general' : ''));
 
               return (
                 <Card key={transaction.id}>
@@ -453,7 +443,7 @@ export default function FinAccountPage() {
                       <div>
                         <p className="font-semibold">{transaction.title}</p>
                         <p className="text-sm text-muted-foreground">
-                          {formatDate(transaction.date)} · {transaction.category}
+                          {formatDate(transaction.activityOn)}{activityCategory ? ` · ${activityCategory}` : ''}
                         </p>
                       </div>
                     </div>
@@ -462,7 +452,7 @@ export default function FinAccountPage() {
                         {isCredit ? '+' : '-'}{formatCurrency(amount, transaction.currency)}
                       </p>
                       <p className="text-xs text-muted-foreground capitalize">
-                          {isOpeningBalance ? 'Opening Balance' : transaction.transaction_type}
+                          {activityLabel}
                       </p>
                     </div>
                   </CardContent>

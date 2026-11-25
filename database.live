@@ -69,6 +69,18 @@ Fields:
 > projectId: UUID, references projects.id;
 > createdAt: timestamp, default: current timestamp;
 
+Table: fin_accounts_transactions, Model: FinAccountTransaction
+Fields:
+> id: UUID, primary key, default: gen_random_uuid();
+> title: string;
+> description: string, nullable;
+> fin_account_id: string, references fin_book.id;
+> currency: string;
+> amount: decimal(18,2);
+> direction: string, values: in, out;
+> details: JSONB, nullable;
+> activity_on: date;
+
 Table: fin_account, Model: FinAccount
 Fields:
 > id: string, UUID, primary key;

@@ -13,13 +13,30 @@ transaction line amounts stored against that book.
 ::end
 */
 
-function calculateBalance(lines: Array<{ baseAmount: unknown; transaction: { status: string } | null }>) {
-  return lines.reduce((sum, line) => {
+function calculateBalance(
+  lines: Array<{ id: string; baseAmount: unknown; transaction: { status: string } | null }>,
+  accountTransactions: Array<{ amount: unknown; direction: string; details: unknown }>,
+) {
+  const mirroredLineIds = new Set(accountTransactions.flatMap((transaction) => {
+    const details = transaction.details;
+    if (!details || typeof details !== 'object' || Array.isArray(details)) return [];
+    const sourceLineId = (details as Record<string, unknown>).sourceTransactionLineId;
+    return typeof sourceLineId === 'string' ? [sourceLineId] : [];
+  }));
+  const legacyBalance = lines.reduce((sum, line) => {
+    if (mirroredLineIds.has(line.id)) return sum;
     if (line.transaction?.status === 'canceled') return sum
     const amount = Number(line.baseAmount)
     if (Number.isNaN(amount)) return sum
     return sum + amount
   }, 0)
+  return accountTransactions.reduce((sum, transaction) => {
+    const details = transaction.details;
+    if (details && typeof details === 'object' && !Array.isArray(details) && (details as Record<string, unknown>).status === 'canceled') return sum;
+    const amount = Number(transaction.amount);
+    if (!Number.isFinite(amount)) return sum;
+    return sum + (transaction.direction === 'in' ? amount : -amount);
+  }, legacyBalance);
 }
 
 function calculateLatestStockBalance(activityStock: Array<{ balance: unknown }>) {
@@ -47,6 +64,7 @@ export async function GET(req: NextRequest) {
       transactionLines: {
         where: { transaction: { projectId: access.projectId } },
         select: {
+          id: true,
           baseAmount: true,
           transaction: {
             select: {
@@ -54,6 +72,9 @@ export async function GET(req: NextRequest) {
             },
           },
         },
+      },
+      accountTransactions: {
+        select: { amount: true, direction: true, details: true },
       },
     },
   })
@@ -65,7 +86,7 @@ export async function GET(req: NextRequest) {
       bankName: a.bankName,
       branch: a.branch,
       accountType: a.accountType,
-      balance: a.type === 'Stock' ? calculateLatestStockBalance(a.activityStock) : calculateBalance(a.transactionLines),
+      balance: a.type === 'Stock' ? calculateLatestStockBalance(a.activityStock) : calculateBalance(a.transactionLines, a.accountTransactions),
       currency: a.currency,
       projectId: a.projectId,
     }))

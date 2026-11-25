@@ -244,6 +244,18 @@ exports.Prisma.TransactionLineScalarFieldEnum = {
   details: 'details'
 };
 
+exports.Prisma.FinAccountTransactionScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  finAccountId: 'finAccountId',
+  currency: 'currency',
+  amount: 'amount',
+  direction: 'direction',
+  details: 'details',
+  activityOn: 'activityOn'
+};
+
 exports.Prisma.ProjectionScalarFieldEnum = {
   id: 'id',
   title: 'title',
@@ -520,6 +532,7 @@ exports.Prisma.ModelName = {
   FinAccount: 'FinAccount',
   Transaction: 'Transaction',
   TransactionLine: 'TransactionLine',
+  FinAccountTransaction: 'FinAccountTransaction',
   Projection: 'Projection',
   ActivityStock: 'ActivityStock',
   Document: 'Document',
