@@ -50,6 +50,11 @@ export default function DocumentsPage() {
   const recordHref = (slug: string) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set('record', slug);
+    if (slug === 'journal-voucher') {
+      params.delete('record');
+      const project = params.toString();
+      return `/documents/accounting/journal-voucher/new${project ? `?${project}` : ''}`;
+    }
     return `/transactions/add?${params.toString()}`;
   };
 

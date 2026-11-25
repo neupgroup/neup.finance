@@ -62,6 +62,9 @@ export type FinBook = {
   id: string;
   name: string;
   type: 'Bank' | 'Cash' | 'Investment' | 'Stock' | 'Other';
+  bankName?: string | null;
+  branch?: string | null;
+  accountType?: string | null;
   balance: number;
   currency: string;
   projectId: string;
@@ -131,7 +134,7 @@ export async function createProject(name: string) {
   });
 }
 
-export async function createFinBook(data: Pick<FinBook, "name" | "type" | "currency">) {
+export async function createFinBook(data: Pick<FinBook, "name" | "type" | "currency"> & { bankName?: string; branch?: string; accountType?: 'saving' | 'current' | 'fixed' }) {
   return requestJson<FinBook>('/bridge/api.v1/books', {
     method: "POST",
     body: JSON.stringify(data),

@@ -12,7 +12,7 @@ transactions against that selected account.
 
 import Link from 'next/link';
 import { useEffect, useState, type FormEvent } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { ArrowLeft, Loader, PlusCircle, TrendingDown, TrendingUp } from 'lucide-react';
 import { Button } from '@neup/components/ui/button';
 import { LinkButton } from '@neup/components/ui/link-button';
@@ -31,6 +31,7 @@ import {
   transactionCategoryOptions,
   transactionStatusOptions,
   transactionTypeOptions,
+  type Transaction,
   type TransactionCategory,
   type TransactionStatus,
   type TransactionType,
@@ -52,9 +53,22 @@ function formatCurrency(value: number, currency: string) {
   }).format(value);
 }
 
+// Identify the special ledger transaction used to set an account's opening balance.
+function isOpeningBalanceTransaction(transaction: Transaction) {
+  return Boolean(
+    transaction.details &&
+    typeof transaction.details === 'object' &&
+    !Array.isArray(transaction.details) &&
+    (transaction.details as Record<string, unknown>).entryKind === 'opening_balance'
+  );
+}
+
 export default function FinAccountPage() {
   const params = useParams<{ id: string }>();
+  const searchParams = useSearchParams();
   const finAccountId = params.id;
+  const projectId = searchParams.get('project')?.trim();
+  const accountsHref = `/finaccounts${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
 
   const { user, isUserLoading } = useUser();
   const { toast } = useToast();
@@ -63,6 +77,19 @@ export default function FinAccountPage() {
 
   const finAccount = accounts?.find((account) => account.id === finAccountId);
   const [isAddOpen, setIsAddOpen] = useState(false);
+  const [isOpeningBalanceOpen, setIsOpeningBalanceOpen] = useState(false);
+  const [openingBalance, setOpeningBalance] = useState('');
+  const [openingBalanceDate, setOpeningBalanceDate] = useState(() => {
+    const today = new Date();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${today.getFullYear()}-${month}-${day}`;
+  });
+  const [openingBalanceNote, setOpeningBalanceNote] = useState('');
+  const [isSavingOpeningBalance, setIsSavingOpeningBalance] = useState(false);
+  const [openingBalanceSaved, setOpeningBalanceSaved] = useState(false);
+  const [newTransactions, setNewTransactions] = useState<Transaction[]>([]);
+  const [balanceAdjustment, setBalanceAdjustment] = useState(0);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
@@ -74,6 +101,66 @@ export default function FinAccountPage() {
   const [recipient, setRecipient] = useState('');
   const [dueOn, setDueOn] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const hasOpeningBalance = openingBalanceSaved || Boolean(transactions?.some(isOpeningBalanceTransaction));
+  const visibleTransactions = [
+    ...newTransactions,
+    ...(transactions ?? []).filter((transaction) => !newTransactions.some((created) => created.id === transaction.id)),
+  ];
+
+  // Save the initial balance as an opening entry in the account's ledger.
+  const handleAddOpeningBalance = async (event: FormEvent) => {
+    event.preventDefault();
+    const amount = Number(openingBalance);
+    if (!user || !finAccount || !openingBalanceDate || !Number.isFinite(amount) || amount <= 0) {
+      toast({ name: 'app', state: 'error', title: 'Opening balance required', description: 'Enter a positive opening balance and its date.' });
+      return;
+    }
+
+    setIsSavingOpeningBalance(true);
+    try {
+      const saved = await createTransaction({
+        title: 'Opening Balance',
+        description: openingBalanceNote.trim() || undefined,
+        accountId: finAccount.name,
+        assetGroupId: finAccountId,
+        category: 'general',
+        transaction_type: 'other',
+        total_amount: amount,
+        total_paid: amount,
+        balance_due: 0,
+        status: 'paid',
+        date: openingBalanceDate,
+        currency: finAccount.currency,
+        userId: user.uid,
+        details: { entryKind: 'opening_balance' },
+        lines: [{
+          title: 'Opening Balance',
+          description: openingBalanceNote.trim() || undefined,
+          line_type_id: 'opening_balance',
+          currency: finAccount.currency,
+          base_amount: amount,
+          sort_order: 0,
+          fin_book: finAccountId,
+          fin_account: finAccount.name,
+          details: { entryKind: 'opening_balance' },
+        }],
+      });
+
+      setNewTransactions((current) => [saved as Transaction, ...current]);
+      setBalanceAdjustment((current) => current + amount);
+      setOpeningBalanceSaved(true);
+      setIsOpeningBalanceOpen(false);
+      setOpeningBalance('');
+      setOpeningBalanceNote('');
+      toast({ name: 'app', title: 'Opening balance added', description: `${formatCurrency(amount, finAccount.currency)} was added to ${finAccount.name}.` });
+    } catch (error) {
+      console.error('Error adding opening balance:', error);
+      toast({ name: 'app', state: 'error', title: 'Could not add opening balance', description: 'Please try again.' });
+    } finally {
+      setIsSavingOpeningBalance(false);
+    }
+  };
 
   useEffect(() => {
     if (finAccount?.currency) {
@@ -100,7 +187,7 @@ export default function FinAccountPage() {
     const balanceDue = Math.max(total - totalPaid, 0);
 
     try {
-      await createTransaction({
+      const saved = await createTransaction({
         title,
         description: description || undefined,
         accountId: finAccount?.name || finAccountId,
@@ -117,6 +204,11 @@ export default function FinAccountPage() {
         due_on: dueOn || undefined,
         userId: user.uid,
       });
+
+      setNewTransactions((current) => [saved as Transaction, ...current]);
+      if (status !== 'canceled') {
+        setBalanceAdjustment((current) => current + (isCreditTransactionType(transactionType) ? total : -total));
+      }
 
       toast({
         name: 'app',
@@ -154,13 +246,16 @@ export default function FinAccountPage() {
       <div className="space-y-4">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <LinkButton href="/finaccounts" variant="ghost" className="mb-3 pl-0 flex items-center gap-1 text-sm text-muted-foreground hover:text-primary" preIcon={<ArrowLeft className="mr-2 h-4 w-4" />}>Back to accounts</LinkButton>
+            <LinkButton href={accountsHref} variant="ghost" className="mb-3 pl-0 flex items-center gap-1 text-sm text-muted-foreground hover:text-primary" preIcon={<ArrowLeft className="mr-2 h-4 w-4" />}>Back to accounts</LinkButton>
             <h1 className="text-3xl font-bold tracking-tight">
               {finAccount?.name || 'Account'}
             </h1>
             <p className="text-muted-foreground">
               All transactions recorded for this account.
             </p>
+            {finAccount?.type === 'Bank' && finAccount.bankName ? (
+              <p className="text-sm text-muted-foreground">{finAccount.bankName}{finAccount.branch ? ` · ${finAccount.branch}` : ''}{finAccount.accountType ? ` · ${finAccount.accountType}` : ''}</p>
+            ) : null}
           </div>
           <div className="flex flex-col items-end gap-3">
             {finAccount && (
@@ -168,18 +263,52 @@ export default function FinAccountPage() {
                 <CardHeader className="pb-2">
                   <CardDescription>Current balance</CardDescription>
                   <CardTitle className="text-2xl">
-                    {formatCurrency(finAccount.balance, finAccount.currency)}
+                    {formatCurrency(finAccount.balance + balanceAdjustment, finAccount.currency)}
                   </CardTitle>
                 </CardHeader>
               </Card>
             )}
-            <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-              <DialogTrigger asChild>
-                <Button disabled={!finAccount || isLoading}>
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  Add Transaction
-                </Button>
-              </DialogTrigger>
+            <div className="flex flex-wrap justify-end gap-2">
+              {!hasOpeningBalance ? (
+                <Dialog open={isOpeningBalanceOpen} onOpenChange={setIsOpeningBalanceOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" disabled={!finAccount || isLoading}>Add Opening Balance</Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[480px]">
+                    <DialogHeader>
+                      <DialogTitle>Add Opening Balance</DialogTitle>
+                      <DialogDescription>Enter the starting balance for {finAccount?.name ?? 'this account'}. This can only be added once.</DialogDescription>
+                    </DialogHeader>
+                    <form onSubmit={handleAddOpeningBalance} className="space-y-4 py-2">
+                      <div className="space-y-2">
+                        <Label htmlFor="opening-balance-amount">Opening balance ({finAccount?.currency ?? ''})</Label>
+                        <Input id="opening-balance-amount" type="number" min="0.01" step="0.01" value={openingBalance} onChange={(event) => setOpeningBalance(event.target.value)} placeholder="0.00" required />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="opening-balance-date">As of date</Label>
+                        <Input id="opening-balance-date" type="date" value={openingBalanceDate} onChange={(event) => setOpeningBalanceDate(event.target.value)} required />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="opening-balance-note">Note</Label>
+                        <Textarea id="opening-balance-note" value={openingBalanceNote} onChange={(event) => setOpeningBalanceNote(event.target.value)} placeholder="Optional note" rows={2} />
+                      </div>
+                      <DialogFooter>
+                        <Button type="submit" disabled={isSavingOpeningBalance}>
+                          {isSavingOpeningBalance ? <Loader className="mr-2 h-4 w-4 animate-spin" /> : null}
+                          Save Opening Balance
+                        </Button>
+                      </DialogFooter>
+                    </form>
+                  </DialogContent>
+                </Dialog>
+              ) : null}
+              <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+                <DialogTrigger asChild>
+                  <Button disabled={!finAccount || isLoading}>
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    Add Transaction
+                  </Button>
+                </DialogTrigger>
               <DialogContent className="sm:max-w-[560px]">
                 <DialogHeader>
                   <DialogTitle>Add Transaction</DialogTitle>
@@ -296,8 +425,9 @@ export default function FinAccountPage() {
                     </Button>
                   </DialogFooter>
                 </form>
-              </DialogContent>
-            </Dialog>
+                </DialogContent>
+              </Dialog>
+            </div>
           </div>
         </div>
 
@@ -306,10 +436,11 @@ export default function FinAccountPage() {
             <Loader className="mr-3 h-6 w-6 animate-spin" />
             <p>Loading transactions...</p>
           </div>
-        ) : transactions && transactions.length > 0 ? (
+        ) : visibleTransactions.length > 0 ? (
           <div className="space-y-3">
-            {transactions.map((transaction) => {
-              const isCredit = isCreditTransactionType(transaction.transaction_type);
+            {visibleTransactions.map((transaction) => {
+              const isOpeningBalance = isOpeningBalanceTransaction(transaction);
+              const isCredit = isCreditTransactionType(transaction.transaction_type) || isOpeningBalance;
               const amount = isCredit ? transaction.total_amount : Math.abs(transaction.total_amount);
 
               return (
@@ -331,7 +462,7 @@ export default function FinAccountPage() {
                         {isCredit ? '+' : '-'}{formatCurrency(amount, transaction.currency)}
                       </p>
                       <p className="text-xs text-muted-foreground capitalize">
-                        {transaction.transaction_type}
+                          {isOpeningBalance ? 'Opening Balance' : transaction.transaction_type}
                       </p>
                     </div>
                   </CardContent>

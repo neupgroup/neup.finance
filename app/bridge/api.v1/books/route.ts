@@ -62,6 +62,9 @@ export async function GET(req: NextRequest) {
       id: a.id,
       name: a.name,
       type: a.type,
+      bankName: a.bankName,
+      branch: a.branch,
+      accountType: a.accountType,
       balance: a.type === 'Stock' ? calculateLatestStockBalance(a.activityStock) : calculateBalance(a.transactionLines),
       currency: a.currency,
       projectId: a.projectId,
@@ -75,14 +78,23 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
   const body = await req.json()
-  const { name, type, currency } = body || {}
-  if (!name || !type || !currency) {
+  const { name, type, currency, bankName, branch, accountType } = body || {}
+  if (!name || !['Bank', 'Cash'].includes(type) || !currency) {
     return NextResponse.json({ error: 'Invalid payload' }, { status: 400 })
+  }
+  if (type === 'Bank' && !String(bankName ?? '').trim()) {
+    return NextResponse.json({ error: 'Bank name is required for bank accounts' }, { status: 400 })
+  }
+  if (type === 'Bank' && accountType != null && !['saving', 'current', 'fixed'].includes(accountType)) {
+    return NextResponse.json({ error: 'Bank account type must be saving, current, or fixed' }, { status: 400 })
   }
   const created = await prisma.assetGroup.create({
     data: {
       name,
       type,
+      bankName: type === 'Bank' ? String(bankName).trim() : null,
+      branch: type === 'Bank' && String(branch ?? '').trim() ? String(branch).trim() : null,
+      accountType: type === 'Bank' ? accountType ?? null : null,
       currency,
       accountId: access.accountId,
       projectId: access.projectId,
@@ -92,6 +104,9 @@ export async function POST(req: NextRequest) {
     id: created.id,
     name: created.name,
     type: created.type,
+    bankName: created.bankName,
+    branch: created.branch,
+    accountType: created.accountType,
     balance: 0,
     currency: created.currency,
     projectId: created.projectId,

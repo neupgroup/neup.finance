@@ -11335,6 +11335,9 @@ export namespace Prisma {
     id: string | null
     name: string | null
     type: $Enums.AccountType | null
+    bankName: string | null
+    branch: string | null
+    accountType: string | null
     currency: string | null
     accountId: string | null
     projectId: string | null
@@ -11345,6 +11348,9 @@ export namespace Prisma {
     id: string | null
     name: string | null
     type: $Enums.AccountType | null
+    bankName: string | null
+    branch: string | null
+    accountType: string | null
     currency: string | null
     accountId: string | null
     projectId: string | null
@@ -11355,6 +11361,9 @@ export namespace Prisma {
     id: number
     name: number
     type: number
+    bankName: number
+    branch: number
+    accountType: number
     currency: number
     accountId: number
     projectId: number
@@ -11367,6 +11376,9 @@ export namespace Prisma {
     id?: true
     name?: true
     type?: true
+    bankName?: true
+    branch?: true
+    accountType?: true
     currency?: true
     accountId?: true
     projectId?: true
@@ -11377,6 +11389,9 @@ export namespace Prisma {
     id?: true
     name?: true
     type?: true
+    bankName?: true
+    branch?: true
+    accountType?: true
     currency?: true
     accountId?: true
     projectId?: true
@@ -11387,6 +11402,9 @@ export namespace Prisma {
     id?: true
     name?: true
     type?: true
+    bankName?: true
+    branch?: true
+    accountType?: true
     currency?: true
     accountId?: true
     projectId?: true
@@ -11470,6 +11488,9 @@ export namespace Prisma {
     id: string
     name: string
     type: $Enums.AccountType
+    bankName: string | null
+    branch: string | null
+    accountType: string | null
     currency: string
     accountId: string
     projectId: string
@@ -11497,6 +11518,9 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     type?: boolean
+    bankName?: boolean
+    branch?: boolean
+    accountType?: boolean
     currency?: boolean
     accountId?: boolean
     projectId?: boolean
@@ -11512,6 +11536,9 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     type?: boolean
+    bankName?: boolean
+    branch?: boolean
+    accountType?: boolean
     currency?: boolean
     accountId?: boolean
     projectId?: boolean
@@ -11524,6 +11551,9 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     type?: boolean
+    bankName?: boolean
+    branch?: boolean
+    accountType?: boolean
     currency?: boolean
     accountId?: boolean
     projectId?: boolean
@@ -11536,13 +11566,16 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     type?: boolean
+    bankName?: boolean
+    branch?: boolean
+    accountType?: boolean
     currency?: boolean
     accountId?: boolean
     projectId?: boolean
     createdAt?: boolean
   }
 
-  export type AssetGroupOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "type" | "currency" | "accountId" | "projectId" | "createdAt", ExtArgs["result"]["assetGroup"]>
+  export type AssetGroupOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "type" | "bankName" | "branch" | "accountType" | "currency" | "accountId" | "projectId" | "createdAt", ExtArgs["result"]["assetGroup"]>
   export type AssetGroupInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     account?: boolean | AccountDefaultArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
@@ -11571,6 +11604,9 @@ export namespace Prisma {
       id: string
       name: string
       type: $Enums.AccountType
+      bankName: string | null
+      branch: string | null
+      accountType: string | null
       currency: string
       accountId: string
       projectId: string
@@ -12005,6 +12041,9 @@ export namespace Prisma {
     readonly id: FieldRef<"AssetGroup", 'String'>
     readonly name: FieldRef<"AssetGroup", 'String'>
     readonly type: FieldRef<"AssetGroup", 'AccountType'>
+    readonly bankName: FieldRef<"AssetGroup", 'String'>
+    readonly branch: FieldRef<"AssetGroup", 'String'>
+    readonly accountType: FieldRef<"AssetGroup", 'String'>
     readonly currency: FieldRef<"AssetGroup", 'String'>
     readonly accountId: FieldRef<"AssetGroup", 'String'>
     readonly projectId: FieldRef<"AssetGroup", 'String'>
@@ -31058,6 +31097,9 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     type: 'type',
+    bankName: 'bankName',
+    branch: 'branch',
+    accountType: 'accountType',
     currency: 'currency',
     accountId: 'accountId',
     projectId: 'projectId',
@@ -32043,6 +32085,9 @@ export namespace Prisma {
     id?: StringFilter<"AssetGroup"> | string
     name?: StringFilter<"AssetGroup"> | string
     type?: EnumAccountTypeFilter<"AssetGroup"> | $Enums.AccountType
+    bankName?: StringNullableFilter<"AssetGroup"> | string | null
+    branch?: StringNullableFilter<"AssetGroup"> | string | null
+    accountType?: StringNullableFilter<"AssetGroup"> | string | null
     currency?: StringFilter<"AssetGroup"> | string
     accountId?: StringFilter<"AssetGroup"> | string
     projectId?: UuidFilter<"AssetGroup"> | string
@@ -32057,6 +32102,9 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     type?: SortOrder
+    bankName?: SortOrderInput | SortOrder
+    branch?: SortOrderInput | SortOrder
+    accountType?: SortOrderInput | SortOrder
     currency?: SortOrder
     accountId?: SortOrder
     projectId?: SortOrder
@@ -32074,6 +32122,9 @@ export namespace Prisma {
     NOT?: AssetGroupWhereInput | AssetGroupWhereInput[]
     name?: StringFilter<"AssetGroup"> | string
     type?: EnumAccountTypeFilter<"AssetGroup"> | $Enums.AccountType
+    bankName?: StringNullableFilter<"AssetGroup"> | string | null
+    branch?: StringNullableFilter<"AssetGroup"> | string | null
+    accountType?: StringNullableFilter<"AssetGroup"> | string | null
     currency?: StringFilter<"AssetGroup"> | string
     accountId?: StringFilter<"AssetGroup"> | string
     projectId?: UuidFilter<"AssetGroup"> | string
@@ -32088,6 +32139,9 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     type?: SortOrder
+    bankName?: SortOrderInput | SortOrder
+    branch?: SortOrderInput | SortOrder
+    accountType?: SortOrderInput | SortOrder
     currency?: SortOrder
     accountId?: SortOrder
     projectId?: SortOrder
@@ -32104,6 +32158,9 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"AssetGroup"> | string
     name?: StringWithAggregatesFilter<"AssetGroup"> | string
     type?: EnumAccountTypeWithAggregatesFilter<"AssetGroup"> | $Enums.AccountType
+    bankName?: StringNullableWithAggregatesFilter<"AssetGroup"> | string | null
+    branch?: StringNullableWithAggregatesFilter<"AssetGroup"> | string | null
+    accountType?: StringNullableWithAggregatesFilter<"AssetGroup"> | string | null
     currency?: StringWithAggregatesFilter<"AssetGroup"> | string
     accountId?: StringWithAggregatesFilter<"AssetGroup"> | string
     projectId?: UuidWithAggregatesFilter<"AssetGroup"> | string
@@ -34107,6 +34164,9 @@ export namespace Prisma {
     id?: string
     name: string
     type: $Enums.AccountType
+    bankName?: string | null
+    branch?: string | null
+    accountType?: string | null
     currency: string
     createdAt?: Date | string
     account: AccountCreateNestedOneWithoutAssetGroupsInput
@@ -34119,6 +34179,9 @@ export namespace Prisma {
     id?: string
     name: string
     type: $Enums.AccountType
+    bankName?: string | null
+    branch?: string | null
+    accountType?: string | null
     currency: string
     accountId: string
     projectId: string
@@ -34131,6 +34194,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     type?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    branch?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     account?: AccountUpdateOneRequiredWithoutAssetGroupsNestedInput
@@ -34143,6 +34209,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     type?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    branch?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: StringFieldUpdateOperationsInput | string
     accountId?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
@@ -34155,6 +34224,9 @@ export namespace Prisma {
     id?: string
     name: string
     type: $Enums.AccountType
+    bankName?: string | null
+    branch?: string | null
+    accountType?: string | null
     currency: string
     accountId: string
     projectId: string
@@ -34165,6 +34237,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     type?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    branch?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -34173,6 +34248,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     type?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    branch?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: StringFieldUpdateOperationsInput | string
     accountId?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
@@ -36485,6 +36563,9 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     type?: SortOrder
+    bankName?: SortOrder
+    branch?: SortOrder
+    accountType?: SortOrder
     currency?: SortOrder
     accountId?: SortOrder
     projectId?: SortOrder
@@ -36495,6 +36576,9 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     type?: SortOrder
+    bankName?: SortOrder
+    branch?: SortOrder
+    accountType?: SortOrder
     currency?: SortOrder
     accountId?: SortOrder
     projectId?: SortOrder
@@ -36505,6 +36589,9 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     type?: SortOrder
+    bankName?: SortOrder
+    branch?: SortOrder
+    accountType?: SortOrder
     currency?: SortOrder
     accountId?: SortOrder
     projectId?: SortOrder
@@ -39800,6 +39887,9 @@ export namespace Prisma {
     id?: string
     name: string
     type: $Enums.AccountType
+    bankName?: string | null
+    branch?: string | null
+    accountType?: string | null
     currency: string
     createdAt?: Date | string
     project: ProjectCreateNestedOneWithoutBooksInput
@@ -39811,6 +39901,9 @@ export namespace Prisma {
     id?: string
     name: string
     type: $Enums.AccountType
+    bankName?: string | null
+    branch?: string | null
+    accountType?: string | null
     currency: string
     projectId: string
     createdAt?: Date | string
@@ -39963,6 +40056,9 @@ export namespace Prisma {
     id?: StringFilter<"AssetGroup"> | string
     name?: StringFilter<"AssetGroup"> | string
     type?: EnumAccountTypeFilter<"AssetGroup"> | $Enums.AccountType
+    bankName?: StringNullableFilter<"AssetGroup"> | string | null
+    branch?: StringNullableFilter<"AssetGroup"> | string | null
+    accountType?: StringNullableFilter<"AssetGroup"> | string | null
     currency?: StringFilter<"AssetGroup"> | string
     accountId?: StringFilter<"AssetGroup"> | string
     projectId?: UuidFilter<"AssetGroup"> | string
@@ -40130,6 +40226,9 @@ export namespace Prisma {
     id?: string
     name: string
     type: $Enums.AccountType
+    bankName?: string | null
+    branch?: string | null
+    accountType?: string | null
     currency: string
     createdAt?: Date | string
     account: AccountCreateNestedOneWithoutAssetGroupsInput
@@ -40141,6 +40240,9 @@ export namespace Prisma {
     id?: string
     name: string
     type: $Enums.AccountType
+    bankName?: string | null
+    branch?: string | null
+    accountType?: string | null
     currency: string
     accountId: string
     createdAt?: Date | string
@@ -41942,6 +42044,9 @@ export namespace Prisma {
     id?: string
     name: string
     type: $Enums.AccountType
+    bankName?: string | null
+    branch?: string | null
+    accountType?: string | null
     currency: string
     createdAt?: Date | string
     account: AccountCreateNestedOneWithoutAssetGroupsInput
@@ -41953,6 +42058,9 @@ export namespace Prisma {
     id?: string
     name: string
     type: $Enums.AccountType
+    bankName?: string | null
+    branch?: string | null
+    accountType?: string | null
     currency: string
     accountId: string
     projectId: string
@@ -42031,6 +42139,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     type?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    branch?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     account?: AccountUpdateOneRequiredWithoutAssetGroupsNestedInput
@@ -42042,6 +42153,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     type?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    branch?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: StringFieldUpdateOperationsInput | string
     accountId?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
@@ -42121,6 +42235,9 @@ export namespace Prisma {
     id?: string
     name: string
     type: $Enums.AccountType
+    bankName?: string | null
+    branch?: string | null
+    accountType?: string | null
     currency: string
     createdAt?: Date | string
     account: AccountCreateNestedOneWithoutAssetGroupsInput
@@ -42132,6 +42249,9 @@ export namespace Prisma {
     id?: string
     name: string
     type: $Enums.AccountType
+    bankName?: string | null
+    branch?: string | null
+    accountType?: string | null
     currency: string
     accountId: string
     projectId: string
@@ -42159,6 +42279,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     type?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    branch?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     account?: AccountUpdateOneRequiredWithoutAssetGroupsNestedInput
@@ -42170,6 +42293,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     type?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    branch?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: StringFieldUpdateOperationsInput | string
     accountId?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
@@ -44052,6 +44178,9 @@ export namespace Prisma {
     id?: string
     name: string
     type: $Enums.AccountType
+    bankName?: string | null
+    branch?: string | null
+    accountType?: string | null
     currency: string
     projectId: string
     createdAt?: Date | string
@@ -44096,6 +44225,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     type?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    branch?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutBooksNestedInput
@@ -44107,6 +44239,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     type?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    branch?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -44118,6 +44253,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     type?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    branch?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -44260,6 +44398,9 @@ export namespace Prisma {
     id?: string
     name: string
     type: $Enums.AccountType
+    bankName?: string | null
+    branch?: string | null
+    accountType?: string | null
     currency: string
     accountId: string
     createdAt?: Date | string
@@ -44384,6 +44525,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     type?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    branch?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     account?: AccountUpdateOneRequiredWithoutAssetGroupsNestedInput
@@ -44395,6 +44539,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     type?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    branch?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: StringFieldUpdateOperationsInput | string
     accountId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -44406,6 +44553,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     type?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    branch?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: StringFieldUpdateOperationsInput | string
     accountId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

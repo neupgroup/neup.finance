@@ -11,6 +11,7 @@ creation and account detail pages.
 */
 
 import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Button } from '@neup/components/ui/button';
 import { Skeleton } from '@neup/components/ui/skeleton';
 import { PlusCircle, Landmark, Wallet, Activity, MoreVertical, Inbox } from 'lucide-react';
@@ -54,6 +55,10 @@ function AccountCardSkeleton({ className = '' }: { className?: string }) {
 
 export default function FinAccountsPage() {
 
+  const searchParams = useSearchParams();
+  const projectId = searchParams.get('project')?.trim();
+  const addAccountHref = `/finaccounts/add${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
+  const accountDetailHref = (accountId: string) => `/finaccounts/${encodeURIComponent(accountId)}${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
   const { data: accounts, isLoading: areAccountsLoading } = useProjectBooks();
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -80,7 +85,7 @@ export default function FinAccountsPage() {
             <div className="overflow-hidden rounded-lg border">
               {areAccountsLoading ? (
                 <div className="divide-y">
-                  <Link href="/finaccounts/add" className="block">
+                  <Link href={addAccountHref} className="block">
                     <div className={stackedCardClassName(0, 4, 'flex items-center justify-between p-4')}>
                       <div className="flex items-center gap-4">
                         <div className="rounded-full bg-muted p-2">
@@ -102,7 +107,7 @@ export default function FinAccountsPage() {
                 </div>
               ) : (
                 <div className="divide-y">
-                  <Link href="/finaccounts/add" className="block">
+                  <Link href={addAccountHref} className="block">
                     <div className={stackedCardClassName(0, stackedTotal, 'flex items-center justify-between p-4')}>
                       <div className="flex items-center gap-4">
                         <div className="rounded-full bg-muted p-2">
@@ -120,7 +125,7 @@ export default function FinAccountsPage() {
                   </Link>
                   {paginatedAccounts.length > 0 ? paginatedAccounts.map((account, index) => {
                     return (
-                      <Link key={account.id} href={`/finaccounts/${account.id}`} className="block">
+                      <Link key={account.id} href={accountDetailHref(account.id)} className="block">
                         <div className={stackedCardClassName(index + 1, stackedTotal, 'flex items-center justify-between p-4')}>
                           <div className="flex items-center gap-4">
                             <div className="rounded-full bg-muted p-2">
@@ -129,6 +134,9 @@ export default function FinAccountsPage() {
                             <div>
                               <p className="font-semibold">{account.name}</p>
                               <p className="text-sm text-muted-foreground">{account.type} Account</p>
+                              {account.type === 'Bank' && account.bankName ? (
+                                <p className="text-xs text-muted-foreground">{account.bankName}{account.branch ? ` · ${account.branch}` : ''}{account.accountType ? ` · ${account.accountType}` : ''}</p>
+                              ) : null}
                             </div>
                           </div>
                           <div className="flex items-center gap-4">

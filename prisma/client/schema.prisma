@@ -123,6 +123,9 @@ model AssetGroup {
   id               String            @id @default(uuid())
   name             String
   type             AccountType
+  bankName         String?           @map("bank_name")
+  branch           String?
+  accountType      String?           @map("account_type")
   currency         String
   accountId        String
   projectId        String            @db.Uuid

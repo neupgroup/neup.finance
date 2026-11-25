@@ -60,7 +60,10 @@ Table: fin_book, Model: AssetGroup
 Fields:
 > id: string, UUID, primary key;
 > name: string;
-> type: AccountType enum;
+> type: AccountType enum, new rows limited to Bank or Cash;
+> bank_name: string, nullable;
+> branch: string, nullable;
+> account_type: string, nullable;
 > currency: string;
 > accountId: string, references accounts.id;
 > projectId: UUID, references projects.id;

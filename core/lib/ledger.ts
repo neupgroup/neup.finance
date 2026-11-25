@@ -52,6 +52,7 @@ export type Transaction = {
   party?: Party;
   accountId?: string;
   assetGroupId?: string;
+  details?: unknown;
   due_on?: string;
   lines?: TransactionLine[];
 };

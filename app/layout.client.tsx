@@ -14,6 +14,7 @@ import {
   FileText,
   Home,
   Landmark,
+  ListTree,
   Repeat2,
   PlusCircle,
   Settings,
@@ -28,6 +29,7 @@ const sidebarGroups: SidebarLinkGroup[] = [
     links: [
       { href: '/home', label: 'Dashboard', icon: Home },
       { href: '/finaccounts', label: 'Accounts', icon: Landmark },
+      { href: '/chart-of-accounts', label: 'Chart of Accounts', icon: ListTree },
       { href: '/party', label: 'Party', icon: Users },
       { href: '/documents', label: 'Documents', icon: PlusCircle },
       { href: '/transactions', label: 'Transactions', icon: ArrowLeftRight },
