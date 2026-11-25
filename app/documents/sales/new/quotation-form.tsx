@@ -13,7 +13,7 @@ import { QuantityUnitUnderlined } from '@neup/elements/ui/quantity_unit_underlin
 import { Label } from '@neup/components/ui/label';
 import { Textarea } from '@neup/components/ui/textarea';
 import { Combobox } from '@/components/ui/combobox';
-import { createTransaction, useParties } from '@/core/hooks/api';
+import { createDocumentQuotation, useParties } from '@/core/hooks/api';
 import { useToast } from '@neup/core/hooks/useToast';
 
 type QuotationLine = { id: string; product: string; quantity: string; unit: string; rate: string; discount: string; tax: string };
@@ -122,50 +122,49 @@ export default function QuotationForm() {
 
     setIsSaving(true);
     try {
-      const quotationLines = completedLines.map((line, index) => {
+      const quotationItems = completedLines.map((line, index) => {
         const calculated = calculateQuotationLine(line);
         return {
-          title: line.product.trim(),
-          description: `${line.quantity} ${line.unit || 'units'} × ${formatMoney(Number(line.rate) || 0)}; discount ${line.discount || 0}%; tax ${line.tax || 0}%`,
-          line_type_id: 'sales',
-          currency,
-          base_amount: calculated.total,
-          sort_order: index,
-          reference_type: 'party',
-          reference_id: selectedParty.id,
-          metadata: {
-            quantity: Number(line.quantity), unit: line.unit,
-            rate: Number(line.rate) || 0, discountPercent: Number(line.discount) || 0,
-            taxPercent: Number(line.tax) || 0, netAmount: calculated.taxable, taxAmount: calculated.tax,
-          },
+          name: line.product.trim(),
+          description: `${line.quantity} ${line.unit || 'units'}`,
+          quantity: Number(line.quantity),
+          unit: line.unit || 'pcs',
+          rate: Number(line.rate) || 0,
+          discountType: 'percentage',
+          discountValue: Number(line.discount) || 0,
+          discountAmount: calculated.discount,
+          taxRate: Number(line.tax) || 0,
+          taxAmount: calculated.tax,
+          amount: calculated.total,
+          sortIndex: index,
         };
       });
-      const saved = await createTransaction({
-        title: `Quotation - ${selectedParty.name}`,
-        description: notes.trim() || undefined,
-        transaction_type: 'sale',
-        category: 'sales',
-        status: 'unpaid',
+      const saved = await createDocumentQuotation({
+        customerId: selectedParty.id,
+        subject: `Quotation for ${selectedParty.name}`,
+        status: 'draft',
         date,
-        due_on: expiryDate || undefined,
+        expires: expiryDate,
         currency,
-        total_amount: totals.total,
-        total_paid: 0,
-        balance_due: totals.total,
-        partyId: selectedParty.id,
-        recipient: selectedParty.name,
-        reference_document: 'quotation',
+        exchangeRate: Number(exchangeRate) || 1,
+        subtotal: totals.subtotal,
+        discountType: 'line_items',
+        discountValue: totals.discount,
+        discountAmount: totals.discount,
+        taxTotal: totals.tax,
+        hasAdjustments: false,
+        total: totals.total,
         details: {
-          documentType: 'quotation', expiryDate, creditTerm,
-          exchangeRate: Number(exchangeRate) || 1, notes: notes.trim(),
-          terms: terms.trim(), reportingTags: tags.split(',').map((tag) => tag.trim()).filter(Boolean),
-          subtotal: totals.subtotal, discount: totals.discount, taxableTotal: totals.taxable,
-          taxTotal: totals.tax, grandTotal: totals.total,
+          creditTerm,
+          notes: notes.trim(),
+          terms: terms.trim(),
+          reportingTags: tags.split(',').map((tag) => tag.trim()).filter(Boolean),
+          taxableTotal: totals.taxable,
         },
-        lines: quotationLines,
+        items: quotationItems,
       });
       toast({ name: 'app', title: 'Quotation saved', description: `Quotation for ${selectedParty.name} has been saved.` });
-      router.push(`/transactions/${saved.id}${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`);
+      router.push(`/documents/${saved.id}?type=quotation${projectId ? `&project=${encodeURIComponent(projectId)}` : ''}`);
     } catch (error) {
       console.error('Error saving quotation:', error);
       toast({ name: 'app', state: 'error', title: 'Could not save quotation', description: 'Please try again.' });

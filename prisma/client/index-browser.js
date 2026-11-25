@@ -270,6 +270,66 @@ exports.Prisma.ActivityStockScalarFieldEnum = {
   transactionOn: 'transactionOn'
 };
 
+exports.Prisma.DocumentScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  type: 'type',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DocumentQuotationScalarFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  counter: 'counter',
+  referenceNumber: 'referenceNumber',
+  subject: 'subject',
+  currency: 'currency',
+  exchangeRate: 'exchangeRate',
+  subtotal: 'subtotal',
+  discountType: 'discountType',
+  discountValue: 'discountValue',
+  discountAmount: 'discountAmount',
+  taxTotal: 'taxTotal',
+  hasAdjustments: 'hasAdjustments',
+  total: 'total',
+  status: 'status',
+  date: 'date',
+  expires: 'expires',
+  details: 'details',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DocumentQuotationAdjustmentScalarFieldEnum = {
+  id: 'id',
+  quotationId: 'quotationId',
+  adjustmentName: 'adjustmentName',
+  adjustmentValue: 'adjustmentValue',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DocumentAdjustmentItemScalarFieldEnum = {
+  id: 'id',
+  quotationId: 'quotationId',
+  productId: 'productId',
+  name: 'name',
+  description: 'description',
+  quantity: 'quantity',
+  unit: 'unit',
+  rate: 'rate',
+  discountType: 'discountType',
+  discountValue: 'discountValue',
+  discountAmount: 'discountAmount',
+  taxRate: 'taxRate',
+  taxAmount: 'taxAmount',
+  amount: 'amount',
+  sortIndex: 'sortIndex',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -354,7 +414,11 @@ exports.Prisma.ModelName = {
   Transaction: 'Transaction',
   TransactionLine: 'TransactionLine',
   Projection: 'Projection',
-  ActivityStock: 'ActivityStock'
+  ActivityStock: 'ActivityStock',
+  Document: 'Document',
+  DocumentQuotation: 'DocumentQuotation',
+  DocumentQuotationAdjustment: 'DocumentQuotationAdjustment',
+  DocumentAdjustmentItem: 'DocumentAdjustmentItem'
 };
 
 /**

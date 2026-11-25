@@ -21,8 +21,9 @@ async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
   });
 
   if (!response.ok) {
-    const body = await response.json().catch(() => null) as { error?: string } | null;
-    throw new Error(body?.error || `Request failed (${response.status})`);
+    const body = await response.json().catch(() => null) as { error?: string | { description?: string } } | null;
+    const message = typeof body?.error === 'string' ? body.error : body?.error?.description;
+    throw new Error(message || `Request failed (${response.status})`);
   }
 
   return response.json() as Promise<T>;
@@ -144,6 +145,67 @@ export async function createProjection(data: Record<string, unknown>) {
 
 export async function createTransaction(data: Record<string, unknown>) {
   return requestJson<any>("/bridge/api.v1/transactions", { method: "POST", body: JSON.stringify(data) });
+}
+
+export type DocumentQuotationRecord = {
+  id: string;
+  counter: number;
+  referenceNumber: string;
+  subject: string;
+  currency: string;
+  exchangeRate: number | string;
+  subtotal: number | string;
+  discountType: string;
+  discountValue: number | string;
+  discountAmount: number | string;
+  taxTotal: number | string;
+  hasAdjustments: boolean;
+  total: number | string;
+  status: string;
+  date: string;
+  expires: string;
+  details: Record<string, unknown> | null;
+  customer: { id: string; name: string; type: string };
+  items: Array<{
+    id: string;
+    name: string;
+    description: string | null;
+    quantity: number | string;
+    unit: string;
+    rate: number | string;
+    discountType: string;
+    discountValue: number | string;
+    discountAmount: number | string;
+    taxRate: number | string;
+    taxAmount: number | string;
+    amount: number | string;
+    sortIndex: number;
+  }>;
+};
+
+type DocumentQuotationResponse = {
+  status: boolean;
+  result?: DocumentQuotationRecord;
+  error?: { code: string; description: string };
+};
+
+export async function createDocumentQuotation(data: Record<string, unknown>) {
+  const response = await requestJson<DocumentQuotationResponse>('/bridge/api.v1/documents/quotations', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+  if (!response.status || !response.result) throw new Error(response.error?.description ?? 'Could not save quotation.');
+  return response.result;
+}
+
+export function useDocumentQuotation(id: string | null) {
+  const query = useQuery<DocumentQuotationResponse>(id ? `/bridge/api.v1/documents/quotations/${encodeURIComponent(id)}` : null);
+  return { ...query, quotation: query.data?.result };
+}
+
+export function useDocumentQuotations(enabled = true) {
+  const query = useQuery<{ status: boolean; result?: DocumentQuotationRecord[] }>(enabled ? '/bridge/api.v1/documents/quotations' : null);
+  return { ...query, quotations: query.data?.result ?? [] };
 }
 
 export async function addTransactionLine(id: string, data: Record<string, unknown>) {

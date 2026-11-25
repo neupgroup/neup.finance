@@ -1,0 +1,73 @@
+'use client';
+
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import { ArrowLeft, Loader, Printer } from 'lucide-react';
+import { Button } from '@neup/components/ui/button';
+import { useDocumentQuotation } from '@/core/hooks/api';
+
+function money(value: number | string, currency: string) {
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency, minimumFractionDigits: 2 }).format(Number(value) || 0);
+}
+
+// Display a saved quotation with its header, item rows, and totals.
+export default function QuotationDocumentView({ id }: { id: string }) {
+  const searchParams = useSearchParams();
+  const projectId = searchParams.get('project')?.trim();
+  const backHref = `/documents/sales?type=quotation${projectId ? `&project=${encodeURIComponent(projectId)}` : ''}`;
+  const { quotation, isLoading, error } = useDocumentQuotation(id);
+
+  if (isLoading) return <div className="flex min-h-72 items-center justify-center"><Loader className="h-7 w-7 animate-spin" /></div>;
+  if (error || !quotation) return <main className="mx-auto max-w-4xl py-12 text-center"><h1 className="text-2xl font-bold">Quotation not found</h1><p className="mt-2 text-muted-foreground">This quotation could not be loaded for the current project.</p><Button asChild className="mt-5"><Link href={backHref}>Back to quotations</Link></Button></main>;
+
+  const details = quotation.details ?? {};
+  const currency = quotation.currency;
+
+  return (
+    <main className="mx-auto max-w-5xl space-y-5">
+      <div className="flex items-center justify-between gap-3 print:hidden">
+        <Button variant="ghost" asChild><Link href={backHref}><ArrowLeft className="mr-2 h-4 w-4" />Back to quotations</Link></Button>
+        <Button onClick={() => window.print()}><Printer className="mr-2 h-4 w-4" />Print Quotation</Button>
+      </div>
+      <article className="space-y-8 rounded-lg border bg-background p-6 shadow-sm md:p-10 print:border-0 print:shadow-none">
+        <header className="flex flex-wrap justify-between gap-5 border-b pb-6">
+          <div><p className="text-sm font-medium uppercase tracking-wide text-muted-foreground">Quotation</p><h1 className="mt-1 text-3xl font-bold">{quotation.subject}</h1><p className="mt-2 text-sm text-muted-foreground">Reference {quotation.referenceNumber}</p></div>
+          <dl className="grid gap-x-8 gap-y-2 text-sm sm:grid-cols-2">
+            <dt className="text-muted-foreground">Status</dt><dd className="font-medium capitalize">{quotation.status}</dd>
+            <dt className="text-muted-foreground">Date</dt><dd>{new Date(quotation.date).toLocaleDateString()}</dd>
+            <dt className="text-muted-foreground">Expires</dt><dd>{new Date(quotation.expires).toLocaleDateString()}</dd>
+            <dt className="text-muted-foreground">Currency</dt><dd>{currency} · Rate to NPR {quotation.exchangeRate}</dd>
+          </dl>
+        </header>
+
+        <section><p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Customer</p><p className="mt-1 font-semibold">{quotation.customer.name}</p><p className="text-sm text-muted-foreground">{quotation.customer.type}</p></section>
+
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[620px] text-sm">
+            <thead className="border-y bg-muted/40 text-left"><tr><th className="px-3 py-3">Item</th><th className="px-3 py-3 text-right">Qty</th><th className="px-3 py-3 text-right">Rate</th><th className="px-3 py-3 text-right">Discount</th><th className="px-3 py-3 text-right">Tax</th><th className="px-3 py-3 text-right">Amount</th></tr></thead>
+            <tbody>{quotation.items.map((item) => (
+              <tr key={item.id} className="border-b">
+                <td className="px-3 py-3"><p className="font-medium">{item.name}</p>{item.description ? <p className="text-xs text-muted-foreground">{item.description}</p> : null}</td>
+                <td className="px-3 py-3 text-right">{item.quantity} {item.unit}</td>
+                <td className="px-3 py-3 text-right">{money(item.rate, currency)}</td>
+                <td className="px-3 py-3 text-right">{item.discountValue}% · {money(item.discountAmount, currency)}</td>
+                <td className="px-3 py-3 text-right">{item.taxRate}% · {money(item.taxAmount, currency)}</td>
+                <td className="px-3 py-3 text-right font-medium">{money(item.amount, currency)}</td>
+              </tr>
+            ))}</tbody>
+          </table>
+        </div>
+
+        <section className="ml-auto w-full max-w-sm space-y-2 text-sm">
+          <div className="flex justify-between"><span>Subtotal</span><span>{money(quotation.subtotal, currency)}</span></div>
+          <div className="flex justify-between"><span>Discount</span><span>-{money(quotation.discountAmount, currency)}</span></div>
+          <div className="flex justify-between"><span>Tax</span><span>{money(quotation.taxTotal, currency)}</span></div>
+          <div className="flex justify-between border-t pt-3 text-lg font-bold"><span>Total</span><span>{money(quotation.total, currency)}</span></div>
+        </section>
+
+        {typeof details.notes === 'string' && details.notes ? <section><h2 className="font-semibold">Notes</h2><p className="mt-1 whitespace-pre-wrap text-sm text-muted-foreground">{details.notes}</p></section> : null}
+        {typeof details.terms === 'string' && details.terms ? <section><h2 className="font-semibold">Terms and Conditions</h2><p className="mt-1 whitespace-pre-wrap text-sm text-muted-foreground">{details.terms}</p></section> : null}
+      </article>
+    </main>
+  );
+}

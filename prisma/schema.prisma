@@ -30,16 +30,17 @@ model Account {
 }
 
 model Project {
-  id        String   @id @default(uuid())
-  name      String
-  status    String
-  createdOn DateTime @default(now())
-  accesses  Access[]
-  parties   Party[]
-  books     AssetGroup[]
+  id           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name         String
+  status       String
+  createdOn    DateTime      @default(now())
+  accesses     Access[]
+  parties      Party[]
+  books        AssetGroup[]
   transactions Transaction[]
-  projections Projection[]
-  finAccounts FinAccount[]
+  projections  Projection[]
+  finAccounts  FinAccount[]
+  documents    Document[]
 
   @@map("projects")
 }
@@ -58,31 +59,32 @@ model Access {
   id          String   @id @default(uuid())
   accountId   String
   roleId      String
-  projectId   String
+  projectId   String   @db.Uuid
   status      String
   permittedOn DateTime
   account     Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
   role        Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
   project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
+  @@unique([accountId, roleId, projectId])
   @@index([accountId])
   @@index([roleId])
   @@index([projectId])
-  @@unique([accountId, roleId, projectId])
   @@map("access")
 }
 
 model Party {
-  id        String           @id @default(uuid())
-  accountId String           @map("account_id")
-  projectId String
-  name      String
-  type      String
-  taxinfo   Json?
-  account   Account          @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  project   Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  contacts  PartyContact[]
+  id             String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  accountId      String               @map("account_id")
+  projectId      String               @db.Uuid
+  name           String
+  type           String
+  taxinfo        Json?
+  account        Account              @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  project        Project              @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  contacts       PartyContact[]
   paymentMethods PartyPaymentMethod[]
+  quotations     DocumentQuotation[]
 
   @@index([accountId])
   @@index([projectId])
@@ -90,42 +92,42 @@ model Party {
 }
 
 model PartyContact {
-  id       String   @id @default(uuid())
-  partyId  String   @map("party_id")
-  type     String
-  value    String
-  addedOn  DateTime @default(now()) @map("added_on")
-  details  Json?
-  party    Party    @relation(fields: [partyId], references: [id], onDelete: Cascade)
+  id      String   @id @default(uuid())
+  partyId String   @map("party_id") @db.Uuid
+  type    String
+  value   String
+  addedOn DateTime @default(now()) @map("added_on")
+  details Json?
+  party   Party    @relation(fields: [partyId], references: [id], onDelete: Cascade)
 
   @@index([partyId])
   @@map("party_contact")
 }
 
 model PartyPaymentMethod {
-  id       String   @id @default(uuid())
-  partyId  String   @map("party_id")
-  type     String
-  value    String
-  addedOn  DateTime @default(now()) @map("added_on")
-  details  Json?
-  party    Party    @relation(fields: [partyId], references: [id], onDelete: Cascade)
+  id      String   @id @default(uuid())
+  partyId String   @map("party_id") @db.Uuid
+  type    String
+  value   String
+  addedOn DateTime @default(now()) @map("added_on")
+  details Json?
+  party   Party    @relation(fields: [partyId], references: [id], onDelete: Cascade)
 
   @@index([partyId])
   @@map("party_payment_method")
 }
 
 model AssetGroup {
-  id        String      @id @default(uuid())
-  name      String
-  type      AccountType
-  currency  String
-  accountId String
-  projectId String
-  createdAt DateTime    @default(now())
-  account   Account     @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  project   Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  activityStock ActivityStock[]
+  id               String            @id @default(uuid())
+  name             String
+  type             AccountType
+  currency         String
+  accountId        String
+  projectId        String            @db.Uuid
+  createdAt        DateTime          @default(now())
+  account          Account           @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  project          Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  activityStock    ActivityStock[]
   transactionLines TransactionLine[]
 
   @@index([accountId])
@@ -134,19 +136,19 @@ model AssetGroup {
 }
 
 model FinAccount {
-  id                String            @id @default(uuid())
+  id                String    @id @default(uuid())
   profile_id        String
-  projectId         String
+  projectId         String    @db.Uuid
   name              String
   description       String?
   type              String
   currency          String
-  is_multi_currency Boolean           @default(false)
+  is_multi_currency Boolean   @default(false)
   status            String
   notes             String?
   opened_on         DateTime?
-  created_on        DateTime          @default(now())
-  project           Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  created_on        DateTime  @default(now())
+  project           Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   @@index([profile_id])
   @@index([projectId])
@@ -157,7 +159,7 @@ model FinAccount {
 model Transaction {
   id                String            @id @default(uuid())
   organizationId    String            @map("organization_id")
-  projectId         String
+  projectId         String            @db.Uuid
   transactionTypeId String            @map("transaction_type_id")
   title             String
   description       String?
@@ -184,23 +186,23 @@ model Transaction {
 }
 
 model TransactionLine {
-  id            String       @id @default(uuid())
-  transactionId String       @map("transaction_id")
-  lineTypeId    String?      @map("line_type_id")
+  id            String      @id @default(uuid())
+  transactionId String      @map("transaction_id")
+  lineTypeId    String?     @map("line_type_id")
   title         String
   description   String?
-  referenceType String?      @map("reference_type")
-  referenceId   String?      @map("reference_id")
+  referenceType String?     @map("reference_type")
+  referenceId   String?     @map("reference_id")
   currency      String
-  baseAmount    Decimal      @default(0) @map("base_amount")
-  sortOrder     Int          @default(0) @map("sort_order")
+  baseAmount    Decimal     @default(0) @map("base_amount")
+  sortOrder     Int         @default(0) @map("sort_order")
   metadata      Json?
-  finBook       String?      @map("fin_book")
-  finAccount    String?      @map("fin_account")
+  finBook       String?     @map("fin_book")
+  finAccount    String?     @map("fin_account")
   tags          Json?
   details       Json?
-  transaction   Transaction  @relation(fields: [transactionId], references: [id], onDelete: Cascade)
-  book          AssetGroup?  @relation(fields: [finBook], references: [id], onDelete: SetNull)
+  transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  book          AssetGroup? @relation(fields: [finBook], references: [id], onDelete: SetNull)
 
   @@index([transactionId])
   @@index([referenceType, referenceId])
@@ -218,7 +220,7 @@ model Projection {
   currency    String
   date        DateTime
   userId      String
-  projectId   String
+  projectId   String               @db.Uuid
   status      ProjectionStatus
   recipient   String?
   isRecurring Boolean              @default(false)
@@ -226,6 +228,7 @@ model Projection {
   endsOn      DateTime?
   createdAt   DateTime             @default(now())
   project     Project              @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
   @@index([userId])
   @@index([projectId])
 }
@@ -239,19 +242,99 @@ enum AccountType {
 }
 
 model ActivityStock {
-  id            String             @id @default(uuid())
-  assetGroupId   String             @map("asset_group_id")
-  stockName     String             @map("stock_name")
-  activityType  ActivityStockType  @map("activity_type")
+  id            String            @id @default(uuid())
+  assetGroupId  String            @map("asset_group_id")
+  stockName     String            @map("stock_name")
+  activityType  ActivityStockType @map("activity_type")
   cost          Decimal
   balance       Decimal
-  recordedOn    DateTime           @map("recorded_on")
-  transactionOn DateTime           @map("transaction_on")
-  assetGroup    AssetGroup         @relation(fields: [assetGroupId], references: [id], onDelete: Cascade)
+  recordedOn    DateTime          @map("recorded_on")
+  transactionOn DateTime          @map("transaction_on")
+  assetGroup    AssetGroup        @relation(fields: [assetGroupId], references: [id], onDelete: Cascade)
 
   @@index([assetGroupId])
   @@index([recordedOn])
   @@map("activity_stock")
+}
+
+model Document {
+  id        String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projectId String             @map("project_id") @db.Uuid
+  type      String             @db.VarChar
+  createdAt DateTime           @default(now()) @map("created_at")
+  updatedAt DateTime           @default(now()) @updatedAt @map("updated_at")
+  project   Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  quotation DocumentQuotation?
+
+  @@index([projectId, type])
+  @@map("documents")
+}
+
+model DocumentQuotation {
+  id              String                        @id @db.Uuid
+  customerId      String                        @map("customer_id") @db.Uuid
+  counter         Int
+  referenceNumber String                        @map("reference_number") @db.VarChar
+  subject         String                        @db.VarChar
+  currency        String                        @db.VarChar
+  exchangeRate    Decimal                       @map("exchange_rate") @db.Decimal(18, 6)
+  subtotal        Decimal                       @db.Decimal(18, 2)
+  discountType    String                        @map("discount_type") @db.VarChar
+  discountValue   Decimal                       @map("discount_value") @db.Decimal(18, 2)
+  discountAmount  Decimal                       @map("discount_amount") @db.Decimal(18, 2)
+  taxTotal        Decimal                       @map("tax_total") @db.Decimal(18, 2)
+  hasAdjustments  Boolean                       @default(false) @map("has_adjustments")
+  total           Decimal                       @db.Decimal(18, 2)
+  status          String                        @db.VarChar
+  date            DateTime                      @db.Date
+  expires         DateTime                      @db.Date
+  details         Json?
+  createdAt       DateTime                      @default(now()) @map("created_at")
+  updatedAt       DateTime                      @default(now()) @updatedAt @map("updated_at")
+  document        Document                      @relation(fields: [id], references: [id], onDelete: Cascade)
+  customer        Party                         @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  adjustments     DocumentQuotationAdjustment[]
+  items           DocumentAdjustmentItem[]
+
+  @@index([customerId, date])
+  @@map("documents_quotations")
+}
+
+model DocumentQuotationAdjustment {
+  id              String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  quotationId     String            @map("quotation_id") @db.Uuid
+  adjustmentName  String            @map("adjustment_name") @db.VarChar
+  adjustmentValue Decimal           @map("adjustment_value") @db.Decimal(18, 2)
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @default(now()) @updatedAt @map("updated_at")
+  quotation       DocumentQuotation @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+
+  @@index([quotationId])
+  @@map("documents_quotations_adjustments")
+}
+
+model DocumentAdjustmentItem {
+  id             String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  quotationId    String            @map("quotation_id") @db.Uuid
+  productId      String?           @map("product_id") @db.Uuid
+  name           String            @db.VarChar
+  description    String?           @db.VarChar(128)
+  quantity       Decimal           @db.Decimal(18, 2)
+  unit           String            @db.VarChar
+  rate           Decimal           @db.Decimal(18, 2)
+  discountType   String            @map("discount_type") @db.VarChar
+  discountValue  Decimal           @map("discount_value") @db.Decimal(18, 2)
+  discountAmount Decimal           @map("discount_amount") @db.Decimal(18, 2)
+  taxRate        Decimal           @map("tax_rate") @db.Decimal(8, 4)
+  taxAmount      Decimal           @map("tax_amount") @db.Decimal(18, 2)
+  amount         Decimal           @db.Decimal(18, 2)
+  sortIndex      Int               @map("sort_index")
+  createdAt      DateTime          @default(now()) @map("created_at")
+  updatedAt      DateTime          @default(now()) @updatedAt @map("updated_at")
+  quotation      DocumentQuotation @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+
+  @@index([quotationId, sortIndex])
+  @@map("documents_adjustments_items")
 }
 
 enum ProjectionType {

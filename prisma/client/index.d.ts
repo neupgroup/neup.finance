@@ -78,6 +78,26 @@ export type Projection = $Result.DefaultSelection<Prisma.$ProjectionPayload>
  * 
  */
 export type ActivityStock = $Result.DefaultSelection<Prisma.$ActivityStockPayload>
+/**
+ * Model Document
+ *
+ */
+export type Document = $Result.DefaultSelection<Prisma.$DocumentPayload>
+/**
+ * Model DocumentQuotation
+ *
+ */
+export type DocumentQuotation = $Result.DefaultSelection<Prisma.$DocumentQuotationPayload>
+/**
+ * Model DocumentQuotationAdjustment
+ *
+ */
+export type DocumentQuotationAdjustment = $Result.DefaultSelection<Prisma.$DocumentQuotationAdjustmentPayload>
+/**
+ * Model DocumentAdjustmentItem
+ *
+ */
+export type DocumentAdjustmentItem = $Result.DefaultSelection<Prisma.$DocumentAdjustmentItemPayload>
 
 /**
  * Enums
@@ -418,6 +438,46 @@ export class PrismaClient<
     * ```
     */
   get activityStock(): Prisma.ActivityStockDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.document`: Exposes CRUD operations for the **Document** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Documents
+    * const documents = await prisma.document.findMany()
+    * ```
+    */
+  get document(): Prisma.DocumentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.documentQuotation`: Exposes CRUD operations for the **DocumentQuotation** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DocumentQuotations
+    * const documentQuotations = await prisma.documentQuotation.findMany()
+    * ```
+    */
+  get documentQuotation(): Prisma.DocumentQuotationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.documentQuotationAdjustment`: Exposes CRUD operations for the **DocumentQuotationAdjustment** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DocumentQuotationAdjustments
+    * const documentQuotationAdjustments = await prisma.documentQuotationAdjustment.findMany()
+    * ```
+    */
+  get documentQuotationAdjustment(): Prisma.DocumentQuotationAdjustmentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.documentAdjustmentItem`: Exposes CRUD operations for the **DocumentAdjustmentItem** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DocumentAdjustmentItems
+    * const documentAdjustmentItems = await prisma.documentAdjustmentItem.findMany()
+    * ```
+    */
+  get documentAdjustmentItem(): Prisma.DocumentAdjustmentItemDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -877,7 +937,11 @@ export namespace Prisma {
     Transaction: 'Transaction',
     TransactionLine: 'TransactionLine',
     Projection: 'Projection',
-    ActivityStock: 'ActivityStock'
+    ActivityStock: 'ActivityStock',
+    Document: 'Document',
+    DocumentQuotation: 'DocumentQuotation',
+    DocumentQuotationAdjustment: 'DocumentQuotationAdjustment',
+    DocumentAdjustmentItem: 'DocumentAdjustmentItem'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -893,7 +957,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "account" | "project" | "role" | "access" | "party" | "partyContact" | "partyPaymentMethod" | "assetGroup" | "finAccount" | "transaction" | "transactionLine" | "projection" | "activityStock"
+      modelProps: "account" | "project" | "role" | "access" | "party" | "partyContact" | "partyPaymentMethod" | "assetGroup" | "finAccount" | "transaction" | "transactionLine" | "projection" | "activityStock" | "document" | "documentQuotation" | "documentQuotationAdjustment" | "documentAdjustmentItem"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1859,6 +1923,302 @@ export namespace Prisma {
           }
         }
       }
+      Document: {
+        payload: Prisma.$DocumentPayload<ExtArgs>
+        fields: Prisma.DocumentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DocumentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DocumentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentPayload>
+          }
+          findFirst: {
+            args: Prisma.DocumentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DocumentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentPayload>
+          }
+          findMany: {
+            args: Prisma.DocumentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentPayload>[]
+          }
+          create: {
+            args: Prisma.DocumentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentPayload>
+          }
+          createMany: {
+            args: Prisma.DocumentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DocumentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentPayload>[]
+          }
+          delete: {
+            args: Prisma.DocumentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentPayload>
+          }
+          update: {
+            args: Prisma.DocumentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentPayload>
+          }
+          deleteMany: {
+            args: Prisma.DocumentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DocumentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DocumentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentPayload>[]
+          }
+          upsert: {
+            args: Prisma.DocumentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentPayload>
+          }
+          aggregate: {
+            args: Prisma.DocumentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDocument>
+          }
+          groupBy: {
+            args: Prisma.DocumentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DocumentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DocumentCountArgs<ExtArgs>
+            result: $Utils.Optional<DocumentCountAggregateOutputType> | number
+          }
+        }
+      }
+      DocumentQuotation: {
+        payload: Prisma.$DocumentQuotationPayload<ExtArgs>
+        fields: Prisma.DocumentQuotationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DocumentQuotationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentQuotationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DocumentQuotationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentQuotationPayload>
+          }
+          findFirst: {
+            args: Prisma.DocumentQuotationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentQuotationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DocumentQuotationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentQuotationPayload>
+          }
+          findMany: {
+            args: Prisma.DocumentQuotationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentQuotationPayload>[]
+          }
+          create: {
+            args: Prisma.DocumentQuotationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentQuotationPayload>
+          }
+          createMany: {
+            args: Prisma.DocumentQuotationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DocumentQuotationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentQuotationPayload>[]
+          }
+          delete: {
+            args: Prisma.DocumentQuotationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentQuotationPayload>
+          }
+          update: {
+            args: Prisma.DocumentQuotationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentQuotationPayload>
+          }
+          deleteMany: {
+            args: Prisma.DocumentQuotationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DocumentQuotationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DocumentQuotationUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentQuotationPayload>[]
+          }
+          upsert: {
+            args: Prisma.DocumentQuotationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentQuotationPayload>
+          }
+          aggregate: {
+            args: Prisma.DocumentQuotationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDocumentQuotation>
+          }
+          groupBy: {
+            args: Prisma.DocumentQuotationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DocumentQuotationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DocumentQuotationCountArgs<ExtArgs>
+            result: $Utils.Optional<DocumentQuotationCountAggregateOutputType> | number
+          }
+        }
+      }
+      DocumentQuotationAdjustment: {
+        payload: Prisma.$DocumentQuotationAdjustmentPayload<ExtArgs>
+        fields: Prisma.DocumentQuotationAdjustmentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DocumentQuotationAdjustmentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentQuotationAdjustmentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DocumentQuotationAdjustmentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentQuotationAdjustmentPayload>
+          }
+          findFirst: {
+            args: Prisma.DocumentQuotationAdjustmentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentQuotationAdjustmentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DocumentQuotationAdjustmentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentQuotationAdjustmentPayload>
+          }
+          findMany: {
+            args: Prisma.DocumentQuotationAdjustmentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentQuotationAdjustmentPayload>[]
+          }
+          create: {
+            args: Prisma.DocumentQuotationAdjustmentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentQuotationAdjustmentPayload>
+          }
+          createMany: {
+            args: Prisma.DocumentQuotationAdjustmentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DocumentQuotationAdjustmentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentQuotationAdjustmentPayload>[]
+          }
+          delete: {
+            args: Prisma.DocumentQuotationAdjustmentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentQuotationAdjustmentPayload>
+          }
+          update: {
+            args: Prisma.DocumentQuotationAdjustmentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentQuotationAdjustmentPayload>
+          }
+          deleteMany: {
+            args: Prisma.DocumentQuotationAdjustmentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DocumentQuotationAdjustmentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DocumentQuotationAdjustmentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentQuotationAdjustmentPayload>[]
+          }
+          upsert: {
+            args: Prisma.DocumentQuotationAdjustmentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentQuotationAdjustmentPayload>
+          }
+          aggregate: {
+            args: Prisma.DocumentQuotationAdjustmentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDocumentQuotationAdjustment>
+          }
+          groupBy: {
+            args: Prisma.DocumentQuotationAdjustmentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DocumentQuotationAdjustmentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DocumentQuotationAdjustmentCountArgs<ExtArgs>
+            result: $Utils.Optional<DocumentQuotationAdjustmentCountAggregateOutputType> | number
+          }
+        }
+      }
+      DocumentAdjustmentItem: {
+        payload: Prisma.$DocumentAdjustmentItemPayload<ExtArgs>
+        fields: Prisma.DocumentAdjustmentItemFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DocumentAdjustmentItemFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentAdjustmentItemPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DocumentAdjustmentItemFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentAdjustmentItemPayload>
+          }
+          findFirst: {
+            args: Prisma.DocumentAdjustmentItemFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentAdjustmentItemPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DocumentAdjustmentItemFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentAdjustmentItemPayload>
+          }
+          findMany: {
+            args: Prisma.DocumentAdjustmentItemFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentAdjustmentItemPayload>[]
+          }
+          create: {
+            args: Prisma.DocumentAdjustmentItemCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentAdjustmentItemPayload>
+          }
+          createMany: {
+            args: Prisma.DocumentAdjustmentItemCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DocumentAdjustmentItemCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentAdjustmentItemPayload>[]
+          }
+          delete: {
+            args: Prisma.DocumentAdjustmentItemDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentAdjustmentItemPayload>
+          }
+          update: {
+            args: Prisma.DocumentAdjustmentItemUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentAdjustmentItemPayload>
+          }
+          deleteMany: {
+            args: Prisma.DocumentAdjustmentItemDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DocumentAdjustmentItemUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DocumentAdjustmentItemUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentAdjustmentItemPayload>[]
+          }
+          upsert: {
+            args: Prisma.DocumentAdjustmentItemUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentAdjustmentItemPayload>
+          }
+          aggregate: {
+            args: Prisma.DocumentAdjustmentItemAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDocumentAdjustmentItem>
+          }
+          groupBy: {
+            args: Prisma.DocumentAdjustmentItemGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DocumentAdjustmentItemGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DocumentAdjustmentItemCountArgs<ExtArgs>
+            result: $Utils.Optional<DocumentAdjustmentItemCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1995,6 +2355,10 @@ export namespace Prisma {
     transactionLine?: TransactionLineOmit
     projection?: ProjectionOmit
     activityStock?: ActivityStockOmit
+    document?: DocumentOmit
+    documentQuotation?: DocumentQuotationOmit
+    documentQuotationAdjustment?: DocumentQuotationAdjustmentOmit
+    documentAdjustmentItem?: DocumentAdjustmentItemOmit
   }
 
   /* Types for Logging */
@@ -2139,6 +2503,7 @@ export namespace Prisma {
     transactions: number
     projections: number
     finAccounts: number
+    documents: number
   }
 
   export type ProjectCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2148,6 +2513,7 @@ export namespace Prisma {
     transactions?: boolean | ProjectCountOutputTypeCountTransactionsArgs
     projections?: boolean | ProjectCountOutputTypeCountProjectionsArgs
     finAccounts?: boolean | ProjectCountOutputTypeCountFinAccountsArgs
+    documents?: boolean | ProjectCountOutputTypeCountDocumentsArgs
   }
 
   // Custom InputTypes
@@ -2203,6 +2569,13 @@ export namespace Prisma {
     where?: FinAccountWhereInput
   }
 
+  /**
+   * ProjectCountOutputType without action
+   */
+  export type ProjectCountOutputTypeCountDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DocumentWhereInput
+  }
+
 
   /**
    * Count Type RoleCountOutputType
@@ -2242,11 +2615,13 @@ export namespace Prisma {
   export type PartyCountOutputType = {
     contacts: number
     paymentMethods: number
+    quotations: number
   }
 
   export type PartyCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     contacts?: boolean | PartyCountOutputTypeCountContactsArgs
     paymentMethods?: boolean | PartyCountOutputTypeCountPaymentMethodsArgs
+    quotations?: boolean | PartyCountOutputTypeCountQuotationsArgs
   }
 
   // Custom InputTypes
@@ -2272,6 +2647,13 @@ export namespace Prisma {
    */
   export type PartyCountOutputTypeCountPaymentMethodsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PartyPaymentMethodWhereInput
+  }
+
+  /**
+   * PartyCountOutputType without action
+   */
+  export type PartyCountOutputTypeCountQuotationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DocumentQuotationWhereInput
   }
 
 
@@ -2343,6 +2725,46 @@ export namespace Prisma {
    */
   export type TransactionCountOutputTypeCountLinesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TransactionLineWhereInput
+  }
+
+
+  /**
+   * Count Type DocumentQuotationCountOutputType
+   */
+
+  export type DocumentQuotationCountOutputType = {
+    adjustments: number
+    items: number
+  }
+
+  export type DocumentQuotationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    adjustments?: boolean | DocumentQuotationCountOutputTypeCountAdjustmentsArgs
+    items?: boolean | DocumentQuotationCountOutputTypeCountItemsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * DocumentQuotationCountOutputType without action
+   */
+  export type DocumentQuotationCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentQuotationCountOutputType
+     */
+    select?: DocumentQuotationCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * DocumentQuotationCountOutputType without action
+   */
+  export type DocumentQuotationCountOutputTypeCountAdjustmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DocumentQuotationAdjustmentWhereInput
+  }
+
+  /**
+   * DocumentQuotationCountOutputType without action
+   */
+  export type DocumentQuotationCountOutputTypeCountItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DocumentAdjustmentItemWhereInput
   }
 
 
@@ -3671,6 +4093,7 @@ export namespace Prisma {
     transactions?: boolean | Project$transactionsArgs<ExtArgs>
     projections?: boolean | Project$projectionsArgs<ExtArgs>
     finAccounts?: boolean | Project$finAccountsArgs<ExtArgs>
+    documents?: boolean | Project$documentsArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["project"]>
 
@@ -3703,6 +4126,7 @@ export namespace Prisma {
     transactions?: boolean | Project$transactionsArgs<ExtArgs>
     projections?: boolean | Project$projectionsArgs<ExtArgs>
     finAccounts?: boolean | Project$finAccountsArgs<ExtArgs>
+    documents?: boolean | Project$documentsArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProjectIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -3717,6 +4141,7 @@ export namespace Prisma {
       transactions: Prisma.$TransactionPayload<ExtArgs>[]
       projections: Prisma.$ProjectionPayload<ExtArgs>[]
       finAccounts: Prisma.$FinAccountPayload<ExtArgs>[]
+      documents: Prisma.$DocumentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -4123,6 +4548,7 @@ export namespace Prisma {
     transactions<T extends Project$transactionsArgs<ExtArgs> = {}>(args?: Subset<T, Project$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     projections<T extends Project$projectionsArgs<ExtArgs> = {}>(args?: Subset<T, Project$projectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     finAccounts<T extends Project$finAccountsArgs<ExtArgs> = {}>(args?: Subset<T, Project$finAccountsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FinAccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    documents<T extends Project$documentsArgs<ExtArgs> = {}>(args?: Subset<T, Project$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4690,6 +5116,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: FinAccountScalarFieldEnum | FinAccountScalarFieldEnum[]
+  }
+
+  /**
+   * Project.documents
+   */
+  export type Project$documentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: DocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Document
+     */
+    omit?: DocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentInclude<ExtArgs> | null
+    where?: DocumentWhereInput
+    orderBy?: DocumentOrderByWithRelationInput | DocumentOrderByWithRelationInput[]
+    cursor?: DocumentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DocumentScalarFieldEnum | DocumentScalarFieldEnum[]
   }
 
   /**
@@ -7033,6 +7483,7 @@ export namespace Prisma {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     contacts?: boolean | Party$contactsArgs<ExtArgs>
     paymentMethods?: boolean | Party$paymentMethodsArgs<ExtArgs>
+    quotations?: boolean | Party$quotationsArgs<ExtArgs>
     _count?: boolean | PartyCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["party"]>
 
@@ -7073,6 +7524,7 @@ export namespace Prisma {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     contacts?: boolean | Party$contactsArgs<ExtArgs>
     paymentMethods?: boolean | Party$paymentMethodsArgs<ExtArgs>
+    quotations?: boolean | Party$quotationsArgs<ExtArgs>
     _count?: boolean | PartyCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type PartyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7091,6 +7543,7 @@ export namespace Prisma {
       project: Prisma.$ProjectPayload<ExtArgs>
       contacts: Prisma.$PartyContactPayload<ExtArgs>[]
       paymentMethods: Prisma.$PartyPaymentMethodPayload<ExtArgs>[]
+      quotations: Prisma.$DocumentQuotationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -7497,6 +7950,7 @@ export namespace Prisma {
     project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     contacts<T extends Party$contactsArgs<ExtArgs> = {}>(args?: Subset<T, Party$contactsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PartyContactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     paymentMethods<T extends Party$paymentMethodsArgs<ExtArgs> = {}>(args?: Subset<T, Party$paymentMethodsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PartyPaymentMethodPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    quotations<T extends Party$quotationsArgs<ExtArgs> = {}>(args?: Subset<T, Party$quotationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentQuotationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7978,6 +8432,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PartyPaymentMethodScalarFieldEnum | PartyPaymentMethodScalarFieldEnum[]
+  }
+
+  /**
+   * Party.quotations
+   */
+  export type Party$quotationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentQuotation
+     */
+    select?: DocumentQuotationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentQuotation
+     */
+    omit?: DocumentQuotationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentQuotationInclude<ExtArgs> | null
+    where?: DocumentQuotationWhereInput
+    orderBy?: DocumentQuotationOrderByWithRelationInput | DocumentQuotationOrderByWithRelationInput[]
+    cursor?: DocumentQuotationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DocumentQuotationScalarFieldEnum | DocumentQuotationScalarFieldEnum[]
   }
 
   /**
@@ -17345,6 +17823,4861 @@ export namespace Prisma {
 
 
   /**
+   * Model Document
+   */
+
+  export type AggregateDocument = {
+    _count: DocumentCountAggregateOutputType | null
+    _min: DocumentMinAggregateOutputType | null
+    _max: DocumentMaxAggregateOutputType | null
+  }
+
+  export type DocumentMinAggregateOutputType = {
+    id: string | null
+    projectId: string | null
+    type: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DocumentMaxAggregateOutputType = {
+    id: string | null
+    projectId: string | null
+    type: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DocumentCountAggregateOutputType = {
+    id: number
+    projectId: number
+    type: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type DocumentMinAggregateInputType = {
+    id?: true
+    projectId?: true
+    type?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DocumentMaxAggregateInputType = {
+    id?: true
+    projectId?: true
+    type?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DocumentCountAggregateInputType = {
+    id?: true
+    projectId?: true
+    type?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type DocumentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Document to aggregate.
+     */
+    where?: DocumentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     *
+     * Determine the order of Documents to fetch.
+     */
+    orderBy?: DocumentOrderByWithRelationInput | DocumentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     *
+     * Sets the start position
+     */
+    cursor?: DocumentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Take `±n` Documents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Skip the first `n` Documents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Count returned Documents
+    **/
+    _count?: true | DocumentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Select which fields to find the minimum value
+    **/
+    _min?: DocumentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Select which fields to find the maximum value
+    **/
+    _max?: DocumentMaxAggregateInputType
+  }
+
+  export type GetDocumentAggregateType<T extends DocumentAggregateArgs> = {
+        [P in keyof T & keyof AggregateDocument]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDocument[P]>
+      : GetScalarType<T[P], AggregateDocument[P]>
+  }
+
+
+
+
+  export type DocumentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DocumentWhereInput
+    orderBy?: DocumentOrderByWithAggregationInput | DocumentOrderByWithAggregationInput[]
+    by: DocumentScalarFieldEnum[] | DocumentScalarFieldEnum
+    having?: DocumentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DocumentCountAggregateInputType | true
+    _min?: DocumentMinAggregateInputType
+    _max?: DocumentMaxAggregateInputType
+  }
+
+  export type DocumentGroupByOutputType = {
+    id: string
+    projectId: string
+    type: string
+    createdAt: Date
+    updatedAt: Date
+    _count: DocumentCountAggregateOutputType | null
+    _min: DocumentMinAggregateOutputType | null
+    _max: DocumentMaxAggregateOutputType | null
+  }
+
+  type GetDocumentGroupByPayload<T extends DocumentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DocumentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DocumentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DocumentGroupByOutputType[P]>
+            : GetScalarType<T[P], DocumentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DocumentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    type?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    quotation?: boolean | Document$quotationArgs<ExtArgs>
+  }, ExtArgs["result"]["document"]>
+
+  export type DocumentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    type?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["document"]>
+
+  export type DocumentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    type?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["document"]>
+
+  export type DocumentSelectScalar = {
+    id?: boolean
+    projectId?: boolean
+    type?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type DocumentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "type" | "createdAt" | "updatedAt", ExtArgs["result"]["document"]>
+  export type DocumentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    quotation?: boolean | Document$quotationArgs<ExtArgs>
+  }
+  export type DocumentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+  }
+  export type DocumentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+  }
+
+  export type $DocumentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Document"
+    objects: {
+      project: Prisma.$ProjectPayload<ExtArgs>
+      quotation: Prisma.$DocumentQuotationPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      projectId: string
+      type: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["document"]>
+    composites: {}
+  }
+
+  type DocumentGetPayload<S extends boolean | null | undefined | DocumentDefaultArgs> = $Result.GetResult<Prisma.$DocumentPayload, S>
+
+  type DocumentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DocumentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DocumentCountAggregateInputType | true
+    }
+
+  export interface DocumentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Document'], meta: { name: 'Document' } }
+    /**
+     * Find zero or one Document that matches the filter.
+     * @param {DocumentFindUniqueArgs} args - Arguments to find a Document
+     * @example
+     * // Get one Document
+     * const document = await prisma.document.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DocumentFindUniqueArgs>(args: SelectSubset<T, DocumentFindUniqueArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Document that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DocumentFindUniqueOrThrowArgs} args - Arguments to find a Document
+     * @example
+     * // Get one Document
+     * const document = await prisma.document.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DocumentFindUniqueOrThrowArgs>(args: SelectSubset<T, DocumentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Document that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentFindFirstArgs} args - Arguments to find a Document
+     * @example
+     * // Get one Document
+     * const document = await prisma.document.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DocumentFindFirstArgs>(args?: SelectSubset<T, DocumentFindFirstArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Document that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentFindFirstOrThrowArgs} args - Arguments to find a Document
+     * @example
+     * // Get one Document
+     * const document = await prisma.document.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DocumentFindFirstOrThrowArgs>(args?: SelectSubset<T, DocumentFindFirstOrThrowArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Documents that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Documents
+     * const documents = await prisma.document.findMany()
+     *
+     * // Get first 10 Documents
+     * const documents = await prisma.document.findMany({ take: 10 })
+     *
+     * // Only select the `id`
+     * const documentWithIdOnly = await prisma.document.findMany({ select: { id: true } })
+     *
+     */
+    findMany<T extends DocumentFindManyArgs>(args?: SelectSubset<T, DocumentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Document.
+     * @param {DocumentCreateArgs} args - Arguments to create a Document.
+     * @example
+     * // Create one Document
+     * const Document = await prisma.document.create({
+     *   data: {
+     *     // ... data to create a Document
+     *   }
+     * })
+     *
+     */
+    create<T extends DocumentCreateArgs>(args: SelectSubset<T, DocumentCreateArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Documents.
+     * @param {DocumentCreateManyArgs} args - Arguments to create many Documents.
+     * @example
+     * // Create many Documents
+     * const document = await prisma.document.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *
+     */
+    createMany<T extends DocumentCreateManyArgs>(args?: SelectSubset<T, DocumentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Documents and returns the data saved in the database.
+     * @param {DocumentCreateManyAndReturnArgs} args - Arguments to create many Documents.
+     * @example
+     * // Create many Documents
+     * const document = await prisma.document.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *
+     * // Create many Documents and only return the `id`
+     * const documentWithIdOnly = await prisma.document.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     *
+     */
+    createManyAndReturn<T extends DocumentCreateManyAndReturnArgs>(args?: SelectSubset<T, DocumentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Document.
+     * @param {DocumentDeleteArgs} args - Arguments to delete one Document.
+     * @example
+     * // Delete one Document
+     * const Document = await prisma.document.delete({
+     *   where: {
+     *     // ... filter to delete one Document
+     *   }
+     * })
+     *
+     */
+    delete<T extends DocumentDeleteArgs>(args: SelectSubset<T, DocumentDeleteArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Document.
+     * @param {DocumentUpdateArgs} args - Arguments to update one Document.
+     * @example
+     * // Update one Document
+     * const document = await prisma.document.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     *
+     */
+    update<T extends DocumentUpdateArgs>(args: SelectSubset<T, DocumentUpdateArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Documents.
+     * @param {DocumentDeleteManyArgs} args - Arguments to filter Documents to delete.
+     * @example
+     * // Delete a few Documents
+     * const { count } = await prisma.document.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     *
+     */
+    deleteMany<T extends DocumentDeleteManyArgs>(args?: SelectSubset<T, DocumentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Documents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Documents
+     * const document = await prisma.document.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     *
+     */
+    updateMany<T extends DocumentUpdateManyArgs>(args: SelectSubset<T, DocumentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Documents and returns the data updated in the database.
+     * @param {DocumentUpdateManyAndReturnArgs} args - Arguments to update many Documents.
+     * @example
+     * // Update many Documents
+     * const document = await prisma.document.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *
+     * // Update zero or more Documents and only return the `id`
+     * const documentWithIdOnly = await prisma.document.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     *
+     */
+    updateManyAndReturn<T extends DocumentUpdateManyAndReturnArgs>(args: SelectSubset<T, DocumentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Document.
+     * @param {DocumentUpsertArgs} args - Arguments to update or create a Document.
+     * @example
+     * // Update or create a Document
+     * const document = await prisma.document.upsert({
+     *   create: {
+     *     // ... data to create a Document
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Document we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DocumentUpsertArgs>(args: SelectSubset<T, DocumentUpsertArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Documents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentCountArgs} args - Arguments to filter Documents to count.
+     * @example
+     * // Count the number of Documents
+     * const count = await prisma.document.count({
+     *   where: {
+     *     // ... the filter for the Documents we want to count
+     *   }
+     * })
+    **/
+    count<T extends DocumentCountArgs>(
+      args?: Subset<T, DocumentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DocumentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Document.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DocumentAggregateArgs>(args: Subset<T, DocumentAggregateArgs>): Prisma.PrismaPromise<GetDocumentAggregateType<T>>
+
+    /**
+     * Group by Document.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     *
+    **/
+    groupBy<
+      T extends DocumentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DocumentGroupByArgs['orderBy'] }
+        : { orderBy?: DocumentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DocumentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDocumentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Document model
+   */
+  readonly fields: DocumentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Document.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DocumentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    quotation<T extends Document$quotationArgs<ExtArgs> = {}>(args?: Subset<T, Document$quotationArgs<ExtArgs>>): Prisma__DocumentQuotationClient<$Result.GetResult<Prisma.$DocumentQuotationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Document model
+   */
+  interface DocumentFieldRefs {
+    readonly id: FieldRef<"Document", 'String'>
+    readonly projectId: FieldRef<"Document", 'String'>
+    readonly type: FieldRef<"Document", 'String'>
+    readonly createdAt: FieldRef<"Document", 'DateTime'>
+    readonly updatedAt: FieldRef<"Document", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Document findUnique
+   */
+  export type DocumentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: DocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Document
+     */
+    omit?: DocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentInclude<ExtArgs> | null
+    /**
+     * Filter, which Document to fetch.
+     */
+    where: DocumentWhereUniqueInput
+  }
+
+  /**
+   * Document findUniqueOrThrow
+   */
+  export type DocumentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: DocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Document
+     */
+    omit?: DocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentInclude<ExtArgs> | null
+    /**
+     * Filter, which Document to fetch.
+     */
+    where: DocumentWhereUniqueInput
+  }
+
+  /**
+   * Document findFirst
+   */
+  export type DocumentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: DocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Document
+     */
+    omit?: DocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentInclude<ExtArgs> | null
+    /**
+     * Filter, which Document to fetch.
+     */
+    where?: DocumentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     *
+     * Determine the order of Documents to fetch.
+     */
+    orderBy?: DocumentOrderByWithRelationInput | DocumentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     *
+     * Sets the position for searching for Documents.
+     */
+    cursor?: DocumentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Take `±n` Documents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Skip the first `n` Documents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     *
+     * Filter by unique combinations of Documents.
+     */
+    distinct?: DocumentScalarFieldEnum | DocumentScalarFieldEnum[]
+  }
+
+  /**
+   * Document findFirstOrThrow
+   */
+  export type DocumentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: DocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Document
+     */
+    omit?: DocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentInclude<ExtArgs> | null
+    /**
+     * Filter, which Document to fetch.
+     */
+    where?: DocumentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     *
+     * Determine the order of Documents to fetch.
+     */
+    orderBy?: DocumentOrderByWithRelationInput | DocumentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     *
+     * Sets the position for searching for Documents.
+     */
+    cursor?: DocumentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Take `±n` Documents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Skip the first `n` Documents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     *
+     * Filter by unique combinations of Documents.
+     */
+    distinct?: DocumentScalarFieldEnum | DocumentScalarFieldEnum[]
+  }
+
+  /**
+   * Document findMany
+   */
+  export type DocumentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: DocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Document
+     */
+    omit?: DocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentInclude<ExtArgs> | null
+    /**
+     * Filter, which Documents to fetch.
+     */
+    where?: DocumentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     *
+     * Determine the order of Documents to fetch.
+     */
+    orderBy?: DocumentOrderByWithRelationInput | DocumentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     *
+     * Sets the position for listing Documents.
+     */
+    cursor?: DocumentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Take `±n` Documents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Skip the first `n` Documents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     *
+     * Filter by unique combinations of Documents.
+     */
+    distinct?: DocumentScalarFieldEnum | DocumentScalarFieldEnum[]
+  }
+
+  /**
+   * Document create
+   */
+  export type DocumentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: DocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Document
+     */
+    omit?: DocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Document.
+     */
+    data: XOR<DocumentCreateInput, DocumentUncheckedCreateInput>
+  }
+
+  /**
+   * Document createMany
+   */
+  export type DocumentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Documents.
+     */
+    data: DocumentCreateManyInput | DocumentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Document createManyAndReturn
+   */
+  export type DocumentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: DocumentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Document
+     */
+    omit?: DocumentOmit<ExtArgs> | null
+    /**
+     * The data used to create many Documents.
+     */
+    data: DocumentCreateManyInput | DocumentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Document update
+   */
+  export type DocumentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: DocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Document
+     */
+    omit?: DocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Document.
+     */
+    data: XOR<DocumentUpdateInput, DocumentUncheckedUpdateInput>
+    /**
+     * Choose, which Document to update.
+     */
+    where: DocumentWhereUniqueInput
+  }
+
+  /**
+   * Document updateMany
+   */
+  export type DocumentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Documents.
+     */
+    data: XOR<DocumentUpdateManyMutationInput, DocumentUncheckedUpdateManyInput>
+    /**
+     * Filter which Documents to update
+     */
+    where?: DocumentWhereInput
+    /**
+     * Limit how many Documents to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Document updateManyAndReturn
+   */
+  export type DocumentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: DocumentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Document
+     */
+    omit?: DocumentOmit<ExtArgs> | null
+    /**
+     * The data used to update Documents.
+     */
+    data: XOR<DocumentUpdateManyMutationInput, DocumentUncheckedUpdateManyInput>
+    /**
+     * Filter which Documents to update
+     */
+    where?: DocumentWhereInput
+    /**
+     * Limit how many Documents to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Document upsert
+   */
+  export type DocumentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: DocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Document
+     */
+    omit?: DocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Document to update in case it exists.
+     */
+    where: DocumentWhereUniqueInput
+    /**
+     * In case the Document found by the `where` argument doesn't exist, create a new Document with this data.
+     */
+    create: XOR<DocumentCreateInput, DocumentUncheckedCreateInput>
+    /**
+     * In case the Document was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DocumentUpdateInput, DocumentUncheckedUpdateInput>
+  }
+
+  /**
+   * Document delete
+   */
+  export type DocumentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: DocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Document
+     */
+    omit?: DocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentInclude<ExtArgs> | null
+    /**
+     * Filter which Document to delete.
+     */
+    where: DocumentWhereUniqueInput
+  }
+
+  /**
+   * Document deleteMany
+   */
+  export type DocumentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Documents to delete
+     */
+    where?: DocumentWhereInput
+    /**
+     * Limit how many Documents to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Document.quotation
+   */
+  export type Document$quotationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentQuotation
+     */
+    select?: DocumentQuotationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentQuotation
+     */
+    omit?: DocumentQuotationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentQuotationInclude<ExtArgs> | null
+    where?: DocumentQuotationWhereInput
+  }
+
+  /**
+   * Document without action
+   */
+  export type DocumentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: DocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Document
+     */
+    omit?: DocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model DocumentQuotation
+   */
+
+  export type AggregateDocumentQuotation = {
+    _count: DocumentQuotationCountAggregateOutputType | null
+    _avg: DocumentQuotationAvgAggregateOutputType | null
+    _sum: DocumentQuotationSumAggregateOutputType | null
+    _min: DocumentQuotationMinAggregateOutputType | null
+    _max: DocumentQuotationMaxAggregateOutputType | null
+  }
+
+  export type DocumentQuotationAvgAggregateOutputType = {
+    counter: number | null
+    exchangeRate: Decimal | null
+    subtotal: Decimal | null
+    discountValue: Decimal | null
+    discountAmount: Decimal | null
+    taxTotal: Decimal | null
+    total: Decimal | null
+  }
+
+  export type DocumentQuotationSumAggregateOutputType = {
+    counter: number | null
+    exchangeRate: Decimal | null
+    subtotal: Decimal | null
+    discountValue: Decimal | null
+    discountAmount: Decimal | null
+    taxTotal: Decimal | null
+    total: Decimal | null
+  }
+
+  export type DocumentQuotationMinAggregateOutputType = {
+    id: string | null
+    customerId: string | null
+    counter: number | null
+    referenceNumber: string | null
+    subject: string | null
+    currency: string | null
+    exchangeRate: Decimal | null
+    subtotal: Decimal | null
+    discountType: string | null
+    discountValue: Decimal | null
+    discountAmount: Decimal | null
+    taxTotal: Decimal | null
+    hasAdjustments: boolean | null
+    total: Decimal | null
+    status: string | null
+    date: Date | null
+    expires: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DocumentQuotationMaxAggregateOutputType = {
+    id: string | null
+    customerId: string | null
+    counter: number | null
+    referenceNumber: string | null
+    subject: string | null
+    currency: string | null
+    exchangeRate: Decimal | null
+    subtotal: Decimal | null
+    discountType: string | null
+    discountValue: Decimal | null
+    discountAmount: Decimal | null
+    taxTotal: Decimal | null
+    hasAdjustments: boolean | null
+    total: Decimal | null
+    status: string | null
+    date: Date | null
+    expires: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DocumentQuotationCountAggregateOutputType = {
+    id: number
+    customerId: number
+    counter: number
+    referenceNumber: number
+    subject: number
+    currency: number
+    exchangeRate: number
+    subtotal: number
+    discountType: number
+    discountValue: number
+    discountAmount: number
+    taxTotal: number
+    hasAdjustments: number
+    total: number
+    status: number
+    date: number
+    expires: number
+    details: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type DocumentQuotationAvgAggregateInputType = {
+    counter?: true
+    exchangeRate?: true
+    subtotal?: true
+    discountValue?: true
+    discountAmount?: true
+    taxTotal?: true
+    total?: true
+  }
+
+  export type DocumentQuotationSumAggregateInputType = {
+    counter?: true
+    exchangeRate?: true
+    subtotal?: true
+    discountValue?: true
+    discountAmount?: true
+    taxTotal?: true
+    total?: true
+  }
+
+  export type DocumentQuotationMinAggregateInputType = {
+    id?: true
+    customerId?: true
+    counter?: true
+    referenceNumber?: true
+    subject?: true
+    currency?: true
+    exchangeRate?: true
+    subtotal?: true
+    discountType?: true
+    discountValue?: true
+    discountAmount?: true
+    taxTotal?: true
+    hasAdjustments?: true
+    total?: true
+    status?: true
+    date?: true
+    expires?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DocumentQuotationMaxAggregateInputType = {
+    id?: true
+    customerId?: true
+    counter?: true
+    referenceNumber?: true
+    subject?: true
+    currency?: true
+    exchangeRate?: true
+    subtotal?: true
+    discountType?: true
+    discountValue?: true
+    discountAmount?: true
+    taxTotal?: true
+    hasAdjustments?: true
+    total?: true
+    status?: true
+    date?: true
+    expires?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DocumentQuotationCountAggregateInputType = {
+    id?: true
+    customerId?: true
+    counter?: true
+    referenceNumber?: true
+    subject?: true
+    currency?: true
+    exchangeRate?: true
+    subtotal?: true
+    discountType?: true
+    discountValue?: true
+    discountAmount?: true
+    taxTotal?: true
+    hasAdjustments?: true
+    total?: true
+    status?: true
+    date?: true
+    expires?: true
+    details?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type DocumentQuotationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DocumentQuotation to aggregate.
+     */
+    where?: DocumentQuotationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     *
+     * Determine the order of DocumentQuotations to fetch.
+     */
+    orderBy?: DocumentQuotationOrderByWithRelationInput | DocumentQuotationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     *
+     * Sets the start position
+     */
+    cursor?: DocumentQuotationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Take `±n` DocumentQuotations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Skip the first `n` DocumentQuotations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Count returned DocumentQuotations
+    **/
+    _count?: true | DocumentQuotationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Select which fields to average
+    **/
+    _avg?: DocumentQuotationAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Select which fields to sum
+    **/
+    _sum?: DocumentQuotationSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Select which fields to find the minimum value
+    **/
+    _min?: DocumentQuotationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Select which fields to find the maximum value
+    **/
+    _max?: DocumentQuotationMaxAggregateInputType
+  }
+
+  export type GetDocumentQuotationAggregateType<T extends DocumentQuotationAggregateArgs> = {
+        [P in keyof T & keyof AggregateDocumentQuotation]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDocumentQuotation[P]>
+      : GetScalarType<T[P], AggregateDocumentQuotation[P]>
+  }
+
+
+
+
+  export type DocumentQuotationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DocumentQuotationWhereInput
+    orderBy?: DocumentQuotationOrderByWithAggregationInput | DocumentQuotationOrderByWithAggregationInput[]
+    by: DocumentQuotationScalarFieldEnum[] | DocumentQuotationScalarFieldEnum
+    having?: DocumentQuotationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DocumentQuotationCountAggregateInputType | true
+    _avg?: DocumentQuotationAvgAggregateInputType
+    _sum?: DocumentQuotationSumAggregateInputType
+    _min?: DocumentQuotationMinAggregateInputType
+    _max?: DocumentQuotationMaxAggregateInputType
+  }
+
+  export type DocumentQuotationGroupByOutputType = {
+    id: string
+    customerId: string
+    counter: number
+    referenceNumber: string
+    subject: string
+    currency: string
+    exchangeRate: Decimal
+    subtotal: Decimal
+    discountType: string
+    discountValue: Decimal
+    discountAmount: Decimal
+    taxTotal: Decimal
+    hasAdjustments: boolean
+    total: Decimal
+    status: string
+    date: Date
+    expires: Date
+    details: JsonValue | null
+    createdAt: Date
+    updatedAt: Date
+    _count: DocumentQuotationCountAggregateOutputType | null
+    _avg: DocumentQuotationAvgAggregateOutputType | null
+    _sum: DocumentQuotationSumAggregateOutputType | null
+    _min: DocumentQuotationMinAggregateOutputType | null
+    _max: DocumentQuotationMaxAggregateOutputType | null
+  }
+
+  type GetDocumentQuotationGroupByPayload<T extends DocumentQuotationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DocumentQuotationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DocumentQuotationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DocumentQuotationGroupByOutputType[P]>
+            : GetScalarType<T[P], DocumentQuotationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DocumentQuotationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    customerId?: boolean
+    counter?: boolean
+    referenceNumber?: boolean
+    subject?: boolean
+    currency?: boolean
+    exchangeRate?: boolean
+    subtotal?: boolean
+    discountType?: boolean
+    discountValue?: boolean
+    discountAmount?: boolean
+    taxTotal?: boolean
+    hasAdjustments?: boolean
+    total?: boolean
+    status?: boolean
+    date?: boolean
+    expires?: boolean
+    details?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    document?: boolean | DocumentDefaultArgs<ExtArgs>
+    customer?: boolean | PartyDefaultArgs<ExtArgs>
+    adjustments?: boolean | DocumentQuotation$adjustmentsArgs<ExtArgs>
+    items?: boolean | DocumentQuotation$itemsArgs<ExtArgs>
+    _count?: boolean | DocumentQuotationCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["documentQuotation"]>
+
+  export type DocumentQuotationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    customerId?: boolean
+    counter?: boolean
+    referenceNumber?: boolean
+    subject?: boolean
+    currency?: boolean
+    exchangeRate?: boolean
+    subtotal?: boolean
+    discountType?: boolean
+    discountValue?: boolean
+    discountAmount?: boolean
+    taxTotal?: boolean
+    hasAdjustments?: boolean
+    total?: boolean
+    status?: boolean
+    date?: boolean
+    expires?: boolean
+    details?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    document?: boolean | DocumentDefaultArgs<ExtArgs>
+    customer?: boolean | PartyDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["documentQuotation"]>
+
+  export type DocumentQuotationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    customerId?: boolean
+    counter?: boolean
+    referenceNumber?: boolean
+    subject?: boolean
+    currency?: boolean
+    exchangeRate?: boolean
+    subtotal?: boolean
+    discountType?: boolean
+    discountValue?: boolean
+    discountAmount?: boolean
+    taxTotal?: boolean
+    hasAdjustments?: boolean
+    total?: boolean
+    status?: boolean
+    date?: boolean
+    expires?: boolean
+    details?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    document?: boolean | DocumentDefaultArgs<ExtArgs>
+    customer?: boolean | PartyDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["documentQuotation"]>
+
+  export type DocumentQuotationSelectScalar = {
+    id?: boolean
+    customerId?: boolean
+    counter?: boolean
+    referenceNumber?: boolean
+    subject?: boolean
+    currency?: boolean
+    exchangeRate?: boolean
+    subtotal?: boolean
+    discountType?: boolean
+    discountValue?: boolean
+    discountAmount?: boolean
+    taxTotal?: boolean
+    hasAdjustments?: boolean
+    total?: boolean
+    status?: boolean
+    date?: boolean
+    expires?: boolean
+    details?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type DocumentQuotationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "customerId" | "counter" | "referenceNumber" | "subject" | "currency" | "exchangeRate" | "subtotal" | "discountType" | "discountValue" | "discountAmount" | "taxTotal" | "hasAdjustments" | "total" | "status" | "date" | "expires" | "details" | "createdAt" | "updatedAt", ExtArgs["result"]["documentQuotation"]>
+  export type DocumentQuotationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    document?: boolean | DocumentDefaultArgs<ExtArgs>
+    customer?: boolean | PartyDefaultArgs<ExtArgs>
+    adjustments?: boolean | DocumentQuotation$adjustmentsArgs<ExtArgs>
+    items?: boolean | DocumentQuotation$itemsArgs<ExtArgs>
+    _count?: boolean | DocumentQuotationCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type DocumentQuotationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    document?: boolean | DocumentDefaultArgs<ExtArgs>
+    customer?: boolean | PartyDefaultArgs<ExtArgs>
+  }
+  export type DocumentQuotationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    document?: boolean | DocumentDefaultArgs<ExtArgs>
+    customer?: boolean | PartyDefaultArgs<ExtArgs>
+  }
+
+  export type $DocumentQuotationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DocumentQuotation"
+    objects: {
+      document: Prisma.$DocumentPayload<ExtArgs>
+      customer: Prisma.$PartyPayload<ExtArgs>
+      adjustments: Prisma.$DocumentQuotationAdjustmentPayload<ExtArgs>[]
+      items: Prisma.$DocumentAdjustmentItemPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      customerId: string
+      counter: number
+      referenceNumber: string
+      subject: string
+      currency: string
+      exchangeRate: Prisma.Decimal
+      subtotal: Prisma.Decimal
+      discountType: string
+      discountValue: Prisma.Decimal
+      discountAmount: Prisma.Decimal
+      taxTotal: Prisma.Decimal
+      hasAdjustments: boolean
+      total: Prisma.Decimal
+      status: string
+      date: Date
+      expires: Date
+      details: Prisma.JsonValue | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["documentQuotation"]>
+    composites: {}
+  }
+
+  type DocumentQuotationGetPayload<S extends boolean | null | undefined | DocumentQuotationDefaultArgs> = $Result.GetResult<Prisma.$DocumentQuotationPayload, S>
+
+  type DocumentQuotationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DocumentQuotationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DocumentQuotationCountAggregateInputType | true
+    }
+
+  export interface DocumentQuotationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DocumentQuotation'], meta: { name: 'DocumentQuotation' } }
+    /**
+     * Find zero or one DocumentQuotation that matches the filter.
+     * @param {DocumentQuotationFindUniqueArgs} args - Arguments to find a DocumentQuotation
+     * @example
+     * // Get one DocumentQuotation
+     * const documentQuotation = await prisma.documentQuotation.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DocumentQuotationFindUniqueArgs>(args: SelectSubset<T, DocumentQuotationFindUniqueArgs<ExtArgs>>): Prisma__DocumentQuotationClient<$Result.GetResult<Prisma.$DocumentQuotationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DocumentQuotation that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DocumentQuotationFindUniqueOrThrowArgs} args - Arguments to find a DocumentQuotation
+     * @example
+     * // Get one DocumentQuotation
+     * const documentQuotation = await prisma.documentQuotation.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DocumentQuotationFindUniqueOrThrowArgs>(args: SelectSubset<T, DocumentQuotationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DocumentQuotationClient<$Result.GetResult<Prisma.$DocumentQuotationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DocumentQuotation that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentQuotationFindFirstArgs} args - Arguments to find a DocumentQuotation
+     * @example
+     * // Get one DocumentQuotation
+     * const documentQuotation = await prisma.documentQuotation.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DocumentQuotationFindFirstArgs>(args?: SelectSubset<T, DocumentQuotationFindFirstArgs<ExtArgs>>): Prisma__DocumentQuotationClient<$Result.GetResult<Prisma.$DocumentQuotationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DocumentQuotation that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentQuotationFindFirstOrThrowArgs} args - Arguments to find a DocumentQuotation
+     * @example
+     * // Get one DocumentQuotation
+     * const documentQuotation = await prisma.documentQuotation.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DocumentQuotationFindFirstOrThrowArgs>(args?: SelectSubset<T, DocumentQuotationFindFirstOrThrowArgs<ExtArgs>>): Prisma__DocumentQuotationClient<$Result.GetResult<Prisma.$DocumentQuotationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DocumentQuotations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentQuotationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DocumentQuotations
+     * const documentQuotations = await prisma.documentQuotation.findMany()
+     *
+     * // Get first 10 DocumentQuotations
+     * const documentQuotations = await prisma.documentQuotation.findMany({ take: 10 })
+     *
+     * // Only select the `id`
+     * const documentQuotationWithIdOnly = await prisma.documentQuotation.findMany({ select: { id: true } })
+     *
+     */
+    findMany<T extends DocumentQuotationFindManyArgs>(args?: SelectSubset<T, DocumentQuotationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentQuotationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DocumentQuotation.
+     * @param {DocumentQuotationCreateArgs} args - Arguments to create a DocumentQuotation.
+     * @example
+     * // Create one DocumentQuotation
+     * const DocumentQuotation = await prisma.documentQuotation.create({
+     *   data: {
+     *     // ... data to create a DocumentQuotation
+     *   }
+     * })
+     *
+     */
+    create<T extends DocumentQuotationCreateArgs>(args: SelectSubset<T, DocumentQuotationCreateArgs<ExtArgs>>): Prisma__DocumentQuotationClient<$Result.GetResult<Prisma.$DocumentQuotationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DocumentQuotations.
+     * @param {DocumentQuotationCreateManyArgs} args - Arguments to create many DocumentQuotations.
+     * @example
+     * // Create many DocumentQuotations
+     * const documentQuotation = await prisma.documentQuotation.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *
+     */
+    createMany<T extends DocumentQuotationCreateManyArgs>(args?: SelectSubset<T, DocumentQuotationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DocumentQuotations and returns the data saved in the database.
+     * @param {DocumentQuotationCreateManyAndReturnArgs} args - Arguments to create many DocumentQuotations.
+     * @example
+     * // Create many DocumentQuotations
+     * const documentQuotation = await prisma.documentQuotation.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *
+     * // Create many DocumentQuotations and only return the `id`
+     * const documentQuotationWithIdOnly = await prisma.documentQuotation.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     *
+     */
+    createManyAndReturn<T extends DocumentQuotationCreateManyAndReturnArgs>(args?: SelectSubset<T, DocumentQuotationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentQuotationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DocumentQuotation.
+     * @param {DocumentQuotationDeleteArgs} args - Arguments to delete one DocumentQuotation.
+     * @example
+     * // Delete one DocumentQuotation
+     * const DocumentQuotation = await prisma.documentQuotation.delete({
+     *   where: {
+     *     // ... filter to delete one DocumentQuotation
+     *   }
+     * })
+     *
+     */
+    delete<T extends DocumentQuotationDeleteArgs>(args: SelectSubset<T, DocumentQuotationDeleteArgs<ExtArgs>>): Prisma__DocumentQuotationClient<$Result.GetResult<Prisma.$DocumentQuotationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DocumentQuotation.
+     * @param {DocumentQuotationUpdateArgs} args - Arguments to update one DocumentQuotation.
+     * @example
+     * // Update one DocumentQuotation
+     * const documentQuotation = await prisma.documentQuotation.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     *
+     */
+    update<T extends DocumentQuotationUpdateArgs>(args: SelectSubset<T, DocumentQuotationUpdateArgs<ExtArgs>>): Prisma__DocumentQuotationClient<$Result.GetResult<Prisma.$DocumentQuotationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DocumentQuotations.
+     * @param {DocumentQuotationDeleteManyArgs} args - Arguments to filter DocumentQuotations to delete.
+     * @example
+     * // Delete a few DocumentQuotations
+     * const { count } = await prisma.documentQuotation.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     *
+     */
+    deleteMany<T extends DocumentQuotationDeleteManyArgs>(args?: SelectSubset<T, DocumentQuotationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DocumentQuotations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentQuotationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DocumentQuotations
+     * const documentQuotation = await prisma.documentQuotation.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     *
+     */
+    updateMany<T extends DocumentQuotationUpdateManyArgs>(args: SelectSubset<T, DocumentQuotationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DocumentQuotations and returns the data updated in the database.
+     * @param {DocumentQuotationUpdateManyAndReturnArgs} args - Arguments to update many DocumentQuotations.
+     * @example
+     * // Update many DocumentQuotations
+     * const documentQuotation = await prisma.documentQuotation.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *
+     * // Update zero or more DocumentQuotations and only return the `id`
+     * const documentQuotationWithIdOnly = await prisma.documentQuotation.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     *
+     */
+    updateManyAndReturn<T extends DocumentQuotationUpdateManyAndReturnArgs>(args: SelectSubset<T, DocumentQuotationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentQuotationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DocumentQuotation.
+     * @param {DocumentQuotationUpsertArgs} args - Arguments to update or create a DocumentQuotation.
+     * @example
+     * // Update or create a DocumentQuotation
+     * const documentQuotation = await prisma.documentQuotation.upsert({
+     *   create: {
+     *     // ... data to create a DocumentQuotation
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DocumentQuotation we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DocumentQuotationUpsertArgs>(args: SelectSubset<T, DocumentQuotationUpsertArgs<ExtArgs>>): Prisma__DocumentQuotationClient<$Result.GetResult<Prisma.$DocumentQuotationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DocumentQuotations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentQuotationCountArgs} args - Arguments to filter DocumentQuotations to count.
+     * @example
+     * // Count the number of DocumentQuotations
+     * const count = await prisma.documentQuotation.count({
+     *   where: {
+     *     // ... the filter for the DocumentQuotations we want to count
+     *   }
+     * })
+    **/
+    count<T extends DocumentQuotationCountArgs>(
+      args?: Subset<T, DocumentQuotationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DocumentQuotationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DocumentQuotation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentQuotationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DocumentQuotationAggregateArgs>(args: Subset<T, DocumentQuotationAggregateArgs>): Prisma.PrismaPromise<GetDocumentQuotationAggregateType<T>>
+
+    /**
+     * Group by DocumentQuotation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentQuotationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     *
+    **/
+    groupBy<
+      T extends DocumentQuotationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DocumentQuotationGroupByArgs['orderBy'] }
+        : { orderBy?: DocumentQuotationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DocumentQuotationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDocumentQuotationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DocumentQuotation model
+   */
+  readonly fields: DocumentQuotationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DocumentQuotation.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DocumentQuotationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    document<T extends DocumentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DocumentDefaultArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    customer<T extends PartyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PartyDefaultArgs<ExtArgs>>): Prisma__PartyClient<$Result.GetResult<Prisma.$PartyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    adjustments<T extends DocumentQuotation$adjustmentsArgs<ExtArgs> = {}>(args?: Subset<T, DocumentQuotation$adjustmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentQuotationAdjustmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    items<T extends DocumentQuotation$itemsArgs<ExtArgs> = {}>(args?: Subset<T, DocumentQuotation$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentAdjustmentItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DocumentQuotation model
+   */
+  interface DocumentQuotationFieldRefs {
+    readonly id: FieldRef<"DocumentQuotation", 'String'>
+    readonly customerId: FieldRef<"DocumentQuotation", 'String'>
+    readonly counter: FieldRef<"DocumentQuotation", 'Int'>
+    readonly referenceNumber: FieldRef<"DocumentQuotation", 'String'>
+    readonly subject: FieldRef<"DocumentQuotation", 'String'>
+    readonly currency: FieldRef<"DocumentQuotation", 'String'>
+    readonly exchangeRate: FieldRef<"DocumentQuotation", 'Decimal'>
+    readonly subtotal: FieldRef<"DocumentQuotation", 'Decimal'>
+    readonly discountType: FieldRef<"DocumentQuotation", 'String'>
+    readonly discountValue: FieldRef<"DocumentQuotation", 'Decimal'>
+    readonly discountAmount: FieldRef<"DocumentQuotation", 'Decimal'>
+    readonly taxTotal: FieldRef<"DocumentQuotation", 'Decimal'>
+    readonly hasAdjustments: FieldRef<"DocumentQuotation", 'Boolean'>
+    readonly total: FieldRef<"DocumentQuotation", 'Decimal'>
+    readonly status: FieldRef<"DocumentQuotation", 'String'>
+    readonly date: FieldRef<"DocumentQuotation", 'DateTime'>
+    readonly expires: FieldRef<"DocumentQuotation", 'DateTime'>
+    readonly details: FieldRef<"DocumentQuotation", 'Json'>
+    readonly createdAt: FieldRef<"DocumentQuotation", 'DateTime'>
+    readonly updatedAt: FieldRef<"DocumentQuotation", 'DateTime'>
+  }
+
+
+  // Custom InputTypes
+  /**
+   * DocumentQuotation findUnique
+   */
+  export type DocumentQuotationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentQuotation
+     */
+    select?: DocumentQuotationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentQuotation
+     */
+    omit?: DocumentQuotationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentQuotationInclude<ExtArgs> | null
+    /**
+     * Filter, which DocumentQuotation to fetch.
+     */
+    where: DocumentQuotationWhereUniqueInput
+  }
+
+  /**
+   * DocumentQuotation findUniqueOrThrow
+   */
+  export type DocumentQuotationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentQuotation
+     */
+    select?: DocumentQuotationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentQuotation
+     */
+    omit?: DocumentQuotationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentQuotationInclude<ExtArgs> | null
+    /**
+     * Filter, which DocumentQuotation to fetch.
+     */
+    where: DocumentQuotationWhereUniqueInput
+  }
+
+  /**
+   * DocumentQuotation findFirst
+   */
+  export type DocumentQuotationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentQuotation
+     */
+    select?: DocumentQuotationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentQuotation
+     */
+    omit?: DocumentQuotationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentQuotationInclude<ExtArgs> | null
+    /**
+     * Filter, which DocumentQuotation to fetch.
+     */
+    where?: DocumentQuotationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     *
+     * Determine the order of DocumentQuotations to fetch.
+     */
+    orderBy?: DocumentQuotationOrderByWithRelationInput | DocumentQuotationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     *
+     * Sets the position for searching for DocumentQuotations.
+     */
+    cursor?: DocumentQuotationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Take `±n` DocumentQuotations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Skip the first `n` DocumentQuotations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     *
+     * Filter by unique combinations of DocumentQuotations.
+     */
+    distinct?: DocumentQuotationScalarFieldEnum | DocumentQuotationScalarFieldEnum[]
+  }
+
+  /**
+   * DocumentQuotation findFirstOrThrow
+   */
+  export type DocumentQuotationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentQuotation
+     */
+    select?: DocumentQuotationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentQuotation
+     */
+    omit?: DocumentQuotationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentQuotationInclude<ExtArgs> | null
+    /**
+     * Filter, which DocumentQuotation to fetch.
+     */
+    where?: DocumentQuotationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     *
+     * Determine the order of DocumentQuotations to fetch.
+     */
+    orderBy?: DocumentQuotationOrderByWithRelationInput | DocumentQuotationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     *
+     * Sets the position for searching for DocumentQuotations.
+     */
+    cursor?: DocumentQuotationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Take `±n` DocumentQuotations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Skip the first `n` DocumentQuotations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     *
+     * Filter by unique combinations of DocumentQuotations.
+     */
+    distinct?: DocumentQuotationScalarFieldEnum | DocumentQuotationScalarFieldEnum[]
+  }
+
+  /**
+   * DocumentQuotation findMany
+   */
+  export type DocumentQuotationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentQuotation
+     */
+    select?: DocumentQuotationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentQuotation
+     */
+    omit?: DocumentQuotationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentQuotationInclude<ExtArgs> | null
+    /**
+     * Filter, which DocumentQuotations to fetch.
+     */
+    where?: DocumentQuotationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     *
+     * Determine the order of DocumentQuotations to fetch.
+     */
+    orderBy?: DocumentQuotationOrderByWithRelationInput | DocumentQuotationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     *
+     * Sets the position for listing DocumentQuotations.
+     */
+    cursor?: DocumentQuotationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Take `±n` DocumentQuotations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Skip the first `n` DocumentQuotations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     *
+     * Filter by unique combinations of DocumentQuotations.
+     */
+    distinct?: DocumentQuotationScalarFieldEnum | DocumentQuotationScalarFieldEnum[]
+  }
+
+  /**
+   * DocumentQuotation create
+   */
+  export type DocumentQuotationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentQuotation
+     */
+    select?: DocumentQuotationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentQuotation
+     */
+    omit?: DocumentQuotationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentQuotationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DocumentQuotation.
+     */
+    data: XOR<DocumentQuotationCreateInput, DocumentQuotationUncheckedCreateInput>
+  }
+
+  /**
+   * DocumentQuotation createMany
+   */
+  export type DocumentQuotationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DocumentQuotations.
+     */
+    data: DocumentQuotationCreateManyInput | DocumentQuotationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DocumentQuotation createManyAndReturn
+   */
+  export type DocumentQuotationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentQuotation
+     */
+    select?: DocumentQuotationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentQuotation
+     */
+    omit?: DocumentQuotationOmit<ExtArgs> | null
+    /**
+     * The data used to create many DocumentQuotations.
+     */
+    data: DocumentQuotationCreateManyInput | DocumentQuotationCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentQuotationIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DocumentQuotation update
+   */
+  export type DocumentQuotationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentQuotation
+     */
+    select?: DocumentQuotationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentQuotation
+     */
+    omit?: DocumentQuotationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentQuotationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DocumentQuotation.
+     */
+    data: XOR<DocumentQuotationUpdateInput, DocumentQuotationUncheckedUpdateInput>
+    /**
+     * Choose, which DocumentQuotation to update.
+     */
+    where: DocumentQuotationWhereUniqueInput
+  }
+
+  /**
+   * DocumentQuotation updateMany
+   */
+  export type DocumentQuotationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DocumentQuotations.
+     */
+    data: XOR<DocumentQuotationUpdateManyMutationInput, DocumentQuotationUncheckedUpdateManyInput>
+    /**
+     * Filter which DocumentQuotations to update
+     */
+    where?: DocumentQuotationWhereInput
+    /**
+     * Limit how many DocumentQuotations to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DocumentQuotation updateManyAndReturn
+   */
+  export type DocumentQuotationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentQuotation
+     */
+    select?: DocumentQuotationSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentQuotation
+     */
+    omit?: DocumentQuotationOmit<ExtArgs> | null
+    /**
+     * The data used to update DocumentQuotations.
+     */
+    data: XOR<DocumentQuotationUpdateManyMutationInput, DocumentQuotationUncheckedUpdateManyInput>
+    /**
+     * Filter which DocumentQuotations to update
+     */
+    where?: DocumentQuotationWhereInput
+    /**
+     * Limit how many DocumentQuotations to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentQuotationIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DocumentQuotation upsert
+   */
+  export type DocumentQuotationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentQuotation
+     */
+    select?: DocumentQuotationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentQuotation
+     */
+    omit?: DocumentQuotationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentQuotationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DocumentQuotation to update in case it exists.
+     */
+    where: DocumentQuotationWhereUniqueInput
+    /**
+     * In case the DocumentQuotation found by the `where` argument doesn't exist, create a new DocumentQuotation with this data.
+     */
+    create: XOR<DocumentQuotationCreateInput, DocumentQuotationUncheckedCreateInput>
+    /**
+     * In case the DocumentQuotation was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DocumentQuotationUpdateInput, DocumentQuotationUncheckedUpdateInput>
+  }
+
+  /**
+   * DocumentQuotation delete
+   */
+  export type DocumentQuotationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentQuotation
+     */
+    select?: DocumentQuotationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentQuotation
+     */
+    omit?: DocumentQuotationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentQuotationInclude<ExtArgs> | null
+    /**
+     * Filter which DocumentQuotation to delete.
+     */
+    where: DocumentQuotationWhereUniqueInput
+  }
+
+  /**
+   * DocumentQuotation deleteMany
+   */
+  export type DocumentQuotationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DocumentQuotations to delete
+     */
+    where?: DocumentQuotationWhereInput
+    /**
+     * Limit how many DocumentQuotations to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DocumentQuotation.adjustments
+   */
+  export type DocumentQuotation$adjustmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentQuotationAdjustment
+     */
+    select?: DocumentQuotationAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentQuotationAdjustment
+     */
+    omit?: DocumentQuotationAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentQuotationAdjustmentInclude<ExtArgs> | null
+    where?: DocumentQuotationAdjustmentWhereInput
+    orderBy?: DocumentQuotationAdjustmentOrderByWithRelationInput | DocumentQuotationAdjustmentOrderByWithRelationInput[]
+    cursor?: DocumentQuotationAdjustmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DocumentQuotationAdjustmentScalarFieldEnum | DocumentQuotationAdjustmentScalarFieldEnum[]
+  }
+
+  /**
+   * DocumentQuotation.items
+   */
+  export type DocumentQuotation$itemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentAdjustmentItem
+     */
+    select?: DocumentAdjustmentItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentAdjustmentItem
+     */
+    omit?: DocumentAdjustmentItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentAdjustmentItemInclude<ExtArgs> | null
+    where?: DocumentAdjustmentItemWhereInput
+    orderBy?: DocumentAdjustmentItemOrderByWithRelationInput | DocumentAdjustmentItemOrderByWithRelationInput[]
+    cursor?: DocumentAdjustmentItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DocumentAdjustmentItemScalarFieldEnum | DocumentAdjustmentItemScalarFieldEnum[]
+  }
+
+  /**
+   * DocumentQuotation without action
+   */
+  export type DocumentQuotationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentQuotation
+     */
+    select?: DocumentQuotationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentQuotation
+     */
+    omit?: DocumentQuotationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentQuotationInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model DocumentQuotationAdjustment
+   */
+
+  export type AggregateDocumentQuotationAdjustment = {
+    _count: DocumentQuotationAdjustmentCountAggregateOutputType | null
+    _avg: DocumentQuotationAdjustmentAvgAggregateOutputType | null
+    _sum: DocumentQuotationAdjustmentSumAggregateOutputType | null
+    _min: DocumentQuotationAdjustmentMinAggregateOutputType | null
+    _max: DocumentQuotationAdjustmentMaxAggregateOutputType | null
+  }
+
+  export type DocumentQuotationAdjustmentAvgAggregateOutputType = {
+    adjustmentValue: Decimal | null
+  }
+
+  export type DocumentQuotationAdjustmentSumAggregateOutputType = {
+    adjustmentValue: Decimal | null
+  }
+
+  export type DocumentQuotationAdjustmentMinAggregateOutputType = {
+    id: string | null
+    quotationId: string | null
+    adjustmentName: string | null
+    adjustmentValue: Decimal | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DocumentQuotationAdjustmentMaxAggregateOutputType = {
+    id: string | null
+    quotationId: string | null
+    adjustmentName: string | null
+    adjustmentValue: Decimal | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DocumentQuotationAdjustmentCountAggregateOutputType = {
+    id: number
+    quotationId: number
+    adjustmentName: number
+    adjustmentValue: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type DocumentQuotationAdjustmentAvgAggregateInputType = {
+    adjustmentValue?: true
+  }
+
+  export type DocumentQuotationAdjustmentSumAggregateInputType = {
+    adjustmentValue?: true
+  }
+
+  export type DocumentQuotationAdjustmentMinAggregateInputType = {
+    id?: true
+    quotationId?: true
+    adjustmentName?: true
+    adjustmentValue?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DocumentQuotationAdjustmentMaxAggregateInputType = {
+    id?: true
+    quotationId?: true
+    adjustmentName?: true
+    adjustmentValue?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DocumentQuotationAdjustmentCountAggregateInputType = {
+    id?: true
+    quotationId?: true
+    adjustmentName?: true
+    adjustmentValue?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type DocumentQuotationAdjustmentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DocumentQuotationAdjustment to aggregate.
+     */
+    where?: DocumentQuotationAdjustmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     *
+     * Determine the order of DocumentQuotationAdjustments to fetch.
+     */
+    orderBy?: DocumentQuotationAdjustmentOrderByWithRelationInput | DocumentQuotationAdjustmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     *
+     * Sets the start position
+     */
+    cursor?: DocumentQuotationAdjustmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Take `±n` DocumentQuotationAdjustments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Skip the first `n` DocumentQuotationAdjustments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Count returned DocumentQuotationAdjustments
+    **/
+    _count?: true | DocumentQuotationAdjustmentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Select which fields to average
+    **/
+    _avg?: DocumentQuotationAdjustmentAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Select which fields to sum
+    **/
+    _sum?: DocumentQuotationAdjustmentSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Select which fields to find the minimum value
+    **/
+    _min?: DocumentQuotationAdjustmentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Select which fields to find the maximum value
+    **/
+    _max?: DocumentQuotationAdjustmentMaxAggregateInputType
+  }
+
+  export type GetDocumentQuotationAdjustmentAggregateType<T extends DocumentQuotationAdjustmentAggregateArgs> = {
+        [P in keyof T & keyof AggregateDocumentQuotationAdjustment]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDocumentQuotationAdjustment[P]>
+      : GetScalarType<T[P], AggregateDocumentQuotationAdjustment[P]>
+  }
+
+
+
+
+  export type DocumentQuotationAdjustmentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DocumentQuotationAdjustmentWhereInput
+    orderBy?: DocumentQuotationAdjustmentOrderByWithAggregationInput | DocumentQuotationAdjustmentOrderByWithAggregationInput[]
+    by: DocumentQuotationAdjustmentScalarFieldEnum[] | DocumentQuotationAdjustmentScalarFieldEnum
+    having?: DocumentQuotationAdjustmentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DocumentQuotationAdjustmentCountAggregateInputType | true
+    _avg?: DocumentQuotationAdjustmentAvgAggregateInputType
+    _sum?: DocumentQuotationAdjustmentSumAggregateInputType
+    _min?: DocumentQuotationAdjustmentMinAggregateInputType
+    _max?: DocumentQuotationAdjustmentMaxAggregateInputType
+  }
+
+  export type DocumentQuotationAdjustmentGroupByOutputType = {
+    id: string
+    quotationId: string
+    adjustmentName: string
+    adjustmentValue: Decimal
+    createdAt: Date
+    updatedAt: Date
+    _count: DocumentQuotationAdjustmentCountAggregateOutputType | null
+    _avg: DocumentQuotationAdjustmentAvgAggregateOutputType | null
+    _sum: DocumentQuotationAdjustmentSumAggregateOutputType | null
+    _min: DocumentQuotationAdjustmentMinAggregateOutputType | null
+    _max: DocumentQuotationAdjustmentMaxAggregateOutputType | null
+  }
+
+  type GetDocumentQuotationAdjustmentGroupByPayload<T extends DocumentQuotationAdjustmentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DocumentQuotationAdjustmentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DocumentQuotationAdjustmentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DocumentQuotationAdjustmentGroupByOutputType[P]>
+            : GetScalarType<T[P], DocumentQuotationAdjustmentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DocumentQuotationAdjustmentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    quotationId?: boolean
+    adjustmentName?: boolean
+    adjustmentValue?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    quotation?: boolean | DocumentQuotationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["documentQuotationAdjustment"]>
+
+  export type DocumentQuotationAdjustmentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    quotationId?: boolean
+    adjustmentName?: boolean
+    adjustmentValue?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    quotation?: boolean | DocumentQuotationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["documentQuotationAdjustment"]>
+
+  export type DocumentQuotationAdjustmentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    quotationId?: boolean
+    adjustmentName?: boolean
+    adjustmentValue?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    quotation?: boolean | DocumentQuotationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["documentQuotationAdjustment"]>
+
+  export type DocumentQuotationAdjustmentSelectScalar = {
+    id?: boolean
+    quotationId?: boolean
+    adjustmentName?: boolean
+    adjustmentValue?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type DocumentQuotationAdjustmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "quotationId" | "adjustmentName" | "adjustmentValue" | "createdAt" | "updatedAt", ExtArgs["result"]["documentQuotationAdjustment"]>
+  export type DocumentQuotationAdjustmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    quotation?: boolean | DocumentQuotationDefaultArgs<ExtArgs>
+  }
+  export type DocumentQuotationAdjustmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    quotation?: boolean | DocumentQuotationDefaultArgs<ExtArgs>
+  }
+  export type DocumentQuotationAdjustmentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    quotation?: boolean | DocumentQuotationDefaultArgs<ExtArgs>
+  }
+
+  export type $DocumentQuotationAdjustmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DocumentQuotationAdjustment"
+    objects: {
+      quotation: Prisma.$DocumentQuotationPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      quotationId: string
+      adjustmentName: string
+      adjustmentValue: Prisma.Decimal
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["documentQuotationAdjustment"]>
+    composites: {}
+  }
+
+  type DocumentQuotationAdjustmentGetPayload<S extends boolean | null | undefined | DocumentQuotationAdjustmentDefaultArgs> = $Result.GetResult<Prisma.$DocumentQuotationAdjustmentPayload, S>
+
+  type DocumentQuotationAdjustmentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DocumentQuotationAdjustmentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DocumentQuotationAdjustmentCountAggregateInputType | true
+    }
+
+  export interface DocumentQuotationAdjustmentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DocumentQuotationAdjustment'], meta: { name: 'DocumentQuotationAdjustment' } }
+    /**
+     * Find zero or one DocumentQuotationAdjustment that matches the filter.
+     * @param {DocumentQuotationAdjustmentFindUniqueArgs} args - Arguments to find a DocumentQuotationAdjustment
+     * @example
+     * // Get one DocumentQuotationAdjustment
+     * const documentQuotationAdjustment = await prisma.documentQuotationAdjustment.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DocumentQuotationAdjustmentFindUniqueArgs>(args: SelectSubset<T, DocumentQuotationAdjustmentFindUniqueArgs<ExtArgs>>): Prisma__DocumentQuotationAdjustmentClient<$Result.GetResult<Prisma.$DocumentQuotationAdjustmentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DocumentQuotationAdjustment that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DocumentQuotationAdjustmentFindUniqueOrThrowArgs} args - Arguments to find a DocumentQuotationAdjustment
+     * @example
+     * // Get one DocumentQuotationAdjustment
+     * const documentQuotationAdjustment = await prisma.documentQuotationAdjustment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DocumentQuotationAdjustmentFindUniqueOrThrowArgs>(args: SelectSubset<T, DocumentQuotationAdjustmentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DocumentQuotationAdjustmentClient<$Result.GetResult<Prisma.$DocumentQuotationAdjustmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DocumentQuotationAdjustment that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentQuotationAdjustmentFindFirstArgs} args - Arguments to find a DocumentQuotationAdjustment
+     * @example
+     * // Get one DocumentQuotationAdjustment
+     * const documentQuotationAdjustment = await prisma.documentQuotationAdjustment.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DocumentQuotationAdjustmentFindFirstArgs>(args?: SelectSubset<T, DocumentQuotationAdjustmentFindFirstArgs<ExtArgs>>): Prisma__DocumentQuotationAdjustmentClient<$Result.GetResult<Prisma.$DocumentQuotationAdjustmentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DocumentQuotationAdjustment that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentQuotationAdjustmentFindFirstOrThrowArgs} args - Arguments to find a DocumentQuotationAdjustment
+     * @example
+     * // Get one DocumentQuotationAdjustment
+     * const documentQuotationAdjustment = await prisma.documentQuotationAdjustment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DocumentQuotationAdjustmentFindFirstOrThrowArgs>(args?: SelectSubset<T, DocumentQuotationAdjustmentFindFirstOrThrowArgs<ExtArgs>>): Prisma__DocumentQuotationAdjustmentClient<$Result.GetResult<Prisma.$DocumentQuotationAdjustmentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DocumentQuotationAdjustments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentQuotationAdjustmentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DocumentQuotationAdjustments
+     * const documentQuotationAdjustments = await prisma.documentQuotationAdjustment.findMany()
+     *
+     * // Get first 10 DocumentQuotationAdjustments
+     * const documentQuotationAdjustments = await prisma.documentQuotationAdjustment.findMany({ take: 10 })
+     *
+     * // Only select the `id`
+     * const documentQuotationAdjustmentWithIdOnly = await prisma.documentQuotationAdjustment.findMany({ select: { id: true } })
+     *
+     */
+    findMany<T extends DocumentQuotationAdjustmentFindManyArgs>(args?: SelectSubset<T, DocumentQuotationAdjustmentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentQuotationAdjustmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DocumentQuotationAdjustment.
+     * @param {DocumentQuotationAdjustmentCreateArgs} args - Arguments to create a DocumentQuotationAdjustment.
+     * @example
+     * // Create one DocumentQuotationAdjustment
+     * const DocumentQuotationAdjustment = await prisma.documentQuotationAdjustment.create({
+     *   data: {
+     *     // ... data to create a DocumentQuotationAdjustment
+     *   }
+     * })
+     *
+     */
+    create<T extends DocumentQuotationAdjustmentCreateArgs>(args: SelectSubset<T, DocumentQuotationAdjustmentCreateArgs<ExtArgs>>): Prisma__DocumentQuotationAdjustmentClient<$Result.GetResult<Prisma.$DocumentQuotationAdjustmentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DocumentQuotationAdjustments.
+     * @param {DocumentQuotationAdjustmentCreateManyArgs} args - Arguments to create many DocumentQuotationAdjustments.
+     * @example
+     * // Create many DocumentQuotationAdjustments
+     * const documentQuotationAdjustment = await prisma.documentQuotationAdjustment.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *
+     */
+    createMany<T extends DocumentQuotationAdjustmentCreateManyArgs>(args?: SelectSubset<T, DocumentQuotationAdjustmentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DocumentQuotationAdjustments and returns the data saved in the database.
+     * @param {DocumentQuotationAdjustmentCreateManyAndReturnArgs} args - Arguments to create many DocumentQuotationAdjustments.
+     * @example
+     * // Create many DocumentQuotationAdjustments
+     * const documentQuotationAdjustment = await prisma.documentQuotationAdjustment.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *
+     * // Create many DocumentQuotationAdjustments and only return the `id`
+     * const documentQuotationAdjustmentWithIdOnly = await prisma.documentQuotationAdjustment.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     *
+     */
+    createManyAndReturn<T extends DocumentQuotationAdjustmentCreateManyAndReturnArgs>(args?: SelectSubset<T, DocumentQuotationAdjustmentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentQuotationAdjustmentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DocumentQuotationAdjustment.
+     * @param {DocumentQuotationAdjustmentDeleteArgs} args - Arguments to delete one DocumentQuotationAdjustment.
+     * @example
+     * // Delete one DocumentQuotationAdjustment
+     * const DocumentQuotationAdjustment = await prisma.documentQuotationAdjustment.delete({
+     *   where: {
+     *     // ... filter to delete one DocumentQuotationAdjustment
+     *   }
+     * })
+     *
+     */
+    delete<T extends DocumentQuotationAdjustmentDeleteArgs>(args: SelectSubset<T, DocumentQuotationAdjustmentDeleteArgs<ExtArgs>>): Prisma__DocumentQuotationAdjustmentClient<$Result.GetResult<Prisma.$DocumentQuotationAdjustmentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DocumentQuotationAdjustment.
+     * @param {DocumentQuotationAdjustmentUpdateArgs} args - Arguments to update one DocumentQuotationAdjustment.
+     * @example
+     * // Update one DocumentQuotationAdjustment
+     * const documentQuotationAdjustment = await prisma.documentQuotationAdjustment.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     *
+     */
+    update<T extends DocumentQuotationAdjustmentUpdateArgs>(args: SelectSubset<T, DocumentQuotationAdjustmentUpdateArgs<ExtArgs>>): Prisma__DocumentQuotationAdjustmentClient<$Result.GetResult<Prisma.$DocumentQuotationAdjustmentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DocumentQuotationAdjustments.
+     * @param {DocumentQuotationAdjustmentDeleteManyArgs} args - Arguments to filter DocumentQuotationAdjustments to delete.
+     * @example
+     * // Delete a few DocumentQuotationAdjustments
+     * const { count } = await prisma.documentQuotationAdjustment.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     *
+     */
+    deleteMany<T extends DocumentQuotationAdjustmentDeleteManyArgs>(args?: SelectSubset<T, DocumentQuotationAdjustmentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DocumentQuotationAdjustments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentQuotationAdjustmentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DocumentQuotationAdjustments
+     * const documentQuotationAdjustment = await prisma.documentQuotationAdjustment.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     *
+     */
+    updateMany<T extends DocumentQuotationAdjustmentUpdateManyArgs>(args: SelectSubset<T, DocumentQuotationAdjustmentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DocumentQuotationAdjustments and returns the data updated in the database.
+     * @param {DocumentQuotationAdjustmentUpdateManyAndReturnArgs} args - Arguments to update many DocumentQuotationAdjustments.
+     * @example
+     * // Update many DocumentQuotationAdjustments
+     * const documentQuotationAdjustment = await prisma.documentQuotationAdjustment.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *
+     * // Update zero or more DocumentQuotationAdjustments and only return the `id`
+     * const documentQuotationAdjustmentWithIdOnly = await prisma.documentQuotationAdjustment.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     *
+     */
+    updateManyAndReturn<T extends DocumentQuotationAdjustmentUpdateManyAndReturnArgs>(args: SelectSubset<T, DocumentQuotationAdjustmentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentQuotationAdjustmentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DocumentQuotationAdjustment.
+     * @param {DocumentQuotationAdjustmentUpsertArgs} args - Arguments to update or create a DocumentQuotationAdjustment.
+     * @example
+     * // Update or create a DocumentQuotationAdjustment
+     * const documentQuotationAdjustment = await prisma.documentQuotationAdjustment.upsert({
+     *   create: {
+     *     // ... data to create a DocumentQuotationAdjustment
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DocumentQuotationAdjustment we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DocumentQuotationAdjustmentUpsertArgs>(args: SelectSubset<T, DocumentQuotationAdjustmentUpsertArgs<ExtArgs>>): Prisma__DocumentQuotationAdjustmentClient<$Result.GetResult<Prisma.$DocumentQuotationAdjustmentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DocumentQuotationAdjustments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentQuotationAdjustmentCountArgs} args - Arguments to filter DocumentQuotationAdjustments to count.
+     * @example
+     * // Count the number of DocumentQuotationAdjustments
+     * const count = await prisma.documentQuotationAdjustment.count({
+     *   where: {
+     *     // ... the filter for the DocumentQuotationAdjustments we want to count
+     *   }
+     * })
+    **/
+    count<T extends DocumentQuotationAdjustmentCountArgs>(
+      args?: Subset<T, DocumentQuotationAdjustmentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DocumentQuotationAdjustmentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DocumentQuotationAdjustment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentQuotationAdjustmentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DocumentQuotationAdjustmentAggregateArgs>(args: Subset<T, DocumentQuotationAdjustmentAggregateArgs>): Prisma.PrismaPromise<GetDocumentQuotationAdjustmentAggregateType<T>>
+
+    /**
+     * Group by DocumentQuotationAdjustment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentQuotationAdjustmentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     *
+    **/
+    groupBy<
+      T extends DocumentQuotationAdjustmentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DocumentQuotationAdjustmentGroupByArgs['orderBy'] }
+        : { orderBy?: DocumentQuotationAdjustmentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DocumentQuotationAdjustmentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDocumentQuotationAdjustmentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DocumentQuotationAdjustment model
+   */
+  readonly fields: DocumentQuotationAdjustmentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DocumentQuotationAdjustment.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DocumentQuotationAdjustmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    quotation<T extends DocumentQuotationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DocumentQuotationDefaultArgs<ExtArgs>>): Prisma__DocumentQuotationClient<$Result.GetResult<Prisma.$DocumentQuotationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DocumentQuotationAdjustment model
+   */
+  interface DocumentQuotationAdjustmentFieldRefs {
+    readonly id: FieldRef<"DocumentQuotationAdjustment", 'String'>
+    readonly quotationId: FieldRef<"DocumentQuotationAdjustment", 'String'>
+    readonly adjustmentName: FieldRef<"DocumentQuotationAdjustment", 'String'>
+    readonly adjustmentValue: FieldRef<"DocumentQuotationAdjustment", 'Decimal'>
+    readonly createdAt: FieldRef<"DocumentQuotationAdjustment", 'DateTime'>
+    readonly updatedAt: FieldRef<"DocumentQuotationAdjustment", 'DateTime'>
+  }
+
+
+  // Custom InputTypes
+  /**
+   * DocumentQuotationAdjustment findUnique
+   */
+  export type DocumentQuotationAdjustmentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentQuotationAdjustment
+     */
+    select?: DocumentQuotationAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentQuotationAdjustment
+     */
+    omit?: DocumentQuotationAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentQuotationAdjustmentInclude<ExtArgs> | null
+    /**
+     * Filter, which DocumentQuotationAdjustment to fetch.
+     */
+    where: DocumentQuotationAdjustmentWhereUniqueInput
+  }
+
+  /**
+   * DocumentQuotationAdjustment findUniqueOrThrow
+   */
+  export type DocumentQuotationAdjustmentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentQuotationAdjustment
+     */
+    select?: DocumentQuotationAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentQuotationAdjustment
+     */
+    omit?: DocumentQuotationAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentQuotationAdjustmentInclude<ExtArgs> | null
+    /**
+     * Filter, which DocumentQuotationAdjustment to fetch.
+     */
+    where: DocumentQuotationAdjustmentWhereUniqueInput
+  }
+
+  /**
+   * DocumentQuotationAdjustment findFirst
+   */
+  export type DocumentQuotationAdjustmentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentQuotationAdjustment
+     */
+    select?: DocumentQuotationAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentQuotationAdjustment
+     */
+    omit?: DocumentQuotationAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentQuotationAdjustmentInclude<ExtArgs> | null
+    /**
+     * Filter, which DocumentQuotationAdjustment to fetch.
+     */
+    where?: DocumentQuotationAdjustmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     *
+     * Determine the order of DocumentQuotationAdjustments to fetch.
+     */
+    orderBy?: DocumentQuotationAdjustmentOrderByWithRelationInput | DocumentQuotationAdjustmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     *
+     * Sets the position for searching for DocumentQuotationAdjustments.
+     */
+    cursor?: DocumentQuotationAdjustmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Take `±n` DocumentQuotationAdjustments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Skip the first `n` DocumentQuotationAdjustments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     *
+     * Filter by unique combinations of DocumentQuotationAdjustments.
+     */
+    distinct?: DocumentQuotationAdjustmentScalarFieldEnum | DocumentQuotationAdjustmentScalarFieldEnum[]
+  }
+
+  /**
+   * DocumentQuotationAdjustment findFirstOrThrow
+   */
+  export type DocumentQuotationAdjustmentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentQuotationAdjustment
+     */
+    select?: DocumentQuotationAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentQuotationAdjustment
+     */
+    omit?: DocumentQuotationAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentQuotationAdjustmentInclude<ExtArgs> | null
+    /**
+     * Filter, which DocumentQuotationAdjustment to fetch.
+     */
+    where?: DocumentQuotationAdjustmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     *
+     * Determine the order of DocumentQuotationAdjustments to fetch.
+     */
+    orderBy?: DocumentQuotationAdjustmentOrderByWithRelationInput | DocumentQuotationAdjustmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     *
+     * Sets the position for searching for DocumentQuotationAdjustments.
+     */
+    cursor?: DocumentQuotationAdjustmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Take `±n` DocumentQuotationAdjustments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Skip the first `n` DocumentQuotationAdjustments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     *
+     * Filter by unique combinations of DocumentQuotationAdjustments.
+     */
+    distinct?: DocumentQuotationAdjustmentScalarFieldEnum | DocumentQuotationAdjustmentScalarFieldEnum[]
+  }
+
+  /**
+   * DocumentQuotationAdjustment findMany
+   */
+  export type DocumentQuotationAdjustmentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentQuotationAdjustment
+     */
+    select?: DocumentQuotationAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentQuotationAdjustment
+     */
+    omit?: DocumentQuotationAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentQuotationAdjustmentInclude<ExtArgs> | null
+    /**
+     * Filter, which DocumentQuotationAdjustments to fetch.
+     */
+    where?: DocumentQuotationAdjustmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     *
+     * Determine the order of DocumentQuotationAdjustments to fetch.
+     */
+    orderBy?: DocumentQuotationAdjustmentOrderByWithRelationInput | DocumentQuotationAdjustmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     *
+     * Sets the position for listing DocumentQuotationAdjustments.
+     */
+    cursor?: DocumentQuotationAdjustmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Take `±n` DocumentQuotationAdjustments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Skip the first `n` DocumentQuotationAdjustments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     *
+     * Filter by unique combinations of DocumentQuotationAdjustments.
+     */
+    distinct?: DocumentQuotationAdjustmentScalarFieldEnum | DocumentQuotationAdjustmentScalarFieldEnum[]
+  }
+
+  /**
+   * DocumentQuotationAdjustment create
+   */
+  export type DocumentQuotationAdjustmentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentQuotationAdjustment
+     */
+    select?: DocumentQuotationAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentQuotationAdjustment
+     */
+    omit?: DocumentQuotationAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentQuotationAdjustmentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DocumentQuotationAdjustment.
+     */
+    data: XOR<DocumentQuotationAdjustmentCreateInput, DocumentQuotationAdjustmentUncheckedCreateInput>
+  }
+
+  /**
+   * DocumentQuotationAdjustment createMany
+   */
+  export type DocumentQuotationAdjustmentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DocumentQuotationAdjustments.
+     */
+    data: DocumentQuotationAdjustmentCreateManyInput | DocumentQuotationAdjustmentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DocumentQuotationAdjustment createManyAndReturn
+   */
+  export type DocumentQuotationAdjustmentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentQuotationAdjustment
+     */
+    select?: DocumentQuotationAdjustmentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentQuotationAdjustment
+     */
+    omit?: DocumentQuotationAdjustmentOmit<ExtArgs> | null
+    /**
+     * The data used to create many DocumentQuotationAdjustments.
+     */
+    data: DocumentQuotationAdjustmentCreateManyInput | DocumentQuotationAdjustmentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentQuotationAdjustmentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DocumentQuotationAdjustment update
+   */
+  export type DocumentQuotationAdjustmentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentQuotationAdjustment
+     */
+    select?: DocumentQuotationAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentQuotationAdjustment
+     */
+    omit?: DocumentQuotationAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentQuotationAdjustmentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DocumentQuotationAdjustment.
+     */
+    data: XOR<DocumentQuotationAdjustmentUpdateInput, DocumentQuotationAdjustmentUncheckedUpdateInput>
+    /**
+     * Choose, which DocumentQuotationAdjustment to update.
+     */
+    where: DocumentQuotationAdjustmentWhereUniqueInput
+  }
+
+  /**
+   * DocumentQuotationAdjustment updateMany
+   */
+  export type DocumentQuotationAdjustmentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DocumentQuotationAdjustments.
+     */
+    data: XOR<DocumentQuotationAdjustmentUpdateManyMutationInput, DocumentQuotationAdjustmentUncheckedUpdateManyInput>
+    /**
+     * Filter which DocumentQuotationAdjustments to update
+     */
+    where?: DocumentQuotationAdjustmentWhereInput
+    /**
+     * Limit how many DocumentQuotationAdjustments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DocumentQuotationAdjustment updateManyAndReturn
+   */
+  export type DocumentQuotationAdjustmentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentQuotationAdjustment
+     */
+    select?: DocumentQuotationAdjustmentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentQuotationAdjustment
+     */
+    omit?: DocumentQuotationAdjustmentOmit<ExtArgs> | null
+    /**
+     * The data used to update DocumentQuotationAdjustments.
+     */
+    data: XOR<DocumentQuotationAdjustmentUpdateManyMutationInput, DocumentQuotationAdjustmentUncheckedUpdateManyInput>
+    /**
+     * Filter which DocumentQuotationAdjustments to update
+     */
+    where?: DocumentQuotationAdjustmentWhereInput
+    /**
+     * Limit how many DocumentQuotationAdjustments to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentQuotationAdjustmentIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DocumentQuotationAdjustment upsert
+   */
+  export type DocumentQuotationAdjustmentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentQuotationAdjustment
+     */
+    select?: DocumentQuotationAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentQuotationAdjustment
+     */
+    omit?: DocumentQuotationAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentQuotationAdjustmentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DocumentQuotationAdjustment to update in case it exists.
+     */
+    where: DocumentQuotationAdjustmentWhereUniqueInput
+    /**
+     * In case the DocumentQuotationAdjustment found by the `where` argument doesn't exist, create a new DocumentQuotationAdjustment with this data.
+     */
+    create: XOR<DocumentQuotationAdjustmentCreateInput, DocumentQuotationAdjustmentUncheckedCreateInput>
+    /**
+     * In case the DocumentQuotationAdjustment was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DocumentQuotationAdjustmentUpdateInput, DocumentQuotationAdjustmentUncheckedUpdateInput>
+  }
+
+  /**
+   * DocumentQuotationAdjustment delete
+   */
+  export type DocumentQuotationAdjustmentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentQuotationAdjustment
+     */
+    select?: DocumentQuotationAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentQuotationAdjustment
+     */
+    omit?: DocumentQuotationAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentQuotationAdjustmentInclude<ExtArgs> | null
+    /**
+     * Filter which DocumentQuotationAdjustment to delete.
+     */
+    where: DocumentQuotationAdjustmentWhereUniqueInput
+  }
+
+  /**
+   * DocumentQuotationAdjustment deleteMany
+   */
+  export type DocumentQuotationAdjustmentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DocumentQuotationAdjustments to delete
+     */
+    where?: DocumentQuotationAdjustmentWhereInput
+    /**
+     * Limit how many DocumentQuotationAdjustments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DocumentQuotationAdjustment without action
+   */
+  export type DocumentQuotationAdjustmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentQuotationAdjustment
+     */
+    select?: DocumentQuotationAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentQuotationAdjustment
+     */
+    omit?: DocumentQuotationAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentQuotationAdjustmentInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model DocumentAdjustmentItem
+   */
+
+  export type AggregateDocumentAdjustmentItem = {
+    _count: DocumentAdjustmentItemCountAggregateOutputType | null
+    _avg: DocumentAdjustmentItemAvgAggregateOutputType | null
+    _sum: DocumentAdjustmentItemSumAggregateOutputType | null
+    _min: DocumentAdjustmentItemMinAggregateOutputType | null
+    _max: DocumentAdjustmentItemMaxAggregateOutputType | null
+  }
+
+  export type DocumentAdjustmentItemAvgAggregateOutputType = {
+    quantity: Decimal | null
+    rate: Decimal | null
+    discountValue: Decimal | null
+    discountAmount: Decimal | null
+    taxRate: Decimal | null
+    taxAmount: Decimal | null
+    amount: Decimal | null
+    sortIndex: number | null
+  }
+
+  export type DocumentAdjustmentItemSumAggregateOutputType = {
+    quantity: Decimal | null
+    rate: Decimal | null
+    discountValue: Decimal | null
+    discountAmount: Decimal | null
+    taxRate: Decimal | null
+    taxAmount: Decimal | null
+    amount: Decimal | null
+    sortIndex: number | null
+  }
+
+  export type DocumentAdjustmentItemMinAggregateOutputType = {
+    id: string | null
+    quotationId: string | null
+    productId: string | null
+    name: string | null
+    description: string | null
+    quantity: Decimal | null
+    unit: string | null
+    rate: Decimal | null
+    discountType: string | null
+    discountValue: Decimal | null
+    discountAmount: Decimal | null
+    taxRate: Decimal | null
+    taxAmount: Decimal | null
+    amount: Decimal | null
+    sortIndex: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DocumentAdjustmentItemMaxAggregateOutputType = {
+    id: string | null
+    quotationId: string | null
+    productId: string | null
+    name: string | null
+    description: string | null
+    quantity: Decimal | null
+    unit: string | null
+    rate: Decimal | null
+    discountType: string | null
+    discountValue: Decimal | null
+    discountAmount: Decimal | null
+    taxRate: Decimal | null
+    taxAmount: Decimal | null
+    amount: Decimal | null
+    sortIndex: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DocumentAdjustmentItemCountAggregateOutputType = {
+    id: number
+    quotationId: number
+    productId: number
+    name: number
+    description: number
+    quantity: number
+    unit: number
+    rate: number
+    discountType: number
+    discountValue: number
+    discountAmount: number
+    taxRate: number
+    taxAmount: number
+    amount: number
+    sortIndex: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type DocumentAdjustmentItemAvgAggregateInputType = {
+    quantity?: true
+    rate?: true
+    discountValue?: true
+    discountAmount?: true
+    taxRate?: true
+    taxAmount?: true
+    amount?: true
+    sortIndex?: true
+  }
+
+  export type DocumentAdjustmentItemSumAggregateInputType = {
+    quantity?: true
+    rate?: true
+    discountValue?: true
+    discountAmount?: true
+    taxRate?: true
+    taxAmount?: true
+    amount?: true
+    sortIndex?: true
+  }
+
+  export type DocumentAdjustmentItemMinAggregateInputType = {
+    id?: true
+    quotationId?: true
+    productId?: true
+    name?: true
+    description?: true
+    quantity?: true
+    unit?: true
+    rate?: true
+    discountType?: true
+    discountValue?: true
+    discountAmount?: true
+    taxRate?: true
+    taxAmount?: true
+    amount?: true
+    sortIndex?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DocumentAdjustmentItemMaxAggregateInputType = {
+    id?: true
+    quotationId?: true
+    productId?: true
+    name?: true
+    description?: true
+    quantity?: true
+    unit?: true
+    rate?: true
+    discountType?: true
+    discountValue?: true
+    discountAmount?: true
+    taxRate?: true
+    taxAmount?: true
+    amount?: true
+    sortIndex?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DocumentAdjustmentItemCountAggregateInputType = {
+    id?: true
+    quotationId?: true
+    productId?: true
+    name?: true
+    description?: true
+    quantity?: true
+    unit?: true
+    rate?: true
+    discountType?: true
+    discountValue?: true
+    discountAmount?: true
+    taxRate?: true
+    taxAmount?: true
+    amount?: true
+    sortIndex?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type DocumentAdjustmentItemAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DocumentAdjustmentItem to aggregate.
+     */
+    where?: DocumentAdjustmentItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     *
+     * Determine the order of DocumentAdjustmentItems to fetch.
+     */
+    orderBy?: DocumentAdjustmentItemOrderByWithRelationInput | DocumentAdjustmentItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     *
+     * Sets the start position
+     */
+    cursor?: DocumentAdjustmentItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Take `±n` DocumentAdjustmentItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Skip the first `n` DocumentAdjustmentItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Count returned DocumentAdjustmentItems
+    **/
+    _count?: true | DocumentAdjustmentItemCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Select which fields to average
+    **/
+    _avg?: DocumentAdjustmentItemAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Select which fields to sum
+    **/
+    _sum?: DocumentAdjustmentItemSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Select which fields to find the minimum value
+    **/
+    _min?: DocumentAdjustmentItemMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Select which fields to find the maximum value
+    **/
+    _max?: DocumentAdjustmentItemMaxAggregateInputType
+  }
+
+  export type GetDocumentAdjustmentItemAggregateType<T extends DocumentAdjustmentItemAggregateArgs> = {
+        [P in keyof T & keyof AggregateDocumentAdjustmentItem]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDocumentAdjustmentItem[P]>
+      : GetScalarType<T[P], AggregateDocumentAdjustmentItem[P]>
+  }
+
+
+
+
+  export type DocumentAdjustmentItemGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DocumentAdjustmentItemWhereInput
+    orderBy?: DocumentAdjustmentItemOrderByWithAggregationInput | DocumentAdjustmentItemOrderByWithAggregationInput[]
+    by: DocumentAdjustmentItemScalarFieldEnum[] | DocumentAdjustmentItemScalarFieldEnum
+    having?: DocumentAdjustmentItemScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DocumentAdjustmentItemCountAggregateInputType | true
+    _avg?: DocumentAdjustmentItemAvgAggregateInputType
+    _sum?: DocumentAdjustmentItemSumAggregateInputType
+    _min?: DocumentAdjustmentItemMinAggregateInputType
+    _max?: DocumentAdjustmentItemMaxAggregateInputType
+  }
+
+  export type DocumentAdjustmentItemGroupByOutputType = {
+    id: string
+    quotationId: string
+    productId: string | null
+    name: string
+    description: string | null
+    quantity: Decimal
+    unit: string
+    rate: Decimal
+    discountType: string
+    discountValue: Decimal
+    discountAmount: Decimal
+    taxRate: Decimal
+    taxAmount: Decimal
+    amount: Decimal
+    sortIndex: number
+    createdAt: Date
+    updatedAt: Date
+    _count: DocumentAdjustmentItemCountAggregateOutputType | null
+    _avg: DocumentAdjustmentItemAvgAggregateOutputType | null
+    _sum: DocumentAdjustmentItemSumAggregateOutputType | null
+    _min: DocumentAdjustmentItemMinAggregateOutputType | null
+    _max: DocumentAdjustmentItemMaxAggregateOutputType | null
+  }
+
+  type GetDocumentAdjustmentItemGroupByPayload<T extends DocumentAdjustmentItemGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DocumentAdjustmentItemGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DocumentAdjustmentItemGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DocumentAdjustmentItemGroupByOutputType[P]>
+            : GetScalarType<T[P], DocumentAdjustmentItemGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DocumentAdjustmentItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    quotationId?: boolean
+    productId?: boolean
+    name?: boolean
+    description?: boolean
+    quantity?: boolean
+    unit?: boolean
+    rate?: boolean
+    discountType?: boolean
+    discountValue?: boolean
+    discountAmount?: boolean
+    taxRate?: boolean
+    taxAmount?: boolean
+    amount?: boolean
+    sortIndex?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    quotation?: boolean | DocumentQuotationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["documentAdjustmentItem"]>
+
+  export type DocumentAdjustmentItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    quotationId?: boolean
+    productId?: boolean
+    name?: boolean
+    description?: boolean
+    quantity?: boolean
+    unit?: boolean
+    rate?: boolean
+    discountType?: boolean
+    discountValue?: boolean
+    discountAmount?: boolean
+    taxRate?: boolean
+    taxAmount?: boolean
+    amount?: boolean
+    sortIndex?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    quotation?: boolean | DocumentQuotationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["documentAdjustmentItem"]>
+
+  export type DocumentAdjustmentItemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    quotationId?: boolean
+    productId?: boolean
+    name?: boolean
+    description?: boolean
+    quantity?: boolean
+    unit?: boolean
+    rate?: boolean
+    discountType?: boolean
+    discountValue?: boolean
+    discountAmount?: boolean
+    taxRate?: boolean
+    taxAmount?: boolean
+    amount?: boolean
+    sortIndex?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    quotation?: boolean | DocumentQuotationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["documentAdjustmentItem"]>
+
+  export type DocumentAdjustmentItemSelectScalar = {
+    id?: boolean
+    quotationId?: boolean
+    productId?: boolean
+    name?: boolean
+    description?: boolean
+    quantity?: boolean
+    unit?: boolean
+    rate?: boolean
+    discountType?: boolean
+    discountValue?: boolean
+    discountAmount?: boolean
+    taxRate?: boolean
+    taxAmount?: boolean
+    amount?: boolean
+    sortIndex?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type DocumentAdjustmentItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "quotationId" | "productId" | "name" | "description" | "quantity" | "unit" | "rate" | "discountType" | "discountValue" | "discountAmount" | "taxRate" | "taxAmount" | "amount" | "sortIndex" | "createdAt" | "updatedAt", ExtArgs["result"]["documentAdjustmentItem"]>
+  export type DocumentAdjustmentItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    quotation?: boolean | DocumentQuotationDefaultArgs<ExtArgs>
+  }
+  export type DocumentAdjustmentItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    quotation?: boolean | DocumentQuotationDefaultArgs<ExtArgs>
+  }
+  export type DocumentAdjustmentItemIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    quotation?: boolean | DocumentQuotationDefaultArgs<ExtArgs>
+  }
+
+  export type $DocumentAdjustmentItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DocumentAdjustmentItem"
+    objects: {
+      quotation: Prisma.$DocumentQuotationPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      quotationId: string
+      productId: string | null
+      name: string
+      description: string | null
+      quantity: Prisma.Decimal
+      unit: string
+      rate: Prisma.Decimal
+      discountType: string
+      discountValue: Prisma.Decimal
+      discountAmount: Prisma.Decimal
+      taxRate: Prisma.Decimal
+      taxAmount: Prisma.Decimal
+      amount: Prisma.Decimal
+      sortIndex: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["documentAdjustmentItem"]>
+    composites: {}
+  }
+
+  type DocumentAdjustmentItemGetPayload<S extends boolean | null | undefined | DocumentAdjustmentItemDefaultArgs> = $Result.GetResult<Prisma.$DocumentAdjustmentItemPayload, S>
+
+  type DocumentAdjustmentItemCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DocumentAdjustmentItemFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DocumentAdjustmentItemCountAggregateInputType | true
+    }
+
+  export interface DocumentAdjustmentItemDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DocumentAdjustmentItem'], meta: { name: 'DocumentAdjustmentItem' } }
+    /**
+     * Find zero or one DocumentAdjustmentItem that matches the filter.
+     * @param {DocumentAdjustmentItemFindUniqueArgs} args - Arguments to find a DocumentAdjustmentItem
+     * @example
+     * // Get one DocumentAdjustmentItem
+     * const documentAdjustmentItem = await prisma.documentAdjustmentItem.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DocumentAdjustmentItemFindUniqueArgs>(args: SelectSubset<T, DocumentAdjustmentItemFindUniqueArgs<ExtArgs>>): Prisma__DocumentAdjustmentItemClient<$Result.GetResult<Prisma.$DocumentAdjustmentItemPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DocumentAdjustmentItem that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DocumentAdjustmentItemFindUniqueOrThrowArgs} args - Arguments to find a DocumentAdjustmentItem
+     * @example
+     * // Get one DocumentAdjustmentItem
+     * const documentAdjustmentItem = await prisma.documentAdjustmentItem.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DocumentAdjustmentItemFindUniqueOrThrowArgs>(args: SelectSubset<T, DocumentAdjustmentItemFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DocumentAdjustmentItemClient<$Result.GetResult<Prisma.$DocumentAdjustmentItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DocumentAdjustmentItem that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentAdjustmentItemFindFirstArgs} args - Arguments to find a DocumentAdjustmentItem
+     * @example
+     * // Get one DocumentAdjustmentItem
+     * const documentAdjustmentItem = await prisma.documentAdjustmentItem.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DocumentAdjustmentItemFindFirstArgs>(args?: SelectSubset<T, DocumentAdjustmentItemFindFirstArgs<ExtArgs>>): Prisma__DocumentAdjustmentItemClient<$Result.GetResult<Prisma.$DocumentAdjustmentItemPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DocumentAdjustmentItem that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentAdjustmentItemFindFirstOrThrowArgs} args - Arguments to find a DocumentAdjustmentItem
+     * @example
+     * // Get one DocumentAdjustmentItem
+     * const documentAdjustmentItem = await prisma.documentAdjustmentItem.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DocumentAdjustmentItemFindFirstOrThrowArgs>(args?: SelectSubset<T, DocumentAdjustmentItemFindFirstOrThrowArgs<ExtArgs>>): Prisma__DocumentAdjustmentItemClient<$Result.GetResult<Prisma.$DocumentAdjustmentItemPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DocumentAdjustmentItems that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentAdjustmentItemFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DocumentAdjustmentItems
+     * const documentAdjustmentItems = await prisma.documentAdjustmentItem.findMany()
+     *
+     * // Get first 10 DocumentAdjustmentItems
+     * const documentAdjustmentItems = await prisma.documentAdjustmentItem.findMany({ take: 10 })
+     *
+     * // Only select the `id`
+     * const documentAdjustmentItemWithIdOnly = await prisma.documentAdjustmentItem.findMany({ select: { id: true } })
+     *
+     */
+    findMany<T extends DocumentAdjustmentItemFindManyArgs>(args?: SelectSubset<T, DocumentAdjustmentItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentAdjustmentItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DocumentAdjustmentItem.
+     * @param {DocumentAdjustmentItemCreateArgs} args - Arguments to create a DocumentAdjustmentItem.
+     * @example
+     * // Create one DocumentAdjustmentItem
+     * const DocumentAdjustmentItem = await prisma.documentAdjustmentItem.create({
+     *   data: {
+     *     // ... data to create a DocumentAdjustmentItem
+     *   }
+     * })
+     *
+     */
+    create<T extends DocumentAdjustmentItemCreateArgs>(args: SelectSubset<T, DocumentAdjustmentItemCreateArgs<ExtArgs>>): Prisma__DocumentAdjustmentItemClient<$Result.GetResult<Prisma.$DocumentAdjustmentItemPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DocumentAdjustmentItems.
+     * @param {DocumentAdjustmentItemCreateManyArgs} args - Arguments to create many DocumentAdjustmentItems.
+     * @example
+     * // Create many DocumentAdjustmentItems
+     * const documentAdjustmentItem = await prisma.documentAdjustmentItem.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *
+     */
+    createMany<T extends DocumentAdjustmentItemCreateManyArgs>(args?: SelectSubset<T, DocumentAdjustmentItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DocumentAdjustmentItems and returns the data saved in the database.
+     * @param {DocumentAdjustmentItemCreateManyAndReturnArgs} args - Arguments to create many DocumentAdjustmentItems.
+     * @example
+     * // Create many DocumentAdjustmentItems
+     * const documentAdjustmentItem = await prisma.documentAdjustmentItem.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *
+     * // Create many DocumentAdjustmentItems and only return the `id`
+     * const documentAdjustmentItemWithIdOnly = await prisma.documentAdjustmentItem.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     *
+     */
+    createManyAndReturn<T extends DocumentAdjustmentItemCreateManyAndReturnArgs>(args?: SelectSubset<T, DocumentAdjustmentItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentAdjustmentItemPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DocumentAdjustmentItem.
+     * @param {DocumentAdjustmentItemDeleteArgs} args - Arguments to delete one DocumentAdjustmentItem.
+     * @example
+     * // Delete one DocumentAdjustmentItem
+     * const DocumentAdjustmentItem = await prisma.documentAdjustmentItem.delete({
+     *   where: {
+     *     // ... filter to delete one DocumentAdjustmentItem
+     *   }
+     * })
+     *
+     */
+    delete<T extends DocumentAdjustmentItemDeleteArgs>(args: SelectSubset<T, DocumentAdjustmentItemDeleteArgs<ExtArgs>>): Prisma__DocumentAdjustmentItemClient<$Result.GetResult<Prisma.$DocumentAdjustmentItemPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DocumentAdjustmentItem.
+     * @param {DocumentAdjustmentItemUpdateArgs} args - Arguments to update one DocumentAdjustmentItem.
+     * @example
+     * // Update one DocumentAdjustmentItem
+     * const documentAdjustmentItem = await prisma.documentAdjustmentItem.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     *
+     */
+    update<T extends DocumentAdjustmentItemUpdateArgs>(args: SelectSubset<T, DocumentAdjustmentItemUpdateArgs<ExtArgs>>): Prisma__DocumentAdjustmentItemClient<$Result.GetResult<Prisma.$DocumentAdjustmentItemPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DocumentAdjustmentItems.
+     * @param {DocumentAdjustmentItemDeleteManyArgs} args - Arguments to filter DocumentAdjustmentItems to delete.
+     * @example
+     * // Delete a few DocumentAdjustmentItems
+     * const { count } = await prisma.documentAdjustmentItem.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     *
+     */
+    deleteMany<T extends DocumentAdjustmentItemDeleteManyArgs>(args?: SelectSubset<T, DocumentAdjustmentItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DocumentAdjustmentItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentAdjustmentItemUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DocumentAdjustmentItems
+     * const documentAdjustmentItem = await prisma.documentAdjustmentItem.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     *
+     */
+    updateMany<T extends DocumentAdjustmentItemUpdateManyArgs>(args: SelectSubset<T, DocumentAdjustmentItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DocumentAdjustmentItems and returns the data updated in the database.
+     * @param {DocumentAdjustmentItemUpdateManyAndReturnArgs} args - Arguments to update many DocumentAdjustmentItems.
+     * @example
+     * // Update many DocumentAdjustmentItems
+     * const documentAdjustmentItem = await prisma.documentAdjustmentItem.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *
+     * // Update zero or more DocumentAdjustmentItems and only return the `id`
+     * const documentAdjustmentItemWithIdOnly = await prisma.documentAdjustmentItem.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     *
+     */
+    updateManyAndReturn<T extends DocumentAdjustmentItemUpdateManyAndReturnArgs>(args: SelectSubset<T, DocumentAdjustmentItemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentAdjustmentItemPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DocumentAdjustmentItem.
+     * @param {DocumentAdjustmentItemUpsertArgs} args - Arguments to update or create a DocumentAdjustmentItem.
+     * @example
+     * // Update or create a DocumentAdjustmentItem
+     * const documentAdjustmentItem = await prisma.documentAdjustmentItem.upsert({
+     *   create: {
+     *     // ... data to create a DocumentAdjustmentItem
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DocumentAdjustmentItem we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DocumentAdjustmentItemUpsertArgs>(args: SelectSubset<T, DocumentAdjustmentItemUpsertArgs<ExtArgs>>): Prisma__DocumentAdjustmentItemClient<$Result.GetResult<Prisma.$DocumentAdjustmentItemPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DocumentAdjustmentItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentAdjustmentItemCountArgs} args - Arguments to filter DocumentAdjustmentItems to count.
+     * @example
+     * // Count the number of DocumentAdjustmentItems
+     * const count = await prisma.documentAdjustmentItem.count({
+     *   where: {
+     *     // ... the filter for the DocumentAdjustmentItems we want to count
+     *   }
+     * })
+    **/
+    count<T extends DocumentAdjustmentItemCountArgs>(
+      args?: Subset<T, DocumentAdjustmentItemCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DocumentAdjustmentItemCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DocumentAdjustmentItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentAdjustmentItemAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DocumentAdjustmentItemAggregateArgs>(args: Subset<T, DocumentAdjustmentItemAggregateArgs>): Prisma.PrismaPromise<GetDocumentAdjustmentItemAggregateType<T>>
+
+    /**
+     * Group by DocumentAdjustmentItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentAdjustmentItemGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     *
+    **/
+    groupBy<
+      T extends DocumentAdjustmentItemGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DocumentAdjustmentItemGroupByArgs['orderBy'] }
+        : { orderBy?: DocumentAdjustmentItemGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DocumentAdjustmentItemGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDocumentAdjustmentItemGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DocumentAdjustmentItem model
+   */
+  readonly fields: DocumentAdjustmentItemFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DocumentAdjustmentItem.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DocumentAdjustmentItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    quotation<T extends DocumentQuotationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DocumentQuotationDefaultArgs<ExtArgs>>): Prisma__DocumentQuotationClient<$Result.GetResult<Prisma.$DocumentQuotationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DocumentAdjustmentItem model
+   */
+  interface DocumentAdjustmentItemFieldRefs {
+    readonly id: FieldRef<"DocumentAdjustmentItem", 'String'>
+    readonly quotationId: FieldRef<"DocumentAdjustmentItem", 'String'>
+    readonly productId: FieldRef<"DocumentAdjustmentItem", 'String'>
+    readonly name: FieldRef<"DocumentAdjustmentItem", 'String'>
+    readonly description: FieldRef<"DocumentAdjustmentItem", 'String'>
+    readonly quantity: FieldRef<"DocumentAdjustmentItem", 'Decimal'>
+    readonly unit: FieldRef<"DocumentAdjustmentItem", 'String'>
+    readonly rate: FieldRef<"DocumentAdjustmentItem", 'Decimal'>
+    readonly discountType: FieldRef<"DocumentAdjustmentItem", 'String'>
+    readonly discountValue: FieldRef<"DocumentAdjustmentItem", 'Decimal'>
+    readonly discountAmount: FieldRef<"DocumentAdjustmentItem", 'Decimal'>
+    readonly taxRate: FieldRef<"DocumentAdjustmentItem", 'Decimal'>
+    readonly taxAmount: FieldRef<"DocumentAdjustmentItem", 'Decimal'>
+    readonly amount: FieldRef<"DocumentAdjustmentItem", 'Decimal'>
+    readonly sortIndex: FieldRef<"DocumentAdjustmentItem", 'Int'>
+    readonly createdAt: FieldRef<"DocumentAdjustmentItem", 'DateTime'>
+    readonly updatedAt: FieldRef<"DocumentAdjustmentItem", 'DateTime'>
+  }
+
+
+  // Custom InputTypes
+  /**
+   * DocumentAdjustmentItem findUnique
+   */
+  export type DocumentAdjustmentItemFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentAdjustmentItem
+     */
+    select?: DocumentAdjustmentItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentAdjustmentItem
+     */
+    omit?: DocumentAdjustmentItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentAdjustmentItemInclude<ExtArgs> | null
+    /**
+     * Filter, which DocumentAdjustmentItem to fetch.
+     */
+    where: DocumentAdjustmentItemWhereUniqueInput
+  }
+
+  /**
+   * DocumentAdjustmentItem findUniqueOrThrow
+   */
+  export type DocumentAdjustmentItemFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentAdjustmentItem
+     */
+    select?: DocumentAdjustmentItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentAdjustmentItem
+     */
+    omit?: DocumentAdjustmentItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentAdjustmentItemInclude<ExtArgs> | null
+    /**
+     * Filter, which DocumentAdjustmentItem to fetch.
+     */
+    where: DocumentAdjustmentItemWhereUniqueInput
+  }
+
+  /**
+   * DocumentAdjustmentItem findFirst
+   */
+  export type DocumentAdjustmentItemFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentAdjustmentItem
+     */
+    select?: DocumentAdjustmentItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentAdjustmentItem
+     */
+    omit?: DocumentAdjustmentItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentAdjustmentItemInclude<ExtArgs> | null
+    /**
+     * Filter, which DocumentAdjustmentItem to fetch.
+     */
+    where?: DocumentAdjustmentItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     *
+     * Determine the order of DocumentAdjustmentItems to fetch.
+     */
+    orderBy?: DocumentAdjustmentItemOrderByWithRelationInput | DocumentAdjustmentItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     *
+     * Sets the position for searching for DocumentAdjustmentItems.
+     */
+    cursor?: DocumentAdjustmentItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Take `±n` DocumentAdjustmentItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Skip the first `n` DocumentAdjustmentItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     *
+     * Filter by unique combinations of DocumentAdjustmentItems.
+     */
+    distinct?: DocumentAdjustmentItemScalarFieldEnum | DocumentAdjustmentItemScalarFieldEnum[]
+  }
+
+  /**
+   * DocumentAdjustmentItem findFirstOrThrow
+   */
+  export type DocumentAdjustmentItemFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentAdjustmentItem
+     */
+    select?: DocumentAdjustmentItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentAdjustmentItem
+     */
+    omit?: DocumentAdjustmentItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentAdjustmentItemInclude<ExtArgs> | null
+    /**
+     * Filter, which DocumentAdjustmentItem to fetch.
+     */
+    where?: DocumentAdjustmentItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     *
+     * Determine the order of DocumentAdjustmentItems to fetch.
+     */
+    orderBy?: DocumentAdjustmentItemOrderByWithRelationInput | DocumentAdjustmentItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     *
+     * Sets the position for searching for DocumentAdjustmentItems.
+     */
+    cursor?: DocumentAdjustmentItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Take `±n` DocumentAdjustmentItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Skip the first `n` DocumentAdjustmentItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     *
+     * Filter by unique combinations of DocumentAdjustmentItems.
+     */
+    distinct?: DocumentAdjustmentItemScalarFieldEnum | DocumentAdjustmentItemScalarFieldEnum[]
+  }
+
+  /**
+   * DocumentAdjustmentItem findMany
+   */
+  export type DocumentAdjustmentItemFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentAdjustmentItem
+     */
+    select?: DocumentAdjustmentItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentAdjustmentItem
+     */
+    omit?: DocumentAdjustmentItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentAdjustmentItemInclude<ExtArgs> | null
+    /**
+     * Filter, which DocumentAdjustmentItems to fetch.
+     */
+    where?: DocumentAdjustmentItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     *
+     * Determine the order of DocumentAdjustmentItems to fetch.
+     */
+    orderBy?: DocumentAdjustmentItemOrderByWithRelationInput | DocumentAdjustmentItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     *
+     * Sets the position for listing DocumentAdjustmentItems.
+     */
+    cursor?: DocumentAdjustmentItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Take `±n` DocumentAdjustmentItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     *
+     * Skip the first `n` DocumentAdjustmentItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     *
+     * Filter by unique combinations of DocumentAdjustmentItems.
+     */
+    distinct?: DocumentAdjustmentItemScalarFieldEnum | DocumentAdjustmentItemScalarFieldEnum[]
+  }
+
+  /**
+   * DocumentAdjustmentItem create
+   */
+  export type DocumentAdjustmentItemCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentAdjustmentItem
+     */
+    select?: DocumentAdjustmentItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentAdjustmentItem
+     */
+    omit?: DocumentAdjustmentItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentAdjustmentItemInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DocumentAdjustmentItem.
+     */
+    data: XOR<DocumentAdjustmentItemCreateInput, DocumentAdjustmentItemUncheckedCreateInput>
+  }
+
+  /**
+   * DocumentAdjustmentItem createMany
+   */
+  export type DocumentAdjustmentItemCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DocumentAdjustmentItems.
+     */
+    data: DocumentAdjustmentItemCreateManyInput | DocumentAdjustmentItemCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DocumentAdjustmentItem createManyAndReturn
+   */
+  export type DocumentAdjustmentItemCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentAdjustmentItem
+     */
+    select?: DocumentAdjustmentItemSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentAdjustmentItem
+     */
+    omit?: DocumentAdjustmentItemOmit<ExtArgs> | null
+    /**
+     * The data used to create many DocumentAdjustmentItems.
+     */
+    data: DocumentAdjustmentItemCreateManyInput | DocumentAdjustmentItemCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentAdjustmentItemIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DocumentAdjustmentItem update
+   */
+  export type DocumentAdjustmentItemUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentAdjustmentItem
+     */
+    select?: DocumentAdjustmentItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentAdjustmentItem
+     */
+    omit?: DocumentAdjustmentItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentAdjustmentItemInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DocumentAdjustmentItem.
+     */
+    data: XOR<DocumentAdjustmentItemUpdateInput, DocumentAdjustmentItemUncheckedUpdateInput>
+    /**
+     * Choose, which DocumentAdjustmentItem to update.
+     */
+    where: DocumentAdjustmentItemWhereUniqueInput
+  }
+
+  /**
+   * DocumentAdjustmentItem updateMany
+   */
+  export type DocumentAdjustmentItemUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DocumentAdjustmentItems.
+     */
+    data: XOR<DocumentAdjustmentItemUpdateManyMutationInput, DocumentAdjustmentItemUncheckedUpdateManyInput>
+    /**
+     * Filter which DocumentAdjustmentItems to update
+     */
+    where?: DocumentAdjustmentItemWhereInput
+    /**
+     * Limit how many DocumentAdjustmentItems to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DocumentAdjustmentItem updateManyAndReturn
+   */
+  export type DocumentAdjustmentItemUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentAdjustmentItem
+     */
+    select?: DocumentAdjustmentItemSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentAdjustmentItem
+     */
+    omit?: DocumentAdjustmentItemOmit<ExtArgs> | null
+    /**
+     * The data used to update DocumentAdjustmentItems.
+     */
+    data: XOR<DocumentAdjustmentItemUpdateManyMutationInput, DocumentAdjustmentItemUncheckedUpdateManyInput>
+    /**
+     * Filter which DocumentAdjustmentItems to update
+     */
+    where?: DocumentAdjustmentItemWhereInput
+    /**
+     * Limit how many DocumentAdjustmentItems to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentAdjustmentItemIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DocumentAdjustmentItem upsert
+   */
+  export type DocumentAdjustmentItemUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentAdjustmentItem
+     */
+    select?: DocumentAdjustmentItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentAdjustmentItem
+     */
+    omit?: DocumentAdjustmentItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentAdjustmentItemInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DocumentAdjustmentItem to update in case it exists.
+     */
+    where: DocumentAdjustmentItemWhereUniqueInput
+    /**
+     * In case the DocumentAdjustmentItem found by the `where` argument doesn't exist, create a new DocumentAdjustmentItem with this data.
+     */
+    create: XOR<DocumentAdjustmentItemCreateInput, DocumentAdjustmentItemUncheckedCreateInput>
+    /**
+     * In case the DocumentAdjustmentItem was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DocumentAdjustmentItemUpdateInput, DocumentAdjustmentItemUncheckedUpdateInput>
+  }
+
+  /**
+   * DocumentAdjustmentItem delete
+   */
+  export type DocumentAdjustmentItemDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentAdjustmentItem
+     */
+    select?: DocumentAdjustmentItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentAdjustmentItem
+     */
+    omit?: DocumentAdjustmentItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentAdjustmentItemInclude<ExtArgs> | null
+    /**
+     * Filter which DocumentAdjustmentItem to delete.
+     */
+    where: DocumentAdjustmentItemWhereUniqueInput
+  }
+
+  /**
+   * DocumentAdjustmentItem deleteMany
+   */
+  export type DocumentAdjustmentItemDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DocumentAdjustmentItems to delete
+     */
+    where?: DocumentAdjustmentItemWhereInput
+    /**
+     * Limit how many DocumentAdjustmentItems to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DocumentAdjustmentItem without action
+   */
+  export type DocumentAdjustmentItemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentAdjustmentItem
+     */
+    select?: DocumentAdjustmentItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentAdjustmentItem
+     */
+    omit?: DocumentAdjustmentItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentAdjustmentItemInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -17547,6 +22880,78 @@ export namespace Prisma {
   export type ActivityStockScalarFieldEnum = (typeof ActivityStockScalarFieldEnum)[keyof typeof ActivityStockScalarFieldEnum]
 
 
+  export const DocumentScalarFieldEnum: {
+    id: 'id',
+    projectId: 'projectId',
+    type: 'type',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DocumentScalarFieldEnum = (typeof DocumentScalarFieldEnum)[keyof typeof DocumentScalarFieldEnum]
+
+
+  export const DocumentQuotationScalarFieldEnum: {
+    id: 'id',
+    customerId: 'customerId',
+    counter: 'counter',
+    referenceNumber: 'referenceNumber',
+    subject: 'subject',
+    currency: 'currency',
+    exchangeRate: 'exchangeRate',
+    subtotal: 'subtotal',
+    discountType: 'discountType',
+    discountValue: 'discountValue',
+    discountAmount: 'discountAmount',
+    taxTotal: 'taxTotal',
+    hasAdjustments: 'hasAdjustments',
+    total: 'total',
+    status: 'status',
+    date: 'date',
+    expires: 'expires',
+    details: 'details',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DocumentQuotationScalarFieldEnum = (typeof DocumentQuotationScalarFieldEnum)[keyof typeof DocumentQuotationScalarFieldEnum]
+
+
+  export const DocumentQuotationAdjustmentScalarFieldEnum: {
+    id: 'id',
+    quotationId: 'quotationId',
+    adjustmentName: 'adjustmentName',
+    adjustmentValue: 'adjustmentValue',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DocumentQuotationAdjustmentScalarFieldEnum = (typeof DocumentQuotationAdjustmentScalarFieldEnum)[keyof typeof DocumentQuotationAdjustmentScalarFieldEnum]
+
+
+  export const DocumentAdjustmentItemScalarFieldEnum: {
+    id: 'id',
+    quotationId: 'quotationId',
+    productId: 'productId',
+    name: 'name',
+    description: 'description',
+    quantity: 'quantity',
+    unit: 'unit',
+    rate: 'rate',
+    discountType: 'discountType',
+    discountValue: 'discountValue',
+    discountAmount: 'discountAmount',
+    taxRate: 'taxRate',
+    taxAmount: 'taxAmount',
+    amount: 'amount',
+    sortIndex: 'sortIndex',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DocumentAdjustmentItemScalarFieldEnum = (typeof DocumentAdjustmentItemScalarFieldEnum)[keyof typeof DocumentAdjustmentItemScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -17604,175 +23009,175 @@ export namespace Prisma {
    * Reference to a field of type 'String'
    */
   export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String'>
-    
+
 
 
   /**
    * Reference to a field of type 'String[]'
    */
   export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
-    
+
 
 
   /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
-    
+
 
 
   /**
    * Reference to a field of type 'DateTime[]'
    */
   export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
-    
+
 
 
   /**
    * Reference to a field of type 'Json'
    */
   export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
+
 
 
   /**
    * Reference to a field of type 'QueryMode'
    */
   export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
+
 
 
   /**
    * Reference to a field of type 'AccountType'
    */
   export type EnumAccountTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AccountType'>
-    
+
 
 
   /**
    * Reference to a field of type 'AccountType[]'
    */
   export type ListEnumAccountTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AccountType[]'>
-    
+
 
 
   /**
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
+
 
 
   /**
    * Reference to a field of type 'Decimal'
    */
   export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
-    
+
 
 
   /**
    * Reference to a field of type 'Decimal[]'
    */
   export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
-    
+
 
 
   /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
+
 
 
   /**
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
+
 
 
   /**
    * Reference to a field of type 'ProjectionType'
    */
   export type EnumProjectionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectionType'>
-    
+
 
 
   /**
    * Reference to a field of type 'ProjectionType[]'
    */
   export type ListEnumProjectionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectionType[]'>
-    
+
 
 
   /**
    * Reference to a field of type 'ProjectionCertainty'
    */
   export type EnumProjectionCertaintyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectionCertainty'>
-    
+
 
 
   /**
    * Reference to a field of type 'ProjectionCertainty[]'
    */
   export type ListEnumProjectionCertaintyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectionCertainty[]'>
-    
+
 
 
   /**
    * Reference to a field of type 'ProjectionStatus'
    */
   export type EnumProjectionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectionStatus'>
-    
+
 
 
   /**
    * Reference to a field of type 'ProjectionStatus[]'
    */
   export type ListEnumProjectionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectionStatus[]'>
-    
+
 
 
   /**
    * Reference to a field of type 'ProjectionRecurrence'
    */
   export type EnumProjectionRecurrenceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectionRecurrence'>
-    
+
 
 
   /**
    * Reference to a field of type 'ProjectionRecurrence[]'
    */
   export type ListEnumProjectionRecurrenceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectionRecurrence[]'>
-    
+
 
 
   /**
    * Reference to a field of type 'ActivityStockType'
    */
   export type EnumActivityStockTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ActivityStockType'>
-    
+
 
 
   /**
    * Reference to a field of type 'ActivityStockType[]'
    */
   export type ListEnumActivityStockTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ActivityStockType[]'>
-    
+
 
 
   /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
+
 
 
   /**
    * Reference to a field of type 'Float[]'
    */
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
-    
+
   /**
    * Deep Input Types
    */
@@ -17846,7 +23251,7 @@ export namespace Prisma {
     AND?: ProjectWhereInput | ProjectWhereInput[]
     OR?: ProjectWhereInput[]
     NOT?: ProjectWhereInput | ProjectWhereInput[]
-    id?: StringFilter<"Project"> | string
+    id?: UuidFilter<"Project"> | string
     name?: StringFilter<"Project"> | string
     status?: StringFilter<"Project"> | string
     createdOn?: DateTimeFilter<"Project"> | Date | string
@@ -17856,6 +23261,7 @@ export namespace Prisma {
     transactions?: TransactionListRelationFilter
     projections?: ProjectionListRelationFilter
     finAccounts?: FinAccountListRelationFilter
+    documents?: DocumentListRelationFilter
   }
 
   export type ProjectOrderByWithRelationInput = {
@@ -17869,6 +23275,7 @@ export namespace Prisma {
     transactions?: TransactionOrderByRelationAggregateInput
     projections?: ProjectionOrderByRelationAggregateInput
     finAccounts?: FinAccountOrderByRelationAggregateInput
+    documents?: DocumentOrderByRelationAggregateInput
   }
 
   export type ProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -17885,6 +23292,7 @@ export namespace Prisma {
     transactions?: TransactionListRelationFilter
     projections?: ProjectionListRelationFilter
     finAccounts?: FinAccountListRelationFilter
+    documents?: DocumentListRelationFilter
   }, "id">
 
   export type ProjectOrderByWithAggregationInput = {
@@ -17901,7 +23309,7 @@ export namespace Prisma {
     AND?: ProjectScalarWhereWithAggregatesInput | ProjectScalarWhereWithAggregatesInput[]
     OR?: ProjectScalarWhereWithAggregatesInput[]
     NOT?: ProjectScalarWhereWithAggregatesInput | ProjectScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"Project"> | string
+    id?: UuidWithAggregatesFilter<"Project"> | string
     name?: StringWithAggregatesFilter<"Project"> | string
     status?: StringWithAggregatesFilter<"Project"> | string
     createdOn?: DateTimeWithAggregatesFilter<"Project"> | Date | string
@@ -17964,7 +23372,7 @@ export namespace Prisma {
     id?: StringFilter<"Access"> | string
     accountId?: StringFilter<"Access"> | string
     roleId?: StringFilter<"Access"> | string
-    projectId?: StringFilter<"Access"> | string
+    projectId?: UuidFilter<"Access"> | string
     status?: StringFilter<"Access"> | string
     permittedOn?: DateTimeFilter<"Access"> | Date | string
     account?: XOR<AccountScalarRelationFilter, AccountWhereInput>
@@ -17992,7 +23400,7 @@ export namespace Prisma {
     NOT?: AccessWhereInput | AccessWhereInput[]
     accountId?: StringFilter<"Access"> | string
     roleId?: StringFilter<"Access"> | string
-    projectId?: StringFilter<"Access"> | string
+    projectId?: UuidFilter<"Access"> | string
     status?: StringFilter<"Access"> | string
     permittedOn?: DateTimeFilter<"Access"> | Date | string
     account?: XOR<AccountScalarRelationFilter, AccountWhereInput>
@@ -18019,7 +23427,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Access"> | string
     accountId?: StringWithAggregatesFilter<"Access"> | string
     roleId?: StringWithAggregatesFilter<"Access"> | string
-    projectId?: StringWithAggregatesFilter<"Access"> | string
+    projectId?: UuidWithAggregatesFilter<"Access"> | string
     status?: StringWithAggregatesFilter<"Access"> | string
     permittedOn?: DateTimeWithAggregatesFilter<"Access"> | Date | string
   }
@@ -18028,9 +23436,9 @@ export namespace Prisma {
     AND?: PartyWhereInput | PartyWhereInput[]
     OR?: PartyWhereInput[]
     NOT?: PartyWhereInput | PartyWhereInput[]
-    id?: StringFilter<"Party"> | string
+    id?: UuidFilter<"Party"> | string
     accountId?: StringFilter<"Party"> | string
-    projectId?: StringFilter<"Party"> | string
+    projectId?: UuidFilter<"Party"> | string
     name?: StringFilter<"Party"> | string
     type?: StringFilter<"Party"> | string
     taxinfo?: JsonNullableFilter<"Party">
@@ -18038,6 +23446,7 @@ export namespace Prisma {
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
     contacts?: PartyContactListRelationFilter
     paymentMethods?: PartyPaymentMethodListRelationFilter
+    quotations?: DocumentQuotationListRelationFilter
   }
 
   export type PartyOrderByWithRelationInput = {
@@ -18051,6 +23460,7 @@ export namespace Prisma {
     project?: ProjectOrderByWithRelationInput
     contacts?: PartyContactOrderByRelationAggregateInput
     paymentMethods?: PartyPaymentMethodOrderByRelationAggregateInput
+    quotations?: DocumentQuotationOrderByRelationAggregateInput
   }
 
   export type PartyWhereUniqueInput = Prisma.AtLeast<{
@@ -18059,7 +23469,7 @@ export namespace Prisma {
     OR?: PartyWhereInput[]
     NOT?: PartyWhereInput | PartyWhereInput[]
     accountId?: StringFilter<"Party"> | string
-    projectId?: StringFilter<"Party"> | string
+    projectId?: UuidFilter<"Party"> | string
     name?: StringFilter<"Party"> | string
     type?: StringFilter<"Party"> | string
     taxinfo?: JsonNullableFilter<"Party">
@@ -18067,6 +23477,7 @@ export namespace Prisma {
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
     contacts?: PartyContactListRelationFilter
     paymentMethods?: PartyPaymentMethodListRelationFilter
+    quotations?: DocumentQuotationListRelationFilter
   }, "id">
 
   export type PartyOrderByWithAggregationInput = {
@@ -18085,9 +23496,9 @@ export namespace Prisma {
     AND?: PartyScalarWhereWithAggregatesInput | PartyScalarWhereWithAggregatesInput[]
     OR?: PartyScalarWhereWithAggregatesInput[]
     NOT?: PartyScalarWhereWithAggregatesInput | PartyScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"Party"> | string
+    id?: UuidWithAggregatesFilter<"Party"> | string
     accountId?: StringWithAggregatesFilter<"Party"> | string
-    projectId?: StringWithAggregatesFilter<"Party"> | string
+    projectId?: UuidWithAggregatesFilter<"Party"> | string
     name?: StringWithAggregatesFilter<"Party"> | string
     type?: StringWithAggregatesFilter<"Party"> | string
     taxinfo?: JsonNullableWithAggregatesFilter<"Party">
@@ -18098,7 +23509,7 @@ export namespace Prisma {
     OR?: PartyContactWhereInput[]
     NOT?: PartyContactWhereInput | PartyContactWhereInput[]
     id?: StringFilter<"PartyContact"> | string
-    partyId?: StringFilter<"PartyContact"> | string
+    partyId?: UuidFilter<"PartyContact"> | string
     type?: StringFilter<"PartyContact"> | string
     value?: StringFilter<"PartyContact"> | string
     addedOn?: DateTimeFilter<"PartyContact"> | Date | string
@@ -18121,7 +23532,7 @@ export namespace Prisma {
     AND?: PartyContactWhereInput | PartyContactWhereInput[]
     OR?: PartyContactWhereInput[]
     NOT?: PartyContactWhereInput | PartyContactWhereInput[]
-    partyId?: StringFilter<"PartyContact"> | string
+    partyId?: UuidFilter<"PartyContact"> | string
     type?: StringFilter<"PartyContact"> | string
     value?: StringFilter<"PartyContact"> | string
     addedOn?: DateTimeFilter<"PartyContact"> | Date | string
@@ -18146,7 +23557,7 @@ export namespace Prisma {
     OR?: PartyContactScalarWhereWithAggregatesInput[]
     NOT?: PartyContactScalarWhereWithAggregatesInput | PartyContactScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"PartyContact"> | string
-    partyId?: StringWithAggregatesFilter<"PartyContact"> | string
+    partyId?: UuidWithAggregatesFilter<"PartyContact"> | string
     type?: StringWithAggregatesFilter<"PartyContact"> | string
     value?: StringWithAggregatesFilter<"PartyContact"> | string
     addedOn?: DateTimeWithAggregatesFilter<"PartyContact"> | Date | string
@@ -18158,7 +23569,7 @@ export namespace Prisma {
     OR?: PartyPaymentMethodWhereInput[]
     NOT?: PartyPaymentMethodWhereInput | PartyPaymentMethodWhereInput[]
     id?: StringFilter<"PartyPaymentMethod"> | string
-    partyId?: StringFilter<"PartyPaymentMethod"> | string
+    partyId?: UuidFilter<"PartyPaymentMethod"> | string
     type?: StringFilter<"PartyPaymentMethod"> | string
     value?: StringFilter<"PartyPaymentMethod"> | string
     addedOn?: DateTimeFilter<"PartyPaymentMethod"> | Date | string
@@ -18181,7 +23592,7 @@ export namespace Prisma {
     AND?: PartyPaymentMethodWhereInput | PartyPaymentMethodWhereInput[]
     OR?: PartyPaymentMethodWhereInput[]
     NOT?: PartyPaymentMethodWhereInput | PartyPaymentMethodWhereInput[]
-    partyId?: StringFilter<"PartyPaymentMethod"> | string
+    partyId?: UuidFilter<"PartyPaymentMethod"> | string
     type?: StringFilter<"PartyPaymentMethod"> | string
     value?: StringFilter<"PartyPaymentMethod"> | string
     addedOn?: DateTimeFilter<"PartyPaymentMethod"> | Date | string
@@ -18206,7 +23617,7 @@ export namespace Prisma {
     OR?: PartyPaymentMethodScalarWhereWithAggregatesInput[]
     NOT?: PartyPaymentMethodScalarWhereWithAggregatesInput | PartyPaymentMethodScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"PartyPaymentMethod"> | string
-    partyId?: StringWithAggregatesFilter<"PartyPaymentMethod"> | string
+    partyId?: UuidWithAggregatesFilter<"PartyPaymentMethod"> | string
     type?: StringWithAggregatesFilter<"PartyPaymentMethod"> | string
     value?: StringWithAggregatesFilter<"PartyPaymentMethod"> | string
     addedOn?: DateTimeWithAggregatesFilter<"PartyPaymentMethod"> | Date | string
@@ -18222,7 +23633,7 @@ export namespace Prisma {
     type?: EnumAccountTypeFilter<"AssetGroup"> | $Enums.AccountType
     currency?: StringFilter<"AssetGroup"> | string
     accountId?: StringFilter<"AssetGroup"> | string
-    projectId?: StringFilter<"AssetGroup"> | string
+    projectId?: UuidFilter<"AssetGroup"> | string
     createdAt?: DateTimeFilter<"AssetGroup"> | Date | string
     account?: XOR<AccountScalarRelationFilter, AccountWhereInput>
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
@@ -18253,7 +23664,7 @@ export namespace Prisma {
     type?: EnumAccountTypeFilter<"AssetGroup"> | $Enums.AccountType
     currency?: StringFilter<"AssetGroup"> | string
     accountId?: StringFilter<"AssetGroup"> | string
-    projectId?: StringFilter<"AssetGroup"> | string
+    projectId?: UuidFilter<"AssetGroup"> | string
     createdAt?: DateTimeFilter<"AssetGroup"> | Date | string
     account?: XOR<AccountScalarRelationFilter, AccountWhereInput>
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
@@ -18283,7 +23694,7 @@ export namespace Prisma {
     type?: EnumAccountTypeWithAggregatesFilter<"AssetGroup"> | $Enums.AccountType
     currency?: StringWithAggregatesFilter<"AssetGroup"> | string
     accountId?: StringWithAggregatesFilter<"AssetGroup"> | string
-    projectId?: StringWithAggregatesFilter<"AssetGroup"> | string
+    projectId?: UuidWithAggregatesFilter<"AssetGroup"> | string
     createdAt?: DateTimeWithAggregatesFilter<"AssetGroup"> | Date | string
   }
 
@@ -18293,7 +23704,7 @@ export namespace Prisma {
     NOT?: FinAccountWhereInput | FinAccountWhereInput[]
     id?: StringFilter<"FinAccount"> | string
     profile_id?: StringFilter<"FinAccount"> | string
-    projectId?: StringFilter<"FinAccount"> | string
+    projectId?: UuidFilter<"FinAccount"> | string
     name?: StringFilter<"FinAccount"> | string
     description?: StringNullableFilter<"FinAccount"> | string | null
     type?: StringFilter<"FinAccount"> | string
@@ -18328,7 +23739,7 @@ export namespace Prisma {
     OR?: FinAccountWhereInput[]
     NOT?: FinAccountWhereInput | FinAccountWhereInput[]
     profile_id?: StringFilter<"FinAccount"> | string
-    projectId?: StringFilter<"FinAccount"> | string
+    projectId?: UuidFilter<"FinAccount"> | string
     name?: StringFilter<"FinAccount"> | string
     description?: StringNullableFilter<"FinAccount"> | string | null
     type?: StringFilter<"FinAccount"> | string
@@ -18365,7 +23776,7 @@ export namespace Prisma {
     NOT?: FinAccountScalarWhereWithAggregatesInput | FinAccountScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"FinAccount"> | string
     profile_id?: StringWithAggregatesFilter<"FinAccount"> | string
-    projectId?: StringWithAggregatesFilter<"FinAccount"> | string
+    projectId?: UuidWithAggregatesFilter<"FinAccount"> | string
     name?: StringWithAggregatesFilter<"FinAccount"> | string
     description?: StringNullableWithAggregatesFilter<"FinAccount"> | string | null
     type?: StringWithAggregatesFilter<"FinAccount"> | string
@@ -18383,7 +23794,7 @@ export namespace Prisma {
     NOT?: TransactionWhereInput | TransactionWhereInput[]
     id?: StringFilter<"Transaction"> | string
     organizationId?: StringFilter<"Transaction"> | string
-    projectId?: StringFilter<"Transaction"> | string
+    projectId?: UuidFilter<"Transaction"> | string
     transactionTypeId?: StringFilter<"Transaction"> | string
     title?: StringFilter<"Transaction"> | string
     description?: StringNullableFilter<"Transaction"> | string | null
@@ -18432,7 +23843,7 @@ export namespace Prisma {
     OR?: TransactionWhereInput[]
     NOT?: TransactionWhereInput | TransactionWhereInput[]
     organizationId?: StringFilter<"Transaction"> | string
-    projectId?: StringFilter<"Transaction"> | string
+    projectId?: UuidFilter<"Transaction"> | string
     transactionTypeId?: StringFilter<"Transaction"> | string
     title?: StringFilter<"Transaction"> | string
     description?: StringNullableFilter<"Transaction"> | string | null
@@ -18483,7 +23894,7 @@ export namespace Prisma {
     NOT?: TransactionScalarWhereWithAggregatesInput | TransactionScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Transaction"> | string
     organizationId?: StringWithAggregatesFilter<"Transaction"> | string
-    projectId?: StringWithAggregatesFilter<"Transaction"> | string
+    projectId?: UuidWithAggregatesFilter<"Transaction"> | string
     transactionTypeId?: StringWithAggregatesFilter<"Transaction"> | string
     title?: StringWithAggregatesFilter<"Transaction"> | string
     description?: StringNullableWithAggregatesFilter<"Transaction"> | string | null
@@ -18622,7 +24033,7 @@ export namespace Prisma {
     currency?: StringFilter<"Projection"> | string
     date?: DateTimeFilter<"Projection"> | Date | string
     userId?: StringFilter<"Projection"> | string
-    projectId?: StringFilter<"Projection"> | string
+    projectId?: UuidFilter<"Projection"> | string
     status?: EnumProjectionStatusFilter<"Projection"> | $Enums.ProjectionStatus
     recipient?: StringNullableFilter<"Projection"> | string | null
     isRecurring?: BoolFilter<"Projection"> | boolean
@@ -18663,7 +24074,7 @@ export namespace Prisma {
     currency?: StringFilter<"Projection"> | string
     date?: DateTimeFilter<"Projection"> | Date | string
     userId?: StringFilter<"Projection"> | string
-    projectId?: StringFilter<"Projection"> | string
+    projectId?: UuidFilter<"Projection"> | string
     status?: EnumProjectionStatusFilter<"Projection"> | $Enums.ProjectionStatus
     recipient?: StringNullableFilter<"Projection"> | string | null
     isRecurring?: BoolFilter<"Projection"> | boolean
@@ -18708,7 +24119,7 @@ export namespace Prisma {
     currency?: StringWithAggregatesFilter<"Projection"> | string
     date?: DateTimeWithAggregatesFilter<"Projection"> | Date | string
     userId?: StringWithAggregatesFilter<"Projection"> | string
-    projectId?: StringWithAggregatesFilter<"Projection"> | string
+    projectId?: UuidWithAggregatesFilter<"Projection"> | string
     status?: EnumProjectionStatusWithAggregatesFilter<"Projection"> | $Enums.ProjectionStatus
     recipient?: StringNullableWithAggregatesFilter<"Projection"> | string | null
     isRecurring?: BoolWithAggregatesFilter<"Projection"> | boolean
@@ -18787,6 +24198,384 @@ export namespace Prisma {
     balance?: DecimalWithAggregatesFilter<"ActivityStock"> | Decimal | DecimalJsLike | number | string
     recordedOn?: DateTimeWithAggregatesFilter<"ActivityStock"> | Date | string
     transactionOn?: DateTimeWithAggregatesFilter<"ActivityStock"> | Date | string
+  }
+
+  export type DocumentWhereInput = {
+    AND?: DocumentWhereInput | DocumentWhereInput[]
+    OR?: DocumentWhereInput[]
+    NOT?: DocumentWhereInput | DocumentWhereInput[]
+    id?: UuidFilter<"Document"> | string
+    projectId?: UuidFilter<"Document"> | string
+    type?: StringFilter<"Document"> | string
+    createdAt?: DateTimeFilter<"Document"> | Date | string
+    updatedAt?: DateTimeFilter<"Document"> | Date | string
+    project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
+    quotation?: XOR<DocumentQuotationNullableScalarRelationFilter, DocumentQuotationWhereInput> | null
+  }
+
+  export type DocumentOrderByWithRelationInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    type?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    project?: ProjectOrderByWithRelationInput
+    quotation?: DocumentQuotationOrderByWithRelationInput
+  }
+
+  export type DocumentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: DocumentWhereInput | DocumentWhereInput[]
+    OR?: DocumentWhereInput[]
+    NOT?: DocumentWhereInput | DocumentWhereInput[]
+    projectId?: UuidFilter<"Document"> | string
+    type?: StringFilter<"Document"> | string
+    createdAt?: DateTimeFilter<"Document"> | Date | string
+    updatedAt?: DateTimeFilter<"Document"> | Date | string
+    project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
+    quotation?: XOR<DocumentQuotationNullableScalarRelationFilter, DocumentQuotationWhereInput> | null
+  }, "id">
+
+  export type DocumentOrderByWithAggregationInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    type?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DocumentCountOrderByAggregateInput
+    _max?: DocumentMaxOrderByAggregateInput
+    _min?: DocumentMinOrderByAggregateInput
+  }
+
+  export type DocumentScalarWhereWithAggregatesInput = {
+    AND?: DocumentScalarWhereWithAggregatesInput | DocumentScalarWhereWithAggregatesInput[]
+    OR?: DocumentScalarWhereWithAggregatesInput[]
+    NOT?: DocumentScalarWhereWithAggregatesInput | DocumentScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"Document"> | string
+    projectId?: UuidWithAggregatesFilter<"Document"> | string
+    type?: StringWithAggregatesFilter<"Document"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Document"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Document"> | Date | string
+  }
+
+  export type DocumentQuotationWhereInput = {
+    AND?: DocumentQuotationWhereInput | DocumentQuotationWhereInput[]
+    OR?: DocumentQuotationWhereInput[]
+    NOT?: DocumentQuotationWhereInput | DocumentQuotationWhereInput[]
+    id?: UuidFilter<"DocumentQuotation"> | string
+    customerId?: UuidFilter<"DocumentQuotation"> | string
+    counter?: IntFilter<"DocumentQuotation"> | number
+    referenceNumber?: StringFilter<"DocumentQuotation"> | string
+    subject?: StringFilter<"DocumentQuotation"> | string
+    currency?: StringFilter<"DocumentQuotation"> | string
+    exchangeRate?: DecimalFilter<"DocumentQuotation"> | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFilter<"DocumentQuotation"> | Decimal | DecimalJsLike | number | string
+    discountType?: StringFilter<"DocumentQuotation"> | string
+    discountValue?: DecimalFilter<"DocumentQuotation"> | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFilter<"DocumentQuotation"> | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFilter<"DocumentQuotation"> | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFilter<"DocumentQuotation"> | boolean
+    total?: DecimalFilter<"DocumentQuotation"> | Decimal | DecimalJsLike | number | string
+    status?: StringFilter<"DocumentQuotation"> | string
+    date?: DateTimeFilter<"DocumentQuotation"> | Date | string
+    expires?: DateTimeFilter<"DocumentQuotation"> | Date | string
+    details?: JsonNullableFilter<"DocumentQuotation">
+    createdAt?: DateTimeFilter<"DocumentQuotation"> | Date | string
+    updatedAt?: DateTimeFilter<"DocumentQuotation"> | Date | string
+    document?: XOR<DocumentScalarRelationFilter, DocumentWhereInput>
+    customer?: XOR<PartyScalarRelationFilter, PartyWhereInput>
+    adjustments?: DocumentQuotationAdjustmentListRelationFilter
+    items?: DocumentAdjustmentItemListRelationFilter
+  }
+
+  export type DocumentQuotationOrderByWithRelationInput = {
+    id?: SortOrder
+    customerId?: SortOrder
+    counter?: SortOrder
+    referenceNumber?: SortOrder
+    subject?: SortOrder
+    currency?: SortOrder
+    exchangeRate?: SortOrder
+    subtotal?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
+    discountAmount?: SortOrder
+    taxTotal?: SortOrder
+    hasAdjustments?: SortOrder
+    total?: SortOrder
+    status?: SortOrder
+    date?: SortOrder
+    expires?: SortOrder
+    details?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    document?: DocumentOrderByWithRelationInput
+    customer?: PartyOrderByWithRelationInput
+    adjustments?: DocumentQuotationAdjustmentOrderByRelationAggregateInput
+    items?: DocumentAdjustmentItemOrderByRelationAggregateInput
+  }
+
+  export type DocumentQuotationWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: DocumentQuotationWhereInput | DocumentQuotationWhereInput[]
+    OR?: DocumentQuotationWhereInput[]
+    NOT?: DocumentQuotationWhereInput | DocumentQuotationWhereInput[]
+    customerId?: UuidFilter<"DocumentQuotation"> | string
+    counter?: IntFilter<"DocumentQuotation"> | number
+    referenceNumber?: StringFilter<"DocumentQuotation"> | string
+    subject?: StringFilter<"DocumentQuotation"> | string
+    currency?: StringFilter<"DocumentQuotation"> | string
+    exchangeRate?: DecimalFilter<"DocumentQuotation"> | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFilter<"DocumentQuotation"> | Decimal | DecimalJsLike | number | string
+    discountType?: StringFilter<"DocumentQuotation"> | string
+    discountValue?: DecimalFilter<"DocumentQuotation"> | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFilter<"DocumentQuotation"> | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFilter<"DocumentQuotation"> | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFilter<"DocumentQuotation"> | boolean
+    total?: DecimalFilter<"DocumentQuotation"> | Decimal | DecimalJsLike | number | string
+    status?: StringFilter<"DocumentQuotation"> | string
+    date?: DateTimeFilter<"DocumentQuotation"> | Date | string
+    expires?: DateTimeFilter<"DocumentQuotation"> | Date | string
+    details?: JsonNullableFilter<"DocumentQuotation">
+    createdAt?: DateTimeFilter<"DocumentQuotation"> | Date | string
+    updatedAt?: DateTimeFilter<"DocumentQuotation"> | Date | string
+    document?: XOR<DocumentScalarRelationFilter, DocumentWhereInput>
+    customer?: XOR<PartyScalarRelationFilter, PartyWhereInput>
+    adjustments?: DocumentQuotationAdjustmentListRelationFilter
+    items?: DocumentAdjustmentItemListRelationFilter
+  }, "id">
+
+  export type DocumentQuotationOrderByWithAggregationInput = {
+    id?: SortOrder
+    customerId?: SortOrder
+    counter?: SortOrder
+    referenceNumber?: SortOrder
+    subject?: SortOrder
+    currency?: SortOrder
+    exchangeRate?: SortOrder
+    subtotal?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
+    discountAmount?: SortOrder
+    taxTotal?: SortOrder
+    hasAdjustments?: SortOrder
+    total?: SortOrder
+    status?: SortOrder
+    date?: SortOrder
+    expires?: SortOrder
+    details?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DocumentQuotationCountOrderByAggregateInput
+    _avg?: DocumentQuotationAvgOrderByAggregateInput
+    _max?: DocumentQuotationMaxOrderByAggregateInput
+    _min?: DocumentQuotationMinOrderByAggregateInput
+    _sum?: DocumentQuotationSumOrderByAggregateInput
+  }
+
+  export type DocumentQuotationScalarWhereWithAggregatesInput = {
+    AND?: DocumentQuotationScalarWhereWithAggregatesInput | DocumentQuotationScalarWhereWithAggregatesInput[]
+    OR?: DocumentQuotationScalarWhereWithAggregatesInput[]
+    NOT?: DocumentQuotationScalarWhereWithAggregatesInput | DocumentQuotationScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"DocumentQuotation"> | string
+    customerId?: UuidWithAggregatesFilter<"DocumentQuotation"> | string
+    counter?: IntWithAggregatesFilter<"DocumentQuotation"> | number
+    referenceNumber?: StringWithAggregatesFilter<"DocumentQuotation"> | string
+    subject?: StringWithAggregatesFilter<"DocumentQuotation"> | string
+    currency?: StringWithAggregatesFilter<"DocumentQuotation"> | string
+    exchangeRate?: DecimalWithAggregatesFilter<"DocumentQuotation"> | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalWithAggregatesFilter<"DocumentQuotation"> | Decimal | DecimalJsLike | number | string
+    discountType?: StringWithAggregatesFilter<"DocumentQuotation"> | string
+    discountValue?: DecimalWithAggregatesFilter<"DocumentQuotation"> | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalWithAggregatesFilter<"DocumentQuotation"> | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalWithAggregatesFilter<"DocumentQuotation"> | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolWithAggregatesFilter<"DocumentQuotation"> | boolean
+    total?: DecimalWithAggregatesFilter<"DocumentQuotation"> | Decimal | DecimalJsLike | number | string
+    status?: StringWithAggregatesFilter<"DocumentQuotation"> | string
+    date?: DateTimeWithAggregatesFilter<"DocumentQuotation"> | Date | string
+    expires?: DateTimeWithAggregatesFilter<"DocumentQuotation"> | Date | string
+    details?: JsonNullableWithAggregatesFilter<"DocumentQuotation">
+    createdAt?: DateTimeWithAggregatesFilter<"DocumentQuotation"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"DocumentQuotation"> | Date | string
+  }
+
+  export type DocumentQuotationAdjustmentWhereInput = {
+    AND?: DocumentQuotationAdjustmentWhereInput | DocumentQuotationAdjustmentWhereInput[]
+    OR?: DocumentQuotationAdjustmentWhereInput[]
+    NOT?: DocumentQuotationAdjustmentWhereInput | DocumentQuotationAdjustmentWhereInput[]
+    id?: UuidFilter<"DocumentQuotationAdjustment"> | string
+    quotationId?: UuidFilter<"DocumentQuotationAdjustment"> | string
+    adjustmentName?: StringFilter<"DocumentQuotationAdjustment"> | string
+    adjustmentValue?: DecimalFilter<"DocumentQuotationAdjustment"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFilter<"DocumentQuotationAdjustment"> | Date | string
+    updatedAt?: DateTimeFilter<"DocumentQuotationAdjustment"> | Date | string
+    quotation?: XOR<DocumentQuotationScalarRelationFilter, DocumentQuotationWhereInput>
+  }
+
+  export type DocumentQuotationAdjustmentOrderByWithRelationInput = {
+    id?: SortOrder
+    quotationId?: SortOrder
+    adjustmentName?: SortOrder
+    adjustmentValue?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    quotation?: DocumentQuotationOrderByWithRelationInput
+  }
+
+  export type DocumentQuotationAdjustmentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: DocumentQuotationAdjustmentWhereInput | DocumentQuotationAdjustmentWhereInput[]
+    OR?: DocumentQuotationAdjustmentWhereInput[]
+    NOT?: DocumentQuotationAdjustmentWhereInput | DocumentQuotationAdjustmentWhereInput[]
+    quotationId?: UuidFilter<"DocumentQuotationAdjustment"> | string
+    adjustmentName?: StringFilter<"DocumentQuotationAdjustment"> | string
+    adjustmentValue?: DecimalFilter<"DocumentQuotationAdjustment"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFilter<"DocumentQuotationAdjustment"> | Date | string
+    updatedAt?: DateTimeFilter<"DocumentQuotationAdjustment"> | Date | string
+    quotation?: XOR<DocumentQuotationScalarRelationFilter, DocumentQuotationWhereInput>
+  }, "id">
+
+  export type DocumentQuotationAdjustmentOrderByWithAggregationInput = {
+    id?: SortOrder
+    quotationId?: SortOrder
+    adjustmentName?: SortOrder
+    adjustmentValue?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DocumentQuotationAdjustmentCountOrderByAggregateInput
+    _avg?: DocumentQuotationAdjustmentAvgOrderByAggregateInput
+    _max?: DocumentQuotationAdjustmentMaxOrderByAggregateInput
+    _min?: DocumentQuotationAdjustmentMinOrderByAggregateInput
+    _sum?: DocumentQuotationAdjustmentSumOrderByAggregateInput
+  }
+
+  export type DocumentQuotationAdjustmentScalarWhereWithAggregatesInput = {
+    AND?: DocumentQuotationAdjustmentScalarWhereWithAggregatesInput | DocumentQuotationAdjustmentScalarWhereWithAggregatesInput[]
+    OR?: DocumentQuotationAdjustmentScalarWhereWithAggregatesInput[]
+    NOT?: DocumentQuotationAdjustmentScalarWhereWithAggregatesInput | DocumentQuotationAdjustmentScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"DocumentQuotationAdjustment"> | string
+    quotationId?: UuidWithAggregatesFilter<"DocumentQuotationAdjustment"> | string
+    adjustmentName?: StringWithAggregatesFilter<"DocumentQuotationAdjustment"> | string
+    adjustmentValue?: DecimalWithAggregatesFilter<"DocumentQuotationAdjustment"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeWithAggregatesFilter<"DocumentQuotationAdjustment"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"DocumentQuotationAdjustment"> | Date | string
+  }
+
+  export type DocumentAdjustmentItemWhereInput = {
+    AND?: DocumentAdjustmentItemWhereInput | DocumentAdjustmentItemWhereInput[]
+    OR?: DocumentAdjustmentItemWhereInput[]
+    NOT?: DocumentAdjustmentItemWhereInput | DocumentAdjustmentItemWhereInput[]
+    id?: UuidFilter<"DocumentAdjustmentItem"> | string
+    quotationId?: UuidFilter<"DocumentAdjustmentItem"> | string
+    productId?: UuidNullableFilter<"DocumentAdjustmentItem"> | string | null
+    name?: StringFilter<"DocumentAdjustmentItem"> | string
+    description?: StringNullableFilter<"DocumentAdjustmentItem"> | string | null
+    quantity?: DecimalFilter<"DocumentAdjustmentItem"> | Decimal | DecimalJsLike | number | string
+    unit?: StringFilter<"DocumentAdjustmentItem"> | string
+    rate?: DecimalFilter<"DocumentAdjustmentItem"> | Decimal | DecimalJsLike | number | string
+    discountType?: StringFilter<"DocumentAdjustmentItem"> | string
+    discountValue?: DecimalFilter<"DocumentAdjustmentItem"> | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFilter<"DocumentAdjustmentItem"> | Decimal | DecimalJsLike | number | string
+    taxRate?: DecimalFilter<"DocumentAdjustmentItem"> | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFilter<"DocumentAdjustmentItem"> | Decimal | DecimalJsLike | number | string
+    amount?: DecimalFilter<"DocumentAdjustmentItem"> | Decimal | DecimalJsLike | number | string
+    sortIndex?: IntFilter<"DocumentAdjustmentItem"> | number
+    createdAt?: DateTimeFilter<"DocumentAdjustmentItem"> | Date | string
+    updatedAt?: DateTimeFilter<"DocumentAdjustmentItem"> | Date | string
+    quotation?: XOR<DocumentQuotationScalarRelationFilter, DocumentQuotationWhereInput>
+  }
+
+  export type DocumentAdjustmentItemOrderByWithRelationInput = {
+    id?: SortOrder
+    quotationId?: SortOrder
+    productId?: SortOrderInput | SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    quantity?: SortOrder
+    unit?: SortOrder
+    rate?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
+    discountAmount?: SortOrder
+    taxRate?: SortOrder
+    taxAmount?: SortOrder
+    amount?: SortOrder
+    sortIndex?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    quotation?: DocumentQuotationOrderByWithRelationInput
+  }
+
+  export type DocumentAdjustmentItemWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: DocumentAdjustmentItemWhereInput | DocumentAdjustmentItemWhereInput[]
+    OR?: DocumentAdjustmentItemWhereInput[]
+    NOT?: DocumentAdjustmentItemWhereInput | DocumentAdjustmentItemWhereInput[]
+    quotationId?: UuidFilter<"DocumentAdjustmentItem"> | string
+    productId?: UuidNullableFilter<"DocumentAdjustmentItem"> | string | null
+    name?: StringFilter<"DocumentAdjustmentItem"> | string
+    description?: StringNullableFilter<"DocumentAdjustmentItem"> | string | null
+    quantity?: DecimalFilter<"DocumentAdjustmentItem"> | Decimal | DecimalJsLike | number | string
+    unit?: StringFilter<"DocumentAdjustmentItem"> | string
+    rate?: DecimalFilter<"DocumentAdjustmentItem"> | Decimal | DecimalJsLike | number | string
+    discountType?: StringFilter<"DocumentAdjustmentItem"> | string
+    discountValue?: DecimalFilter<"DocumentAdjustmentItem"> | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFilter<"DocumentAdjustmentItem"> | Decimal | DecimalJsLike | number | string
+    taxRate?: DecimalFilter<"DocumentAdjustmentItem"> | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFilter<"DocumentAdjustmentItem"> | Decimal | DecimalJsLike | number | string
+    amount?: DecimalFilter<"DocumentAdjustmentItem"> | Decimal | DecimalJsLike | number | string
+    sortIndex?: IntFilter<"DocumentAdjustmentItem"> | number
+    createdAt?: DateTimeFilter<"DocumentAdjustmentItem"> | Date | string
+    updatedAt?: DateTimeFilter<"DocumentAdjustmentItem"> | Date | string
+    quotation?: XOR<DocumentQuotationScalarRelationFilter, DocumentQuotationWhereInput>
+  }, "id">
+
+  export type DocumentAdjustmentItemOrderByWithAggregationInput = {
+    id?: SortOrder
+    quotationId?: SortOrder
+    productId?: SortOrderInput | SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    quantity?: SortOrder
+    unit?: SortOrder
+    rate?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
+    discountAmount?: SortOrder
+    taxRate?: SortOrder
+    taxAmount?: SortOrder
+    amount?: SortOrder
+    sortIndex?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DocumentAdjustmentItemCountOrderByAggregateInput
+    _avg?: DocumentAdjustmentItemAvgOrderByAggregateInput
+    _max?: DocumentAdjustmentItemMaxOrderByAggregateInput
+    _min?: DocumentAdjustmentItemMinOrderByAggregateInput
+    _sum?: DocumentAdjustmentItemSumOrderByAggregateInput
+  }
+
+  export type DocumentAdjustmentItemScalarWhereWithAggregatesInput = {
+    AND?: DocumentAdjustmentItemScalarWhereWithAggregatesInput | DocumentAdjustmentItemScalarWhereWithAggregatesInput[]
+    OR?: DocumentAdjustmentItemScalarWhereWithAggregatesInput[]
+    NOT?: DocumentAdjustmentItemScalarWhereWithAggregatesInput | DocumentAdjustmentItemScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"DocumentAdjustmentItem"> | string
+    quotationId?: UuidWithAggregatesFilter<"DocumentAdjustmentItem"> | string
+    productId?: UuidNullableWithAggregatesFilter<"DocumentAdjustmentItem"> | string | null
+    name?: StringWithAggregatesFilter<"DocumentAdjustmentItem"> | string
+    description?: StringNullableWithAggregatesFilter<"DocumentAdjustmentItem"> | string | null
+    quantity?: DecimalWithAggregatesFilter<"DocumentAdjustmentItem"> | Decimal | DecimalJsLike | number | string
+    unit?: StringWithAggregatesFilter<"DocumentAdjustmentItem"> | string
+    rate?: DecimalWithAggregatesFilter<"DocumentAdjustmentItem"> | Decimal | DecimalJsLike | number | string
+    discountType?: StringWithAggregatesFilter<"DocumentAdjustmentItem"> | string
+    discountValue?: DecimalWithAggregatesFilter<"DocumentAdjustmentItem"> | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalWithAggregatesFilter<"DocumentAdjustmentItem"> | Decimal | DecimalJsLike | number | string
+    taxRate?: DecimalWithAggregatesFilter<"DocumentAdjustmentItem"> | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalWithAggregatesFilter<"DocumentAdjustmentItem"> | Decimal | DecimalJsLike | number | string
+    amount?: DecimalWithAggregatesFilter<"DocumentAdjustmentItem"> | Decimal | DecimalJsLike | number | string
+    sortIndex?: IntWithAggregatesFilter<"DocumentAdjustmentItem"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"DocumentAdjustmentItem"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"DocumentAdjustmentItem"> | Date | string
   }
 
   export type AccountCreateInput = {
@@ -18872,6 +24661,7 @@ export namespace Prisma {
     transactions?: TransactionCreateNestedManyWithoutProjectInput
     projections?: ProjectionCreateNestedManyWithoutProjectInput
     finAccounts?: FinAccountCreateNestedManyWithoutProjectInput
+    documents?: DocumentCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateInput = {
@@ -18885,6 +24675,7 @@ export namespace Prisma {
     transactions?: TransactionUncheckedCreateNestedManyWithoutProjectInput
     projections?: ProjectionUncheckedCreateNestedManyWithoutProjectInput
     finAccounts?: FinAccountUncheckedCreateNestedManyWithoutProjectInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUpdateInput = {
@@ -18898,6 +24689,7 @@ export namespace Prisma {
     transactions?: TransactionUpdateManyWithoutProjectNestedInput
     projections?: ProjectionUpdateManyWithoutProjectNestedInput
     finAccounts?: FinAccountUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateInput = {
@@ -18911,6 +24703,7 @@ export namespace Prisma {
     transactions?: TransactionUncheckedUpdateManyWithoutProjectNestedInput
     projections?: ProjectionUncheckedUpdateManyWithoutProjectNestedInput
     finAccounts?: FinAccountUncheckedUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectCreateManyInput = {
@@ -19056,6 +24849,7 @@ export namespace Prisma {
     project: ProjectCreateNestedOneWithoutPartiesInput
     contacts?: PartyContactCreateNestedManyWithoutPartyInput
     paymentMethods?: PartyPaymentMethodCreateNestedManyWithoutPartyInput
+    quotations?: DocumentQuotationCreateNestedManyWithoutCustomerInput
   }
 
   export type PartyUncheckedCreateInput = {
@@ -19067,6 +24861,7 @@ export namespace Prisma {
     taxinfo?: NullableJsonNullValueInput | InputJsonValue
     contacts?: PartyContactUncheckedCreateNestedManyWithoutPartyInput
     paymentMethods?: PartyPaymentMethodUncheckedCreateNestedManyWithoutPartyInput
+    quotations?: DocumentQuotationUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type PartyUpdateInput = {
@@ -19078,6 +24873,7 @@ export namespace Prisma {
     project?: ProjectUpdateOneRequiredWithoutPartiesNestedInput
     contacts?: PartyContactUpdateManyWithoutPartyNestedInput
     paymentMethods?: PartyPaymentMethodUpdateManyWithoutPartyNestedInput
+    quotations?: DocumentQuotationUpdateManyWithoutCustomerNestedInput
   }
 
   export type PartyUncheckedUpdateInput = {
@@ -19089,6 +24885,7 @@ export namespace Prisma {
     taxinfo?: NullableJsonNullValueInput | InputJsonValue
     contacts?: PartyContactUncheckedUpdateManyWithoutPartyNestedInput
     paymentMethods?: PartyPaymentMethodUncheckedUpdateManyWithoutPartyNestedInput
+    quotations?: DocumentQuotationUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type PartyCreateManyInput = {
@@ -19887,6 +25684,433 @@ export namespace Prisma {
     transactionOn?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type DocumentCreateInput = {
+    id?: string
+    type: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutDocumentsInput
+    quotation?: DocumentQuotationCreateNestedOneWithoutDocumentInput
+  }
+
+  export type DocumentUncheckedCreateInput = {
+    id?: string
+    projectId: string
+    type: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    quotation?: DocumentQuotationUncheckedCreateNestedOneWithoutDocumentInput
+  }
+
+  export type DocumentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutDocumentsNestedInput
+    quotation?: DocumentQuotationUpdateOneWithoutDocumentNestedInput
+  }
+
+  export type DocumentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    quotation?: DocumentQuotationUncheckedUpdateOneWithoutDocumentNestedInput
+  }
+
+  export type DocumentCreateManyInput = {
+    id?: string
+    projectId: string
+    type: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentQuotationCreateInput = {
+    counter: number
+    referenceNumber: string
+    subject: string
+    currency: string
+    exchangeRate: Decimal | DecimalJsLike | number | string
+    subtotal: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    hasAdjustments?: boolean
+    total: Decimal | DecimalJsLike | number | string
+    status: string
+    date: Date | string
+    expires: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    document: DocumentCreateNestedOneWithoutQuotationInput
+    customer: PartyCreateNestedOneWithoutQuotationsInput
+    adjustments?: DocumentQuotationAdjustmentCreateNestedManyWithoutQuotationInput
+    items?: DocumentAdjustmentItemCreateNestedManyWithoutQuotationInput
+  }
+
+  export type DocumentQuotationUncheckedCreateInput = {
+    id: string
+    customerId: string
+    counter: number
+    referenceNumber: string
+    subject: string
+    currency: string
+    exchangeRate: Decimal | DecimalJsLike | number | string
+    subtotal: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    hasAdjustments?: boolean
+    total: Decimal | DecimalJsLike | number | string
+    status: string
+    date: Date | string
+    expires: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    adjustments?: DocumentQuotationAdjustmentUncheckedCreateNestedManyWithoutQuotationInput
+    items?: DocumentAdjustmentItemUncheckedCreateNestedManyWithoutQuotationInput
+  }
+
+  export type DocumentQuotationUpdateInput = {
+    counter?: IntFieldUpdateOperationsInput | number
+    referenceNumber?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFieldUpdateOperationsInput | boolean
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    expires?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    document?: DocumentUpdateOneRequiredWithoutQuotationNestedInput
+    customer?: PartyUpdateOneRequiredWithoutQuotationsNestedInput
+    adjustments?: DocumentQuotationAdjustmentUpdateManyWithoutQuotationNestedInput
+    items?: DocumentAdjustmentItemUpdateManyWithoutQuotationNestedInput
+  }
+
+  export type DocumentQuotationUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    counter?: IntFieldUpdateOperationsInput | number
+    referenceNumber?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFieldUpdateOperationsInput | boolean
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    expires?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    adjustments?: DocumentQuotationAdjustmentUncheckedUpdateManyWithoutQuotationNestedInput
+    items?: DocumentAdjustmentItemUncheckedUpdateManyWithoutQuotationNestedInput
+  }
+
+  export type DocumentQuotationCreateManyInput = {
+    id: string
+    customerId: string
+    counter: number
+    referenceNumber: string
+    subject: string
+    currency: string
+    exchangeRate: Decimal | DecimalJsLike | number | string
+    subtotal: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    hasAdjustments?: boolean
+    total: Decimal | DecimalJsLike | number | string
+    status: string
+    date: Date | string
+    expires: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentQuotationUpdateManyMutationInput = {
+    counter?: IntFieldUpdateOperationsInput | number
+    referenceNumber?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFieldUpdateOperationsInput | boolean
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    expires?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentQuotationUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    counter?: IntFieldUpdateOperationsInput | number
+    referenceNumber?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFieldUpdateOperationsInput | boolean
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    expires?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentQuotationAdjustmentCreateInput = {
+    id?: string
+    adjustmentName: string
+    adjustmentValue: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    quotation: DocumentQuotationCreateNestedOneWithoutAdjustmentsInput
+  }
+
+  export type DocumentQuotationAdjustmentUncheckedCreateInput = {
+    id?: string
+    quotationId: string
+    adjustmentName: string
+    adjustmentValue: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentQuotationAdjustmentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    adjustmentName?: StringFieldUpdateOperationsInput | string
+    adjustmentValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    quotation?: DocumentQuotationUpdateOneRequiredWithoutAdjustmentsNestedInput
+  }
+
+  export type DocumentQuotationAdjustmentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    quotationId?: StringFieldUpdateOperationsInput | string
+    adjustmentName?: StringFieldUpdateOperationsInput | string
+    adjustmentValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentQuotationAdjustmentCreateManyInput = {
+    id?: string
+    quotationId: string
+    adjustmentName: string
+    adjustmentValue: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentQuotationAdjustmentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    adjustmentName?: StringFieldUpdateOperationsInput | string
+    adjustmentValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentQuotationAdjustmentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    quotationId?: StringFieldUpdateOperationsInput | string
+    adjustmentName?: StringFieldUpdateOperationsInput | string
+    adjustmentValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentAdjustmentItemCreateInput = {
+    id?: string
+    productId?: string | null
+    name: string
+    description?: string | null
+    quantity: Decimal | DecimalJsLike | number | string
+    unit: string
+    rate: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxRate: Decimal | DecimalJsLike | number | string
+    taxAmount: Decimal | DecimalJsLike | number | string
+    amount: Decimal | DecimalJsLike | number | string
+    sortIndex: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    quotation: DocumentQuotationCreateNestedOneWithoutItemsInput
+  }
+
+  export type DocumentAdjustmentItemUncheckedCreateInput = {
+    id?: string
+    quotationId: string
+    productId?: string | null
+    name: string
+    description?: string | null
+    quantity: Decimal | DecimalJsLike | number | string
+    unit: string
+    rate: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxRate: Decimal | DecimalJsLike | number | string
+    taxAmount: Decimal | DecimalJsLike | number | string
+    amount: Decimal | DecimalJsLike | number | string
+    sortIndex: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentAdjustmentItemUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    sortIndex?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    quotation?: DocumentQuotationUpdateOneRequiredWithoutItemsNestedInput
+  }
+
+  export type DocumentAdjustmentItemUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    quotationId?: StringFieldUpdateOperationsInput | string
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    sortIndex?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentAdjustmentItemCreateManyInput = {
+    id?: string
+    quotationId: string
+    productId?: string | null
+    name: string
+    description?: string | null
+    quantity: Decimal | DecimalJsLike | number | string
+    unit: string
+    rate: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxRate: Decimal | DecimalJsLike | number | string
+    taxAmount: Decimal | DecimalJsLike | number | string
+    amount: Decimal | DecimalJsLike | number | string
+    sortIndex: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentAdjustmentItemUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    sortIndex?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentAdjustmentItemUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    quotationId?: StringFieldUpdateOperationsInput | string
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    sortIndex?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -20022,6 +26246,18 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
+  export type UuidFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel>
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedUuidFilter<$PrismaModel> | string
+  }
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -20045,11 +26281,21 @@ export namespace Prisma {
     none?: FinAccountWhereInput
   }
 
+  export type DocumentListRelationFilter = {
+    every?: DocumentWhereInput
+    some?: DocumentWhereInput
+    none?: DocumentWhereInput
+  }
+
   export type ProjectionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type FinAccountOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DocumentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -20072,6 +26318,21 @@ export namespace Prisma {
     name?: SortOrder
     status?: SortOrder
     createdOn?: SortOrder
+  }
+
+  export type UuidWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel>
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedUuidWithAggregatesFilter<$PrismaModel> | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedStringFilter<$PrismaModel>
+    _max?: NestedStringFilter<$PrismaModel>
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -20239,11 +26500,21 @@ export namespace Prisma {
     none?: PartyPaymentMethodWhereInput
   }
 
+  export type DocumentQuotationListRelationFilter = {
+    every?: DocumentQuotationWhereInput
+    some?: DocumentQuotationWhereInput
+    none?: DocumentQuotationWhereInput
+  }
+
   export type PartyContactOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type PartyPaymentMethodOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DocumentQuotationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -20882,6 +27153,296 @@ export namespace Prisma {
     _max?: NestedEnumActivityStockTypeFilter<$PrismaModel>
   }
 
+  export type DocumentQuotationNullableScalarRelationFilter = {
+    is?: DocumentQuotationWhereInput | null
+    isNot?: DocumentQuotationWhereInput | null
+  }
+
+  export type DocumentCountOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    type?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DocumentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    type?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DocumentMinOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    type?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DocumentScalarRelationFilter = {
+    is?: DocumentWhereInput
+    isNot?: DocumentWhereInput
+  }
+
+  export type DocumentQuotationAdjustmentListRelationFilter = {
+    every?: DocumentQuotationAdjustmentWhereInput
+    some?: DocumentQuotationAdjustmentWhereInput
+    none?: DocumentQuotationAdjustmentWhereInput
+  }
+
+  export type DocumentAdjustmentItemListRelationFilter = {
+    every?: DocumentAdjustmentItemWhereInput
+    some?: DocumentAdjustmentItemWhereInput
+    none?: DocumentAdjustmentItemWhereInput
+  }
+
+  export type DocumentQuotationAdjustmentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DocumentAdjustmentItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DocumentQuotationCountOrderByAggregateInput = {
+    id?: SortOrder
+    customerId?: SortOrder
+    counter?: SortOrder
+    referenceNumber?: SortOrder
+    subject?: SortOrder
+    currency?: SortOrder
+    exchangeRate?: SortOrder
+    subtotal?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
+    discountAmount?: SortOrder
+    taxTotal?: SortOrder
+    hasAdjustments?: SortOrder
+    total?: SortOrder
+    status?: SortOrder
+    date?: SortOrder
+    expires?: SortOrder
+    details?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DocumentQuotationAvgOrderByAggregateInput = {
+    counter?: SortOrder
+    exchangeRate?: SortOrder
+    subtotal?: SortOrder
+    discountValue?: SortOrder
+    discountAmount?: SortOrder
+    taxTotal?: SortOrder
+    total?: SortOrder
+  }
+
+  export type DocumentQuotationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    customerId?: SortOrder
+    counter?: SortOrder
+    referenceNumber?: SortOrder
+    subject?: SortOrder
+    currency?: SortOrder
+    exchangeRate?: SortOrder
+    subtotal?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
+    discountAmount?: SortOrder
+    taxTotal?: SortOrder
+    hasAdjustments?: SortOrder
+    total?: SortOrder
+    status?: SortOrder
+    date?: SortOrder
+    expires?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DocumentQuotationMinOrderByAggregateInput = {
+    id?: SortOrder
+    customerId?: SortOrder
+    counter?: SortOrder
+    referenceNumber?: SortOrder
+    subject?: SortOrder
+    currency?: SortOrder
+    exchangeRate?: SortOrder
+    subtotal?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
+    discountAmount?: SortOrder
+    taxTotal?: SortOrder
+    hasAdjustments?: SortOrder
+    total?: SortOrder
+    status?: SortOrder
+    date?: SortOrder
+    expires?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DocumentQuotationSumOrderByAggregateInput = {
+    counter?: SortOrder
+    exchangeRate?: SortOrder
+    subtotal?: SortOrder
+    discountValue?: SortOrder
+    discountAmount?: SortOrder
+    taxTotal?: SortOrder
+    total?: SortOrder
+  }
+
+  export type DocumentQuotationScalarRelationFilter = {
+    is?: DocumentQuotationWhereInput
+    isNot?: DocumentQuotationWhereInput
+  }
+
+  export type DocumentQuotationAdjustmentCountOrderByAggregateInput = {
+    id?: SortOrder
+    quotationId?: SortOrder
+    adjustmentName?: SortOrder
+    adjustmentValue?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DocumentQuotationAdjustmentAvgOrderByAggregateInput = {
+    adjustmentValue?: SortOrder
+  }
+
+  export type DocumentQuotationAdjustmentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    quotationId?: SortOrder
+    adjustmentName?: SortOrder
+    adjustmentValue?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DocumentQuotationAdjustmentMinOrderByAggregateInput = {
+    id?: SortOrder
+    quotationId?: SortOrder
+    adjustmentName?: SortOrder
+    adjustmentValue?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DocumentQuotationAdjustmentSumOrderByAggregateInput = {
+    adjustmentValue?: SortOrder
+  }
+
+  export type UuidNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type DocumentAdjustmentItemCountOrderByAggregateInput = {
+    id?: SortOrder
+    quotationId?: SortOrder
+    productId?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    quantity?: SortOrder
+    unit?: SortOrder
+    rate?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
+    discountAmount?: SortOrder
+    taxRate?: SortOrder
+    taxAmount?: SortOrder
+    amount?: SortOrder
+    sortIndex?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DocumentAdjustmentItemAvgOrderByAggregateInput = {
+    quantity?: SortOrder
+    rate?: SortOrder
+    discountValue?: SortOrder
+    discountAmount?: SortOrder
+    taxRate?: SortOrder
+    taxAmount?: SortOrder
+    amount?: SortOrder
+    sortIndex?: SortOrder
+  }
+
+  export type DocumentAdjustmentItemMaxOrderByAggregateInput = {
+    id?: SortOrder
+    quotationId?: SortOrder
+    productId?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    quantity?: SortOrder
+    unit?: SortOrder
+    rate?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
+    discountAmount?: SortOrder
+    taxRate?: SortOrder
+    taxAmount?: SortOrder
+    amount?: SortOrder
+    sortIndex?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DocumentAdjustmentItemMinOrderByAggregateInput = {
+    id?: SortOrder
+    quotationId?: SortOrder
+    productId?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    quantity?: SortOrder
+    unit?: SortOrder
+    rate?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
+    discountAmount?: SortOrder
+    taxRate?: SortOrder
+    taxAmount?: SortOrder
+    amount?: SortOrder
+    sortIndex?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DocumentAdjustmentItemSumOrderByAggregateInput = {
+    quantity?: SortOrder
+    rate?: SortOrder
+    discountValue?: SortOrder
+    discountAmount?: SortOrder
+    taxRate?: SortOrder
+    taxAmount?: SortOrder
+    amount?: SortOrder
+    sortIndex?: SortOrder
+  }
+
+  export type UuidNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
   export type AssetGroupCreateNestedManyWithoutAccountInput = {
     create?: XOR<AssetGroupCreateWithoutAccountInput, AssetGroupUncheckedCreateWithoutAccountInput> | AssetGroupCreateWithoutAccountInput[] | AssetGroupUncheckedCreateWithoutAccountInput[]
     connectOrCreate?: AssetGroupCreateOrConnectWithoutAccountInput | AssetGroupCreateOrConnectWithoutAccountInput[]
@@ -21100,6 +27661,13 @@ export namespace Prisma {
     connect?: FinAccountWhereUniqueInput | FinAccountWhereUniqueInput[]
   }
 
+  export type DocumentCreateNestedManyWithoutProjectInput = {
+    create?: XOR<DocumentCreateWithoutProjectInput, DocumentUncheckedCreateWithoutProjectInput> | DocumentCreateWithoutProjectInput[] | DocumentUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: DocumentCreateOrConnectWithoutProjectInput | DocumentCreateOrConnectWithoutProjectInput[]
+    createMany?: DocumentCreateManyProjectInputEnvelope
+    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+  }
+
   export type AccessUncheckedCreateNestedManyWithoutProjectInput = {
     create?: XOR<AccessCreateWithoutProjectInput, AccessUncheckedCreateWithoutProjectInput> | AccessCreateWithoutProjectInput[] | AccessUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: AccessCreateOrConnectWithoutProjectInput | AccessCreateOrConnectWithoutProjectInput[]
@@ -21140,6 +27708,13 @@ export namespace Prisma {
     connectOrCreate?: FinAccountCreateOrConnectWithoutProjectInput | FinAccountCreateOrConnectWithoutProjectInput[]
     createMany?: FinAccountCreateManyProjectInputEnvelope
     connect?: FinAccountWhereUniqueInput | FinAccountWhereUniqueInput[]
+  }
+
+  export type DocumentUncheckedCreateNestedManyWithoutProjectInput = {
+    create?: XOR<DocumentCreateWithoutProjectInput, DocumentUncheckedCreateWithoutProjectInput> | DocumentCreateWithoutProjectInput[] | DocumentUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: DocumentCreateOrConnectWithoutProjectInput | DocumentCreateOrConnectWithoutProjectInput[]
+    createMany?: DocumentCreateManyProjectInputEnvelope
+    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
   }
 
   export type DateTimeFieldUpdateOperationsInput = {
@@ -21230,6 +27805,20 @@ export namespace Prisma {
     deleteMany?: FinAccountScalarWhereInput | FinAccountScalarWhereInput[]
   }
 
+  export type DocumentUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<DocumentCreateWithoutProjectInput, DocumentUncheckedCreateWithoutProjectInput> | DocumentCreateWithoutProjectInput[] | DocumentUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: DocumentCreateOrConnectWithoutProjectInput | DocumentCreateOrConnectWithoutProjectInput[]
+    upsert?: DocumentUpsertWithWhereUniqueWithoutProjectInput | DocumentUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: DocumentCreateManyProjectInputEnvelope
+    set?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    disconnect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    delete?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    update?: DocumentUpdateWithWhereUniqueWithoutProjectInput | DocumentUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: DocumentUpdateManyWithWhereWithoutProjectInput | DocumentUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
+  }
+
   export type AccessUncheckedUpdateManyWithoutProjectNestedInput = {
     create?: XOR<AccessCreateWithoutProjectInput, AccessUncheckedCreateWithoutProjectInput> | AccessCreateWithoutProjectInput[] | AccessUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: AccessCreateOrConnectWithoutProjectInput | AccessCreateOrConnectWithoutProjectInput[]
@@ -21312,6 +27901,20 @@ export namespace Prisma {
     update?: FinAccountUpdateWithWhereUniqueWithoutProjectInput | FinAccountUpdateWithWhereUniqueWithoutProjectInput[]
     updateMany?: FinAccountUpdateManyWithWhereWithoutProjectInput | FinAccountUpdateManyWithWhereWithoutProjectInput[]
     deleteMany?: FinAccountScalarWhereInput | FinAccountScalarWhereInput[]
+  }
+
+  export type DocumentUncheckedUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<DocumentCreateWithoutProjectInput, DocumentUncheckedCreateWithoutProjectInput> | DocumentCreateWithoutProjectInput[] | DocumentUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: DocumentCreateOrConnectWithoutProjectInput | DocumentCreateOrConnectWithoutProjectInput[]
+    upsert?: DocumentUpsertWithWhereUniqueWithoutProjectInput | DocumentUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: DocumentCreateManyProjectInputEnvelope
+    set?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    disconnect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    delete?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    update?: DocumentUpdateWithWhereUniqueWithoutProjectInput | DocumentUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: DocumentUpdateManyWithWhereWithoutProjectInput | DocumentUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
   }
 
   export type AccessCreateNestedManyWithoutRoleInput = {
@@ -21424,6 +28027,13 @@ export namespace Prisma {
     connect?: PartyPaymentMethodWhereUniqueInput | PartyPaymentMethodWhereUniqueInput[]
   }
 
+  export type DocumentQuotationCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<DocumentQuotationCreateWithoutCustomerInput, DocumentQuotationUncheckedCreateWithoutCustomerInput> | DocumentQuotationCreateWithoutCustomerInput[] | DocumentQuotationUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: DocumentQuotationCreateOrConnectWithoutCustomerInput | DocumentQuotationCreateOrConnectWithoutCustomerInput[]
+    createMany?: DocumentQuotationCreateManyCustomerInputEnvelope
+    connect?: DocumentQuotationWhereUniqueInput | DocumentQuotationWhereUniqueInput[]
+  }
+
   export type PartyContactUncheckedCreateNestedManyWithoutPartyInput = {
     create?: XOR<PartyContactCreateWithoutPartyInput, PartyContactUncheckedCreateWithoutPartyInput> | PartyContactCreateWithoutPartyInput[] | PartyContactUncheckedCreateWithoutPartyInput[]
     connectOrCreate?: PartyContactCreateOrConnectWithoutPartyInput | PartyContactCreateOrConnectWithoutPartyInput[]
@@ -21436,6 +28046,13 @@ export namespace Prisma {
     connectOrCreate?: PartyPaymentMethodCreateOrConnectWithoutPartyInput | PartyPaymentMethodCreateOrConnectWithoutPartyInput[]
     createMany?: PartyPaymentMethodCreateManyPartyInputEnvelope
     connect?: PartyPaymentMethodWhereUniqueInput | PartyPaymentMethodWhereUniqueInput[]
+  }
+
+  export type DocumentQuotationUncheckedCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<DocumentQuotationCreateWithoutCustomerInput, DocumentQuotationUncheckedCreateWithoutCustomerInput> | DocumentQuotationCreateWithoutCustomerInput[] | DocumentQuotationUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: DocumentQuotationCreateOrConnectWithoutCustomerInput | DocumentQuotationCreateOrConnectWithoutCustomerInput[]
+    createMany?: DocumentQuotationCreateManyCustomerInputEnvelope
+    connect?: DocumentQuotationWhereUniqueInput | DocumentQuotationWhereUniqueInput[]
   }
 
   export type AccountUpdateOneRequiredWithoutPartiesNestedInput = {
@@ -21482,6 +28099,20 @@ export namespace Prisma {
     deleteMany?: PartyPaymentMethodScalarWhereInput | PartyPaymentMethodScalarWhereInput[]
   }
 
+  export type DocumentQuotationUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<DocumentQuotationCreateWithoutCustomerInput, DocumentQuotationUncheckedCreateWithoutCustomerInput> | DocumentQuotationCreateWithoutCustomerInput[] | DocumentQuotationUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: DocumentQuotationCreateOrConnectWithoutCustomerInput | DocumentQuotationCreateOrConnectWithoutCustomerInput[]
+    upsert?: DocumentQuotationUpsertWithWhereUniqueWithoutCustomerInput | DocumentQuotationUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: DocumentQuotationCreateManyCustomerInputEnvelope
+    set?: DocumentQuotationWhereUniqueInput | DocumentQuotationWhereUniqueInput[]
+    disconnect?: DocumentQuotationWhereUniqueInput | DocumentQuotationWhereUniqueInput[]
+    delete?: DocumentQuotationWhereUniqueInput | DocumentQuotationWhereUniqueInput[]
+    connect?: DocumentQuotationWhereUniqueInput | DocumentQuotationWhereUniqueInput[]
+    update?: DocumentQuotationUpdateWithWhereUniqueWithoutCustomerInput | DocumentQuotationUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: DocumentQuotationUpdateManyWithWhereWithoutCustomerInput | DocumentQuotationUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: DocumentQuotationScalarWhereInput | DocumentQuotationScalarWhereInput[]
+  }
+
   export type PartyContactUncheckedUpdateManyWithoutPartyNestedInput = {
     create?: XOR<PartyContactCreateWithoutPartyInput, PartyContactUncheckedCreateWithoutPartyInput> | PartyContactCreateWithoutPartyInput[] | PartyContactUncheckedCreateWithoutPartyInput[]
     connectOrCreate?: PartyContactCreateOrConnectWithoutPartyInput | PartyContactCreateOrConnectWithoutPartyInput[]
@@ -21508,6 +28139,20 @@ export namespace Prisma {
     update?: PartyPaymentMethodUpdateWithWhereUniqueWithoutPartyInput | PartyPaymentMethodUpdateWithWhereUniqueWithoutPartyInput[]
     updateMany?: PartyPaymentMethodUpdateManyWithWhereWithoutPartyInput | PartyPaymentMethodUpdateManyWithWhereWithoutPartyInput[]
     deleteMany?: PartyPaymentMethodScalarWhereInput | PartyPaymentMethodScalarWhereInput[]
+  }
+
+  export type DocumentQuotationUncheckedUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<DocumentQuotationCreateWithoutCustomerInput, DocumentQuotationUncheckedCreateWithoutCustomerInput> | DocumentQuotationCreateWithoutCustomerInput[] | DocumentQuotationUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: DocumentQuotationCreateOrConnectWithoutCustomerInput | DocumentQuotationCreateOrConnectWithoutCustomerInput[]
+    upsert?: DocumentQuotationUpsertWithWhereUniqueWithoutCustomerInput | DocumentQuotationUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: DocumentQuotationCreateManyCustomerInputEnvelope
+    set?: DocumentQuotationWhereUniqueInput | DocumentQuotationWhereUniqueInput[]
+    disconnect?: DocumentQuotationWhereUniqueInput | DocumentQuotationWhereUniqueInput[]
+    delete?: DocumentQuotationWhereUniqueInput | DocumentQuotationWhereUniqueInput[]
+    connect?: DocumentQuotationWhereUniqueInput | DocumentQuotationWhereUniqueInput[]
+    update?: DocumentQuotationUpdateWithWhereUniqueWithoutCustomerInput | DocumentQuotationUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: DocumentQuotationUpdateManyWithWhereWithoutCustomerInput | DocumentQuotationUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: DocumentQuotationScalarWhereInput | DocumentQuotationScalarWhereInput[]
   }
 
   export type PartyCreateNestedOneWithoutContactsInput = {
@@ -21840,6 +28485,192 @@ export namespace Prisma {
     update?: XOR<XOR<AssetGroupUpdateToOneWithWhereWithoutActivityStockInput, AssetGroupUpdateWithoutActivityStockInput>, AssetGroupUncheckedUpdateWithoutActivityStockInput>
   }
 
+  export type ProjectCreateNestedOneWithoutDocumentsInput = {
+    create?: XOR<ProjectCreateWithoutDocumentsInput, ProjectUncheckedCreateWithoutDocumentsInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutDocumentsInput
+    connect?: ProjectWhereUniqueInput
+  }
+
+  export type DocumentQuotationCreateNestedOneWithoutDocumentInput = {
+    create?: XOR<DocumentQuotationCreateWithoutDocumentInput, DocumentQuotationUncheckedCreateWithoutDocumentInput>
+    connectOrCreate?: DocumentQuotationCreateOrConnectWithoutDocumentInput
+    connect?: DocumentQuotationWhereUniqueInput
+  }
+
+  export type DocumentQuotationUncheckedCreateNestedOneWithoutDocumentInput = {
+    create?: XOR<DocumentQuotationCreateWithoutDocumentInput, DocumentQuotationUncheckedCreateWithoutDocumentInput>
+    connectOrCreate?: DocumentQuotationCreateOrConnectWithoutDocumentInput
+    connect?: DocumentQuotationWhereUniqueInput
+  }
+
+  export type ProjectUpdateOneRequiredWithoutDocumentsNestedInput = {
+    create?: XOR<ProjectCreateWithoutDocumentsInput, ProjectUncheckedCreateWithoutDocumentsInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutDocumentsInput
+    upsert?: ProjectUpsertWithoutDocumentsInput
+    connect?: ProjectWhereUniqueInput
+    update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutDocumentsInput, ProjectUpdateWithoutDocumentsInput>, ProjectUncheckedUpdateWithoutDocumentsInput>
+  }
+
+  export type DocumentQuotationUpdateOneWithoutDocumentNestedInput = {
+    create?: XOR<DocumentQuotationCreateWithoutDocumentInput, DocumentQuotationUncheckedCreateWithoutDocumentInput>
+    connectOrCreate?: DocumentQuotationCreateOrConnectWithoutDocumentInput
+    upsert?: DocumentQuotationUpsertWithoutDocumentInput
+    disconnect?: DocumentQuotationWhereInput | boolean
+    delete?: DocumentQuotationWhereInput | boolean
+    connect?: DocumentQuotationWhereUniqueInput
+    update?: XOR<XOR<DocumentQuotationUpdateToOneWithWhereWithoutDocumentInput, DocumentQuotationUpdateWithoutDocumentInput>, DocumentQuotationUncheckedUpdateWithoutDocumentInput>
+  }
+
+  export type DocumentQuotationUncheckedUpdateOneWithoutDocumentNestedInput = {
+    create?: XOR<DocumentQuotationCreateWithoutDocumentInput, DocumentQuotationUncheckedCreateWithoutDocumentInput>
+    connectOrCreate?: DocumentQuotationCreateOrConnectWithoutDocumentInput
+    upsert?: DocumentQuotationUpsertWithoutDocumentInput
+    disconnect?: DocumentQuotationWhereInput | boolean
+    delete?: DocumentQuotationWhereInput | boolean
+    connect?: DocumentQuotationWhereUniqueInput
+    update?: XOR<XOR<DocumentQuotationUpdateToOneWithWhereWithoutDocumentInput, DocumentQuotationUpdateWithoutDocumentInput>, DocumentQuotationUncheckedUpdateWithoutDocumentInput>
+  }
+
+  export type DocumentCreateNestedOneWithoutQuotationInput = {
+    create?: XOR<DocumentCreateWithoutQuotationInput, DocumentUncheckedCreateWithoutQuotationInput>
+    connectOrCreate?: DocumentCreateOrConnectWithoutQuotationInput
+    connect?: DocumentWhereUniqueInput
+  }
+
+  export type PartyCreateNestedOneWithoutQuotationsInput = {
+    create?: XOR<PartyCreateWithoutQuotationsInput, PartyUncheckedCreateWithoutQuotationsInput>
+    connectOrCreate?: PartyCreateOrConnectWithoutQuotationsInput
+    connect?: PartyWhereUniqueInput
+  }
+
+  export type DocumentQuotationAdjustmentCreateNestedManyWithoutQuotationInput = {
+    create?: XOR<DocumentQuotationAdjustmentCreateWithoutQuotationInput, DocumentQuotationAdjustmentUncheckedCreateWithoutQuotationInput> | DocumentQuotationAdjustmentCreateWithoutQuotationInput[] | DocumentQuotationAdjustmentUncheckedCreateWithoutQuotationInput[]
+    connectOrCreate?: DocumentQuotationAdjustmentCreateOrConnectWithoutQuotationInput | DocumentQuotationAdjustmentCreateOrConnectWithoutQuotationInput[]
+    createMany?: DocumentQuotationAdjustmentCreateManyQuotationInputEnvelope
+    connect?: DocumentQuotationAdjustmentWhereUniqueInput | DocumentQuotationAdjustmentWhereUniqueInput[]
+  }
+
+  export type DocumentAdjustmentItemCreateNestedManyWithoutQuotationInput = {
+    create?: XOR<DocumentAdjustmentItemCreateWithoutQuotationInput, DocumentAdjustmentItemUncheckedCreateWithoutQuotationInput> | DocumentAdjustmentItemCreateWithoutQuotationInput[] | DocumentAdjustmentItemUncheckedCreateWithoutQuotationInput[]
+    connectOrCreate?: DocumentAdjustmentItemCreateOrConnectWithoutQuotationInput | DocumentAdjustmentItemCreateOrConnectWithoutQuotationInput[]
+    createMany?: DocumentAdjustmentItemCreateManyQuotationInputEnvelope
+    connect?: DocumentAdjustmentItemWhereUniqueInput | DocumentAdjustmentItemWhereUniqueInput[]
+  }
+
+  export type DocumentQuotationAdjustmentUncheckedCreateNestedManyWithoutQuotationInput = {
+    create?: XOR<DocumentQuotationAdjustmentCreateWithoutQuotationInput, DocumentQuotationAdjustmentUncheckedCreateWithoutQuotationInput> | DocumentQuotationAdjustmentCreateWithoutQuotationInput[] | DocumentQuotationAdjustmentUncheckedCreateWithoutQuotationInput[]
+    connectOrCreate?: DocumentQuotationAdjustmentCreateOrConnectWithoutQuotationInput | DocumentQuotationAdjustmentCreateOrConnectWithoutQuotationInput[]
+    createMany?: DocumentQuotationAdjustmentCreateManyQuotationInputEnvelope
+    connect?: DocumentQuotationAdjustmentWhereUniqueInput | DocumentQuotationAdjustmentWhereUniqueInput[]
+  }
+
+  export type DocumentAdjustmentItemUncheckedCreateNestedManyWithoutQuotationInput = {
+    create?: XOR<DocumentAdjustmentItemCreateWithoutQuotationInput, DocumentAdjustmentItemUncheckedCreateWithoutQuotationInput> | DocumentAdjustmentItemCreateWithoutQuotationInput[] | DocumentAdjustmentItemUncheckedCreateWithoutQuotationInput[]
+    connectOrCreate?: DocumentAdjustmentItemCreateOrConnectWithoutQuotationInput | DocumentAdjustmentItemCreateOrConnectWithoutQuotationInput[]
+    createMany?: DocumentAdjustmentItemCreateManyQuotationInputEnvelope
+    connect?: DocumentAdjustmentItemWhereUniqueInput | DocumentAdjustmentItemWhereUniqueInput[]
+  }
+
+  export type DocumentUpdateOneRequiredWithoutQuotationNestedInput = {
+    create?: XOR<DocumentCreateWithoutQuotationInput, DocumentUncheckedCreateWithoutQuotationInput>
+    connectOrCreate?: DocumentCreateOrConnectWithoutQuotationInput
+    upsert?: DocumentUpsertWithoutQuotationInput
+    connect?: DocumentWhereUniqueInput
+    update?: XOR<XOR<DocumentUpdateToOneWithWhereWithoutQuotationInput, DocumentUpdateWithoutQuotationInput>, DocumentUncheckedUpdateWithoutQuotationInput>
+  }
+
+  export type PartyUpdateOneRequiredWithoutQuotationsNestedInput = {
+    create?: XOR<PartyCreateWithoutQuotationsInput, PartyUncheckedCreateWithoutQuotationsInput>
+    connectOrCreate?: PartyCreateOrConnectWithoutQuotationsInput
+    upsert?: PartyUpsertWithoutQuotationsInput
+    connect?: PartyWhereUniqueInput
+    update?: XOR<XOR<PartyUpdateToOneWithWhereWithoutQuotationsInput, PartyUpdateWithoutQuotationsInput>, PartyUncheckedUpdateWithoutQuotationsInput>
+  }
+
+  export type DocumentQuotationAdjustmentUpdateManyWithoutQuotationNestedInput = {
+    create?: XOR<DocumentQuotationAdjustmentCreateWithoutQuotationInput, DocumentQuotationAdjustmentUncheckedCreateWithoutQuotationInput> | DocumentQuotationAdjustmentCreateWithoutQuotationInput[] | DocumentQuotationAdjustmentUncheckedCreateWithoutQuotationInput[]
+    connectOrCreate?: DocumentQuotationAdjustmentCreateOrConnectWithoutQuotationInput | DocumentQuotationAdjustmentCreateOrConnectWithoutQuotationInput[]
+    upsert?: DocumentQuotationAdjustmentUpsertWithWhereUniqueWithoutQuotationInput | DocumentQuotationAdjustmentUpsertWithWhereUniqueWithoutQuotationInput[]
+    createMany?: DocumentQuotationAdjustmentCreateManyQuotationInputEnvelope
+    set?: DocumentQuotationAdjustmentWhereUniqueInput | DocumentQuotationAdjustmentWhereUniqueInput[]
+    disconnect?: DocumentQuotationAdjustmentWhereUniqueInput | DocumentQuotationAdjustmentWhereUniqueInput[]
+    delete?: DocumentQuotationAdjustmentWhereUniqueInput | DocumentQuotationAdjustmentWhereUniqueInput[]
+    connect?: DocumentQuotationAdjustmentWhereUniqueInput | DocumentQuotationAdjustmentWhereUniqueInput[]
+    update?: DocumentQuotationAdjustmentUpdateWithWhereUniqueWithoutQuotationInput | DocumentQuotationAdjustmentUpdateWithWhereUniqueWithoutQuotationInput[]
+    updateMany?: DocumentQuotationAdjustmentUpdateManyWithWhereWithoutQuotationInput | DocumentQuotationAdjustmentUpdateManyWithWhereWithoutQuotationInput[]
+    deleteMany?: DocumentQuotationAdjustmentScalarWhereInput | DocumentQuotationAdjustmentScalarWhereInput[]
+  }
+
+  export type DocumentAdjustmentItemUpdateManyWithoutQuotationNestedInput = {
+    create?: XOR<DocumentAdjustmentItemCreateWithoutQuotationInput, DocumentAdjustmentItemUncheckedCreateWithoutQuotationInput> | DocumentAdjustmentItemCreateWithoutQuotationInput[] | DocumentAdjustmentItemUncheckedCreateWithoutQuotationInput[]
+    connectOrCreate?: DocumentAdjustmentItemCreateOrConnectWithoutQuotationInput | DocumentAdjustmentItemCreateOrConnectWithoutQuotationInput[]
+    upsert?: DocumentAdjustmentItemUpsertWithWhereUniqueWithoutQuotationInput | DocumentAdjustmentItemUpsertWithWhereUniqueWithoutQuotationInput[]
+    createMany?: DocumentAdjustmentItemCreateManyQuotationInputEnvelope
+    set?: DocumentAdjustmentItemWhereUniqueInput | DocumentAdjustmentItemWhereUniqueInput[]
+    disconnect?: DocumentAdjustmentItemWhereUniqueInput | DocumentAdjustmentItemWhereUniqueInput[]
+    delete?: DocumentAdjustmentItemWhereUniqueInput | DocumentAdjustmentItemWhereUniqueInput[]
+    connect?: DocumentAdjustmentItemWhereUniqueInput | DocumentAdjustmentItemWhereUniqueInput[]
+    update?: DocumentAdjustmentItemUpdateWithWhereUniqueWithoutQuotationInput | DocumentAdjustmentItemUpdateWithWhereUniqueWithoutQuotationInput[]
+    updateMany?: DocumentAdjustmentItemUpdateManyWithWhereWithoutQuotationInput | DocumentAdjustmentItemUpdateManyWithWhereWithoutQuotationInput[]
+    deleteMany?: DocumentAdjustmentItemScalarWhereInput | DocumentAdjustmentItemScalarWhereInput[]
+  }
+
+  export type DocumentQuotationAdjustmentUncheckedUpdateManyWithoutQuotationNestedInput = {
+    create?: XOR<DocumentQuotationAdjustmentCreateWithoutQuotationInput, DocumentQuotationAdjustmentUncheckedCreateWithoutQuotationInput> | DocumentQuotationAdjustmentCreateWithoutQuotationInput[] | DocumentQuotationAdjustmentUncheckedCreateWithoutQuotationInput[]
+    connectOrCreate?: DocumentQuotationAdjustmentCreateOrConnectWithoutQuotationInput | DocumentQuotationAdjustmentCreateOrConnectWithoutQuotationInput[]
+    upsert?: DocumentQuotationAdjustmentUpsertWithWhereUniqueWithoutQuotationInput | DocumentQuotationAdjustmentUpsertWithWhereUniqueWithoutQuotationInput[]
+    createMany?: DocumentQuotationAdjustmentCreateManyQuotationInputEnvelope
+    set?: DocumentQuotationAdjustmentWhereUniqueInput | DocumentQuotationAdjustmentWhereUniqueInput[]
+    disconnect?: DocumentQuotationAdjustmentWhereUniqueInput | DocumentQuotationAdjustmentWhereUniqueInput[]
+    delete?: DocumentQuotationAdjustmentWhereUniqueInput | DocumentQuotationAdjustmentWhereUniqueInput[]
+    connect?: DocumentQuotationAdjustmentWhereUniqueInput | DocumentQuotationAdjustmentWhereUniqueInput[]
+    update?: DocumentQuotationAdjustmentUpdateWithWhereUniqueWithoutQuotationInput | DocumentQuotationAdjustmentUpdateWithWhereUniqueWithoutQuotationInput[]
+    updateMany?: DocumentQuotationAdjustmentUpdateManyWithWhereWithoutQuotationInput | DocumentQuotationAdjustmentUpdateManyWithWhereWithoutQuotationInput[]
+    deleteMany?: DocumentQuotationAdjustmentScalarWhereInput | DocumentQuotationAdjustmentScalarWhereInput[]
+  }
+
+  export type DocumentAdjustmentItemUncheckedUpdateManyWithoutQuotationNestedInput = {
+    create?: XOR<DocumentAdjustmentItemCreateWithoutQuotationInput, DocumentAdjustmentItemUncheckedCreateWithoutQuotationInput> | DocumentAdjustmentItemCreateWithoutQuotationInput[] | DocumentAdjustmentItemUncheckedCreateWithoutQuotationInput[]
+    connectOrCreate?: DocumentAdjustmentItemCreateOrConnectWithoutQuotationInput | DocumentAdjustmentItemCreateOrConnectWithoutQuotationInput[]
+    upsert?: DocumentAdjustmentItemUpsertWithWhereUniqueWithoutQuotationInput | DocumentAdjustmentItemUpsertWithWhereUniqueWithoutQuotationInput[]
+    createMany?: DocumentAdjustmentItemCreateManyQuotationInputEnvelope
+    set?: DocumentAdjustmentItemWhereUniqueInput | DocumentAdjustmentItemWhereUniqueInput[]
+    disconnect?: DocumentAdjustmentItemWhereUniqueInput | DocumentAdjustmentItemWhereUniqueInput[]
+    delete?: DocumentAdjustmentItemWhereUniqueInput | DocumentAdjustmentItemWhereUniqueInput[]
+    connect?: DocumentAdjustmentItemWhereUniqueInput | DocumentAdjustmentItemWhereUniqueInput[]
+    update?: DocumentAdjustmentItemUpdateWithWhereUniqueWithoutQuotationInput | DocumentAdjustmentItemUpdateWithWhereUniqueWithoutQuotationInput[]
+    updateMany?: DocumentAdjustmentItemUpdateManyWithWhereWithoutQuotationInput | DocumentAdjustmentItemUpdateManyWithWhereWithoutQuotationInput[]
+    deleteMany?: DocumentAdjustmentItemScalarWhereInput | DocumentAdjustmentItemScalarWhereInput[]
+  }
+
+  export type DocumentQuotationCreateNestedOneWithoutAdjustmentsInput = {
+    create?: XOR<DocumentQuotationCreateWithoutAdjustmentsInput, DocumentQuotationUncheckedCreateWithoutAdjustmentsInput>
+    connectOrCreate?: DocumentQuotationCreateOrConnectWithoutAdjustmentsInput
+    connect?: DocumentQuotationWhereUniqueInput
+  }
+
+  export type DocumentQuotationUpdateOneRequiredWithoutAdjustmentsNestedInput = {
+    create?: XOR<DocumentQuotationCreateWithoutAdjustmentsInput, DocumentQuotationUncheckedCreateWithoutAdjustmentsInput>
+    connectOrCreate?: DocumentQuotationCreateOrConnectWithoutAdjustmentsInput
+    upsert?: DocumentQuotationUpsertWithoutAdjustmentsInput
+    connect?: DocumentQuotationWhereUniqueInput
+    update?: XOR<XOR<DocumentQuotationUpdateToOneWithWhereWithoutAdjustmentsInput, DocumentQuotationUpdateWithoutAdjustmentsInput>, DocumentQuotationUncheckedUpdateWithoutAdjustmentsInput>
+  }
+
+  export type DocumentQuotationCreateNestedOneWithoutItemsInput = {
+    create?: XOR<DocumentQuotationCreateWithoutItemsInput, DocumentQuotationUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: DocumentQuotationCreateOrConnectWithoutItemsInput
+    connect?: DocumentQuotationWhereUniqueInput
+  }
+
+  export type DocumentQuotationUpdateOneRequiredWithoutItemsNestedInput = {
+    create?: XOR<DocumentQuotationCreateWithoutItemsInput, DocumentQuotationUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: DocumentQuotationCreateOrConnectWithoutItemsInput
+    upsert?: DocumentQuotationUpsertWithoutItemsInput
+    connect?: DocumentQuotationWhereUniqueInput
+    update?: XOR<XOR<DocumentQuotationUpdateToOneWithWhereWithoutItemsInput, DocumentQuotationUpdateWithoutItemsInput>, DocumentQuotationUncheckedUpdateWithoutItemsInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -21924,6 +28755,17 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedUuidFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel>
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedUuidFilter<$PrismaModel> | string
+  }
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -21933,6 +28775,20 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type NestedUuidWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel>
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedUuidWithAggregatesFilter<$PrismaModel> | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedStringFilter<$PrismaModel>
+    _max?: NestedStringFilter<$PrismaModel>
   }
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -22189,6 +29045,31 @@ export namespace Prisma {
     _max?: NestedEnumActivityStockTypeFilter<$PrismaModel>
   }
 
+  export type NestedUuidNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedUuidNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
   export type AssetGroupCreateWithoutAccountInput = {
     id?: string
     name: string
@@ -22229,6 +29110,7 @@ export namespace Prisma {
     project: ProjectCreateNestedOneWithoutPartiesInput
     contacts?: PartyContactCreateNestedManyWithoutPartyInput
     paymentMethods?: PartyPaymentMethodCreateNestedManyWithoutPartyInput
+    quotations?: DocumentQuotationCreateNestedManyWithoutCustomerInput
   }
 
   export type PartyUncheckedCreateWithoutAccountInput = {
@@ -22239,6 +29121,7 @@ export namespace Prisma {
     taxinfo?: NullableJsonNullValueInput | InputJsonValue
     contacts?: PartyContactUncheckedCreateNestedManyWithoutPartyInput
     paymentMethods?: PartyPaymentMethodUncheckedCreateNestedManyWithoutPartyInput
+    quotations?: DocumentQuotationUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type PartyCreateOrConnectWithoutAccountInput = {
@@ -22352,7 +29235,7 @@ export namespace Prisma {
     type?: EnumAccountTypeFilter<"AssetGroup"> | $Enums.AccountType
     currency?: StringFilter<"AssetGroup"> | string
     accountId?: StringFilter<"AssetGroup"> | string
-    projectId?: StringFilter<"AssetGroup"> | string
+    projectId?: UuidFilter<"AssetGroup"> | string
     createdAt?: DateTimeFilter<"AssetGroup"> | Date | string
   }
 
@@ -22376,9 +29259,9 @@ export namespace Prisma {
     AND?: PartyScalarWhereInput | PartyScalarWhereInput[]
     OR?: PartyScalarWhereInput[]
     NOT?: PartyScalarWhereInput | PartyScalarWhereInput[]
-    id?: StringFilter<"Party"> | string
+    id?: UuidFilter<"Party"> | string
     accountId?: StringFilter<"Party"> | string
-    projectId?: StringFilter<"Party"> | string
+    projectId?: UuidFilter<"Party"> | string
     name?: StringFilter<"Party"> | string
     type?: StringFilter<"Party"> | string
     taxinfo?: JsonNullableFilter<"Party">
@@ -22406,7 +29289,7 @@ export namespace Prisma {
     NOT?: TransactionScalarWhereInput | TransactionScalarWhereInput[]
     id?: StringFilter<"Transaction"> | string
     organizationId?: StringFilter<"Transaction"> | string
-    projectId?: StringFilter<"Transaction"> | string
+    projectId?: UuidFilter<"Transaction"> | string
     transactionTypeId?: StringFilter<"Transaction"> | string
     title?: StringFilter<"Transaction"> | string
     description?: StringNullableFilter<"Transaction"> | string | null
@@ -22446,7 +29329,7 @@ export namespace Prisma {
     id?: StringFilter<"Access"> | string
     accountId?: StringFilter<"Access"> | string
     roleId?: StringFilter<"Access"> | string
-    projectId?: StringFilter<"Access"> | string
+    projectId?: UuidFilter<"Access"> | string
     status?: StringFilter<"Access"> | string
     permittedOn?: DateTimeFilter<"Access"> | Date | string
   }
@@ -22485,6 +29368,7 @@ export namespace Prisma {
     account: AccountCreateNestedOneWithoutPartiesInput
     contacts?: PartyContactCreateNestedManyWithoutPartyInput
     paymentMethods?: PartyPaymentMethodCreateNestedManyWithoutPartyInput
+    quotations?: DocumentQuotationCreateNestedManyWithoutCustomerInput
   }
 
   export type PartyUncheckedCreateWithoutProjectInput = {
@@ -22495,6 +29379,7 @@ export namespace Prisma {
     taxinfo?: NullableJsonNullValueInput | InputJsonValue
     contacts?: PartyContactUncheckedCreateNestedManyWithoutPartyInput
     paymentMethods?: PartyPaymentMethodUncheckedCreateNestedManyWithoutPartyInput
+    quotations?: DocumentQuotationUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type PartyCreateOrConnectWithoutProjectInput = {
@@ -22671,6 +29556,32 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type DocumentCreateWithoutProjectInput = {
+    id?: string
+    type: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    quotation?: DocumentQuotationCreateNestedOneWithoutDocumentInput
+  }
+
+  export type DocumentUncheckedCreateWithoutProjectInput = {
+    id?: string
+    type: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    quotation?: DocumentQuotationUncheckedCreateNestedOneWithoutDocumentInput
+  }
+
+  export type DocumentCreateOrConnectWithoutProjectInput = {
+    where: DocumentWhereUniqueInput
+    create: XOR<DocumentCreateWithoutProjectInput, DocumentUncheckedCreateWithoutProjectInput>
+  }
+
+  export type DocumentCreateManyProjectInputEnvelope = {
+    data: DocumentCreateManyProjectInput | DocumentCreateManyProjectInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AccessUpsertWithWhereUniqueWithoutProjectInput = {
     where: AccessWhereUniqueInput
     update: XOR<AccessUpdateWithoutProjectInput, AccessUncheckedUpdateWithoutProjectInput>
@@ -22763,7 +29674,7 @@ export namespace Prisma {
     currency?: StringFilter<"Projection"> | string
     date?: DateTimeFilter<"Projection"> | Date | string
     userId?: StringFilter<"Projection"> | string
-    projectId?: StringFilter<"Projection"> | string
+    projectId?: UuidFilter<"Projection"> | string
     status?: EnumProjectionStatusFilter<"Projection"> | $Enums.ProjectionStatus
     recipient?: StringNullableFilter<"Projection"> | string | null
     isRecurring?: BoolFilter<"Projection"> | boolean
@@ -22794,7 +29705,7 @@ export namespace Prisma {
     NOT?: FinAccountScalarWhereInput | FinAccountScalarWhereInput[]
     id?: StringFilter<"FinAccount"> | string
     profile_id?: StringFilter<"FinAccount"> | string
-    projectId?: StringFilter<"FinAccount"> | string
+    projectId?: UuidFilter<"FinAccount"> | string
     name?: StringFilter<"FinAccount"> | string
     description?: StringNullableFilter<"FinAccount"> | string | null
     type?: StringFilter<"FinAccount"> | string
@@ -22804,6 +29715,33 @@ export namespace Prisma {
     notes?: StringNullableFilter<"FinAccount"> | string | null
     opened_on?: DateTimeNullableFilter<"FinAccount"> | Date | string | null
     created_on?: DateTimeFilter<"FinAccount"> | Date | string
+  }
+
+  export type DocumentUpsertWithWhereUniqueWithoutProjectInput = {
+    where: DocumentWhereUniqueInput
+    update: XOR<DocumentUpdateWithoutProjectInput, DocumentUncheckedUpdateWithoutProjectInput>
+    create: XOR<DocumentCreateWithoutProjectInput, DocumentUncheckedCreateWithoutProjectInput>
+  }
+
+  export type DocumentUpdateWithWhereUniqueWithoutProjectInput = {
+    where: DocumentWhereUniqueInput
+    data: XOR<DocumentUpdateWithoutProjectInput, DocumentUncheckedUpdateWithoutProjectInput>
+  }
+
+  export type DocumentUpdateManyWithWhereWithoutProjectInput = {
+    where: DocumentScalarWhereInput
+    data: XOR<DocumentUpdateManyMutationInput, DocumentUncheckedUpdateManyWithoutProjectInput>
+  }
+
+  export type DocumentScalarWhereInput = {
+    AND?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
+    OR?: DocumentScalarWhereInput[]
+    NOT?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
+    id?: UuidFilter<"Document"> | string
+    projectId?: UuidFilter<"Document"> | string
+    type?: StringFilter<"Document"> | string
+    createdAt?: DateTimeFilter<"Document"> | Date | string
+    updatedAt?: DateTimeFilter<"Document"> | Date | string
   }
 
   export type AccessCreateWithoutRoleInput = {
@@ -22904,6 +29842,7 @@ export namespace Prisma {
     transactions?: TransactionCreateNestedManyWithoutProjectInput
     projections?: ProjectionCreateNestedManyWithoutProjectInput
     finAccounts?: FinAccountCreateNestedManyWithoutProjectInput
+    documents?: DocumentCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutAccessesInput = {
@@ -22916,6 +29855,7 @@ export namespace Prisma {
     transactions?: TransactionUncheckedCreateNestedManyWithoutProjectInput
     projections?: ProjectionUncheckedCreateNestedManyWithoutProjectInput
     finAccounts?: FinAccountUncheckedCreateNestedManyWithoutProjectInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutAccessesInput = {
@@ -23002,6 +29942,7 @@ export namespace Prisma {
     transactions?: TransactionUpdateManyWithoutProjectNestedInput
     projections?: ProjectionUpdateManyWithoutProjectNestedInput
     finAccounts?: FinAccountUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutAccessesInput = {
@@ -23014,6 +29955,7 @@ export namespace Prisma {
     transactions?: TransactionUncheckedUpdateManyWithoutProjectNestedInput
     projections?: ProjectionUncheckedUpdateManyWithoutProjectNestedInput
     finAccounts?: FinAccountUncheckedUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type AccountCreateWithoutPartiesInput = {
@@ -23053,6 +29995,7 @@ export namespace Prisma {
     transactions?: TransactionCreateNestedManyWithoutProjectInput
     projections?: ProjectionCreateNestedManyWithoutProjectInput
     finAccounts?: FinAccountCreateNestedManyWithoutProjectInput
+    documents?: DocumentCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutPartiesInput = {
@@ -23065,6 +30008,7 @@ export namespace Prisma {
     transactions?: TransactionUncheckedCreateNestedManyWithoutProjectInput
     projections?: ProjectionUncheckedCreateNestedManyWithoutProjectInput
     finAccounts?: FinAccountUncheckedCreateNestedManyWithoutProjectInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutPartiesInput = {
@@ -23124,6 +30068,64 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type DocumentQuotationCreateWithoutCustomerInput = {
+    counter: number
+    referenceNumber: string
+    subject: string
+    currency: string
+    exchangeRate: Decimal | DecimalJsLike | number | string
+    subtotal: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    hasAdjustments?: boolean
+    total: Decimal | DecimalJsLike | number | string
+    status: string
+    date: Date | string
+    expires: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    document: DocumentCreateNestedOneWithoutQuotationInput
+    adjustments?: DocumentQuotationAdjustmentCreateNestedManyWithoutQuotationInput
+    items?: DocumentAdjustmentItemCreateNestedManyWithoutQuotationInput
+  }
+
+  export type DocumentQuotationUncheckedCreateWithoutCustomerInput = {
+    id: string
+    counter: number
+    referenceNumber: string
+    subject: string
+    currency: string
+    exchangeRate: Decimal | DecimalJsLike | number | string
+    subtotal: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    hasAdjustments?: boolean
+    total: Decimal | DecimalJsLike | number | string
+    status: string
+    date: Date | string
+    expires: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    adjustments?: DocumentQuotationAdjustmentUncheckedCreateNestedManyWithoutQuotationInput
+    items?: DocumentAdjustmentItemUncheckedCreateNestedManyWithoutQuotationInput
+  }
+
+  export type DocumentQuotationCreateOrConnectWithoutCustomerInput = {
+    where: DocumentQuotationWhereUniqueInput
+    create: XOR<DocumentQuotationCreateWithoutCustomerInput, DocumentQuotationUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type DocumentQuotationCreateManyCustomerInputEnvelope = {
+    data: DocumentQuotationCreateManyCustomerInput | DocumentQuotationCreateManyCustomerInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AccountUpsertWithoutPartiesInput = {
     update: XOR<AccountUpdateWithoutPartiesInput, AccountUncheckedUpdateWithoutPartiesInput>
     create: XOR<AccountCreateWithoutPartiesInput, AccountUncheckedCreateWithoutPartiesInput>
@@ -23178,6 +30180,7 @@ export namespace Prisma {
     transactions?: TransactionUpdateManyWithoutProjectNestedInput
     projections?: ProjectionUpdateManyWithoutProjectNestedInput
     finAccounts?: FinAccountUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutPartiesInput = {
@@ -23190,6 +30193,7 @@ export namespace Prisma {
     transactions?: TransactionUncheckedUpdateManyWithoutProjectNestedInput
     projections?: ProjectionUncheckedUpdateManyWithoutProjectNestedInput
     finAccounts?: FinAccountUncheckedUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type PartyContactUpsertWithWhereUniqueWithoutPartyInput = {
@@ -23213,7 +30217,7 @@ export namespace Prisma {
     OR?: PartyContactScalarWhereInput[]
     NOT?: PartyContactScalarWhereInput | PartyContactScalarWhereInput[]
     id?: StringFilter<"PartyContact"> | string
-    partyId?: StringFilter<"PartyContact"> | string
+    partyId?: UuidFilter<"PartyContact"> | string
     type?: StringFilter<"PartyContact"> | string
     value?: StringFilter<"PartyContact"> | string
     addedOn?: DateTimeFilter<"PartyContact"> | Date | string
@@ -23241,11 +30245,53 @@ export namespace Prisma {
     OR?: PartyPaymentMethodScalarWhereInput[]
     NOT?: PartyPaymentMethodScalarWhereInput | PartyPaymentMethodScalarWhereInput[]
     id?: StringFilter<"PartyPaymentMethod"> | string
-    partyId?: StringFilter<"PartyPaymentMethod"> | string
+    partyId?: UuidFilter<"PartyPaymentMethod"> | string
     type?: StringFilter<"PartyPaymentMethod"> | string
     value?: StringFilter<"PartyPaymentMethod"> | string
     addedOn?: DateTimeFilter<"PartyPaymentMethod"> | Date | string
     details?: JsonNullableFilter<"PartyPaymentMethod">
+  }
+
+  export type DocumentQuotationUpsertWithWhereUniqueWithoutCustomerInput = {
+    where: DocumentQuotationWhereUniqueInput
+    update: XOR<DocumentQuotationUpdateWithoutCustomerInput, DocumentQuotationUncheckedUpdateWithoutCustomerInput>
+    create: XOR<DocumentQuotationCreateWithoutCustomerInput, DocumentQuotationUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type DocumentQuotationUpdateWithWhereUniqueWithoutCustomerInput = {
+    where: DocumentQuotationWhereUniqueInput
+    data: XOR<DocumentQuotationUpdateWithoutCustomerInput, DocumentQuotationUncheckedUpdateWithoutCustomerInput>
+  }
+
+  export type DocumentQuotationUpdateManyWithWhereWithoutCustomerInput = {
+    where: DocumentQuotationScalarWhereInput
+    data: XOR<DocumentQuotationUpdateManyMutationInput, DocumentQuotationUncheckedUpdateManyWithoutCustomerInput>
+  }
+
+  export type DocumentQuotationScalarWhereInput = {
+    AND?: DocumentQuotationScalarWhereInput | DocumentQuotationScalarWhereInput[]
+    OR?: DocumentQuotationScalarWhereInput[]
+    NOT?: DocumentQuotationScalarWhereInput | DocumentQuotationScalarWhereInput[]
+    id?: UuidFilter<"DocumentQuotation"> | string
+    customerId?: UuidFilter<"DocumentQuotation"> | string
+    counter?: IntFilter<"DocumentQuotation"> | number
+    referenceNumber?: StringFilter<"DocumentQuotation"> | string
+    subject?: StringFilter<"DocumentQuotation"> | string
+    currency?: StringFilter<"DocumentQuotation"> | string
+    exchangeRate?: DecimalFilter<"DocumentQuotation"> | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFilter<"DocumentQuotation"> | Decimal | DecimalJsLike | number | string
+    discountType?: StringFilter<"DocumentQuotation"> | string
+    discountValue?: DecimalFilter<"DocumentQuotation"> | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFilter<"DocumentQuotation"> | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFilter<"DocumentQuotation"> | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFilter<"DocumentQuotation"> | boolean
+    total?: DecimalFilter<"DocumentQuotation"> | Decimal | DecimalJsLike | number | string
+    status?: StringFilter<"DocumentQuotation"> | string
+    date?: DateTimeFilter<"DocumentQuotation"> | Date | string
+    expires?: DateTimeFilter<"DocumentQuotation"> | Date | string
+    details?: JsonNullableFilter<"DocumentQuotation">
+    createdAt?: DateTimeFilter<"DocumentQuotation"> | Date | string
+    updatedAt?: DateTimeFilter<"DocumentQuotation"> | Date | string
   }
 
   export type PartyCreateWithoutContactsInput = {
@@ -23256,6 +30302,7 @@ export namespace Prisma {
     account: AccountCreateNestedOneWithoutPartiesInput
     project: ProjectCreateNestedOneWithoutPartiesInput
     paymentMethods?: PartyPaymentMethodCreateNestedManyWithoutPartyInput
+    quotations?: DocumentQuotationCreateNestedManyWithoutCustomerInput
   }
 
   export type PartyUncheckedCreateWithoutContactsInput = {
@@ -23266,6 +30313,7 @@ export namespace Prisma {
     type: string
     taxinfo?: NullableJsonNullValueInput | InputJsonValue
     paymentMethods?: PartyPaymentMethodUncheckedCreateNestedManyWithoutPartyInput
+    quotations?: DocumentQuotationUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type PartyCreateOrConnectWithoutContactsInput = {
@@ -23292,6 +30340,7 @@ export namespace Prisma {
     account?: AccountUpdateOneRequiredWithoutPartiesNestedInput
     project?: ProjectUpdateOneRequiredWithoutPartiesNestedInput
     paymentMethods?: PartyPaymentMethodUpdateManyWithoutPartyNestedInput
+    quotations?: DocumentQuotationUpdateManyWithoutCustomerNestedInput
   }
 
   export type PartyUncheckedUpdateWithoutContactsInput = {
@@ -23302,6 +30351,7 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     taxinfo?: NullableJsonNullValueInput | InputJsonValue
     paymentMethods?: PartyPaymentMethodUncheckedUpdateManyWithoutPartyNestedInput
+    quotations?: DocumentQuotationUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type PartyCreateWithoutPaymentMethodsInput = {
@@ -23312,6 +30362,7 @@ export namespace Prisma {
     account: AccountCreateNestedOneWithoutPartiesInput
     project: ProjectCreateNestedOneWithoutPartiesInput
     contacts?: PartyContactCreateNestedManyWithoutPartyInput
+    quotations?: DocumentQuotationCreateNestedManyWithoutCustomerInput
   }
 
   export type PartyUncheckedCreateWithoutPaymentMethodsInput = {
@@ -23322,6 +30373,7 @@ export namespace Prisma {
     type: string
     taxinfo?: NullableJsonNullValueInput | InputJsonValue
     contacts?: PartyContactUncheckedCreateNestedManyWithoutPartyInput
+    quotations?: DocumentQuotationUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type PartyCreateOrConnectWithoutPaymentMethodsInput = {
@@ -23348,6 +30400,7 @@ export namespace Prisma {
     account?: AccountUpdateOneRequiredWithoutPartiesNestedInput
     project?: ProjectUpdateOneRequiredWithoutPartiesNestedInput
     contacts?: PartyContactUpdateManyWithoutPartyNestedInput
+    quotations?: DocumentQuotationUpdateManyWithoutCustomerNestedInput
   }
 
   export type PartyUncheckedUpdateWithoutPaymentMethodsInput = {
@@ -23358,6 +30411,7 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     taxinfo?: NullableJsonNullValueInput | InputJsonValue
     contacts?: PartyContactUncheckedUpdateManyWithoutPartyNestedInput
+    quotations?: DocumentQuotationUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type AccountCreateWithoutAssetGroupsInput = {
@@ -23397,6 +30451,7 @@ export namespace Prisma {
     transactions?: TransactionCreateNestedManyWithoutProjectInput
     projections?: ProjectionCreateNestedManyWithoutProjectInput
     finAccounts?: FinAccountCreateNestedManyWithoutProjectInput
+    documents?: DocumentCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutBooksInput = {
@@ -23409,6 +30464,7 @@ export namespace Prisma {
     transactions?: TransactionUncheckedCreateNestedManyWithoutProjectInput
     projections?: ProjectionUncheckedCreateNestedManyWithoutProjectInput
     finAccounts?: FinAccountUncheckedCreateNestedManyWithoutProjectInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutBooksInput = {
@@ -23544,6 +30600,7 @@ export namespace Prisma {
     transactions?: TransactionUpdateManyWithoutProjectNestedInput
     projections?: ProjectionUpdateManyWithoutProjectNestedInput
     finAccounts?: FinAccountUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutBooksInput = {
@@ -23556,6 +30613,7 @@ export namespace Prisma {
     transactions?: TransactionUncheckedUpdateManyWithoutProjectNestedInput
     projections?: ProjectionUncheckedUpdateManyWithoutProjectNestedInput
     finAccounts?: FinAccountUncheckedUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ActivityStockUpsertWithWhereUniqueWithoutAssetGroupInput = {
@@ -23635,6 +30693,7 @@ export namespace Prisma {
     books?: AssetGroupCreateNestedManyWithoutProjectInput
     transactions?: TransactionCreateNestedManyWithoutProjectInput
     projections?: ProjectionCreateNestedManyWithoutProjectInput
+    documents?: DocumentCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutFinAccountsInput = {
@@ -23647,6 +30706,7 @@ export namespace Prisma {
     books?: AssetGroupUncheckedCreateNestedManyWithoutProjectInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutProjectInput
     projections?: ProjectionUncheckedCreateNestedManyWithoutProjectInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutFinAccountsInput = {
@@ -23675,6 +30735,7 @@ export namespace Prisma {
     books?: AssetGroupUpdateManyWithoutProjectNestedInput
     transactions?: TransactionUpdateManyWithoutProjectNestedInput
     projections?: ProjectionUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutFinAccountsInput = {
@@ -23687,6 +30748,7 @@ export namespace Prisma {
     books?: AssetGroupUncheckedUpdateManyWithoutProjectNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutProjectNestedInput
     projections?: ProjectionUncheckedUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type AccountCreateWithoutOrganizationTransactionsInput = {
@@ -23726,6 +30788,7 @@ export namespace Prisma {
     books?: AssetGroupCreateNestedManyWithoutProjectInput
     projections?: ProjectionCreateNestedManyWithoutProjectInput
     finAccounts?: FinAccountCreateNestedManyWithoutProjectInput
+    documents?: DocumentCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutTransactionsInput = {
@@ -23738,6 +30801,7 @@ export namespace Prisma {
     books?: AssetGroupUncheckedCreateNestedManyWithoutProjectInput
     projections?: ProjectionUncheckedCreateNestedManyWithoutProjectInput
     finAccounts?: FinAccountUncheckedCreateNestedManyWithoutProjectInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutTransactionsInput = {
@@ -23843,6 +30907,7 @@ export namespace Prisma {
     books?: AssetGroupUpdateManyWithoutProjectNestedInput
     projections?: ProjectionUpdateManyWithoutProjectNestedInput
     finAccounts?: FinAccountUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutTransactionsInput = {
@@ -23855,6 +30920,7 @@ export namespace Prisma {
     books?: AssetGroupUncheckedUpdateManyWithoutProjectNestedInput
     projections?: ProjectionUncheckedUpdateManyWithoutProjectNestedInput
     finAccounts?: FinAccountUncheckedUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type TransactionLineUpsertWithWhereUniqueWithoutTransactionInput = {
@@ -24039,6 +31105,7 @@ export namespace Prisma {
     books?: AssetGroupCreateNestedManyWithoutProjectInput
     transactions?: TransactionCreateNestedManyWithoutProjectInput
     finAccounts?: FinAccountCreateNestedManyWithoutProjectInput
+    documents?: DocumentCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutProjectionsInput = {
@@ -24051,6 +31118,7 @@ export namespace Prisma {
     books?: AssetGroupUncheckedCreateNestedManyWithoutProjectInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutProjectInput
     finAccounts?: FinAccountUncheckedCreateNestedManyWithoutProjectInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutProjectionsInput = {
@@ -24079,6 +31147,7 @@ export namespace Prisma {
     books?: AssetGroupUpdateManyWithoutProjectNestedInput
     transactions?: TransactionUpdateManyWithoutProjectNestedInput
     finAccounts?: FinAccountUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutProjectionsInput = {
@@ -24091,6 +31160,7 @@ export namespace Prisma {
     books?: AssetGroupUncheckedUpdateManyWithoutProjectNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutProjectNestedInput
     finAccounts?: FinAccountUncheckedUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type AssetGroupCreateWithoutActivityStockInput = {
@@ -24151,6 +31221,659 @@ export namespace Prisma {
     projectId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     transactionLines?: TransactionLineUncheckedUpdateManyWithoutBookNestedInput
+  }
+
+  export type ProjectCreateWithoutDocumentsInput = {
+    id?: string
+    name: string
+    status: string
+    createdOn?: Date | string
+    accesses?: AccessCreateNestedManyWithoutProjectInput
+    parties?: PartyCreateNestedManyWithoutProjectInput
+    books?: AssetGroupCreateNestedManyWithoutProjectInput
+    transactions?: TransactionCreateNestedManyWithoutProjectInput
+    projections?: ProjectionCreateNestedManyWithoutProjectInput
+    finAccounts?: FinAccountCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectUncheckedCreateWithoutDocumentsInput = {
+    id?: string
+    name: string
+    status: string
+    createdOn?: Date | string
+    accesses?: AccessUncheckedCreateNestedManyWithoutProjectInput
+    parties?: PartyUncheckedCreateNestedManyWithoutProjectInput
+    books?: AssetGroupUncheckedCreateNestedManyWithoutProjectInput
+    transactions?: TransactionUncheckedCreateNestedManyWithoutProjectInput
+    projections?: ProjectionUncheckedCreateNestedManyWithoutProjectInput
+    finAccounts?: FinAccountUncheckedCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectCreateOrConnectWithoutDocumentsInput = {
+    where: ProjectWhereUniqueInput
+    create: XOR<ProjectCreateWithoutDocumentsInput, ProjectUncheckedCreateWithoutDocumentsInput>
+  }
+
+  export type DocumentQuotationCreateWithoutDocumentInput = {
+    counter: number
+    referenceNumber: string
+    subject: string
+    currency: string
+    exchangeRate: Decimal | DecimalJsLike | number | string
+    subtotal: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    hasAdjustments?: boolean
+    total: Decimal | DecimalJsLike | number | string
+    status: string
+    date: Date | string
+    expires: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customer: PartyCreateNestedOneWithoutQuotationsInput
+    adjustments?: DocumentQuotationAdjustmentCreateNestedManyWithoutQuotationInput
+    items?: DocumentAdjustmentItemCreateNestedManyWithoutQuotationInput
+  }
+
+  export type DocumentQuotationUncheckedCreateWithoutDocumentInput = {
+    customerId: string
+    counter: number
+    referenceNumber: string
+    subject: string
+    currency: string
+    exchangeRate: Decimal | DecimalJsLike | number | string
+    subtotal: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    hasAdjustments?: boolean
+    total: Decimal | DecimalJsLike | number | string
+    status: string
+    date: Date | string
+    expires: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    adjustments?: DocumentQuotationAdjustmentUncheckedCreateNestedManyWithoutQuotationInput
+    items?: DocumentAdjustmentItemUncheckedCreateNestedManyWithoutQuotationInput
+  }
+
+  export type DocumentQuotationCreateOrConnectWithoutDocumentInput = {
+    where: DocumentQuotationWhereUniqueInput
+    create: XOR<DocumentQuotationCreateWithoutDocumentInput, DocumentQuotationUncheckedCreateWithoutDocumentInput>
+  }
+
+  export type ProjectUpsertWithoutDocumentsInput = {
+    update: XOR<ProjectUpdateWithoutDocumentsInput, ProjectUncheckedUpdateWithoutDocumentsInput>
+    create: XOR<ProjectCreateWithoutDocumentsInput, ProjectUncheckedCreateWithoutDocumentsInput>
+    where?: ProjectWhereInput
+  }
+
+  export type ProjectUpdateToOneWithWhereWithoutDocumentsInput = {
+    where?: ProjectWhereInput
+    data: XOR<ProjectUpdateWithoutDocumentsInput, ProjectUncheckedUpdateWithoutDocumentsInput>
+  }
+
+  export type ProjectUpdateWithoutDocumentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdOn?: DateTimeFieldUpdateOperationsInput | Date | string
+    accesses?: AccessUpdateManyWithoutProjectNestedInput
+    parties?: PartyUpdateManyWithoutProjectNestedInput
+    books?: AssetGroupUpdateManyWithoutProjectNestedInput
+    transactions?: TransactionUpdateManyWithoutProjectNestedInput
+    projections?: ProjectionUpdateManyWithoutProjectNestedInput
+    finAccounts?: FinAccountUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectUncheckedUpdateWithoutDocumentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdOn?: DateTimeFieldUpdateOperationsInput | Date | string
+    accesses?: AccessUncheckedUpdateManyWithoutProjectNestedInput
+    parties?: PartyUncheckedUpdateManyWithoutProjectNestedInput
+    books?: AssetGroupUncheckedUpdateManyWithoutProjectNestedInput
+    transactions?: TransactionUncheckedUpdateManyWithoutProjectNestedInput
+    projections?: ProjectionUncheckedUpdateManyWithoutProjectNestedInput
+    finAccounts?: FinAccountUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type DocumentQuotationUpsertWithoutDocumentInput = {
+    update: XOR<DocumentQuotationUpdateWithoutDocumentInput, DocumentQuotationUncheckedUpdateWithoutDocumentInput>
+    create: XOR<DocumentQuotationCreateWithoutDocumentInput, DocumentQuotationUncheckedCreateWithoutDocumentInput>
+    where?: DocumentQuotationWhereInput
+  }
+
+  export type DocumentQuotationUpdateToOneWithWhereWithoutDocumentInput = {
+    where?: DocumentQuotationWhereInput
+    data: XOR<DocumentQuotationUpdateWithoutDocumentInput, DocumentQuotationUncheckedUpdateWithoutDocumentInput>
+  }
+
+  export type DocumentQuotationUpdateWithoutDocumentInput = {
+    counter?: IntFieldUpdateOperationsInput | number
+    referenceNumber?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFieldUpdateOperationsInput | boolean
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    expires?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customer?: PartyUpdateOneRequiredWithoutQuotationsNestedInput
+    adjustments?: DocumentQuotationAdjustmentUpdateManyWithoutQuotationNestedInput
+    items?: DocumentAdjustmentItemUpdateManyWithoutQuotationNestedInput
+  }
+
+  export type DocumentQuotationUncheckedUpdateWithoutDocumentInput = {
+    customerId?: StringFieldUpdateOperationsInput | string
+    counter?: IntFieldUpdateOperationsInput | number
+    referenceNumber?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFieldUpdateOperationsInput | boolean
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    expires?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    adjustments?: DocumentQuotationAdjustmentUncheckedUpdateManyWithoutQuotationNestedInput
+    items?: DocumentAdjustmentItemUncheckedUpdateManyWithoutQuotationNestedInput
+  }
+
+  export type DocumentCreateWithoutQuotationInput = {
+    id?: string
+    type: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutDocumentsInput
+  }
+
+  export type DocumentUncheckedCreateWithoutQuotationInput = {
+    id?: string
+    projectId: string
+    type: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentCreateOrConnectWithoutQuotationInput = {
+    where: DocumentWhereUniqueInput
+    create: XOR<DocumentCreateWithoutQuotationInput, DocumentUncheckedCreateWithoutQuotationInput>
+  }
+
+  export type PartyCreateWithoutQuotationsInput = {
+    id?: string
+    name: string
+    type: string
+    taxinfo?: NullableJsonNullValueInput | InputJsonValue
+    account: AccountCreateNestedOneWithoutPartiesInput
+    project: ProjectCreateNestedOneWithoutPartiesInput
+    contacts?: PartyContactCreateNestedManyWithoutPartyInput
+    paymentMethods?: PartyPaymentMethodCreateNestedManyWithoutPartyInput
+  }
+
+  export type PartyUncheckedCreateWithoutQuotationsInput = {
+    id?: string
+    accountId: string
+    projectId: string
+    name: string
+    type: string
+    taxinfo?: NullableJsonNullValueInput | InputJsonValue
+    contacts?: PartyContactUncheckedCreateNestedManyWithoutPartyInput
+    paymentMethods?: PartyPaymentMethodUncheckedCreateNestedManyWithoutPartyInput
+  }
+
+  export type PartyCreateOrConnectWithoutQuotationsInput = {
+    where: PartyWhereUniqueInput
+    create: XOR<PartyCreateWithoutQuotationsInput, PartyUncheckedCreateWithoutQuotationsInput>
+  }
+
+  export type DocumentQuotationAdjustmentCreateWithoutQuotationInput = {
+    id?: string
+    adjustmentName: string
+    adjustmentValue: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentQuotationAdjustmentUncheckedCreateWithoutQuotationInput = {
+    id?: string
+    adjustmentName: string
+    adjustmentValue: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentQuotationAdjustmentCreateOrConnectWithoutQuotationInput = {
+    where: DocumentQuotationAdjustmentWhereUniqueInput
+    create: XOR<DocumentQuotationAdjustmentCreateWithoutQuotationInput, DocumentQuotationAdjustmentUncheckedCreateWithoutQuotationInput>
+  }
+
+  export type DocumentQuotationAdjustmentCreateManyQuotationInputEnvelope = {
+    data: DocumentQuotationAdjustmentCreateManyQuotationInput | DocumentQuotationAdjustmentCreateManyQuotationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DocumentAdjustmentItemCreateWithoutQuotationInput = {
+    id?: string
+    productId?: string | null
+    name: string
+    description?: string | null
+    quantity: Decimal | DecimalJsLike | number | string
+    unit: string
+    rate: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxRate: Decimal | DecimalJsLike | number | string
+    taxAmount: Decimal | DecimalJsLike | number | string
+    amount: Decimal | DecimalJsLike | number | string
+    sortIndex: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentAdjustmentItemUncheckedCreateWithoutQuotationInput = {
+    id?: string
+    productId?: string | null
+    name: string
+    description?: string | null
+    quantity: Decimal | DecimalJsLike | number | string
+    unit: string
+    rate: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxRate: Decimal | DecimalJsLike | number | string
+    taxAmount: Decimal | DecimalJsLike | number | string
+    amount: Decimal | DecimalJsLike | number | string
+    sortIndex: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentAdjustmentItemCreateOrConnectWithoutQuotationInput = {
+    where: DocumentAdjustmentItemWhereUniqueInput
+    create: XOR<DocumentAdjustmentItemCreateWithoutQuotationInput, DocumentAdjustmentItemUncheckedCreateWithoutQuotationInput>
+  }
+
+  export type DocumentAdjustmentItemCreateManyQuotationInputEnvelope = {
+    data: DocumentAdjustmentItemCreateManyQuotationInput | DocumentAdjustmentItemCreateManyQuotationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DocumentUpsertWithoutQuotationInput = {
+    update: XOR<DocumentUpdateWithoutQuotationInput, DocumentUncheckedUpdateWithoutQuotationInput>
+    create: XOR<DocumentCreateWithoutQuotationInput, DocumentUncheckedCreateWithoutQuotationInput>
+    where?: DocumentWhereInput
+  }
+
+  export type DocumentUpdateToOneWithWhereWithoutQuotationInput = {
+    where?: DocumentWhereInput
+    data: XOR<DocumentUpdateWithoutQuotationInput, DocumentUncheckedUpdateWithoutQuotationInput>
+  }
+
+  export type DocumentUpdateWithoutQuotationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutDocumentsNestedInput
+  }
+
+  export type DocumentUncheckedUpdateWithoutQuotationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PartyUpsertWithoutQuotationsInput = {
+    update: XOR<PartyUpdateWithoutQuotationsInput, PartyUncheckedUpdateWithoutQuotationsInput>
+    create: XOR<PartyCreateWithoutQuotationsInput, PartyUncheckedCreateWithoutQuotationsInput>
+    where?: PartyWhereInput
+  }
+
+  export type PartyUpdateToOneWithWhereWithoutQuotationsInput = {
+    where?: PartyWhereInput
+    data: XOR<PartyUpdateWithoutQuotationsInput, PartyUncheckedUpdateWithoutQuotationsInput>
+  }
+
+  export type PartyUpdateWithoutQuotationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    taxinfo?: NullableJsonNullValueInput | InputJsonValue
+    account?: AccountUpdateOneRequiredWithoutPartiesNestedInput
+    project?: ProjectUpdateOneRequiredWithoutPartiesNestedInput
+    contacts?: PartyContactUpdateManyWithoutPartyNestedInput
+    paymentMethods?: PartyPaymentMethodUpdateManyWithoutPartyNestedInput
+  }
+
+  export type PartyUncheckedUpdateWithoutQuotationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accountId?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    taxinfo?: NullableJsonNullValueInput | InputJsonValue
+    contacts?: PartyContactUncheckedUpdateManyWithoutPartyNestedInput
+    paymentMethods?: PartyPaymentMethodUncheckedUpdateManyWithoutPartyNestedInput
+  }
+
+  export type DocumentQuotationAdjustmentUpsertWithWhereUniqueWithoutQuotationInput = {
+    where: DocumentQuotationAdjustmentWhereUniqueInput
+    update: XOR<DocumentQuotationAdjustmentUpdateWithoutQuotationInput, DocumentQuotationAdjustmentUncheckedUpdateWithoutQuotationInput>
+    create: XOR<DocumentQuotationAdjustmentCreateWithoutQuotationInput, DocumentQuotationAdjustmentUncheckedCreateWithoutQuotationInput>
+  }
+
+  export type DocumentQuotationAdjustmentUpdateWithWhereUniqueWithoutQuotationInput = {
+    where: DocumentQuotationAdjustmentWhereUniqueInput
+    data: XOR<DocumentQuotationAdjustmentUpdateWithoutQuotationInput, DocumentQuotationAdjustmentUncheckedUpdateWithoutQuotationInput>
+  }
+
+  export type DocumentQuotationAdjustmentUpdateManyWithWhereWithoutQuotationInput = {
+    where: DocumentQuotationAdjustmentScalarWhereInput
+    data: XOR<DocumentQuotationAdjustmentUpdateManyMutationInput, DocumentQuotationAdjustmentUncheckedUpdateManyWithoutQuotationInput>
+  }
+
+  export type DocumentQuotationAdjustmentScalarWhereInput = {
+    AND?: DocumentQuotationAdjustmentScalarWhereInput | DocumentQuotationAdjustmentScalarWhereInput[]
+    OR?: DocumentQuotationAdjustmentScalarWhereInput[]
+    NOT?: DocumentQuotationAdjustmentScalarWhereInput | DocumentQuotationAdjustmentScalarWhereInput[]
+    id?: UuidFilter<"DocumentQuotationAdjustment"> | string
+    quotationId?: UuidFilter<"DocumentQuotationAdjustment"> | string
+    adjustmentName?: StringFilter<"DocumentQuotationAdjustment"> | string
+    adjustmentValue?: DecimalFilter<"DocumentQuotationAdjustment"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFilter<"DocumentQuotationAdjustment"> | Date | string
+    updatedAt?: DateTimeFilter<"DocumentQuotationAdjustment"> | Date | string
+  }
+
+  export type DocumentAdjustmentItemUpsertWithWhereUniqueWithoutQuotationInput = {
+    where: DocumentAdjustmentItemWhereUniqueInput
+    update: XOR<DocumentAdjustmentItemUpdateWithoutQuotationInput, DocumentAdjustmentItemUncheckedUpdateWithoutQuotationInput>
+    create: XOR<DocumentAdjustmentItemCreateWithoutQuotationInput, DocumentAdjustmentItemUncheckedCreateWithoutQuotationInput>
+  }
+
+  export type DocumentAdjustmentItemUpdateWithWhereUniqueWithoutQuotationInput = {
+    where: DocumentAdjustmentItemWhereUniqueInput
+    data: XOR<DocumentAdjustmentItemUpdateWithoutQuotationInput, DocumentAdjustmentItemUncheckedUpdateWithoutQuotationInput>
+  }
+
+  export type DocumentAdjustmentItemUpdateManyWithWhereWithoutQuotationInput = {
+    where: DocumentAdjustmentItemScalarWhereInput
+    data: XOR<DocumentAdjustmentItemUpdateManyMutationInput, DocumentAdjustmentItemUncheckedUpdateManyWithoutQuotationInput>
+  }
+
+  export type DocumentAdjustmentItemScalarWhereInput = {
+    AND?: DocumentAdjustmentItemScalarWhereInput | DocumentAdjustmentItemScalarWhereInput[]
+    OR?: DocumentAdjustmentItemScalarWhereInput[]
+    NOT?: DocumentAdjustmentItemScalarWhereInput | DocumentAdjustmentItemScalarWhereInput[]
+    id?: UuidFilter<"DocumentAdjustmentItem"> | string
+    quotationId?: UuidFilter<"DocumentAdjustmentItem"> | string
+    productId?: UuidNullableFilter<"DocumentAdjustmentItem"> | string | null
+    name?: StringFilter<"DocumentAdjustmentItem"> | string
+    description?: StringNullableFilter<"DocumentAdjustmentItem"> | string | null
+    quantity?: DecimalFilter<"DocumentAdjustmentItem"> | Decimal | DecimalJsLike | number | string
+    unit?: StringFilter<"DocumentAdjustmentItem"> | string
+    rate?: DecimalFilter<"DocumentAdjustmentItem"> | Decimal | DecimalJsLike | number | string
+    discountType?: StringFilter<"DocumentAdjustmentItem"> | string
+    discountValue?: DecimalFilter<"DocumentAdjustmentItem"> | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFilter<"DocumentAdjustmentItem"> | Decimal | DecimalJsLike | number | string
+    taxRate?: DecimalFilter<"DocumentAdjustmentItem"> | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFilter<"DocumentAdjustmentItem"> | Decimal | DecimalJsLike | number | string
+    amount?: DecimalFilter<"DocumentAdjustmentItem"> | Decimal | DecimalJsLike | number | string
+    sortIndex?: IntFilter<"DocumentAdjustmentItem"> | number
+    createdAt?: DateTimeFilter<"DocumentAdjustmentItem"> | Date | string
+    updatedAt?: DateTimeFilter<"DocumentAdjustmentItem"> | Date | string
+  }
+
+  export type DocumentQuotationCreateWithoutAdjustmentsInput = {
+    counter: number
+    referenceNumber: string
+    subject: string
+    currency: string
+    exchangeRate: Decimal | DecimalJsLike | number | string
+    subtotal: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    hasAdjustments?: boolean
+    total: Decimal | DecimalJsLike | number | string
+    status: string
+    date: Date | string
+    expires: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    document: DocumentCreateNestedOneWithoutQuotationInput
+    customer: PartyCreateNestedOneWithoutQuotationsInput
+    items?: DocumentAdjustmentItemCreateNestedManyWithoutQuotationInput
+  }
+
+  export type DocumentQuotationUncheckedCreateWithoutAdjustmentsInput = {
+    id: string
+    customerId: string
+    counter: number
+    referenceNumber: string
+    subject: string
+    currency: string
+    exchangeRate: Decimal | DecimalJsLike | number | string
+    subtotal: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    hasAdjustments?: boolean
+    total: Decimal | DecimalJsLike | number | string
+    status: string
+    date: Date | string
+    expires: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: DocumentAdjustmentItemUncheckedCreateNestedManyWithoutQuotationInput
+  }
+
+  export type DocumentQuotationCreateOrConnectWithoutAdjustmentsInput = {
+    where: DocumentQuotationWhereUniqueInput
+    create: XOR<DocumentQuotationCreateWithoutAdjustmentsInput, DocumentQuotationUncheckedCreateWithoutAdjustmentsInput>
+  }
+
+  export type DocumentQuotationUpsertWithoutAdjustmentsInput = {
+    update: XOR<DocumentQuotationUpdateWithoutAdjustmentsInput, DocumentQuotationUncheckedUpdateWithoutAdjustmentsInput>
+    create: XOR<DocumentQuotationCreateWithoutAdjustmentsInput, DocumentQuotationUncheckedCreateWithoutAdjustmentsInput>
+    where?: DocumentQuotationWhereInput
+  }
+
+  export type DocumentQuotationUpdateToOneWithWhereWithoutAdjustmentsInput = {
+    where?: DocumentQuotationWhereInput
+    data: XOR<DocumentQuotationUpdateWithoutAdjustmentsInput, DocumentQuotationUncheckedUpdateWithoutAdjustmentsInput>
+  }
+
+  export type DocumentQuotationUpdateWithoutAdjustmentsInput = {
+    counter?: IntFieldUpdateOperationsInput | number
+    referenceNumber?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFieldUpdateOperationsInput | boolean
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    expires?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    document?: DocumentUpdateOneRequiredWithoutQuotationNestedInput
+    customer?: PartyUpdateOneRequiredWithoutQuotationsNestedInput
+    items?: DocumentAdjustmentItemUpdateManyWithoutQuotationNestedInput
+  }
+
+  export type DocumentQuotationUncheckedUpdateWithoutAdjustmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    counter?: IntFieldUpdateOperationsInput | number
+    referenceNumber?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFieldUpdateOperationsInput | boolean
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    expires?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: DocumentAdjustmentItemUncheckedUpdateManyWithoutQuotationNestedInput
+  }
+
+  export type DocumentQuotationCreateWithoutItemsInput = {
+    counter: number
+    referenceNumber: string
+    subject: string
+    currency: string
+    exchangeRate: Decimal | DecimalJsLike | number | string
+    subtotal: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    hasAdjustments?: boolean
+    total: Decimal | DecimalJsLike | number | string
+    status: string
+    date: Date | string
+    expires: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    document: DocumentCreateNestedOneWithoutQuotationInput
+    customer: PartyCreateNestedOneWithoutQuotationsInput
+    adjustments?: DocumentQuotationAdjustmentCreateNestedManyWithoutQuotationInput
+  }
+
+  export type DocumentQuotationUncheckedCreateWithoutItemsInput = {
+    id: string
+    customerId: string
+    counter: number
+    referenceNumber: string
+    subject: string
+    currency: string
+    exchangeRate: Decimal | DecimalJsLike | number | string
+    subtotal: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    hasAdjustments?: boolean
+    total: Decimal | DecimalJsLike | number | string
+    status: string
+    date: Date | string
+    expires: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    adjustments?: DocumentQuotationAdjustmentUncheckedCreateNestedManyWithoutQuotationInput
+  }
+
+  export type DocumentQuotationCreateOrConnectWithoutItemsInput = {
+    where: DocumentQuotationWhereUniqueInput
+    create: XOR<DocumentQuotationCreateWithoutItemsInput, DocumentQuotationUncheckedCreateWithoutItemsInput>
+  }
+
+  export type DocumentQuotationUpsertWithoutItemsInput = {
+    update: XOR<DocumentQuotationUpdateWithoutItemsInput, DocumentQuotationUncheckedUpdateWithoutItemsInput>
+    create: XOR<DocumentQuotationCreateWithoutItemsInput, DocumentQuotationUncheckedCreateWithoutItemsInput>
+    where?: DocumentQuotationWhereInput
+  }
+
+  export type DocumentQuotationUpdateToOneWithWhereWithoutItemsInput = {
+    where?: DocumentQuotationWhereInput
+    data: XOR<DocumentQuotationUpdateWithoutItemsInput, DocumentQuotationUncheckedUpdateWithoutItemsInput>
+  }
+
+  export type DocumentQuotationUpdateWithoutItemsInput = {
+    counter?: IntFieldUpdateOperationsInput | number
+    referenceNumber?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFieldUpdateOperationsInput | boolean
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    expires?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    document?: DocumentUpdateOneRequiredWithoutQuotationNestedInput
+    customer?: PartyUpdateOneRequiredWithoutQuotationsNestedInput
+    adjustments?: DocumentQuotationAdjustmentUpdateManyWithoutQuotationNestedInput
+  }
+
+  export type DocumentQuotationUncheckedUpdateWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    counter?: IntFieldUpdateOperationsInput | number
+    referenceNumber?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFieldUpdateOperationsInput | boolean
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    expires?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    adjustments?: DocumentQuotationAdjustmentUncheckedUpdateManyWithoutQuotationNestedInput
   }
 
   export type AssetGroupCreateManyAccountInput = {
@@ -24236,6 +31959,7 @@ export namespace Prisma {
     project?: ProjectUpdateOneRequiredWithoutPartiesNestedInput
     contacts?: PartyContactUpdateManyWithoutPartyNestedInput
     paymentMethods?: PartyPaymentMethodUpdateManyWithoutPartyNestedInput
+    quotations?: DocumentQuotationUpdateManyWithoutCustomerNestedInput
   }
 
   export type PartyUncheckedUpdateWithoutAccountInput = {
@@ -24246,6 +31970,7 @@ export namespace Prisma {
     taxinfo?: NullableJsonNullValueInput | InputJsonValue
     contacts?: PartyContactUncheckedUpdateManyWithoutPartyNestedInput
     paymentMethods?: PartyPaymentMethodUncheckedUpdateManyWithoutPartyNestedInput
+    quotations?: DocumentQuotationUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type PartyUncheckedUpdateManyWithoutAccountInput = {
@@ -24414,6 +32139,13 @@ export namespace Prisma {
     created_on?: Date | string
   }
 
+  export type DocumentCreateManyProjectInput = {
+    id?: string
+    type: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type AccessUpdateWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
@@ -24446,6 +32178,7 @@ export namespace Prisma {
     account?: AccountUpdateOneRequiredWithoutPartiesNestedInput
     contacts?: PartyContactUpdateManyWithoutPartyNestedInput
     paymentMethods?: PartyPaymentMethodUpdateManyWithoutPartyNestedInput
+    quotations?: DocumentQuotationUpdateManyWithoutCustomerNestedInput
   }
 
   export type PartyUncheckedUpdateWithoutProjectInput = {
@@ -24456,6 +32189,7 @@ export namespace Prisma {
     taxinfo?: NullableJsonNullValueInput | InputJsonValue
     contacts?: PartyContactUncheckedUpdateManyWithoutPartyNestedInput
     paymentMethods?: PartyPaymentMethodUncheckedUpdateManyWithoutPartyNestedInput
+    quotations?: DocumentQuotationUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type PartyUncheckedUpdateManyWithoutProjectInput = {
@@ -24649,6 +32383,29 @@ export namespace Prisma {
     created_on?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type DocumentUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    quotation?: DocumentQuotationUpdateOneWithoutDocumentNestedInput
+  }
+
+  export type DocumentUncheckedUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    quotation?: DocumentQuotationUncheckedUpdateOneWithoutDocumentNestedInput
+  }
+
+  export type DocumentUncheckedUpdateManyWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type AccessCreateManyRoleInput = {
     id?: string
     accountId: string
@@ -24697,6 +32454,28 @@ export namespace Prisma {
     details?: NullableJsonNullValueInput | InputJsonValue
   }
 
+  export type DocumentQuotationCreateManyCustomerInput = {
+    id: string
+    counter: number
+    referenceNumber: string
+    subject: string
+    currency: string
+    exchangeRate: Decimal | DecimalJsLike | number | string
+    subtotal: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    hasAdjustments?: boolean
+    total: Decimal | DecimalJsLike | number | string
+    status: string
+    date: Date | string
+    expires: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type PartyContactUpdateWithoutPartyInput = {
     id?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
@@ -24743,6 +32522,76 @@ export namespace Prisma {
     value?: StringFieldUpdateOperationsInput | string
     addedOn?: DateTimeFieldUpdateOperationsInput | Date | string
     details?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type DocumentQuotationUpdateWithoutCustomerInput = {
+    counter?: IntFieldUpdateOperationsInput | number
+    referenceNumber?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFieldUpdateOperationsInput | boolean
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    expires?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    document?: DocumentUpdateOneRequiredWithoutQuotationNestedInput
+    adjustments?: DocumentQuotationAdjustmentUpdateManyWithoutQuotationNestedInput
+    items?: DocumentAdjustmentItemUpdateManyWithoutQuotationNestedInput
+  }
+
+  export type DocumentQuotationUncheckedUpdateWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    counter?: IntFieldUpdateOperationsInput | number
+    referenceNumber?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFieldUpdateOperationsInput | boolean
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    expires?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    adjustments?: DocumentQuotationAdjustmentUncheckedUpdateManyWithoutQuotationNestedInput
+    items?: DocumentAdjustmentItemUncheckedUpdateManyWithoutQuotationNestedInput
+  }
+
+  export type DocumentQuotationUncheckedUpdateManyWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    counter?: IntFieldUpdateOperationsInput | number
+    referenceNumber?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    hasAdjustments?: BoolFieldUpdateOperationsInput | boolean
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    expires?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ActivityStockCreateManyAssetGroupInput = {
@@ -24919,6 +32768,114 @@ export namespace Prisma {
     finAccount?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type DocumentQuotationAdjustmentCreateManyQuotationInput = {
+    id?: string
+    adjustmentName: string
+    adjustmentValue: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentAdjustmentItemCreateManyQuotationInput = {
+    id?: string
+    productId?: string | null
+    name: string
+    description?: string | null
+    quantity: Decimal | DecimalJsLike | number | string
+    unit: string
+    rate: Decimal | DecimalJsLike | number | string
+    discountType: string
+    discountValue: Decimal | DecimalJsLike | number | string
+    discountAmount: Decimal | DecimalJsLike | number | string
+    taxRate: Decimal | DecimalJsLike | number | string
+    taxAmount: Decimal | DecimalJsLike | number | string
+    amount: Decimal | DecimalJsLike | number | string
+    sortIndex: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentQuotationAdjustmentUpdateWithoutQuotationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    adjustmentName?: StringFieldUpdateOperationsInput | string
+    adjustmentValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentQuotationAdjustmentUncheckedUpdateWithoutQuotationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    adjustmentName?: StringFieldUpdateOperationsInput | string
+    adjustmentValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentQuotationAdjustmentUncheckedUpdateManyWithoutQuotationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    adjustmentName?: StringFieldUpdateOperationsInput | string
+    adjustmentValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentAdjustmentItemUpdateWithoutQuotationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    sortIndex?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentAdjustmentItemUncheckedUpdateWithoutQuotationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    sortIndex?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentAdjustmentItemUncheckedUpdateManyWithoutQuotationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    sortIndex?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 
