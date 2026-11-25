@@ -207,3 +207,54 @@ Fields:
 > sort_index: integer;
 > created_at: timestamp, default: current timestamp;
 > updated_at: timestamp, automatically updated;
+
+Table: documents_invoices, Model: Invoice
+Fields:
+> id: UUID, primary key, references documents.id;
+> customer_id: UUID, references party.id;
+> counter: integer;
+> reference_number: varchar;
+> subject: varchar;
+> currency: varchar;
+> exchange_rate: decimal(18,6);
+> subtotal: decimal(18,2);
+> discount_type: varchar;
+> discount_value: decimal(18,2);
+> discount_amount: decimal(18,2);
+> tax_total: decimal(18,2);
+> has_adjustments: boolean, default: false;
+> total: decimal(18,2);
+> status: varchar;
+> date: date;
+> due_date: date;
+> created_at: timestamp, default: current timestamp;
+> updated_at: timestamp, automatically updated;
+
+Table: documents_invoices_adjustments, Model: InvoiceAdjustment
+Fields:
+> id: UUID, primary key, default: gen_random_uuid();
+> invoice_id: UUID, references documents_invoices.id;
+> adjustment_name: varchar;
+> adjustment_value: decimal(18,2);
+> created_at: timestamp, default: current timestamp;
+> updated_at: timestamp, automatically updated;
+
+Table: documents_invoices_items, Model: InvoiceItem
+Fields:
+> id: UUID, primary key, default: gen_random_uuid();
+> invoice_id: UUID, references documents_invoices.id;
+> product_id: UUID, nullable;
+> name: varchar;
+> description: varchar(128), nullable;
+> quantity: decimal(18,2);
+> unit: varchar;
+> rate: decimal(18,2);
+> discount_type: varchar;
+> discount_value: decimal(18,2);
+> discount_amount: decimal(18,2);
+> tax_rate: decimal(8,4);
+> tax_amount: decimal(18,2);
+> amount: decimal(18,2);
+> sort_index: integer;
+> created_at: timestamp, default: current timestamp;
+> updated_at: timestamp, automatically updated;

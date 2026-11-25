@@ -85,6 +85,7 @@ model Party {
   contacts       PartyContact[]
   paymentMethods PartyPaymentMethod[]
   quotations     DocumentQuotation[]
+  invoices       Invoice[]
 
   @@index([accountId])
   @@index([projectId])
@@ -265,6 +266,7 @@ model Document {
   updatedAt DateTime           @default(now()) @updatedAt @map("updated_at")
   project   Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
   quotation DocumentQuotation?
+  invoice   Invoice?
 
   @@index([projectId, type])
   @@map("documents")
@@ -335,6 +337,72 @@ model DocumentAdjustmentItem {
 
   @@index([quotationId, sortIndex])
   @@map("documents_adjustments_items")
+}
+
+model Invoice {
+  id              String              @id @db.Uuid
+  customerId      String              @map("customer_id") @db.Uuid
+  counter         Int
+  referenceNumber String              @map("reference_number") @db.VarChar
+  subject         String              @db.VarChar
+  currency        String              @db.VarChar
+  exchangeRate    Decimal             @map("exchange_rate") @db.Decimal(18, 6)
+  subtotal        Decimal             @db.Decimal(18, 2)
+  discountType    String              @map("discount_type") @db.VarChar
+  discountValue   Decimal             @map("discount_value") @db.Decimal(18, 2)
+  discountAmount  Decimal             @map("discount_amount") @db.Decimal(18, 2)
+  taxTotal        Decimal             @map("tax_total") @db.Decimal(18, 2)
+  hasAdjustments  Boolean             @default(false) @map("has_adjustments")
+  total           Decimal             @db.Decimal(18, 2)
+  status          String              @db.VarChar
+  date            DateTime            @db.Date
+  dueDate         DateTime            @map("due_date") @db.Date
+  createdAt       DateTime            @default(now()) @map("created_at")
+  updatedAt       DateTime            @default(now()) @updatedAt @map("updated_at")
+  document        Document            @relation(fields: [id], references: [id], onDelete: Cascade)
+  customer        Party               @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  adjustments     InvoiceAdjustment[]
+  items           InvoiceItem[]
+
+  @@index([customerId, date])
+  @@map("documents_invoices")
+}
+
+model InvoiceAdjustment {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  invoiceId       String   @map("invoice_id") @db.Uuid
+  adjustmentName  String   @map("adjustment_name") @db.VarChar
+  adjustmentValue Decimal  @map("adjustment_value") @db.Decimal(18, 2)
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at")
+  invoice         Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceId])
+  @@map("documents_invoices_adjustments")
+}
+
+model InvoiceItem {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  invoiceId      String   @map("invoice_id") @db.Uuid
+  productId      String?  @map("product_id") @db.Uuid
+  name           String   @db.VarChar
+  description    String?  @db.VarChar(128)
+  quantity       Decimal  @db.Decimal(18, 2)
+  unit           String   @db.VarChar
+  rate           Decimal  @db.Decimal(18, 2)
+  discountType   String   @map("discount_type") @db.VarChar
+  discountValue  Decimal  @map("discount_value") @db.Decimal(18, 2)
+  discountAmount Decimal  @map("discount_amount") @db.Decimal(18, 2)
+  taxRate        Decimal  @map("tax_rate") @db.Decimal(8, 4)
+  taxAmount      Decimal  @map("tax_amount") @db.Decimal(18, 2)
+  amount         Decimal  @db.Decimal(18, 2)
+  sortIndex      Int      @map("sort_index")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at")
+  invoice        Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceId, sortIndex])
+  @@map("documents_invoices_items")
 }
 
 enum ProjectionType {
