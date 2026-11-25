@@ -227,6 +227,7 @@ Fields:
 > status: varchar;
 > date: date;
 > due_date: date;
+> details: JSON, nullable;
 > created_at: timestamp, default: current timestamp;
 > updated_at: timestamp, automatically updated;
 

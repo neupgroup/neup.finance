@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { ArrowLeft, ArrowUpRight, Plus, ReceiptText } from 'lucide-react';
 import { Badge } from '@neup/components/ui/badge';
 import { Button } from '@neup/components/ui/button';
-import { useDocumentQuotations, useTransactionsList } from '@/core/hooks/api';
+import { useDocumentInvoices, useDocumentQuotations, useTransactionsList } from '@/core/hooks/api';
 
 const salesDocumentTypes = [
   ['quotation', 'Quotation'],
@@ -24,6 +24,7 @@ export default function SalesDocumentsPage() {
   const projectId = searchParams.get('project')?.trim();
   const { data: transactions, isLoading } = useTransactionsList();
   const { quotations, isLoading: areQuotationsLoading } = useDocumentQuotations(type === 'quotation');
+  const { invoices, isLoading: areInvoicesLoading } = useDocumentInvoices(type === 'invoice');
   const salesTransactions = (transactions ?? []).filter((transaction) =>
     ['sales', 'receivable'].includes(String(transaction.category).toLowerCase()) ||
     ['sale', 'income', 'refund'].includes(String(transaction.transaction_type).toLowerCase())
@@ -47,7 +48,7 @@ export default function SalesDocumentsPage() {
               <h1 className="text-3xl font-bold tracking-tight">{selectedType?.[1] ?? 'Sales documents'}</h1>
               {selectedType ? <Badge variant="outline">Sales</Badge> : null}
             </div>
-            <p className="text-muted-foreground">{selectedType ? `Review sales transactions or create a new ${selectedType[1].toLowerCase()}. Document types are not yet stored separately.` : 'Choose a sales document type to get started.'}</p>
+            <p className="text-muted-foreground">{selectedType ? `Review ${selectedType[1].toLowerCase()} records or create a new one.` : 'Choose a sales document type to get started.'}</p>
           </div>
           {selectedType ? <Button asChild><Link href={newHref}><Plus className="mr-2 h-4 w-4" />New {selectedType[1]}</Link></Button> : null}
         </div>
@@ -78,6 +79,22 @@ export default function SalesDocumentsPage() {
         </div>
       ) : (
         <div className="rounded-lg border border-dashed px-6 py-12 text-center"><ReceiptText className="mx-auto h-8 w-8 text-muted-foreground" /><h2 className="mt-3 font-semibold">No quotations yet</h2><p className="mt-1 text-sm text-muted-foreground">Create a quotation to see it here.</p><Button asChild className="mt-4"><Link href={newHref}><Plus className="mr-2 h-4 w-4" />New Quotation</Link></Button></div>
+      )) : type === 'invoice' ? (areInvoicesLoading ? (
+        <p className="py-10 text-center text-sm text-muted-foreground">Loading invoices…</p>
+      ) : invoices.length ? (
+        <div className="overflow-hidden divide-y rounded-lg border">
+          {invoices.map((invoice) => (
+            <Link key={invoice.id} href={withProject(`/documents/${encodeURIComponent(invoice.id)}?type=invoice`)} className="flex items-center justify-between gap-4 p-4 hover:bg-muted/40">
+              <span className="flex min-w-0 items-center gap-3">
+                <ReceiptText className="h-5 w-5 shrink-0 text-muted-foreground" />
+                <span className="min-w-0"><span className="block truncate font-medium">{invoice.subject}</span><span className="block text-sm text-muted-foreground">{invoice.referenceNumber} · {new Date(invoice.date).toLocaleDateString()} · {invoice.status}</span></span>
+              </span>
+              <span className="flex items-center gap-2 whitespace-nowrap font-medium">{new Intl.NumberFormat('en-US', { style: 'currency', currency: invoice.currency }).format(Number(invoice.total))}<ArrowUpRight className="h-4 w-4 text-muted-foreground" /></span>
+            </Link>
+          ))}
+        </div>
+      ) : (
+        <div className="rounded-lg border border-dashed px-6 py-12 text-center"><ReceiptText className="mx-auto h-8 w-8 text-muted-foreground" /><h2 className="mt-3 font-semibold">No invoices yet</h2><p className="mt-1 text-sm text-muted-foreground">Create an invoice to see it here.</p><Button asChild className="mt-4"><Link href={newHref}><Plus className="mr-2 h-4 w-4" />New Invoice</Link></Button></div>
       )) : isLoading ? (
         <p className="py-10 text-center text-sm text-muted-foreground">Loading sales records…</p>
       ) : salesTransactions.length ? (

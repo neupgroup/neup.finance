@@ -183,6 +183,8 @@ export type DocumentQuotationRecord = {
   }>;
 };
 
+export type DocumentInvoiceRecord = Omit<DocumentQuotationRecord, 'expires'> & { dueDate: string };
+
 type DocumentQuotationResponse = {
   status: boolean;
   result?: DocumentQuotationRecord;
@@ -206,6 +208,25 @@ export function useDocumentQuotation(id: string | null) {
 export function useDocumentQuotations(enabled = true) {
   const query = useQuery<{ status: boolean; result?: DocumentQuotationRecord[] }>(enabled ? '/bridge/api.v1/documents/quotations' : null);
   return { ...query, quotations: query.data?.result ?? [] };
+}
+
+export async function createDocumentInvoice(data: Record<string, unknown>) {
+  const response = await requestJson<{ status: boolean; result?: DocumentInvoiceRecord; error?: { code: string; description: string } }>('/bridge/api.v1/documents/invoices', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+  if (!response.status || !response.result) throw new Error(response.error?.description ?? 'Could not save invoice.');
+  return response.result;
+}
+
+export function useDocumentInvoice(id: string | null) {
+  const query = useQuery<{ status: boolean; result?: DocumentInvoiceRecord }>(id ? `/bridge/api.v1/documents/invoices/${encodeURIComponent(id)}` : null);
+  return { ...query, invoice: query.data?.result };
+}
+
+export function useDocumentInvoices(enabled = true) {
+  const query = useQuery<{ status: boolean; result?: DocumentInvoiceRecord[] }>(enabled ? '/bridge/api.v1/documents/invoices' : null);
+  return { ...query, invoices: query.data?.result ?? [] };
 }
 
 export async function addTransactionLine(id: string, data: Record<string, unknown>) {

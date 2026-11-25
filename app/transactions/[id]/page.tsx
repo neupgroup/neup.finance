@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import {
   transactionLineCategoryOptions,
   type Transaction,
@@ -10,7 +10,7 @@ import {
   type TransactionLineCategory,
 } from '@/core/lib/ledger';
 import { Badge } from '@neup/components/ui/badge';
-import { ArrowLeft, Paperclip, PlusCircle, Printer, Loader } from 'lucide-react';
+import { ArrowLeft, Paperclip, PlusCircle, Loader } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@neup/components/ui/button';
 import { LinkButton } from '@neup/components/ui/link-button';
@@ -153,10 +153,7 @@ function AddLineItemForm({ transactionId, currency, accountOptions, onAddLine }:
 export default function TransactionDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const searchParams = useSearchParams();
   const id = params.id as string;
-  const projectId = searchParams.get('project')?.trim();
-  const invoiceHref = `/documents/${encodeURIComponent(id)}?type=invoice${projectId ? `&project=${encodeURIComponent(projectId)}` : ''}`;
   const { data: transaction, isLoading: isTransactionLoading } = useTransactionById(id);
   const { data: lines, isLoading: areLinesLoading } = useTransactionLines(id);
   const { data: accounts } = useProjectBooks();
@@ -218,7 +215,6 @@ export default function TransactionDetailPage() {
                     <ArrowLeft className="mr-2 h-4 w-4" />
                     Back
                 </Button>
-                <LinkButton href={invoiceHref} variant="outline" preIcon={<Printer className="mr-2 h-4 w-4" />}>View Invoice</LinkButton>
             </div>
 
             <div className="space-y-4">

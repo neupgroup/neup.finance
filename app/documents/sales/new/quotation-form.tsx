@@ -13,7 +13,7 @@ import { QuantityUnitUnderlined } from '@neup/elements/ui/quantity_unit_underlin
 import { Label } from '@neup/components/ui/label';
 import { Textarea } from '@neup/components/ui/textarea';
 import { Combobox } from '@/components/ui/combobox';
-import { createDocumentQuotation, useParties } from '@/core/hooks/api';
+import { createDocumentInvoice, createDocumentQuotation, useParties } from '@/core/hooks/api';
 import { useToast } from '@neup/core/hooks/useToast';
 
 type QuotationLine = { id: string; product: string; quantity: string; unit: string; rate: string; discount: string; tax: string };
@@ -47,18 +47,21 @@ function calculateQuotationLine(line: QuotationLine) {
   return { subtotal, discount, taxable, tax, total: taxable + tax };
 }
 
-// Render and save a quotation with customer, dates, item lines, and calculated totals.
-export default function QuotationForm() {
+// Render and save a quotation or invoice using the shared sales-document layout.
+export function SalesDocumentForm({ type }: { type: 'quotation' | 'invoice' }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { toast } = useToast();
   const { data: parties } = useParties();
   const projectId = searchParams.get('project')?.trim();
+  const isInvoice = type === 'invoice';
+  const documentLabel = isInvoice ? 'Invoice' : 'Quotation';
+  const dateLabel = isInvoice ? 'Due Date' : 'Expiry Date';
   const [partyId, setPartyId] = useState('');
   const [date, setDate] = useState(() => toLocalDate(new Date()));
   const [expiryDate, setExpiryDate] = useState(() => {
     const date = new Date();
-    date.setDate(date.getDate() + 6);
+    date.setDate(date.getDate() + (isInvoice ? 30 : 6));
     return toLocalDate(date);
   });
   const [terms, setTerms] = useState('');
@@ -81,7 +84,7 @@ export default function QuotationForm() {
     };
   }, { subtotal: 0, discount: 0, taxable: 0, tax: 0, total: 0 }), [lines]);
   const selectedParty = parties?.find((party) => party.id === partyId);
-  const backHref = `/documents/sales?type=quotation${projectId ? `&project=${encodeURIComponent(projectId)}` : ''}`;
+  const backHref = `/documents/sales?type=${type}${projectId ? `&project=${encodeURIComponent(projectId)}` : ''}`;
 
   const updateLine = (lineId: string, field: keyof Omit<QuotationLine, 'id'>, value: string) => {
     setLines((current) => current.map((line) => line.id === lineId ? { ...line, [field]: value } : line));
@@ -104,14 +107,14 @@ export default function QuotationForm() {
     }
   };
 
-  const saveQuotation = async (event: React.FormEvent<HTMLFormElement>) => {
+  const saveSalesDocument = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!selectedParty) {
-      toast({ name: 'app', state: 'error', title: 'Customer required', description: 'Choose a customer for this quotation.' });
+      toast({ name: 'app', state: 'error', title: 'Customer required', description: `Choose a customer for this ${documentLabel.toLowerCase()}.` });
       return;
     }
     if (!currencies.includes(currency)) {
-      toast({ name: 'app', state: 'error', title: 'Unsupported currency', description: 'Enter NPR, USD, INR, EUR, or GBP in the rate currency field.' });
+      toast({ name: 'app', state: 'error', title: 'Unsupported currency', description: 'Choose NPR, USD, INR, EUR, or GBP.' });
       return;
     }
     const completedLines = lines.filter((line) => line.product.trim() && Number(line.quantity) > 0);
@@ -139,12 +142,11 @@ export default function QuotationForm() {
           sortIndex: index,
         };
       });
-      const saved = await createDocumentQuotation({
+      const documentData = {
         customerId: selectedParty.id,
-        subject: `Quotation for ${selectedParty.name}`,
+        subject: `${documentLabel} for ${selectedParty.name}`,
         status: 'draft',
         date,
-        expires: expiryDate,
         currency,
         exchangeRate: Number(exchangeRate) || 1,
         subtotal: totals.subtotal,
@@ -162,23 +164,26 @@ export default function QuotationForm() {
           taxableTotal: totals.taxable,
         },
         items: quotationItems,
-      });
-      toast({ name: 'app', title: 'Quotation saved', description: `Quotation for ${selectedParty.name} has been saved.` });
-      router.push(`/documents/${saved.id}?type=quotation${projectId ? `&project=${encodeURIComponent(projectId)}` : ''}`);
+      };
+      const saved = isInvoice
+        ? await createDocumentInvoice({ ...documentData, dueDate: expiryDate })
+        : await createDocumentQuotation({ ...documentData, expires: expiryDate });
+      toast({ name: 'app', title: `${documentLabel} saved`, description: `${documentLabel} for ${selectedParty.name} has been saved.` });
+      router.push(`/documents/${saved.id}?type=${type}${projectId ? `&project=${encodeURIComponent(projectId)}` : ''}`);
     } catch (error) {
-      console.error('Error saving quotation:', error);
-      toast({ name: 'app', state: 'error', title: 'Could not save quotation', description: 'Please try again.' });
+      console.error(`Error saving ${documentLabel.toLowerCase()}:`, error);
+      toast({ name: 'app', state: 'error', title: `Could not save ${documentLabel.toLowerCase()}`, description: 'Please try again.' });
     } finally {
       setIsSaving(false);
     }
   };
 
   return (
-    <form onSubmit={saveQuotation} className="space-y-7">
+    <form onSubmit={saveSalesDocument} className="space-y-7">
       <div className="space-y-4">
         <div className="space-y-1">
-          <h1 className="text-3xl font-bold tracking-tight">New Quotation</h1>
-          <p className="text-muted-foreground">Create a new quotation for a customer.</p>
+          <h1 className="text-3xl font-bold tracking-tight">New {documentLabel}</h1>
+          <p className="text-muted-foreground">Create a new {documentLabel.toLowerCase()} for a customer.</p>
         </div>
       </div>
 
@@ -253,7 +258,7 @@ export default function QuotationForm() {
         </div>
 
         <div className="grid gap-4 md:grid-cols-3">
-          <div className="space-y-2"><Label htmlFor="quotation-expiry">Expiry Date *</Label><Input id="quotation-expiry" type="date" value={expiryDate} min={date} onChange={(event) => setExpiryDate(event.target.value)} required /></div>
+          <div className="space-y-2"><Label htmlFor="document-expiry">{dateLabel} *</Label><Input id="document-expiry" type="date" value={expiryDate} min={date} onChange={(event) => setExpiryDate(event.target.value)} required /></div>
           <div className="space-y-2"><Label htmlFor="credit-terms">Credit Terms</Label><Input id="credit-terms" list="quotation-credit-terms" value={creditTerm} onChange={(event) => setCreditTerm(event.target.value)} placeholder="Select or enter terms" /><datalist id="quotation-credit-terms">{creditTerms.map((term) => <option key={term} value={term} />)}</datalist></div>
           <div className="space-y-2"><Label htmlFor="exchange-rate">Exchange Rate To NPR *</Label><Input id="exchange-rate" type="number" min="0.000001" step="any" className="underlined-stepper" value={exchangeRate} onChange={(event) => setExchangeRate(event.target.value)} onKeyDown={(event) => {
             if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown') return;
@@ -285,11 +290,15 @@ export default function QuotationForm() {
         <div className="flex items-center justify-between border-t pt-4">
           <Button type="button" variant="outline" asChild><Link href={backHref}><ArrowLeft className="mr-2 h-4 w-4" />Back</Link></Button>
           <div className="flex items-center gap-2">
-            <Button type="submit" disabled={isSaving || !selectedParty}><Save className="mr-2 h-4 w-4" />{isSaving ? 'Saving…' : 'Save'}</Button>
-            <Button type="button" variant="ghost" size="icon" asChild><Link href={backHref} aria-label="Close quotation"><X className="h-5 w-5" /></Link></Button>
+            <Button type="submit" disabled={isSaving || !selectedParty}><Save className="mr-2 h-4 w-4" />{isSaving ? 'Saving…' : `Save ${documentLabel}`}</Button>
+            <Button type="button" variant="ghost" size="icon" asChild><Link href={backHref} aria-label={`Close ${documentLabel.toLowerCase()}`}><X className="h-5 w-5" /></Link></Button>
           </div>
         </div>
       </div>
     </form>
   );
+}
+
+export default function QuotationForm() {
+  return <SalesDocumentForm type="quotation" />;
 }

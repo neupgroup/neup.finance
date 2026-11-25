@@ -357,6 +357,7 @@ model Invoice {
   status          String              @db.VarChar
   date            DateTime            @db.Date
   dueDate         DateTime            @map("due_date") @db.Date
+  details         Json?
   createdAt       DateTime            @default(now()) @map("created_at")
   updatedAt       DateTime            @default(now()) @updatedAt @map("updated_at")
   document        Document            @relation(fields: [id], references: [id], onDelete: Cascade)

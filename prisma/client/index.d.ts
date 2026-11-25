@@ -80,37 +80,37 @@ export type Projection = $Result.DefaultSelection<Prisma.$ProjectionPayload>
 export type ActivityStock = $Result.DefaultSelection<Prisma.$ActivityStockPayload>
 /**
  * Model Document
- *
+ * 
  */
 export type Document = $Result.DefaultSelection<Prisma.$DocumentPayload>
 /**
  * Model DocumentQuotation
- *
+ * 
  */
 export type DocumentQuotation = $Result.DefaultSelection<Prisma.$DocumentQuotationPayload>
 /**
  * Model DocumentQuotationAdjustment
- *
+ * 
  */
 export type DocumentQuotationAdjustment = $Result.DefaultSelection<Prisma.$DocumentQuotationAdjustmentPayload>
 /**
  * Model DocumentAdjustmentItem
- *
+ * 
  */
 export type DocumentAdjustmentItem = $Result.DefaultSelection<Prisma.$DocumentAdjustmentItemPayload>
 /**
  * Model Invoice
- *
+ * 
  */
 export type Invoice = $Result.DefaultSelection<Prisma.$InvoicePayload>
 /**
  * Model InvoiceAdjustment
- *
+ * 
  */
 export type InvoiceAdjustment = $Result.DefaultSelection<Prisma.$InvoiceAdjustmentPayload>
 /**
  * Model InvoiceItem
- *
+ * 
  */
 export type InvoiceItem = $Result.DefaultSelection<Prisma.$InvoiceItemPayload>
 
@@ -18240,43 +18240,43 @@ export namespace Prisma {
     where?: DocumentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     *
+     * 
      * Determine the order of Documents to fetch.
      */
     orderBy?: DocumentOrderByWithRelationInput | DocumentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     *
+     * 
      * Sets the start position
      */
     cursor?: DocumentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Take `±n` Documents from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Skip the first `n` Documents.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Count returned Documents
     **/
     _count?: true | DocumentCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: DocumentMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Select which fields to find the maximum value
     **/
     _max?: DocumentMaxAggregateInputType
@@ -18472,13 +18472,13 @@ export namespace Prisma {
      * @example
      * // Get all Documents
      * const documents = await prisma.document.findMany()
-     *
+     * 
      * // Get first 10 Documents
      * const documents = await prisma.document.findMany({ take: 10 })
-     *
+     * 
      * // Only select the `id`
      * const documentWithIdOnly = await prisma.document.findMany({ select: { id: true } })
-     *
+     * 
      */
     findMany<T extends DocumentFindManyArgs>(args?: SelectSubset<T, DocumentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
@@ -18492,7 +18492,7 @@ export namespace Prisma {
      *     // ... data to create a Document
      *   }
      * })
-     *
+     * 
      */
     create<T extends DocumentCreateArgs>(args: SelectSubset<T, DocumentCreateArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -18506,7 +18506,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *
+     *     
      */
     createMany<T extends DocumentCreateManyArgs>(args?: SelectSubset<T, DocumentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -18520,7 +18520,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *
+     * 
      * // Create many Documents and only return the `id`
      * const documentWithIdOnly = await prisma.document.createManyAndReturn({
      *   select: { id: true },
@@ -18530,7 +18530,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     *
+     * 
      */
     createManyAndReturn<T extends DocumentCreateManyAndReturnArgs>(args?: SelectSubset<T, DocumentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
@@ -18544,7 +18544,7 @@ export namespace Prisma {
      *     // ... filter to delete one Document
      *   }
      * })
-     *
+     * 
      */
     delete<T extends DocumentDeleteArgs>(args: SelectSubset<T, DocumentDeleteArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -18561,7 +18561,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     *
+     * 
      */
     update<T extends DocumentUpdateArgs>(args: SelectSubset<T, DocumentUpdateArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -18575,7 +18575,7 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     *
+     * 
      */
     deleteMany<T extends DocumentDeleteManyArgs>(args?: SelectSubset<T, DocumentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -18594,7 +18594,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     *
+     * 
      */
     updateMany<T extends DocumentUpdateManyArgs>(args: SelectSubset<T, DocumentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -18611,7 +18611,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *
+     * 
      * // Update zero or more Documents and only return the `id`
      * const documentWithIdOnly = await prisma.document.updateManyAndReturn({
      *   select: { id: true },
@@ -18624,7 +18624,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     *
+     * 
      */
     updateManyAndReturn<T extends DocumentUpdateManyAndReturnArgs>(args: SelectSubset<T, DocumentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
@@ -18713,7 +18713,7 @@ export namespace Prisma {
      *     _all: true
      *   },
      * })
-     *
+     * 
     **/
     groupBy<
       T extends DocumentGroupByArgs,
@@ -18894,31 +18894,31 @@ export namespace Prisma {
     where?: DocumentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     *
+     * 
      * Determine the order of Documents to fetch.
      */
     orderBy?: DocumentOrderByWithRelationInput | DocumentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     *
+     * 
      * Sets the position for searching for Documents.
      */
     cursor?: DocumentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Take `±n` Documents from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Skip the first `n` Documents.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     *
+     * 
      * Filter by unique combinations of Documents.
      */
     distinct?: DocumentScalarFieldEnum | DocumentScalarFieldEnum[]
@@ -18946,31 +18946,31 @@ export namespace Prisma {
     where?: DocumentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     *
+     * 
      * Determine the order of Documents to fetch.
      */
     orderBy?: DocumentOrderByWithRelationInput | DocumentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     *
+     * 
      * Sets the position for searching for Documents.
      */
     cursor?: DocumentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Take `±n` Documents from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Skip the first `n` Documents.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     *
+     * 
      * Filter by unique combinations of Documents.
      */
     distinct?: DocumentScalarFieldEnum | DocumentScalarFieldEnum[]
@@ -18998,31 +18998,31 @@ export namespace Prisma {
     where?: DocumentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     *
+     * 
      * Determine the order of Documents to fetch.
      */
     orderBy?: DocumentOrderByWithRelationInput | DocumentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     *
+     * 
      * Sets the position for listing Documents.
      */
     cursor?: DocumentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Take `±n` Documents from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Skip the first `n` Documents.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     *
+     * 
      * Filter by unique combinations of Documents.
      */
     distinct?: DocumentScalarFieldEnum | DocumentScalarFieldEnum[]
@@ -19477,55 +19477,55 @@ export namespace Prisma {
     where?: DocumentQuotationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     *
+     * 
      * Determine the order of DocumentQuotations to fetch.
      */
     orderBy?: DocumentQuotationOrderByWithRelationInput | DocumentQuotationOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     *
+     * 
      * Sets the start position
      */
     cursor?: DocumentQuotationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Take `±n` DocumentQuotations from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Skip the first `n` DocumentQuotations.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Count returned DocumentQuotations
     **/
     _count?: true | DocumentQuotationCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Select which fields to average
     **/
     _avg?: DocumentQuotationAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Select which fields to sum
     **/
     _sum?: DocumentQuotationSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: DocumentQuotationMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Select which fields to find the maximum value
     **/
     _max?: DocumentQuotationMaxAggregateInputType
@@ -19824,13 +19824,13 @@ export namespace Prisma {
      * @example
      * // Get all DocumentQuotations
      * const documentQuotations = await prisma.documentQuotation.findMany()
-     *
+     * 
      * // Get first 10 DocumentQuotations
      * const documentQuotations = await prisma.documentQuotation.findMany({ take: 10 })
-     *
+     * 
      * // Only select the `id`
      * const documentQuotationWithIdOnly = await prisma.documentQuotation.findMany({ select: { id: true } })
-     *
+     * 
      */
     findMany<T extends DocumentQuotationFindManyArgs>(args?: SelectSubset<T, DocumentQuotationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentQuotationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
@@ -19844,7 +19844,7 @@ export namespace Prisma {
      *     // ... data to create a DocumentQuotation
      *   }
      * })
-     *
+     * 
      */
     create<T extends DocumentQuotationCreateArgs>(args: SelectSubset<T, DocumentQuotationCreateArgs<ExtArgs>>): Prisma__DocumentQuotationClient<$Result.GetResult<Prisma.$DocumentQuotationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -19858,7 +19858,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *
+     *     
      */
     createMany<T extends DocumentQuotationCreateManyArgs>(args?: SelectSubset<T, DocumentQuotationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -19872,7 +19872,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *
+     * 
      * // Create many DocumentQuotations and only return the `id`
      * const documentQuotationWithIdOnly = await prisma.documentQuotation.createManyAndReturn({
      *   select: { id: true },
@@ -19882,7 +19882,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     *
+     * 
      */
     createManyAndReturn<T extends DocumentQuotationCreateManyAndReturnArgs>(args?: SelectSubset<T, DocumentQuotationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentQuotationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
@@ -19896,7 +19896,7 @@ export namespace Prisma {
      *     // ... filter to delete one DocumentQuotation
      *   }
      * })
-     *
+     * 
      */
     delete<T extends DocumentQuotationDeleteArgs>(args: SelectSubset<T, DocumentQuotationDeleteArgs<ExtArgs>>): Prisma__DocumentQuotationClient<$Result.GetResult<Prisma.$DocumentQuotationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -19913,7 +19913,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     *
+     * 
      */
     update<T extends DocumentQuotationUpdateArgs>(args: SelectSubset<T, DocumentQuotationUpdateArgs<ExtArgs>>): Prisma__DocumentQuotationClient<$Result.GetResult<Prisma.$DocumentQuotationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -19927,7 +19927,7 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     *
+     * 
      */
     deleteMany<T extends DocumentQuotationDeleteManyArgs>(args?: SelectSubset<T, DocumentQuotationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -19946,7 +19946,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     *
+     * 
      */
     updateMany<T extends DocumentQuotationUpdateManyArgs>(args: SelectSubset<T, DocumentQuotationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -19963,7 +19963,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *
+     * 
      * // Update zero or more DocumentQuotations and only return the `id`
      * const documentQuotationWithIdOnly = await prisma.documentQuotation.updateManyAndReturn({
      *   select: { id: true },
@@ -19976,7 +19976,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     *
+     * 
      */
     updateManyAndReturn<T extends DocumentQuotationUpdateManyAndReturnArgs>(args: SelectSubset<T, DocumentQuotationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentQuotationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
@@ -20065,7 +20065,7 @@ export namespace Prisma {
      *     _all: true
      *   },
      * })
-     *
+     * 
     **/
     groupBy<
       T extends DocumentQuotationGroupByArgs,
@@ -20193,7 +20193,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"DocumentQuotation", 'DateTime'>
     readonly updatedAt: FieldRef<"DocumentQuotation", 'DateTime'>
   }
-
+    
 
   // Custom InputTypes
   /**
@@ -20262,31 +20262,31 @@ export namespace Prisma {
     where?: DocumentQuotationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     *
+     * 
      * Determine the order of DocumentQuotations to fetch.
      */
     orderBy?: DocumentQuotationOrderByWithRelationInput | DocumentQuotationOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     *
+     * 
      * Sets the position for searching for DocumentQuotations.
      */
     cursor?: DocumentQuotationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Take `±n` DocumentQuotations from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Skip the first `n` DocumentQuotations.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     *
+     * 
      * Filter by unique combinations of DocumentQuotations.
      */
     distinct?: DocumentQuotationScalarFieldEnum | DocumentQuotationScalarFieldEnum[]
@@ -20314,31 +20314,31 @@ export namespace Prisma {
     where?: DocumentQuotationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     *
+     * 
      * Determine the order of DocumentQuotations to fetch.
      */
     orderBy?: DocumentQuotationOrderByWithRelationInput | DocumentQuotationOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     *
+     * 
      * Sets the position for searching for DocumentQuotations.
      */
     cursor?: DocumentQuotationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Take `±n` DocumentQuotations from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Skip the first `n` DocumentQuotations.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     *
+     * 
      * Filter by unique combinations of DocumentQuotations.
      */
     distinct?: DocumentQuotationScalarFieldEnum | DocumentQuotationScalarFieldEnum[]
@@ -20366,31 +20366,31 @@ export namespace Prisma {
     where?: DocumentQuotationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     *
+     * 
      * Determine the order of DocumentQuotations to fetch.
      */
     orderBy?: DocumentQuotationOrderByWithRelationInput | DocumentQuotationOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     *
+     * 
      * Sets the position for listing DocumentQuotations.
      */
     cursor?: DocumentQuotationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Take `±n` DocumentQuotations from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Skip the first `n` DocumentQuotations.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     *
+     * 
      * Filter by unique combinations of DocumentQuotations.
      */
     distinct?: DocumentQuotationScalarFieldEnum | DocumentQuotationScalarFieldEnum[]
@@ -20751,55 +20751,55 @@ export namespace Prisma {
     where?: DocumentQuotationAdjustmentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     *
+     * 
      * Determine the order of DocumentQuotationAdjustments to fetch.
      */
     orderBy?: DocumentQuotationAdjustmentOrderByWithRelationInput | DocumentQuotationAdjustmentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     *
+     * 
      * Sets the start position
      */
     cursor?: DocumentQuotationAdjustmentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Take `±n` DocumentQuotationAdjustments from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Skip the first `n` DocumentQuotationAdjustments.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Count returned DocumentQuotationAdjustments
     **/
     _count?: true | DocumentQuotationAdjustmentCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Select which fields to average
     **/
     _avg?: DocumentQuotationAdjustmentAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Select which fields to sum
     **/
     _sum?: DocumentQuotationAdjustmentSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: DocumentQuotationAdjustmentMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Select which fields to find the maximum value
     **/
     _max?: DocumentQuotationAdjustmentMaxAggregateInputType
@@ -20999,13 +20999,13 @@ export namespace Prisma {
      * @example
      * // Get all DocumentQuotationAdjustments
      * const documentQuotationAdjustments = await prisma.documentQuotationAdjustment.findMany()
-     *
+     * 
      * // Get first 10 DocumentQuotationAdjustments
      * const documentQuotationAdjustments = await prisma.documentQuotationAdjustment.findMany({ take: 10 })
-     *
+     * 
      * // Only select the `id`
      * const documentQuotationAdjustmentWithIdOnly = await prisma.documentQuotationAdjustment.findMany({ select: { id: true } })
-     *
+     * 
      */
     findMany<T extends DocumentQuotationAdjustmentFindManyArgs>(args?: SelectSubset<T, DocumentQuotationAdjustmentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentQuotationAdjustmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
@@ -21019,7 +21019,7 @@ export namespace Prisma {
      *     // ... data to create a DocumentQuotationAdjustment
      *   }
      * })
-     *
+     * 
      */
     create<T extends DocumentQuotationAdjustmentCreateArgs>(args: SelectSubset<T, DocumentQuotationAdjustmentCreateArgs<ExtArgs>>): Prisma__DocumentQuotationAdjustmentClient<$Result.GetResult<Prisma.$DocumentQuotationAdjustmentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -21033,7 +21033,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *
+     *     
      */
     createMany<T extends DocumentQuotationAdjustmentCreateManyArgs>(args?: SelectSubset<T, DocumentQuotationAdjustmentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -21047,7 +21047,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *
+     * 
      * // Create many DocumentQuotationAdjustments and only return the `id`
      * const documentQuotationAdjustmentWithIdOnly = await prisma.documentQuotationAdjustment.createManyAndReturn({
      *   select: { id: true },
@@ -21057,7 +21057,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     *
+     * 
      */
     createManyAndReturn<T extends DocumentQuotationAdjustmentCreateManyAndReturnArgs>(args?: SelectSubset<T, DocumentQuotationAdjustmentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentQuotationAdjustmentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
@@ -21071,7 +21071,7 @@ export namespace Prisma {
      *     // ... filter to delete one DocumentQuotationAdjustment
      *   }
      * })
-     *
+     * 
      */
     delete<T extends DocumentQuotationAdjustmentDeleteArgs>(args: SelectSubset<T, DocumentQuotationAdjustmentDeleteArgs<ExtArgs>>): Prisma__DocumentQuotationAdjustmentClient<$Result.GetResult<Prisma.$DocumentQuotationAdjustmentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -21088,7 +21088,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     *
+     * 
      */
     update<T extends DocumentQuotationAdjustmentUpdateArgs>(args: SelectSubset<T, DocumentQuotationAdjustmentUpdateArgs<ExtArgs>>): Prisma__DocumentQuotationAdjustmentClient<$Result.GetResult<Prisma.$DocumentQuotationAdjustmentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -21102,7 +21102,7 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     *
+     * 
      */
     deleteMany<T extends DocumentQuotationAdjustmentDeleteManyArgs>(args?: SelectSubset<T, DocumentQuotationAdjustmentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -21121,7 +21121,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     *
+     * 
      */
     updateMany<T extends DocumentQuotationAdjustmentUpdateManyArgs>(args: SelectSubset<T, DocumentQuotationAdjustmentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -21138,7 +21138,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *
+     * 
      * // Update zero or more DocumentQuotationAdjustments and only return the `id`
      * const documentQuotationAdjustmentWithIdOnly = await prisma.documentQuotationAdjustment.updateManyAndReturn({
      *   select: { id: true },
@@ -21151,7 +21151,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     *
+     * 
      */
     updateManyAndReturn<T extends DocumentQuotationAdjustmentUpdateManyAndReturnArgs>(args: SelectSubset<T, DocumentQuotationAdjustmentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentQuotationAdjustmentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
@@ -21240,7 +21240,7 @@ export namespace Prisma {
      *     _all: true
      *   },
      * })
-     *
+     * 
     **/
     groupBy<
       T extends DocumentQuotationAdjustmentGroupByArgs,
@@ -21351,7 +21351,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"DocumentQuotationAdjustment", 'DateTime'>
     readonly updatedAt: FieldRef<"DocumentQuotationAdjustment", 'DateTime'>
   }
-
+    
 
   // Custom InputTypes
   /**
@@ -21420,31 +21420,31 @@ export namespace Prisma {
     where?: DocumentQuotationAdjustmentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     *
+     * 
      * Determine the order of DocumentQuotationAdjustments to fetch.
      */
     orderBy?: DocumentQuotationAdjustmentOrderByWithRelationInput | DocumentQuotationAdjustmentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     *
+     * 
      * Sets the position for searching for DocumentQuotationAdjustments.
      */
     cursor?: DocumentQuotationAdjustmentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Take `±n` DocumentQuotationAdjustments from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Skip the first `n` DocumentQuotationAdjustments.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     *
+     * 
      * Filter by unique combinations of DocumentQuotationAdjustments.
      */
     distinct?: DocumentQuotationAdjustmentScalarFieldEnum | DocumentQuotationAdjustmentScalarFieldEnum[]
@@ -21472,31 +21472,31 @@ export namespace Prisma {
     where?: DocumentQuotationAdjustmentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     *
+     * 
      * Determine the order of DocumentQuotationAdjustments to fetch.
      */
     orderBy?: DocumentQuotationAdjustmentOrderByWithRelationInput | DocumentQuotationAdjustmentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     *
+     * 
      * Sets the position for searching for DocumentQuotationAdjustments.
      */
     cursor?: DocumentQuotationAdjustmentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Take `±n` DocumentQuotationAdjustments from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Skip the first `n` DocumentQuotationAdjustments.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     *
+     * 
      * Filter by unique combinations of DocumentQuotationAdjustments.
      */
     distinct?: DocumentQuotationAdjustmentScalarFieldEnum | DocumentQuotationAdjustmentScalarFieldEnum[]
@@ -21524,31 +21524,31 @@ export namespace Prisma {
     where?: DocumentQuotationAdjustmentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     *
+     * 
      * Determine the order of DocumentQuotationAdjustments to fetch.
      */
     orderBy?: DocumentQuotationAdjustmentOrderByWithRelationInput | DocumentQuotationAdjustmentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     *
+     * 
      * Sets the position for listing DocumentQuotationAdjustments.
      */
     cursor?: DocumentQuotationAdjustmentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Take `±n` DocumentQuotationAdjustments from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Skip the first `n` DocumentQuotationAdjustments.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     *
+     * 
      * Filter by unique combinations of DocumentQuotationAdjustments.
      */
     distinct?: DocumentQuotationAdjustmentScalarFieldEnum | DocumentQuotationAdjustmentScalarFieldEnum[]
@@ -21955,55 +21955,55 @@ export namespace Prisma {
     where?: DocumentAdjustmentItemWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     *
+     * 
      * Determine the order of DocumentAdjustmentItems to fetch.
      */
     orderBy?: DocumentAdjustmentItemOrderByWithRelationInput | DocumentAdjustmentItemOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     *
+     * 
      * Sets the start position
      */
     cursor?: DocumentAdjustmentItemWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Take `±n` DocumentAdjustmentItems from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Skip the first `n` DocumentAdjustmentItems.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Count returned DocumentAdjustmentItems
     **/
     _count?: true | DocumentAdjustmentItemCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Select which fields to average
     **/
     _avg?: DocumentAdjustmentItemAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Select which fields to sum
     **/
     _sum?: DocumentAdjustmentItemSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: DocumentAdjustmentItemMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Select which fields to find the maximum value
     **/
     _max?: DocumentAdjustmentItemMaxAggregateInputType
@@ -22269,13 +22269,13 @@ export namespace Prisma {
      * @example
      * // Get all DocumentAdjustmentItems
      * const documentAdjustmentItems = await prisma.documentAdjustmentItem.findMany()
-     *
+     * 
      * // Get first 10 DocumentAdjustmentItems
      * const documentAdjustmentItems = await prisma.documentAdjustmentItem.findMany({ take: 10 })
-     *
+     * 
      * // Only select the `id`
      * const documentAdjustmentItemWithIdOnly = await prisma.documentAdjustmentItem.findMany({ select: { id: true } })
-     *
+     * 
      */
     findMany<T extends DocumentAdjustmentItemFindManyArgs>(args?: SelectSubset<T, DocumentAdjustmentItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentAdjustmentItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
@@ -22289,7 +22289,7 @@ export namespace Prisma {
      *     // ... data to create a DocumentAdjustmentItem
      *   }
      * })
-     *
+     * 
      */
     create<T extends DocumentAdjustmentItemCreateArgs>(args: SelectSubset<T, DocumentAdjustmentItemCreateArgs<ExtArgs>>): Prisma__DocumentAdjustmentItemClient<$Result.GetResult<Prisma.$DocumentAdjustmentItemPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -22303,7 +22303,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *
+     *     
      */
     createMany<T extends DocumentAdjustmentItemCreateManyArgs>(args?: SelectSubset<T, DocumentAdjustmentItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -22317,7 +22317,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *
+     * 
      * // Create many DocumentAdjustmentItems and only return the `id`
      * const documentAdjustmentItemWithIdOnly = await prisma.documentAdjustmentItem.createManyAndReturn({
      *   select: { id: true },
@@ -22327,7 +22327,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     *
+     * 
      */
     createManyAndReturn<T extends DocumentAdjustmentItemCreateManyAndReturnArgs>(args?: SelectSubset<T, DocumentAdjustmentItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentAdjustmentItemPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
@@ -22341,7 +22341,7 @@ export namespace Prisma {
      *     // ... filter to delete one DocumentAdjustmentItem
      *   }
      * })
-     *
+     * 
      */
     delete<T extends DocumentAdjustmentItemDeleteArgs>(args: SelectSubset<T, DocumentAdjustmentItemDeleteArgs<ExtArgs>>): Prisma__DocumentAdjustmentItemClient<$Result.GetResult<Prisma.$DocumentAdjustmentItemPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -22358,7 +22358,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     *
+     * 
      */
     update<T extends DocumentAdjustmentItemUpdateArgs>(args: SelectSubset<T, DocumentAdjustmentItemUpdateArgs<ExtArgs>>): Prisma__DocumentAdjustmentItemClient<$Result.GetResult<Prisma.$DocumentAdjustmentItemPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -22372,7 +22372,7 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     *
+     * 
      */
     deleteMany<T extends DocumentAdjustmentItemDeleteManyArgs>(args?: SelectSubset<T, DocumentAdjustmentItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -22391,7 +22391,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     *
+     * 
      */
     updateMany<T extends DocumentAdjustmentItemUpdateManyArgs>(args: SelectSubset<T, DocumentAdjustmentItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -22408,7 +22408,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *
+     * 
      * // Update zero or more DocumentAdjustmentItems and only return the `id`
      * const documentAdjustmentItemWithIdOnly = await prisma.documentAdjustmentItem.updateManyAndReturn({
      *   select: { id: true },
@@ -22421,7 +22421,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     *
+     * 
      */
     updateManyAndReturn<T extends DocumentAdjustmentItemUpdateManyAndReturnArgs>(args: SelectSubset<T, DocumentAdjustmentItemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentAdjustmentItemPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
@@ -22510,7 +22510,7 @@ export namespace Prisma {
      *     _all: true
      *   },
      * })
-     *
+     * 
     **/
     groupBy<
       T extends DocumentAdjustmentItemGroupByArgs,
@@ -22632,7 +22632,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"DocumentAdjustmentItem", 'DateTime'>
     readonly updatedAt: FieldRef<"DocumentAdjustmentItem", 'DateTime'>
   }
-
+    
 
   // Custom InputTypes
   /**
@@ -22701,31 +22701,31 @@ export namespace Prisma {
     where?: DocumentAdjustmentItemWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     *
+     * 
      * Determine the order of DocumentAdjustmentItems to fetch.
      */
     orderBy?: DocumentAdjustmentItemOrderByWithRelationInput | DocumentAdjustmentItemOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     *
+     * 
      * Sets the position for searching for DocumentAdjustmentItems.
      */
     cursor?: DocumentAdjustmentItemWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Take `±n` DocumentAdjustmentItems from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Skip the first `n` DocumentAdjustmentItems.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     *
+     * 
      * Filter by unique combinations of DocumentAdjustmentItems.
      */
     distinct?: DocumentAdjustmentItemScalarFieldEnum | DocumentAdjustmentItemScalarFieldEnum[]
@@ -22753,31 +22753,31 @@ export namespace Prisma {
     where?: DocumentAdjustmentItemWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     *
+     * 
      * Determine the order of DocumentAdjustmentItems to fetch.
      */
     orderBy?: DocumentAdjustmentItemOrderByWithRelationInput | DocumentAdjustmentItemOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     *
+     * 
      * Sets the position for searching for DocumentAdjustmentItems.
      */
     cursor?: DocumentAdjustmentItemWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Take `±n` DocumentAdjustmentItems from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Skip the first `n` DocumentAdjustmentItems.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     *
+     * 
      * Filter by unique combinations of DocumentAdjustmentItems.
      */
     distinct?: DocumentAdjustmentItemScalarFieldEnum | DocumentAdjustmentItemScalarFieldEnum[]
@@ -22805,31 +22805,31 @@ export namespace Prisma {
     where?: DocumentAdjustmentItemWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     *
+     * 
      * Determine the order of DocumentAdjustmentItems to fetch.
      */
     orderBy?: DocumentAdjustmentItemOrderByWithRelationInput | DocumentAdjustmentItemOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     *
+     * 
      * Sets the position for listing DocumentAdjustmentItems.
      */
     cursor?: DocumentAdjustmentItemWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Take `±n` DocumentAdjustmentItems from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Skip the first `n` DocumentAdjustmentItems.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     *
+     * 
      * Filter by unique combinations of DocumentAdjustmentItems.
      */
     distinct?: DocumentAdjustmentItemScalarFieldEnum | DocumentAdjustmentItemScalarFieldEnum[]
@@ -23144,6 +23144,7 @@ export namespace Prisma {
     status: number
     date: number
     dueDate: number
+    details: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -23232,6 +23233,7 @@ export namespace Prisma {
     status?: true
     date?: true
     dueDate?: true
+    details?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -23244,55 +23246,55 @@ export namespace Prisma {
     where?: InvoiceWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     *
+     * 
      * Determine the order of Invoices to fetch.
      */
     orderBy?: InvoiceOrderByWithRelationInput | InvoiceOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     *
+     * 
      * Sets the start position
      */
     cursor?: InvoiceWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Take `±n` Invoices from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Skip the first `n` Invoices.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Count returned Invoices
     **/
     _count?: true | InvoiceCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Select which fields to average
     **/
     _avg?: InvoiceAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Select which fields to sum
     **/
     _sum?: InvoiceSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: InvoiceMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Select which fields to find the maximum value
     **/
     _max?: InvoiceMaxAggregateInputType
@@ -23341,6 +23343,7 @@ export namespace Prisma {
     status: string
     date: Date
     dueDate: Date
+    details: JsonValue | null
     createdAt: Date
     updatedAt: Date
     _count: InvoiceCountAggregateOutputType | null
@@ -23382,6 +23385,7 @@ export namespace Prisma {
     status?: boolean
     date?: boolean
     dueDate?: boolean
+    details?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     document?: boolean | DocumentDefaultArgs<ExtArgs>
@@ -23409,6 +23413,7 @@ export namespace Prisma {
     status?: boolean
     date?: boolean
     dueDate?: boolean
+    details?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     document?: boolean | DocumentDefaultArgs<ExtArgs>
@@ -23433,6 +23438,7 @@ export namespace Prisma {
     status?: boolean
     date?: boolean
     dueDate?: boolean
+    details?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     document?: boolean | DocumentDefaultArgs<ExtArgs>
@@ -23457,11 +23463,12 @@ export namespace Prisma {
     status?: boolean
     date?: boolean
     dueDate?: boolean
+    details?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "customerId" | "counter" | "referenceNumber" | "subject" | "currency" | "exchangeRate" | "subtotal" | "discountType" | "discountValue" | "discountAmount" | "taxTotal" | "hasAdjustments" | "total" | "status" | "date" | "dueDate" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
+  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "customerId" | "counter" | "referenceNumber" | "subject" | "currency" | "exchangeRate" | "subtotal" | "discountType" | "discountValue" | "discountAmount" | "taxTotal" | "hasAdjustments" | "total" | "status" | "date" | "dueDate" | "details" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
   export type InvoiceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     document?: boolean | DocumentDefaultArgs<ExtArgs>
     customer?: boolean | PartyDefaultArgs<ExtArgs>
@@ -23504,6 +23511,7 @@ export namespace Prisma {
       status: string
       date: Date
       dueDate: Date
+      details: Prisma.JsonValue | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["invoice"]>
@@ -23585,13 +23593,13 @@ export namespace Prisma {
      * @example
      * // Get all Invoices
      * const invoices = await prisma.invoice.findMany()
-     *
+     * 
      * // Get first 10 Invoices
      * const invoices = await prisma.invoice.findMany({ take: 10 })
-     *
+     * 
      * // Only select the `id`
      * const invoiceWithIdOnly = await prisma.invoice.findMany({ select: { id: true } })
-     *
+     * 
      */
     findMany<T extends InvoiceFindManyArgs>(args?: SelectSubset<T, InvoiceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
@@ -23605,7 +23613,7 @@ export namespace Prisma {
      *     // ... data to create a Invoice
      *   }
      * })
-     *
+     * 
      */
     create<T extends InvoiceCreateArgs>(args: SelectSubset<T, InvoiceCreateArgs<ExtArgs>>): Prisma__InvoiceClient<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -23619,7 +23627,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *
+     *     
      */
     createMany<T extends InvoiceCreateManyArgs>(args?: SelectSubset<T, InvoiceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -23633,7 +23641,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *
+     * 
      * // Create many Invoices and only return the `id`
      * const invoiceWithIdOnly = await prisma.invoice.createManyAndReturn({
      *   select: { id: true },
@@ -23643,7 +23651,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     *
+     * 
      */
     createManyAndReturn<T extends InvoiceCreateManyAndReturnArgs>(args?: SelectSubset<T, InvoiceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
@@ -23657,7 +23665,7 @@ export namespace Prisma {
      *     // ... filter to delete one Invoice
      *   }
      * })
-     *
+     * 
      */
     delete<T extends InvoiceDeleteArgs>(args: SelectSubset<T, InvoiceDeleteArgs<ExtArgs>>): Prisma__InvoiceClient<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -23674,7 +23682,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     *
+     * 
      */
     update<T extends InvoiceUpdateArgs>(args: SelectSubset<T, InvoiceUpdateArgs<ExtArgs>>): Prisma__InvoiceClient<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -23688,7 +23696,7 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     *
+     * 
      */
     deleteMany<T extends InvoiceDeleteManyArgs>(args?: SelectSubset<T, InvoiceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -23707,7 +23715,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     *
+     * 
      */
     updateMany<T extends InvoiceUpdateManyArgs>(args: SelectSubset<T, InvoiceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -23724,7 +23732,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *
+     * 
      * // Update zero or more Invoices and only return the `id`
      * const invoiceWithIdOnly = await prisma.invoice.updateManyAndReturn({
      *   select: { id: true },
@@ -23737,7 +23745,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     *
+     * 
      */
     updateManyAndReturn<T extends InvoiceUpdateManyAndReturnArgs>(args: SelectSubset<T, InvoiceUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
@@ -23826,7 +23834,7 @@ export namespace Prisma {
      *     _all: true
      *   },
      * })
-     *
+     * 
     **/
     groupBy<
       T extends InvoiceGroupByArgs,
@@ -23950,10 +23958,11 @@ export namespace Prisma {
     readonly status: FieldRef<"Invoice", 'String'>
     readonly date: FieldRef<"Invoice", 'DateTime'>
     readonly dueDate: FieldRef<"Invoice", 'DateTime'>
+    readonly details: FieldRef<"Invoice", 'Json'>
     readonly createdAt: FieldRef<"Invoice", 'DateTime'>
     readonly updatedAt: FieldRef<"Invoice", 'DateTime'>
   }
-
+    
 
   // Custom InputTypes
   /**
@@ -24022,31 +24031,31 @@ export namespace Prisma {
     where?: InvoiceWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     *
+     * 
      * Determine the order of Invoices to fetch.
      */
     orderBy?: InvoiceOrderByWithRelationInput | InvoiceOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     *
+     * 
      * Sets the position for searching for Invoices.
      */
     cursor?: InvoiceWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Take `±n` Invoices from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Skip the first `n` Invoices.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     *
+     * 
      * Filter by unique combinations of Invoices.
      */
     distinct?: InvoiceScalarFieldEnum | InvoiceScalarFieldEnum[]
@@ -24074,31 +24083,31 @@ export namespace Prisma {
     where?: InvoiceWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     *
+     * 
      * Determine the order of Invoices to fetch.
      */
     orderBy?: InvoiceOrderByWithRelationInput | InvoiceOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     *
+     * 
      * Sets the position for searching for Invoices.
      */
     cursor?: InvoiceWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Take `±n` Invoices from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Skip the first `n` Invoices.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     *
+     * 
      * Filter by unique combinations of Invoices.
      */
     distinct?: InvoiceScalarFieldEnum | InvoiceScalarFieldEnum[]
@@ -24126,31 +24135,31 @@ export namespace Prisma {
     where?: InvoiceWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     *
+     * 
      * Determine the order of Invoices to fetch.
      */
     orderBy?: InvoiceOrderByWithRelationInput | InvoiceOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     *
+     * 
      * Sets the position for listing Invoices.
      */
     cursor?: InvoiceWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Take `±n` Invoices from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Skip the first `n` Invoices.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     *
+     * 
      * Filter by unique combinations of Invoices.
      */
     distinct?: InvoiceScalarFieldEnum | InvoiceScalarFieldEnum[]
@@ -24511,55 +24520,55 @@ export namespace Prisma {
     where?: InvoiceAdjustmentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     *
+     * 
      * Determine the order of InvoiceAdjustments to fetch.
      */
     orderBy?: InvoiceAdjustmentOrderByWithRelationInput | InvoiceAdjustmentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     *
+     * 
      * Sets the start position
      */
     cursor?: InvoiceAdjustmentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Take `±n` InvoiceAdjustments from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Skip the first `n` InvoiceAdjustments.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Count returned InvoiceAdjustments
     **/
     _count?: true | InvoiceAdjustmentCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Select which fields to average
     **/
     _avg?: InvoiceAdjustmentAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Select which fields to sum
     **/
     _sum?: InvoiceAdjustmentSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: InvoiceAdjustmentMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Select which fields to find the maximum value
     **/
     _max?: InvoiceAdjustmentMaxAggregateInputType
@@ -24759,13 +24768,13 @@ export namespace Prisma {
      * @example
      * // Get all InvoiceAdjustments
      * const invoiceAdjustments = await prisma.invoiceAdjustment.findMany()
-     *
+     * 
      * // Get first 10 InvoiceAdjustments
      * const invoiceAdjustments = await prisma.invoiceAdjustment.findMany({ take: 10 })
-     *
+     * 
      * // Only select the `id`
      * const invoiceAdjustmentWithIdOnly = await prisma.invoiceAdjustment.findMany({ select: { id: true } })
-     *
+     * 
      */
     findMany<T extends InvoiceAdjustmentFindManyArgs>(args?: SelectSubset<T, InvoiceAdjustmentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoiceAdjustmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
@@ -24779,7 +24788,7 @@ export namespace Prisma {
      *     // ... data to create a InvoiceAdjustment
      *   }
      * })
-     *
+     * 
      */
     create<T extends InvoiceAdjustmentCreateArgs>(args: SelectSubset<T, InvoiceAdjustmentCreateArgs<ExtArgs>>): Prisma__InvoiceAdjustmentClient<$Result.GetResult<Prisma.$InvoiceAdjustmentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -24793,7 +24802,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *
+     *     
      */
     createMany<T extends InvoiceAdjustmentCreateManyArgs>(args?: SelectSubset<T, InvoiceAdjustmentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -24807,7 +24816,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *
+     * 
      * // Create many InvoiceAdjustments and only return the `id`
      * const invoiceAdjustmentWithIdOnly = await prisma.invoiceAdjustment.createManyAndReturn({
      *   select: { id: true },
@@ -24817,7 +24826,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     *
+     * 
      */
     createManyAndReturn<T extends InvoiceAdjustmentCreateManyAndReturnArgs>(args?: SelectSubset<T, InvoiceAdjustmentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoiceAdjustmentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
@@ -24831,7 +24840,7 @@ export namespace Prisma {
      *     // ... filter to delete one InvoiceAdjustment
      *   }
      * })
-     *
+     * 
      */
     delete<T extends InvoiceAdjustmentDeleteArgs>(args: SelectSubset<T, InvoiceAdjustmentDeleteArgs<ExtArgs>>): Prisma__InvoiceAdjustmentClient<$Result.GetResult<Prisma.$InvoiceAdjustmentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -24848,7 +24857,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     *
+     * 
      */
     update<T extends InvoiceAdjustmentUpdateArgs>(args: SelectSubset<T, InvoiceAdjustmentUpdateArgs<ExtArgs>>): Prisma__InvoiceAdjustmentClient<$Result.GetResult<Prisma.$InvoiceAdjustmentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -24862,7 +24871,7 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     *
+     * 
      */
     deleteMany<T extends InvoiceAdjustmentDeleteManyArgs>(args?: SelectSubset<T, InvoiceAdjustmentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -24881,7 +24890,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     *
+     * 
      */
     updateMany<T extends InvoiceAdjustmentUpdateManyArgs>(args: SelectSubset<T, InvoiceAdjustmentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -24898,7 +24907,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *
+     * 
      * // Update zero or more InvoiceAdjustments and only return the `id`
      * const invoiceAdjustmentWithIdOnly = await prisma.invoiceAdjustment.updateManyAndReturn({
      *   select: { id: true },
@@ -24911,7 +24920,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     *
+     * 
      */
     updateManyAndReturn<T extends InvoiceAdjustmentUpdateManyAndReturnArgs>(args: SelectSubset<T, InvoiceAdjustmentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoiceAdjustmentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
@@ -25000,7 +25009,7 @@ export namespace Prisma {
      *     _all: true
      *   },
      * })
-     *
+     * 
     **/
     groupBy<
       T extends InvoiceAdjustmentGroupByArgs,
@@ -25111,7 +25120,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"InvoiceAdjustment", 'DateTime'>
     readonly updatedAt: FieldRef<"InvoiceAdjustment", 'DateTime'>
   }
-
+    
 
   // Custom InputTypes
   /**
@@ -25180,31 +25189,31 @@ export namespace Prisma {
     where?: InvoiceAdjustmentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     *
+     * 
      * Determine the order of InvoiceAdjustments to fetch.
      */
     orderBy?: InvoiceAdjustmentOrderByWithRelationInput | InvoiceAdjustmentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     *
+     * 
      * Sets the position for searching for InvoiceAdjustments.
      */
     cursor?: InvoiceAdjustmentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Take `±n` InvoiceAdjustments from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Skip the first `n` InvoiceAdjustments.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     *
+     * 
      * Filter by unique combinations of InvoiceAdjustments.
      */
     distinct?: InvoiceAdjustmentScalarFieldEnum | InvoiceAdjustmentScalarFieldEnum[]
@@ -25232,31 +25241,31 @@ export namespace Prisma {
     where?: InvoiceAdjustmentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     *
+     * 
      * Determine the order of InvoiceAdjustments to fetch.
      */
     orderBy?: InvoiceAdjustmentOrderByWithRelationInput | InvoiceAdjustmentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     *
+     * 
      * Sets the position for searching for InvoiceAdjustments.
      */
     cursor?: InvoiceAdjustmentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Take `±n` InvoiceAdjustments from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Skip the first `n` InvoiceAdjustments.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     *
+     * 
      * Filter by unique combinations of InvoiceAdjustments.
      */
     distinct?: InvoiceAdjustmentScalarFieldEnum | InvoiceAdjustmentScalarFieldEnum[]
@@ -25284,31 +25293,31 @@ export namespace Prisma {
     where?: InvoiceAdjustmentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     *
+     * 
      * Determine the order of InvoiceAdjustments to fetch.
      */
     orderBy?: InvoiceAdjustmentOrderByWithRelationInput | InvoiceAdjustmentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     *
+     * 
      * Sets the position for listing InvoiceAdjustments.
      */
     cursor?: InvoiceAdjustmentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Take `±n` InvoiceAdjustments from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Skip the first `n` InvoiceAdjustments.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     *
+     * 
      * Filter by unique combinations of InvoiceAdjustments.
      */
     distinct?: InvoiceAdjustmentScalarFieldEnum | InvoiceAdjustmentScalarFieldEnum[]
@@ -25715,55 +25724,55 @@ export namespace Prisma {
     where?: InvoiceItemWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     *
+     * 
      * Determine the order of InvoiceItems to fetch.
      */
     orderBy?: InvoiceItemOrderByWithRelationInput | InvoiceItemOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     *
+     * 
      * Sets the start position
      */
     cursor?: InvoiceItemWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Take `±n` InvoiceItems from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Skip the first `n` InvoiceItems.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Count returned InvoiceItems
     **/
     _count?: true | InvoiceItemCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Select which fields to average
     **/
     _avg?: InvoiceItemAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Select which fields to sum
     **/
     _sum?: InvoiceItemSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: InvoiceItemMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
+     * 
      * Select which fields to find the maximum value
     **/
     _max?: InvoiceItemMaxAggregateInputType
@@ -26029,13 +26038,13 @@ export namespace Prisma {
      * @example
      * // Get all InvoiceItems
      * const invoiceItems = await prisma.invoiceItem.findMany()
-     *
+     * 
      * // Get first 10 InvoiceItems
      * const invoiceItems = await prisma.invoiceItem.findMany({ take: 10 })
-     *
+     * 
      * // Only select the `id`
      * const invoiceItemWithIdOnly = await prisma.invoiceItem.findMany({ select: { id: true } })
-     *
+     * 
      */
     findMany<T extends InvoiceItemFindManyArgs>(args?: SelectSubset<T, InvoiceItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoiceItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
@@ -26049,7 +26058,7 @@ export namespace Prisma {
      *     // ... data to create a InvoiceItem
      *   }
      * })
-     *
+     * 
      */
     create<T extends InvoiceItemCreateArgs>(args: SelectSubset<T, InvoiceItemCreateArgs<ExtArgs>>): Prisma__InvoiceItemClient<$Result.GetResult<Prisma.$InvoiceItemPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -26063,7 +26072,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *
+     *     
      */
     createMany<T extends InvoiceItemCreateManyArgs>(args?: SelectSubset<T, InvoiceItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -26077,7 +26086,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *
+     * 
      * // Create many InvoiceItems and only return the `id`
      * const invoiceItemWithIdOnly = await prisma.invoiceItem.createManyAndReturn({
      *   select: { id: true },
@@ -26087,7 +26096,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     *
+     * 
      */
     createManyAndReturn<T extends InvoiceItemCreateManyAndReturnArgs>(args?: SelectSubset<T, InvoiceItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoiceItemPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
@@ -26101,7 +26110,7 @@ export namespace Prisma {
      *     // ... filter to delete one InvoiceItem
      *   }
      * })
-     *
+     * 
      */
     delete<T extends InvoiceItemDeleteArgs>(args: SelectSubset<T, InvoiceItemDeleteArgs<ExtArgs>>): Prisma__InvoiceItemClient<$Result.GetResult<Prisma.$InvoiceItemPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -26118,7 +26127,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     *
+     * 
      */
     update<T extends InvoiceItemUpdateArgs>(args: SelectSubset<T, InvoiceItemUpdateArgs<ExtArgs>>): Prisma__InvoiceItemClient<$Result.GetResult<Prisma.$InvoiceItemPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
@@ -26132,7 +26141,7 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     *
+     * 
      */
     deleteMany<T extends InvoiceItemDeleteManyArgs>(args?: SelectSubset<T, InvoiceItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -26151,7 +26160,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   }
      * })
-     *
+     * 
      */
     updateMany<T extends InvoiceItemUpdateManyArgs>(args: SelectSubset<T, InvoiceItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
@@ -26168,7 +26177,7 @@ export namespace Prisma {
      *     // ... provide data here
      *   ]
      * })
-     *
+     * 
      * // Update zero or more InvoiceItems and only return the `id`
      * const invoiceItemWithIdOnly = await prisma.invoiceItem.updateManyAndReturn({
      *   select: { id: true },
@@ -26181,7 +26190,7 @@ export namespace Prisma {
      * })
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     *
+     * 
      */
     updateManyAndReturn<T extends InvoiceItemUpdateManyAndReturnArgs>(args: SelectSubset<T, InvoiceItemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoiceItemPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
@@ -26270,7 +26279,7 @@ export namespace Prisma {
      *     _all: true
      *   },
      * })
-     *
+     * 
     **/
     groupBy<
       T extends InvoiceItemGroupByArgs,
@@ -26392,7 +26401,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"InvoiceItem", 'DateTime'>
     readonly updatedAt: FieldRef<"InvoiceItem", 'DateTime'>
   }
-
+    
 
   // Custom InputTypes
   /**
@@ -26461,31 +26470,31 @@ export namespace Prisma {
     where?: InvoiceItemWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     *
+     * 
      * Determine the order of InvoiceItems to fetch.
      */
     orderBy?: InvoiceItemOrderByWithRelationInput | InvoiceItemOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     *
+     * 
      * Sets the position for searching for InvoiceItems.
      */
     cursor?: InvoiceItemWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Take `±n` InvoiceItems from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Skip the first `n` InvoiceItems.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     *
+     * 
      * Filter by unique combinations of InvoiceItems.
      */
     distinct?: InvoiceItemScalarFieldEnum | InvoiceItemScalarFieldEnum[]
@@ -26513,31 +26522,31 @@ export namespace Prisma {
     where?: InvoiceItemWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     *
+     * 
      * Determine the order of InvoiceItems to fetch.
      */
     orderBy?: InvoiceItemOrderByWithRelationInput | InvoiceItemOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     *
+     * 
      * Sets the position for searching for InvoiceItems.
      */
     cursor?: InvoiceItemWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Take `±n` InvoiceItems from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Skip the first `n` InvoiceItems.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     *
+     * 
      * Filter by unique combinations of InvoiceItems.
      */
     distinct?: InvoiceItemScalarFieldEnum | InvoiceItemScalarFieldEnum[]
@@ -26565,31 +26574,31 @@ export namespace Prisma {
     where?: InvoiceItemWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     *
+     * 
      * Determine the order of InvoiceItems to fetch.
      */
     orderBy?: InvoiceItemOrderByWithRelationInput | InvoiceItemOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     *
+     * 
      * Sets the position for listing InvoiceItems.
      */
     cursor?: InvoiceItemWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Take `±n` InvoiceItems from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     *
+     * 
      * Skip the first `n` InvoiceItems.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     *
+     * 
      * Filter by unique combinations of InvoiceItems.
      */
     distinct?: InvoiceItemScalarFieldEnum | InvoiceItemScalarFieldEnum[]
@@ -27103,6 +27112,7 @@ export namespace Prisma {
     status: 'status',
     date: 'date',
     dueDate: 'dueDate',
+    details: 'details',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -27202,175 +27212,175 @@ export namespace Prisma {
    * Reference to a field of type 'String'
    */
   export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String'>
-
+    
 
 
   /**
    * Reference to a field of type 'String[]'
    */
   export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
-
+    
 
 
   /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
-
+    
 
 
   /**
    * Reference to a field of type 'DateTime[]'
    */
   export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
-
+    
 
 
   /**
    * Reference to a field of type 'Json'
    */
   export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-
+    
 
 
   /**
    * Reference to a field of type 'QueryMode'
    */
   export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-
+    
 
 
   /**
    * Reference to a field of type 'AccountType'
    */
   export type EnumAccountTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AccountType'>
-
+    
 
 
   /**
    * Reference to a field of type 'AccountType[]'
    */
   export type ListEnumAccountTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AccountType[]'>
-
+    
 
 
   /**
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-
+    
 
 
   /**
    * Reference to a field of type 'Decimal'
    */
   export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
-
+    
 
 
   /**
    * Reference to a field of type 'Decimal[]'
    */
   export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
-
+    
 
 
   /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-
+    
 
 
   /**
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-
+    
 
 
   /**
    * Reference to a field of type 'ProjectionType'
    */
   export type EnumProjectionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectionType'>
-
+    
 
 
   /**
    * Reference to a field of type 'ProjectionType[]'
    */
   export type ListEnumProjectionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectionType[]'>
-
+    
 
 
   /**
    * Reference to a field of type 'ProjectionCertainty'
    */
   export type EnumProjectionCertaintyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectionCertainty'>
-
+    
 
 
   /**
    * Reference to a field of type 'ProjectionCertainty[]'
    */
   export type ListEnumProjectionCertaintyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectionCertainty[]'>
-
+    
 
 
   /**
    * Reference to a field of type 'ProjectionStatus'
    */
   export type EnumProjectionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectionStatus'>
-
+    
 
 
   /**
    * Reference to a field of type 'ProjectionStatus[]'
    */
   export type ListEnumProjectionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectionStatus[]'>
-
+    
 
 
   /**
    * Reference to a field of type 'ProjectionRecurrence'
    */
   export type EnumProjectionRecurrenceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectionRecurrence'>
-
+    
 
 
   /**
    * Reference to a field of type 'ProjectionRecurrence[]'
    */
   export type ListEnumProjectionRecurrenceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectionRecurrence[]'>
-
+    
 
 
   /**
    * Reference to a field of type 'ActivityStockType'
    */
   export type EnumActivityStockTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ActivityStockType'>
-
+    
 
 
   /**
    * Reference to a field of type 'ActivityStockType[]'
    */
   export type ListEnumActivityStockTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ActivityStockType[]'>
-
+    
 
 
   /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-
+    
 
 
   /**
    * Reference to a field of type 'Float[]'
    */
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
-
+    
   /**
    * Deep Input Types
    */
@@ -28798,6 +28808,7 @@ export namespace Prisma {
     status?: StringFilter<"Invoice"> | string
     date?: DateTimeFilter<"Invoice"> | Date | string
     dueDate?: DateTimeFilter<"Invoice"> | Date | string
+    details?: JsonNullableFilter<"Invoice">
     createdAt?: DateTimeFilter<"Invoice"> | Date | string
     updatedAt?: DateTimeFilter<"Invoice"> | Date | string
     document?: XOR<DocumentScalarRelationFilter, DocumentWhereInput>
@@ -28824,6 +28835,7 @@ export namespace Prisma {
     status?: SortOrder
     date?: SortOrder
     dueDate?: SortOrder
+    details?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     document?: DocumentOrderByWithRelationInput
@@ -28853,6 +28865,7 @@ export namespace Prisma {
     status?: StringFilter<"Invoice"> | string
     date?: DateTimeFilter<"Invoice"> | Date | string
     dueDate?: DateTimeFilter<"Invoice"> | Date | string
+    details?: JsonNullableFilter<"Invoice">
     createdAt?: DateTimeFilter<"Invoice"> | Date | string
     updatedAt?: DateTimeFilter<"Invoice"> | Date | string
     document?: XOR<DocumentScalarRelationFilter, DocumentWhereInput>
@@ -28879,6 +28892,7 @@ export namespace Prisma {
     status?: SortOrder
     date?: SortOrder
     dueDate?: SortOrder
+    details?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: InvoiceCountOrderByAggregateInput
@@ -28909,6 +28923,7 @@ export namespace Prisma {
     status?: StringWithAggregatesFilter<"Invoice"> | string
     date?: DateTimeWithAggregatesFilter<"Invoice"> | Date | string
     dueDate?: DateTimeWithAggregatesFilter<"Invoice"> | Date | string
+    details?: JsonNullableWithAggregatesFilter<"Invoice">
     createdAt?: DateTimeWithAggregatesFilter<"Invoice"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Invoice"> | Date | string
   }
@@ -30649,6 +30664,7 @@ export namespace Prisma {
     status: string
     date: Date | string
     dueDate: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     document: DocumentCreateNestedOneWithoutInvoiceInput
@@ -30675,6 +30691,7 @@ export namespace Prisma {
     status: string
     date: Date | string
     dueDate: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     adjustments?: InvoiceAdjustmentUncheckedCreateNestedManyWithoutInvoiceInput
@@ -30697,6 +30714,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     document?: DocumentUpdateOneRequiredWithoutInvoiceNestedInput
@@ -30723,6 +30741,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     adjustments?: InvoiceAdjustmentUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -30747,6 +30766,7 @@ export namespace Prisma {
     status: string
     date: Date | string
     dueDate: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -30767,6 +30787,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -30789,6 +30810,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -32379,6 +32401,7 @@ export namespace Prisma {
     status?: SortOrder
     date?: SortOrder
     dueDate?: SortOrder
+    details?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -35488,6 +35511,7 @@ export namespace Prisma {
     status: string
     date: Date | string
     dueDate: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     document: DocumentCreateNestedOneWithoutInvoiceInput
@@ -35512,6 +35536,7 @@ export namespace Prisma {
     status: string
     date: Date | string
     dueDate: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     adjustments?: InvoiceAdjustmentUncheckedCreateNestedManyWithoutInvoiceInput
@@ -35733,6 +35758,7 @@ export namespace Prisma {
     status?: StringFilter<"Invoice"> | string
     date?: DateTimeFilter<"Invoice"> | Date | string
     dueDate?: DateTimeFilter<"Invoice"> | Date | string
+    details?: JsonNullableFilter<"Invoice">
     createdAt?: DateTimeFilter<"Invoice"> | Date | string
     updatedAt?: DateTimeFilter<"Invoice"> | Date | string
   }
@@ -36774,6 +36800,7 @@ export namespace Prisma {
     status: string
     date: Date | string
     dueDate: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     customer: PartyCreateNestedOneWithoutInvoicesInput
@@ -36798,6 +36825,7 @@ export namespace Prisma {
     status: string
     date: Date | string
     dueDate: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     adjustments?: InvoiceAdjustmentUncheckedCreateNestedManyWithoutInvoiceInput
@@ -36932,6 +36960,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: PartyUpdateOneRequiredWithoutInvoicesNestedInput
@@ -36956,6 +36985,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     adjustments?: InvoiceAdjustmentUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -37716,6 +37746,7 @@ export namespace Prisma {
     status: string
     date: Date | string
     dueDate: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     document: DocumentCreateNestedOneWithoutInvoiceInput
@@ -37741,6 +37772,7 @@ export namespace Prisma {
     status: string
     date: Date | string
     dueDate: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput
@@ -37778,6 +37810,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     document?: DocumentUpdateOneRequiredWithoutInvoiceNestedInput
@@ -37803,6 +37836,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -37824,6 +37858,7 @@ export namespace Prisma {
     status: string
     date: Date | string
     dueDate: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     document: DocumentCreateNestedOneWithoutInvoiceInput
@@ -37849,6 +37884,7 @@ export namespace Prisma {
     status: string
     date: Date | string
     dueDate: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     adjustments?: InvoiceAdjustmentUncheckedCreateNestedManyWithoutInvoiceInput
@@ -37886,6 +37922,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     document?: DocumentUpdateOneRequiredWithoutInvoiceNestedInput
@@ -37911,6 +37948,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     adjustments?: InvoiceAdjustmentUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -38539,6 +38577,7 @@ export namespace Prisma {
     status: string
     date: Date | string
     dueDate: Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -38677,6 +38716,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     document?: DocumentUpdateOneRequiredWithoutInvoiceNestedInput
@@ -38701,6 +38741,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     adjustments?: InvoiceAdjustmentUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -38724,6 +38765,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

@@ -5,10 +5,10 @@ import { redirect } from 'next/navigation';
 ::neup.documentation::legacy-transaction-invoice-page
 ::function InvoicePage(props)
 
-Redirects the legacy transaction invoice route to the generic print route.
+Redirects to the invoice document list. Legacy transaction IDs are not invoice IDs.
 
 ::param external props
-::datatype { params: { id: string } }
+::datatype { params: Promise<{ id: string }> }
 
 The route parameters provided by Next.js.
 
@@ -17,8 +17,9 @@ The route parameters provided by Next.js.
 
 ::end
 */
-const InvoicePage = ({ params }: { params: { id: string } }) => {
-    redirect(`/print?type=transaction&id=${encodeURIComponent(params.id)}`);
+const InvoicePage = async ({ params }: { params: Promise<{ id: string }> }) => {
+    const { id } = await params;
+    redirect(`/documents/sales?type=invoice&legacyTransaction=${encodeURIComponent(id)}`);
 };
 
 export default InvoicePage;

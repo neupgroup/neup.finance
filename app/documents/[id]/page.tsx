@@ -3,7 +3,7 @@
 import { notFound } from 'next/navigation';
 import { useParams, useSearchParams } from 'next/navigation';
 import { TransactionPrintPage } from '@/app/print/transaction-print-page';
-import QuotationDocumentView from './quotation-document-view';
+import SalesDocumentView from './sales-document-view';
 
 const documentTypes = new Set([
   'quotation',
@@ -22,6 +22,6 @@ export default function DocumentViewPage() {
 
   if (!params.id || !documentTypes.has(type)) notFound();
 
-  if (type === 'quotation') return <QuotationDocumentView id={params.id} />;
+  if (type === 'quotation' || type === 'invoice') return <SalesDocumentView id={params.id} type={type} />;
   return <TransactionPrintPage id={params.id} type={type} />;
 }
