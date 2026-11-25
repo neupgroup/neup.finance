@@ -1,33 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@neup/core/database/prisma';
 import { canAccess, getProjectAccess } from '@/server/access';
+import { createFinAccountTransactionForProject, getFinAccountTransactionHistory } from '@/services/fin-account-transactions';
 
 type RouteContext = { params: Promise<{ id: string }> };
-
-// Return database decimals and dates in a stable JSON-friendly format.
-function serializeAccountTransaction(transaction: {
-  id: string;
-  title: string;
-  description: string | null;
-  finAccountId: string;
-  currency: string;
-  amount: unknown;
-  direction: string;
-  details: unknown;
-  activityOn: Date;
-}) {
-  return {
-    id: transaction.id,
-    title: transaction.title,
-    description: transaction.description,
-    finAccountId: transaction.finAccountId,
-    currency: transaction.currency,
-    amount: Number(transaction.amount),
-    direction: transaction.direction,
-    details: transaction.details,
-    activityOn: transaction.activityOn.toISOString().slice(0, 10),
-  };
-}
 
 // List account transactions after confirming the account belongs to the active project.
 export async function GET(request: NextRequest, context: RouteContext) {
@@ -37,14 +12,9 @@ export async function GET(request: NextRequest, context: RouteContext) {
   }
 
   const { id } = await context.params;
-  const account = await prisma.assetGroup.findFirst({ where: { id, projectId: access.projectId }, select: { id: true } });
-  if (!account) return NextResponse.json({ error: 'Account not found' }, { status: 404 });
-
-  const transactions = await prisma.finAccountTransaction.findMany({
-    where: { finAccountId: id },
-    orderBy: [{ activityOn: 'desc' }, { id: 'desc' }],
-  });
-  return NextResponse.json(transactions.map(serializeAccountTransaction));
+  const transactions = await getFinAccountTransactionHistory(access.projectId, id);
+  if (!transactions) return NextResponse.json({ error: 'Account not found' }, { status: 404 });
+  return NextResponse.json(transactions);
 }
 
 // Create a transaction directly against the selected cash or bank account.
@@ -58,28 +28,28 @@ export async function POST(request: NextRequest, context: RouteContext) {
   const body = await request.json().catch(() => null);
   const title = typeof body?.title === 'string' ? body.title.trim() : '';
   const currency = typeof body?.currency === 'string' ? body.currency.trim().toUpperCase() : '';
-  const amount = Number(body?.amount);
-  const direction = body?.direction;
-  const activityOn = typeof body?.activityOn === 'string' ? new Date(`${body.activityOn}T00:00:00.000Z`) : null;
+  const requestedAmount = Number(body?.amount);
+  const signedAmount = body?.direction === 'out' ? -Math.abs(requestedAmount) : body?.direction === 'in' ? Math.abs(requestedAmount) : requestedAmount;
+  const activityOn = typeof body?.activityOn === 'string' ? body.activityOn : '';
 
-  if (!title || !currency || !Number.isFinite(amount) || amount <= 0 || !['in', 'out'].includes(direction) || !activityOn || Number.isNaN(activityOn.getTime())) {
+  if (!title || !currency || !Number.isFinite(signedAmount) || signedAmount === 0 || !activityOn) {
     return NextResponse.json({ error: 'Invalid transaction details' }, { status: 400 });
   }
 
-  const account = await prisma.assetGroup.findFirst({ where: { id, projectId: access.projectId }, select: { id: true } });
-  if (!account) return NextResponse.json({ error: 'Account not found' }, { status: 404 });
-
-  const transaction = await prisma.finAccountTransaction.create({
-    data: {
+  try {
+    const transaction = await createFinAccountTransactionForProject(access.projectId, id, {
       title,
-      description: typeof body.description === 'string' && body.description.trim() ? body.description.trim() : null,
-      finAccountId: id,
+      description: typeof body.description === 'string' ? body.description : undefined,
       currency,
-      amount,
-      direction,
-      details: body.details ?? undefined,
+      amount: Math.abs(signedAmount),
+      direction: signedAmount > 0 ? 'in' : 'out',
       activityOn,
-    },
-  });
-  return NextResponse.json(serializeAccountTransaction(transaction), { status: 201 });
+      partyId: typeof body.partyId === 'string' && body.partyId ? body.partyId : null,
+      details: body.details,
+    });
+    if (!transaction) return NextResponse.json({ error: 'Account not found' }, { status: 404 });
+    return NextResponse.json(transaction, { status: 201 });
+  } catch (error) {
+    return NextResponse.json({ error: error instanceof Error ? error.message : 'Invalid transaction details' }, { status: 400 });
+  }
 }

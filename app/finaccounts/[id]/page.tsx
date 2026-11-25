@@ -10,38 +10,34 @@ transactions against that selected account.
 ::end
 */
 
-import Link from 'next/link';
 import { useEffect, useState, type FormEvent } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
-import { ArrowLeft, Loader, PlusCircle, TrendingDown, TrendingUp } from 'lucide-react';
+import { ArrowLeft, FileUp, Loader, PlusCircle, TrendingDown, TrendingUp } from 'lucide-react';
 import { Button } from '@neup/components/ui/button';
 import { LinkButton } from '@neup/components/ui/link-button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@neup/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@neup/components/ui/dialog';
 import { Input } from '@neup/components/ui/input';
+import { DateTimePicker } from '@neup/components/ui/date-time-picker';
 import { Label } from '@neup/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@neup/components/ui/select';
 import { useUser } from '@/core/providers/auth';
-import { createFinAccountTransaction, useFinAccountTransactions, useTransactionsList, useProjectBooks, type FinAccountTransaction } from '@/core/hooks/api';
+import { createFinAccountTransaction, useFinAccountTransactions, useTransactionsList, useProjectBooks, useParties, type FinAccountTransaction } from '@/core/hooks/api';
 import { useToast } from '@neup/core/hooks/useToast';
 import { Textarea } from '@neup/components/ui/textarea';
 import {
   currencyOptions,
   isCreditTransactionType,
-  transactionCategoryOptions,
-  transactionStatusOptions,
-  transactionTypeOptions,
   type Transaction,
-  type TransactionCategory,
-  type TransactionStatus,
-  type TransactionType,
 } from '@/core/lib/ledger';
 
 function formatDate(value: string) {
-  return new Date(value).toLocaleDateString('en-US', {
+  return new Date(value).toLocaleString('en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
   });
 }
 
@@ -69,10 +65,12 @@ export default function FinAccountPage() {
   const finAccountId = params.id;
   const projectId = searchParams.get('project')?.trim();
   const accountsHref = `/finaccounts${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
+  const importHref = `/finaccounts/${encodeURIComponent(finAccountId)}/import${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
 
   const { user, isUserLoading } = useUser();
   const { toast } = useToast();
   const { data: accounts, isLoading: areAccountsLoading } = useProjectBooks();
+  const { data: parties } = useParties();
   const { data: legacyTransactions, isLoading: areLegacyTransactionsLoading } = useTransactionsList(undefined, finAccountId);
   const { data: accountTransactions, isLoading: areAccountTransactionsLoading } = useFinAccountTransactions(finAccountId);
 
@@ -94,13 +92,10 @@ export default function FinAccountPage() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
-  const [transactionType, setTransactionType] = useState<TransactionType | ''>('');
-  const [category, setCategory] = useState<TransactionCategory | ''>('');
+  const [isDateTimePickerOpen, setIsDateTimePickerOpen] = useState(false);
   const [currency, setCurrency] = useState('');
   const [totalAmount, setTotalAmount] = useState<number | ''>('');
-  const [status, setStatus] = useState<TransactionStatus | ''>('');
-  const [recipient, setRecipient] = useState('');
-  const [dueOn, setDueOn] = useState('');
+  const [partyId, setPartyId] = useState('none');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const hasOpeningBalance = openingBalanceSaved || Boolean(accountTransactions?.some(isOpeningBalanceTransaction)) || Boolean(legacyTransactions?.some(isOpeningBalanceTransaction));
@@ -121,7 +116,7 @@ export default function FinAccountPage() {
       details: transaction.details as Record<string, unknown> | null,
       legacy: true as const,
     })),
-  ];
+  ].sort((left, right) => new Date(right.activityOn).getTime() - new Date(left.activityOn).getTime());
 
   // Save the initial balance as an opening entry in the account transaction table.
   const handleAddOpeningBalance = async (event: FormEvent) => {
@@ -167,35 +162,32 @@ export default function FinAccountPage() {
 
   const handleAddTransaction = async (e: FormEvent) => {
     e.preventDefault();
-    if (!user || !title || !date || !transactionType || !category || !currency || totalAmount === '' || !status) {
+    if (!user || !finAccount || !title.trim() || !date || !currency || totalAmount === '' || !Number.isFinite(totalAmount) || totalAmount === 0) {
       toast({
         name: 'app',
         state: 'error',
         title: 'Missing Fields',
-        description: 'Please fill out all required fields.',
+        description: 'Enter a title, date and time, currency, and a non-zero amount.',
       });
       return;
     }
 
     setIsSubmitting(true);
 
-    const total = typeof totalAmount === 'number' ? totalAmount : 0;
+    const signedAmount = typeof totalAmount === 'number' ? totalAmount : 0;
     try {
-      const direction = isCreditTransactionType(transactionType) ? 'in' : 'out';
       const saved = await createFinAccountTransaction(finAccountId, {
-        title,
+        title: title.trim(),
         description: description || undefined,
         currency,
-        amount: total,
-        direction,
-        activityOn: date,
-        details: { transactionType, category, status, recipient: recipient || null, dueOn: dueOn || null },
+        amount: Math.abs(signedAmount),
+        direction: signedAmount > 0 ? 'in' : 'out',
+        activityOn: new Date(date).toISOString(),
+        partyId: partyId === 'none' ? null : partyId,
       });
 
       setNewTransactions((current) => [saved, ...current]);
-      if (status !== 'canceled') {
-        setBalanceAdjustment((current) => current + (isCreditTransactionType(transactionType) ? total : -total));
-      }
+      setBalanceAdjustment((current) => current + signedAmount);
 
       toast({
         name: 'app',
@@ -206,12 +198,8 @@ export default function FinAccountPage() {
       setTitle('');
       setDescription('');
       setDate('');
-      setTransactionType('');
-      setCategory('');
       setTotalAmount('');
-      setStatus('');
-      setRecipient('');
-      setDueOn('');
+      setPartyId('none');
       setIsAddOpen(false);
     } catch (error) {
       console.error('Error creating transaction:', error);
@@ -256,6 +244,9 @@ export default function FinAccountPage() {
               </Card>
             )}
             <div className="flex flex-wrap justify-end gap-2">
+              <LinkButton href={importHref} variant="outline" aria-disabled={!finAccount || isLoading} tabIndex={!finAccount || isLoading ? -1 : undefined} className={!finAccount || isLoading ? 'pointer-events-none opacity-50' : undefined} preIcon={<FileUp className="mr-2 h-4 w-4" />}>
+                Import transactions
+              </LinkButton>
               {!hasOpeningBalance ? (
                 <Dialog open={isOpeningBalanceOpen} onOpenChange={setIsOpeningBalanceOpen}>
                   <DialogTrigger asChild>
@@ -309,13 +300,34 @@ export default function FinAccountPage() {
                     <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g., Stock purchase" required />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="description">Description</Label>
+                    <Label htmlFor="description">Description (optional)</Label>
                     <Textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Optional notes" />
                   </div>
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div className="space-y-2">
-                      <Label htmlFor="date">Date</Label>
-                      <Input id="date" type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
+                      <Label htmlFor="date">Transaction date and time</Label>
+                      <Button
+                        id="date"
+                        type="button"
+                        variant="outline"
+                        className="w-full justify-start text-left font-normal"
+                        aria-required="true"
+                        onClick={() => setIsDateTimePickerOpen(true)}
+                      >
+                        {date ? formatDate(new Date(date).toISOString()) : 'Choose date and time'}
+                      </Button>
+                      {isDateTimePickerOpen ? (
+                        <DateTimePicker
+                          kind="when"
+                          initialDate={date ? date.slice(0, 10) : ''}
+                          initialTime={date ? date.slice(11, 16) : ''}
+                          onClose={() => setIsDateTimePickerOpen(false)}
+                          onComplete={(selectedDate, selectedTime) => {
+                            if (selectedDate && selectedTime) setDate(`${selectedDate}T${selectedTime}`);
+                            setIsDateTimePickerOpen(false);
+                          }}
+                        />
+                      ) : null}
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="currency">Currency</Label>
@@ -335,74 +347,31 @@ export default function FinAccountPage() {
                   </div>
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div className="space-y-2">
-                      <Label htmlFor="type">Transaction Type</Label>
-                      <Select value={transactionType} onValueChange={(value) => setTransactionType(value as TransactionType)} required>
-                        <SelectTrigger id="type">
-                          <SelectValue placeholder="Select type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {transactionTypeOptions.map((option) => (
-                            <SelectItem key={option.value} value={option.value}>
-                              {option.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="category">Category</Label>
-                      <Select value={category} onValueChange={(value) => setCategory(value as TransactionCategory)} required>
-                        <SelectTrigger id="category">
-                          <SelectValue placeholder="Select category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {transactionCategoryOptions.map((option) => (
-                            <SelectItem key={option.value} value={option.value}>
-                              {option.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="space-y-2">
                       <Label htmlFor="amount">Amount</Label>
                       <Input
                         id="amount"
                         type="number"
-                        min="0"
                         step="0.01"
                         value={totalAmount}
                         onChange={(e) => setTotalAmount(e.target.value === '' ? '' : parseFloat(e.target.value))}
                         placeholder="0.00"
                         required
                       />
+                      <p className="text-xs text-muted-foreground">Positive for money in; negative for money out.</p>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="status">Status</Label>
-                      <Select value={status} onValueChange={(value) => setStatus(value as TransactionStatus)} required>
-                        <SelectTrigger id="status">
-                          <SelectValue placeholder="Select status" />
+                      <Label htmlFor="recipient-party">Recipient (party, optional)</Label>
+                      <Select value={partyId} onValueChange={setPartyId}>
+                        <SelectTrigger id="recipient-party">
+                          <SelectValue placeholder="No recipient" />
                         </SelectTrigger>
                         <SelectContent>
-                          {transactionStatusOptions.map((option) => (
-                            <SelectItem key={option.value} value={option.value}>
-                              {option.label}
-                            </SelectItem>
+                          <SelectItem value="none">No recipient</SelectItem>
+                          {(parties ?? []).map((party: { id: string; name: string; type: string }) => (
+                            <SelectItem key={party.id} value={party.id}>{party.name}</SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
-                    </div>
-                  </div>
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="space-y-2">
-                      <Label htmlFor="recipient">Recipient</Label>
-                      <Input id="recipient" value={recipient} onChange={(e) => setRecipient(e.target.value)} placeholder="Optional recipient" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="dueOn">Due On</Label>
-                      <Input id="dueOn" type="date" value={dueOn} onChange={(e) => setDueOn(e.target.value)} />
                     </div>
                   </div>
                   <DialogFooter>
@@ -418,6 +387,7 @@ export default function FinAccountPage() {
           </div>
         </div>
 
+        <h2 className="text-xl font-semibold tracking-tight">Transaction history</h2>
         {isLoading ? (
           <div className="flex items-center justify-center py-16 text-muted-foreground">
             <Loader className="mr-3 h-6 w-6 animate-spin" />
@@ -432,6 +402,7 @@ export default function FinAccountPage() {
               const details = transaction.details && typeof transaction.details === 'object' ? transaction.details as Record<string, unknown> : {};
               const activityLabel = isOpeningBalance ? 'Opening Balance' : String(details.transactionType ?? (transaction as FinAccountTransaction).direction ?? 'transaction');
               const activityCategory = String(details.category ?? (isOpeningBalance ? 'general' : ''));
+              const recipientName = transaction.party?.name ?? (typeof details.recipient === 'string' ? details.recipient : '');
 
               return (
                 <Card key={transaction.id}>
@@ -445,6 +416,8 @@ export default function FinAccountPage() {
                         <p className="text-sm text-muted-foreground">
                           {formatDate(transaction.activityOn)}{activityCategory ? ` · ${activityCategory}` : ''}
                         </p>
+                        {transaction.description ? <p className="text-sm text-muted-foreground">{transaction.description}</p> : null}
+                        {recipientName ? <p className="text-xs text-muted-foreground">Recipient: {recipientName}</p> : null}
                       </div>
                     </div>
                     <div className="text-right">

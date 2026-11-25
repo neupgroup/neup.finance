@@ -52,6 +52,7 @@
     "next": "16.4.6",
     "next-themes": "^0.4.0",
     "nprogress": "^0.2.0",
+    "pdf-parse": "^2.4.5",
     "react": "^19.3.0",
     "react-day-picker": "^9.11.3",
     "react-dom": "^19.3.0",
@@ -59,6 +60,8 @@
     "recharts": "^2.15.1",
     "tailwind-merge": "^3.0.1",
     "tailwindcss-animate": "^1.0.7",
+    "word-extractor": "^1.0.4",
+    "xlsx": "^0.18.5",
     "zod": "^3.24.2"
   },
   "devDependencies": {

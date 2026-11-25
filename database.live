@@ -75,11 +75,12 @@ Fields:
 > title: string;
 > description: string, nullable;
 > fin_account_id: string, references fin_book.id;
+> party_id: UUID, references party.id, nullable;
 > currency: string;
 > amount: decimal(18,2);
 > direction: string, values: in, out;
 > details: JSONB, nullable;
-> activity_on: date;
+> activity_on: timestamp with time zone;
 
 Table: fin_account, Model: FinAccount
 Fields:

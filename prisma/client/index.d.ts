@@ -3255,6 +3255,7 @@ export namespace Prisma {
     quotations: number
     invoices: number
     proformas: number
+    finAccountTransactions: number
   }
 
   export type PartyCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3263,6 +3264,7 @@ export namespace Prisma {
     quotations?: boolean | PartyCountOutputTypeCountQuotationsArgs
     invoices?: boolean | PartyCountOutputTypeCountInvoicesArgs
     proformas?: boolean | PartyCountOutputTypeCountProformasArgs
+    finAccountTransactions?: boolean | PartyCountOutputTypeCountFinAccountTransactionsArgs
   }
 
   // Custom InputTypes
@@ -3309,6 +3311,13 @@ export namespace Prisma {
    */
   export type PartyCountOutputTypeCountProformasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProformaWhereInput
+  }
+
+  /**
+   * PartyCountOutputType without action
+   */
+  export type PartyCountOutputTypeCountFinAccountTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FinAccountTransactionWhereInput
   }
 
 
@@ -8230,6 +8239,7 @@ export namespace Prisma {
     quotations?: boolean | Party$quotationsArgs<ExtArgs>
     invoices?: boolean | Party$invoicesArgs<ExtArgs>
     proformas?: boolean | Party$proformasArgs<ExtArgs>
+    finAccountTransactions?: boolean | Party$finAccountTransactionsArgs<ExtArgs>
     _count?: boolean | PartyCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["party"]>
 
@@ -8273,6 +8283,7 @@ export namespace Prisma {
     quotations?: boolean | Party$quotationsArgs<ExtArgs>
     invoices?: boolean | Party$invoicesArgs<ExtArgs>
     proformas?: boolean | Party$proformasArgs<ExtArgs>
+    finAccountTransactions?: boolean | Party$finAccountTransactionsArgs<ExtArgs>
     _count?: boolean | PartyCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type PartyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8294,6 +8305,7 @@ export namespace Prisma {
       quotations: Prisma.$DocumentQuotationPayload<ExtArgs>[]
       invoices: Prisma.$InvoicePayload<ExtArgs>[]
       proformas: Prisma.$ProformaPayload<ExtArgs>[]
+      finAccountTransactions: Prisma.$FinAccountTransactionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -8703,6 +8715,7 @@ export namespace Prisma {
     quotations<T extends Party$quotationsArgs<ExtArgs> = {}>(args?: Subset<T, Party$quotationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentQuotationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     invoices<T extends Party$invoicesArgs<ExtArgs> = {}>(args?: Subset<T, Party$invoicesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     proformas<T extends Party$proformasArgs<ExtArgs> = {}>(args?: Subset<T, Party$proformasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProformaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    finAccountTransactions<T extends Party$finAccountTransactionsArgs<ExtArgs> = {}>(args?: Subset<T, Party$finAccountTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FinAccountTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9256,6 +9269,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ProformaScalarFieldEnum | ProformaScalarFieldEnum[]
+  }
+
+  /**
+   * Party.finAccountTransactions
+   */
+  export type Party$finAccountTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FinAccountTransaction
+     */
+    select?: FinAccountTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FinAccountTransaction
+     */
+    omit?: FinAccountTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FinAccountTransactionInclude<ExtArgs> | null
+    where?: FinAccountTransactionWhereInput
+    orderBy?: FinAccountTransactionOrderByWithRelationInput | FinAccountTransactionOrderByWithRelationInput[]
+    cursor?: FinAccountTransactionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FinAccountTransactionScalarFieldEnum | FinAccountTransactionScalarFieldEnum[]
   }
 
   /**
@@ -16347,6 +16384,7 @@ export namespace Prisma {
     title: string | null
     description: string | null
     finAccountId: string | null
+    partyId: string | null
     currency: string | null
     amount: Decimal | null
     direction: string | null
@@ -16358,6 +16396,7 @@ export namespace Prisma {
     title: string | null
     description: string | null
     finAccountId: string | null
+    partyId: string | null
     currency: string | null
     amount: Decimal | null
     direction: string | null
@@ -16369,6 +16408,7 @@ export namespace Prisma {
     title: number
     description: number
     finAccountId: number
+    partyId: number
     currency: number
     amount: number
     direction: number
@@ -16391,6 +16431,7 @@ export namespace Prisma {
     title?: true
     description?: true
     finAccountId?: true
+    partyId?: true
     currency?: true
     amount?: true
     direction?: true
@@ -16402,6 +16443,7 @@ export namespace Prisma {
     title?: true
     description?: true
     finAccountId?: true
+    partyId?: true
     currency?: true
     amount?: true
     direction?: true
@@ -16413,6 +16455,7 @@ export namespace Prisma {
     title?: true
     description?: true
     finAccountId?: true
+    partyId?: true
     currency?: true
     amount?: true
     direction?: true
@@ -16512,6 +16555,7 @@ export namespace Prisma {
     title: string
     description: string | null
     finAccountId: string
+    partyId: string | null
     currency: string
     amount: Decimal
     direction: string
@@ -16543,12 +16587,14 @@ export namespace Prisma {
     title?: boolean
     description?: boolean
     finAccountId?: boolean
+    partyId?: boolean
     currency?: boolean
     amount?: boolean
     direction?: boolean
     details?: boolean
     activityOn?: boolean
     finAccount?: boolean | AssetGroupDefaultArgs<ExtArgs>
+    party?: boolean | FinAccountTransaction$partyArgs<ExtArgs>
   }, ExtArgs["result"]["finAccountTransaction"]>
 
   export type FinAccountTransactionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -16556,12 +16602,14 @@ export namespace Prisma {
     title?: boolean
     description?: boolean
     finAccountId?: boolean
+    partyId?: boolean
     currency?: boolean
     amount?: boolean
     direction?: boolean
     details?: boolean
     activityOn?: boolean
     finAccount?: boolean | AssetGroupDefaultArgs<ExtArgs>
+    party?: boolean | FinAccountTransaction$partyArgs<ExtArgs>
   }, ExtArgs["result"]["finAccountTransaction"]>
 
   export type FinAccountTransactionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -16569,12 +16617,14 @@ export namespace Prisma {
     title?: boolean
     description?: boolean
     finAccountId?: boolean
+    partyId?: boolean
     currency?: boolean
     amount?: boolean
     direction?: boolean
     details?: boolean
     activityOn?: boolean
     finAccount?: boolean | AssetGroupDefaultArgs<ExtArgs>
+    party?: boolean | FinAccountTransaction$partyArgs<ExtArgs>
   }, ExtArgs["result"]["finAccountTransaction"]>
 
   export type FinAccountTransactionSelectScalar = {
@@ -16582,6 +16632,7 @@ export namespace Prisma {
     title?: boolean
     description?: boolean
     finAccountId?: boolean
+    partyId?: boolean
     currency?: boolean
     amount?: boolean
     direction?: boolean
@@ -16589,27 +16640,32 @@ export namespace Prisma {
     activityOn?: boolean
   }
 
-  export type FinAccountTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "finAccountId" | "currency" | "amount" | "direction" | "details" | "activityOn", ExtArgs["result"]["finAccountTransaction"]>
+  export type FinAccountTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "finAccountId" | "partyId" | "currency" | "amount" | "direction" | "details" | "activityOn", ExtArgs["result"]["finAccountTransaction"]>
   export type FinAccountTransactionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     finAccount?: boolean | AssetGroupDefaultArgs<ExtArgs>
+    party?: boolean | FinAccountTransaction$partyArgs<ExtArgs>
   }
   export type FinAccountTransactionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     finAccount?: boolean | AssetGroupDefaultArgs<ExtArgs>
+    party?: boolean | FinAccountTransaction$partyArgs<ExtArgs>
   }
   export type FinAccountTransactionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     finAccount?: boolean | AssetGroupDefaultArgs<ExtArgs>
+    party?: boolean | FinAccountTransaction$partyArgs<ExtArgs>
   }
 
   export type $FinAccountTransactionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "FinAccountTransaction"
     objects: {
       finAccount: Prisma.$AssetGroupPayload<ExtArgs>
+      party: Prisma.$PartyPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       title: string
       description: string | null
       finAccountId: string
+      partyId: string | null
       currency: string
       amount: Prisma.Decimal
       direction: string
@@ -17010,6 +17066,7 @@ export namespace Prisma {
   export interface Prisma__FinAccountTransactionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     finAccount<T extends AssetGroupDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AssetGroupDefaultArgs<ExtArgs>>): Prisma__AssetGroupClient<$Result.GetResult<Prisma.$AssetGroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    party<T extends FinAccountTransaction$partyArgs<ExtArgs> = {}>(args?: Subset<T, FinAccountTransaction$partyArgs<ExtArgs>>): Prisma__PartyClient<$Result.GetResult<Prisma.$PartyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -17043,6 +17100,7 @@ export namespace Prisma {
     readonly title: FieldRef<"FinAccountTransaction", 'String'>
     readonly description: FieldRef<"FinAccountTransaction", 'String'>
     readonly finAccountId: FieldRef<"FinAccountTransaction", 'String'>
+    readonly partyId: FieldRef<"FinAccountTransaction", 'String'>
     readonly currency: FieldRef<"FinAccountTransaction", 'String'>
     readonly amount: FieldRef<"FinAccountTransaction", 'Decimal'>
     readonly direction: FieldRef<"FinAccountTransaction", 'String'>
@@ -17446,6 +17504,25 @@ export namespace Prisma {
      * Limit how many FinAccountTransactions to delete.
      */
     limit?: number
+  }
+
+  /**
+   * FinAccountTransaction.party
+   */
+  export type FinAccountTransaction$partyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Party
+     */
+    select?: PartySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Party
+     */
+    omit?: PartyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PartyInclude<ExtArgs> | null
+    where?: PartyWhereInput
   }
 
   /**
@@ -32449,6 +32526,7 @@ export namespace Prisma {
     title: 'title',
     description: 'description',
     finAccountId: 'finAccountId',
+    partyId: 'partyId',
     currency: 'currency',
     amount: 'amount',
     direction: 'direction',
@@ -33185,6 +33263,7 @@ export namespace Prisma {
     quotations?: DocumentQuotationListRelationFilter
     invoices?: InvoiceListRelationFilter
     proformas?: ProformaListRelationFilter
+    finAccountTransactions?: FinAccountTransactionListRelationFilter
   }
 
   export type PartyOrderByWithRelationInput = {
@@ -33201,6 +33280,7 @@ export namespace Prisma {
     quotations?: DocumentQuotationOrderByRelationAggregateInput
     invoices?: InvoiceOrderByRelationAggregateInput
     proformas?: ProformaOrderByRelationAggregateInput
+    finAccountTransactions?: FinAccountTransactionOrderByRelationAggregateInput
   }
 
   export type PartyWhereUniqueInput = Prisma.AtLeast<{
@@ -33220,6 +33300,7 @@ export namespace Prisma {
     quotations?: DocumentQuotationListRelationFilter
     invoices?: InvoiceListRelationFilter
     proformas?: ProformaListRelationFilter
+    finAccountTransactions?: FinAccountTransactionListRelationFilter
   }, "id">
 
   export type PartyOrderByWithAggregationInput = {
@@ -33789,12 +33870,14 @@ export namespace Prisma {
     title?: StringFilter<"FinAccountTransaction"> | string
     description?: StringNullableFilter<"FinAccountTransaction"> | string | null
     finAccountId?: StringFilter<"FinAccountTransaction"> | string
+    partyId?: UuidNullableFilter<"FinAccountTransaction"> | string | null
     currency?: StringFilter<"FinAccountTransaction"> | string
     amount?: DecimalFilter<"FinAccountTransaction"> | Decimal | DecimalJsLike | number | string
     direction?: StringFilter<"FinAccountTransaction"> | string
     details?: JsonNullableFilter<"FinAccountTransaction">
     activityOn?: DateTimeFilter<"FinAccountTransaction"> | Date | string
     finAccount?: XOR<AssetGroupScalarRelationFilter, AssetGroupWhereInput>
+    party?: XOR<PartyNullableScalarRelationFilter, PartyWhereInput> | null
   }
 
   export type FinAccountTransactionOrderByWithRelationInput = {
@@ -33802,12 +33885,14 @@ export namespace Prisma {
     title?: SortOrder
     description?: SortOrderInput | SortOrder
     finAccountId?: SortOrder
+    partyId?: SortOrderInput | SortOrder
     currency?: SortOrder
     amount?: SortOrder
     direction?: SortOrder
     details?: SortOrderInput | SortOrder
     activityOn?: SortOrder
     finAccount?: AssetGroupOrderByWithRelationInput
+    party?: PartyOrderByWithRelationInput
   }
 
   export type FinAccountTransactionWhereUniqueInput = Prisma.AtLeast<{
@@ -33818,12 +33903,14 @@ export namespace Prisma {
     title?: StringFilter<"FinAccountTransaction"> | string
     description?: StringNullableFilter<"FinAccountTransaction"> | string | null
     finAccountId?: StringFilter<"FinAccountTransaction"> | string
+    partyId?: UuidNullableFilter<"FinAccountTransaction"> | string | null
     currency?: StringFilter<"FinAccountTransaction"> | string
     amount?: DecimalFilter<"FinAccountTransaction"> | Decimal | DecimalJsLike | number | string
     direction?: StringFilter<"FinAccountTransaction"> | string
     details?: JsonNullableFilter<"FinAccountTransaction">
     activityOn?: DateTimeFilter<"FinAccountTransaction"> | Date | string
     finAccount?: XOR<AssetGroupScalarRelationFilter, AssetGroupWhereInput>
+    party?: XOR<PartyNullableScalarRelationFilter, PartyWhereInput> | null
   }, "id">
 
   export type FinAccountTransactionOrderByWithAggregationInput = {
@@ -33831,6 +33918,7 @@ export namespace Prisma {
     title?: SortOrder
     description?: SortOrderInput | SortOrder
     finAccountId?: SortOrder
+    partyId?: SortOrderInput | SortOrder
     currency?: SortOrder
     amount?: SortOrder
     direction?: SortOrder
@@ -33851,6 +33939,7 @@ export namespace Prisma {
     title?: StringWithAggregatesFilter<"FinAccountTransaction"> | string
     description?: StringNullableWithAggregatesFilter<"FinAccountTransaction"> | string | null
     finAccountId?: StringWithAggregatesFilter<"FinAccountTransaction"> | string
+    partyId?: UuidNullableWithAggregatesFilter<"FinAccountTransaction"> | string | null
     currency?: StringWithAggregatesFilter<"FinAccountTransaction"> | string
     amount?: DecimalWithAggregatesFilter<"FinAccountTransaction"> | Decimal | DecimalJsLike | number | string
     direction?: StringWithAggregatesFilter<"FinAccountTransaction"> | string
@@ -35335,6 +35424,7 @@ export namespace Prisma {
     quotations?: DocumentQuotationCreateNestedManyWithoutCustomerInput
     invoices?: InvoiceCreateNestedManyWithoutCustomerInput
     proformas?: ProformaCreateNestedManyWithoutCustomerInput
+    finAccountTransactions?: FinAccountTransactionCreateNestedManyWithoutPartyInput
   }
 
   export type PartyUncheckedCreateInput = {
@@ -35349,6 +35439,7 @@ export namespace Prisma {
     quotations?: DocumentQuotationUncheckedCreateNestedManyWithoutCustomerInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutCustomerInput
     proformas?: ProformaUncheckedCreateNestedManyWithoutCustomerInput
+    finAccountTransactions?: FinAccountTransactionUncheckedCreateNestedManyWithoutPartyInput
   }
 
   export type PartyUpdateInput = {
@@ -35363,6 +35454,7 @@ export namespace Prisma {
     quotations?: DocumentQuotationUpdateManyWithoutCustomerNestedInput
     invoices?: InvoiceUpdateManyWithoutCustomerNestedInput
     proformas?: ProformaUpdateManyWithoutCustomerNestedInput
+    finAccountTransactions?: FinAccountTransactionUpdateManyWithoutPartyNestedInput
   }
 
   export type PartyUncheckedUpdateInput = {
@@ -35377,6 +35469,7 @@ export namespace Prisma {
     quotations?: DocumentQuotationUncheckedUpdateManyWithoutCustomerNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutCustomerNestedInput
     proformas?: ProformaUncheckedUpdateManyWithoutCustomerNestedInput
+    finAccountTransactions?: FinAccountTransactionUncheckedUpdateManyWithoutPartyNestedInput
   }
 
   export type PartyCreateManyInput = {
@@ -36009,6 +36102,7 @@ export namespace Prisma {
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn: Date | string
     finAccount: AssetGroupCreateNestedOneWithoutAccountTransactionsInput
+    party?: PartyCreateNestedOneWithoutFinAccountTransactionsInput
   }
 
   export type FinAccountTransactionUncheckedCreateInput = {
@@ -36016,6 +36110,7 @@ export namespace Prisma {
     title: string
     description?: string | null
     finAccountId: string
+    partyId?: string | null
     currency: string
     amount: Decimal | DecimalJsLike | number | string
     direction: string
@@ -36033,6 +36128,7 @@ export namespace Prisma {
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn?: DateTimeFieldUpdateOperationsInput | Date | string
     finAccount?: AssetGroupUpdateOneRequiredWithoutAccountTransactionsNestedInput
+    party?: PartyUpdateOneWithoutFinAccountTransactionsNestedInput
   }
 
   export type FinAccountTransactionUncheckedUpdateInput = {
@@ -36040,6 +36136,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     finAccountId?: StringFieldUpdateOperationsInput | string
+    partyId?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     direction?: StringFieldUpdateOperationsInput | string
@@ -36052,6 +36149,7 @@ export namespace Prisma {
     title: string
     description?: string | null
     finAccountId: string
+    partyId?: string | null
     currency: string
     amount: Decimal | DecimalJsLike | number | string
     direction: string
@@ -36075,6 +36173,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     finAccountId?: StringFieldUpdateOperationsInput | string
+    partyId?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     direction?: StringFieldUpdateOperationsInput | string
@@ -37861,6 +37960,12 @@ export namespace Prisma {
     none?: ProformaWhereInput
   }
 
+  export type FinAccountTransactionListRelationFilter = {
+    every?: FinAccountTransactionWhereInput
+    some?: FinAccountTransactionWhereInput
+    none?: FinAccountTransactionWhereInput
+  }
+
   export type PartyContactOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -37878,6 +37983,10 @@ export namespace Prisma {
   }
 
   export type ProformaOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FinAccountTransactionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -38006,21 +38115,11 @@ export namespace Prisma {
     none?: TransactionLineWhereInput
   }
 
-  export type FinAccountTransactionListRelationFilter = {
-    every?: FinAccountTransactionWhereInput
-    some?: FinAccountTransactionWhereInput
-    none?: FinAccountTransactionWhereInput
-  }
-
   export type ActivityStockOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type TransactionLineOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type FinAccountTransactionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -38340,9 +38439,26 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
+  export type UuidNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
+  }
+
   export type AssetGroupScalarRelationFilter = {
     is?: AssetGroupWhereInput
     isNot?: AssetGroupWhereInput
+  }
+
+  export type PartyNullableScalarRelationFilter = {
+    is?: PartyWhereInput | null
+    isNot?: PartyWhereInput | null
   }
 
   export type FinAccountTransactionCountOrderByAggregateInput = {
@@ -38350,6 +38466,7 @@ export namespace Prisma {
     title?: SortOrder
     description?: SortOrder
     finAccountId?: SortOrder
+    partyId?: SortOrder
     currency?: SortOrder
     amount?: SortOrder
     direction?: SortOrder
@@ -38366,6 +38483,7 @@ export namespace Prisma {
     title?: SortOrder
     description?: SortOrder
     finAccountId?: SortOrder
+    partyId?: SortOrder
     currency?: SortOrder
     amount?: SortOrder
     direction?: SortOrder
@@ -38377,6 +38495,7 @@ export namespace Prisma {
     title?: SortOrder
     description?: SortOrder
     finAccountId?: SortOrder
+    partyId?: SortOrder
     currency?: SortOrder
     amount?: SortOrder
     direction?: SortOrder
@@ -38385,6 +38504,21 @@ export namespace Prisma {
 
   export type FinAccountTransactionSumOrderByAggregateInput = {
     amount?: SortOrder
+  }
+
+  export type UuidNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type EnumProjectionTypeFilter<$PrismaModel = never> = {
@@ -38768,18 +38902,6 @@ export namespace Prisma {
     adjustmentValue?: SortOrder
   }
 
-  export type UuidNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
-  }
-
   export type DocumentAdjustmentItemCountOrderByAggregateInput = {
     id?: SortOrder
     quotationId?: SortOrder
@@ -38860,21 +38982,6 @@ export namespace Prisma {
     taxAmount?: SortOrder
     amount?: SortOrder
     sortIndex?: SortOrder
-  }
-
-  export type UuidNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type InvoiceAdjustmentListRelationFilter = {
@@ -39940,6 +40047,13 @@ export namespace Prisma {
     connect?: ProformaWhereUniqueInput | ProformaWhereUniqueInput[]
   }
 
+  export type FinAccountTransactionCreateNestedManyWithoutPartyInput = {
+    create?: XOR<FinAccountTransactionCreateWithoutPartyInput, FinAccountTransactionUncheckedCreateWithoutPartyInput> | FinAccountTransactionCreateWithoutPartyInput[] | FinAccountTransactionUncheckedCreateWithoutPartyInput[]
+    connectOrCreate?: FinAccountTransactionCreateOrConnectWithoutPartyInput | FinAccountTransactionCreateOrConnectWithoutPartyInput[]
+    createMany?: FinAccountTransactionCreateManyPartyInputEnvelope
+    connect?: FinAccountTransactionWhereUniqueInput | FinAccountTransactionWhereUniqueInput[]
+  }
+
   export type PartyContactUncheckedCreateNestedManyWithoutPartyInput = {
     create?: XOR<PartyContactCreateWithoutPartyInput, PartyContactUncheckedCreateWithoutPartyInput> | PartyContactCreateWithoutPartyInput[] | PartyContactUncheckedCreateWithoutPartyInput[]
     connectOrCreate?: PartyContactCreateOrConnectWithoutPartyInput | PartyContactCreateOrConnectWithoutPartyInput[]
@@ -39973,6 +40087,13 @@ export namespace Prisma {
     connectOrCreate?: ProformaCreateOrConnectWithoutCustomerInput | ProformaCreateOrConnectWithoutCustomerInput[]
     createMany?: ProformaCreateManyCustomerInputEnvelope
     connect?: ProformaWhereUniqueInput | ProformaWhereUniqueInput[]
+  }
+
+  export type FinAccountTransactionUncheckedCreateNestedManyWithoutPartyInput = {
+    create?: XOR<FinAccountTransactionCreateWithoutPartyInput, FinAccountTransactionUncheckedCreateWithoutPartyInput> | FinAccountTransactionCreateWithoutPartyInput[] | FinAccountTransactionUncheckedCreateWithoutPartyInput[]
+    connectOrCreate?: FinAccountTransactionCreateOrConnectWithoutPartyInput | FinAccountTransactionCreateOrConnectWithoutPartyInput[]
+    createMany?: FinAccountTransactionCreateManyPartyInputEnvelope
+    connect?: FinAccountTransactionWhereUniqueInput | FinAccountTransactionWhereUniqueInput[]
   }
 
   export type AccountUpdateOneRequiredWithoutPartiesNestedInput = {
@@ -40061,6 +40182,20 @@ export namespace Prisma {
     deleteMany?: ProformaScalarWhereInput | ProformaScalarWhereInput[]
   }
 
+  export type FinAccountTransactionUpdateManyWithoutPartyNestedInput = {
+    create?: XOR<FinAccountTransactionCreateWithoutPartyInput, FinAccountTransactionUncheckedCreateWithoutPartyInput> | FinAccountTransactionCreateWithoutPartyInput[] | FinAccountTransactionUncheckedCreateWithoutPartyInput[]
+    connectOrCreate?: FinAccountTransactionCreateOrConnectWithoutPartyInput | FinAccountTransactionCreateOrConnectWithoutPartyInput[]
+    upsert?: FinAccountTransactionUpsertWithWhereUniqueWithoutPartyInput | FinAccountTransactionUpsertWithWhereUniqueWithoutPartyInput[]
+    createMany?: FinAccountTransactionCreateManyPartyInputEnvelope
+    set?: FinAccountTransactionWhereUniqueInput | FinAccountTransactionWhereUniqueInput[]
+    disconnect?: FinAccountTransactionWhereUniqueInput | FinAccountTransactionWhereUniqueInput[]
+    delete?: FinAccountTransactionWhereUniqueInput | FinAccountTransactionWhereUniqueInput[]
+    connect?: FinAccountTransactionWhereUniqueInput | FinAccountTransactionWhereUniqueInput[]
+    update?: FinAccountTransactionUpdateWithWhereUniqueWithoutPartyInput | FinAccountTransactionUpdateWithWhereUniqueWithoutPartyInput[]
+    updateMany?: FinAccountTransactionUpdateManyWithWhereWithoutPartyInput | FinAccountTransactionUpdateManyWithWhereWithoutPartyInput[]
+    deleteMany?: FinAccountTransactionScalarWhereInput | FinAccountTransactionScalarWhereInput[]
+  }
+
   export type PartyContactUncheckedUpdateManyWithoutPartyNestedInput = {
     create?: XOR<PartyContactCreateWithoutPartyInput, PartyContactUncheckedCreateWithoutPartyInput> | PartyContactCreateWithoutPartyInput[] | PartyContactUncheckedCreateWithoutPartyInput[]
     connectOrCreate?: PartyContactCreateOrConnectWithoutPartyInput | PartyContactCreateOrConnectWithoutPartyInput[]
@@ -40129,6 +40264,20 @@ export namespace Prisma {
     update?: ProformaUpdateWithWhereUniqueWithoutCustomerInput | ProformaUpdateWithWhereUniqueWithoutCustomerInput[]
     updateMany?: ProformaUpdateManyWithWhereWithoutCustomerInput | ProformaUpdateManyWithWhereWithoutCustomerInput[]
     deleteMany?: ProformaScalarWhereInput | ProformaScalarWhereInput[]
+  }
+
+  export type FinAccountTransactionUncheckedUpdateManyWithoutPartyNestedInput = {
+    create?: XOR<FinAccountTransactionCreateWithoutPartyInput, FinAccountTransactionUncheckedCreateWithoutPartyInput> | FinAccountTransactionCreateWithoutPartyInput[] | FinAccountTransactionUncheckedCreateWithoutPartyInput[]
+    connectOrCreate?: FinAccountTransactionCreateOrConnectWithoutPartyInput | FinAccountTransactionCreateOrConnectWithoutPartyInput[]
+    upsert?: FinAccountTransactionUpsertWithWhereUniqueWithoutPartyInput | FinAccountTransactionUpsertWithWhereUniqueWithoutPartyInput[]
+    createMany?: FinAccountTransactionCreateManyPartyInputEnvelope
+    set?: FinAccountTransactionWhereUniqueInput | FinAccountTransactionWhereUniqueInput[]
+    disconnect?: FinAccountTransactionWhereUniqueInput | FinAccountTransactionWhereUniqueInput[]
+    delete?: FinAccountTransactionWhereUniqueInput | FinAccountTransactionWhereUniqueInput[]
+    connect?: FinAccountTransactionWhereUniqueInput | FinAccountTransactionWhereUniqueInput[]
+    update?: FinAccountTransactionUpdateWithWhereUniqueWithoutPartyInput | FinAccountTransactionUpdateWithWhereUniqueWithoutPartyInput[]
+    updateMany?: FinAccountTransactionUpdateManyWithWhereWithoutPartyInput | FinAccountTransactionUpdateManyWithWhereWithoutPartyInput[]
+    deleteMany?: FinAccountTransactionScalarWhereInput | FinAccountTransactionScalarWhereInput[]
   }
 
   export type PartyCreateNestedOneWithoutContactsInput = {
@@ -40461,12 +40610,28 @@ export namespace Prisma {
     connect?: AssetGroupWhereUniqueInput
   }
 
+  export type PartyCreateNestedOneWithoutFinAccountTransactionsInput = {
+    create?: XOR<PartyCreateWithoutFinAccountTransactionsInput, PartyUncheckedCreateWithoutFinAccountTransactionsInput>
+    connectOrCreate?: PartyCreateOrConnectWithoutFinAccountTransactionsInput
+    connect?: PartyWhereUniqueInput
+  }
+
   export type AssetGroupUpdateOneRequiredWithoutAccountTransactionsNestedInput = {
     create?: XOR<AssetGroupCreateWithoutAccountTransactionsInput, AssetGroupUncheckedCreateWithoutAccountTransactionsInput>
     connectOrCreate?: AssetGroupCreateOrConnectWithoutAccountTransactionsInput
     upsert?: AssetGroupUpsertWithoutAccountTransactionsInput
     connect?: AssetGroupWhereUniqueInput
     update?: XOR<XOR<AssetGroupUpdateToOneWithWhereWithoutAccountTransactionsInput, AssetGroupUpdateWithoutAccountTransactionsInput>, AssetGroupUncheckedUpdateWithoutAccountTransactionsInput>
+  }
+
+  export type PartyUpdateOneWithoutFinAccountTransactionsNestedInput = {
+    create?: XOR<PartyCreateWithoutFinAccountTransactionsInput, PartyUncheckedCreateWithoutFinAccountTransactionsInput>
+    connectOrCreate?: PartyCreateOrConnectWithoutFinAccountTransactionsInput
+    upsert?: PartyUpsertWithoutFinAccountTransactionsInput
+    disconnect?: PartyWhereInput | boolean
+    delete?: PartyWhereInput | boolean
+    connect?: PartyWhereUniqueInput
+    update?: XOR<XOR<PartyUpdateToOneWithWhereWithoutFinAccountTransactionsInput, PartyUpdateWithoutFinAccountTransactionsInput>, PartyUncheckedUpdateWithoutFinAccountTransactionsInput>
   }
 
   export type ProjectCreateNestedOneWithoutProjectionsInput = {
@@ -41336,6 +41501,31 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
+  export type NestedUuidNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedUuidNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
   export type NestedEnumProjectionTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.ProjectionType | EnumProjectionTypeFieldRefInput<$PrismaModel>
     in?: $Enums.ProjectionType[] | ListEnumProjectionTypeFieldRefInput<$PrismaModel>
@@ -41421,31 +41611,6 @@ export namespace Prisma {
     _max?: NestedEnumActivityStockTypeFilter<$PrismaModel>
   }
 
-  export type NestedUuidNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type NestedUuidNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
   export type AssetGroupCreateWithoutAccountInput = {
     id?: string
     name: string
@@ -41497,6 +41662,7 @@ export namespace Prisma {
     quotations?: DocumentQuotationCreateNestedManyWithoutCustomerInput
     invoices?: InvoiceCreateNestedManyWithoutCustomerInput
     proformas?: ProformaCreateNestedManyWithoutCustomerInput
+    finAccountTransactions?: FinAccountTransactionCreateNestedManyWithoutPartyInput
   }
 
   export type PartyUncheckedCreateWithoutAccountInput = {
@@ -41510,6 +41676,7 @@ export namespace Prisma {
     quotations?: DocumentQuotationUncheckedCreateNestedManyWithoutCustomerInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutCustomerInput
     proformas?: ProformaUncheckedCreateNestedManyWithoutCustomerInput
+    finAccountTransactions?: FinAccountTransactionUncheckedCreateNestedManyWithoutPartyInput
   }
 
   export type PartyCreateOrConnectWithoutAccountInput = {
@@ -41762,6 +41929,7 @@ export namespace Prisma {
     quotations?: DocumentQuotationCreateNestedManyWithoutCustomerInput
     invoices?: InvoiceCreateNestedManyWithoutCustomerInput
     proformas?: ProformaCreateNestedManyWithoutCustomerInput
+    finAccountTransactions?: FinAccountTransactionCreateNestedManyWithoutPartyInput
   }
 
   export type PartyUncheckedCreateWithoutProjectInput = {
@@ -41775,6 +41943,7 @@ export namespace Prisma {
     quotations?: DocumentQuotationUncheckedCreateNestedManyWithoutCustomerInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutCustomerInput
     proformas?: ProformaUncheckedCreateNestedManyWithoutCustomerInput
+    finAccountTransactions?: FinAccountTransactionUncheckedCreateNestedManyWithoutPartyInput
   }
 
   export type PartyCreateOrConnectWithoutProjectInput = {
@@ -42649,6 +42818,40 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type FinAccountTransactionCreateWithoutPartyInput = {
+    id?: string
+    title: string
+    description?: string | null
+    currency: string
+    amount: Decimal | DecimalJsLike | number | string
+    direction: string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    activityOn: Date | string
+    finAccount: AssetGroupCreateNestedOneWithoutAccountTransactionsInput
+  }
+
+  export type FinAccountTransactionUncheckedCreateWithoutPartyInput = {
+    id?: string
+    title: string
+    description?: string | null
+    finAccountId: string
+    currency: string
+    amount: Decimal | DecimalJsLike | number | string
+    direction: string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    activityOn: Date | string
+  }
+
+  export type FinAccountTransactionCreateOrConnectWithoutPartyInput = {
+    where: FinAccountTransactionWhereUniqueInput
+    create: XOR<FinAccountTransactionCreateWithoutPartyInput, FinAccountTransactionUncheckedCreateWithoutPartyInput>
+  }
+
+  export type FinAccountTransactionCreateManyPartyInputEnvelope = {
+    data: FinAccountTransactionCreateManyPartyInput | FinAccountTransactionCreateManyPartyInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AccountUpsertWithoutPartiesInput = {
     update: XOR<AccountUpdateWithoutPartiesInput, AccountUncheckedUpdateWithoutPartiesInput>
     create: XOR<AccountCreateWithoutPartiesInput, AccountUncheckedCreateWithoutPartiesInput>
@@ -42901,6 +43104,38 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Proforma"> | Date | string
   }
 
+  export type FinAccountTransactionUpsertWithWhereUniqueWithoutPartyInput = {
+    where: FinAccountTransactionWhereUniqueInput
+    update: XOR<FinAccountTransactionUpdateWithoutPartyInput, FinAccountTransactionUncheckedUpdateWithoutPartyInput>
+    create: XOR<FinAccountTransactionCreateWithoutPartyInput, FinAccountTransactionUncheckedCreateWithoutPartyInput>
+  }
+
+  export type FinAccountTransactionUpdateWithWhereUniqueWithoutPartyInput = {
+    where: FinAccountTransactionWhereUniqueInput
+    data: XOR<FinAccountTransactionUpdateWithoutPartyInput, FinAccountTransactionUncheckedUpdateWithoutPartyInput>
+  }
+
+  export type FinAccountTransactionUpdateManyWithWhereWithoutPartyInput = {
+    where: FinAccountTransactionScalarWhereInput
+    data: XOR<FinAccountTransactionUpdateManyMutationInput, FinAccountTransactionUncheckedUpdateManyWithoutPartyInput>
+  }
+
+  export type FinAccountTransactionScalarWhereInput = {
+    AND?: FinAccountTransactionScalarWhereInput | FinAccountTransactionScalarWhereInput[]
+    OR?: FinAccountTransactionScalarWhereInput[]
+    NOT?: FinAccountTransactionScalarWhereInput | FinAccountTransactionScalarWhereInput[]
+    id?: UuidFilter<"FinAccountTransaction"> | string
+    title?: StringFilter<"FinAccountTransaction"> | string
+    description?: StringNullableFilter<"FinAccountTransaction"> | string | null
+    finAccountId?: StringFilter<"FinAccountTransaction"> | string
+    partyId?: UuidNullableFilter<"FinAccountTransaction"> | string | null
+    currency?: StringFilter<"FinAccountTransaction"> | string
+    amount?: DecimalFilter<"FinAccountTransaction"> | Decimal | DecimalJsLike | number | string
+    direction?: StringFilter<"FinAccountTransaction"> | string
+    details?: JsonNullableFilter<"FinAccountTransaction">
+    activityOn?: DateTimeFilter<"FinAccountTransaction"> | Date | string
+  }
+
   export type PartyCreateWithoutContactsInput = {
     id?: string
     name: string
@@ -42912,6 +43147,7 @@ export namespace Prisma {
     quotations?: DocumentQuotationCreateNestedManyWithoutCustomerInput
     invoices?: InvoiceCreateNestedManyWithoutCustomerInput
     proformas?: ProformaCreateNestedManyWithoutCustomerInput
+    finAccountTransactions?: FinAccountTransactionCreateNestedManyWithoutPartyInput
   }
 
   export type PartyUncheckedCreateWithoutContactsInput = {
@@ -42925,6 +43161,7 @@ export namespace Prisma {
     quotations?: DocumentQuotationUncheckedCreateNestedManyWithoutCustomerInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutCustomerInput
     proformas?: ProformaUncheckedCreateNestedManyWithoutCustomerInput
+    finAccountTransactions?: FinAccountTransactionUncheckedCreateNestedManyWithoutPartyInput
   }
 
   export type PartyCreateOrConnectWithoutContactsInput = {
@@ -42954,6 +43191,7 @@ export namespace Prisma {
     quotations?: DocumentQuotationUpdateManyWithoutCustomerNestedInput
     invoices?: InvoiceUpdateManyWithoutCustomerNestedInput
     proformas?: ProformaUpdateManyWithoutCustomerNestedInput
+    finAccountTransactions?: FinAccountTransactionUpdateManyWithoutPartyNestedInput
   }
 
   export type PartyUncheckedUpdateWithoutContactsInput = {
@@ -42967,6 +43205,7 @@ export namespace Prisma {
     quotations?: DocumentQuotationUncheckedUpdateManyWithoutCustomerNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutCustomerNestedInput
     proformas?: ProformaUncheckedUpdateManyWithoutCustomerNestedInput
+    finAccountTransactions?: FinAccountTransactionUncheckedUpdateManyWithoutPartyNestedInput
   }
 
   export type PartyCreateWithoutPaymentMethodsInput = {
@@ -42980,6 +43219,7 @@ export namespace Prisma {
     quotations?: DocumentQuotationCreateNestedManyWithoutCustomerInput
     invoices?: InvoiceCreateNestedManyWithoutCustomerInput
     proformas?: ProformaCreateNestedManyWithoutCustomerInput
+    finAccountTransactions?: FinAccountTransactionCreateNestedManyWithoutPartyInput
   }
 
   export type PartyUncheckedCreateWithoutPaymentMethodsInput = {
@@ -42993,6 +43233,7 @@ export namespace Prisma {
     quotations?: DocumentQuotationUncheckedCreateNestedManyWithoutCustomerInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutCustomerInput
     proformas?: ProformaUncheckedCreateNestedManyWithoutCustomerInput
+    finAccountTransactions?: FinAccountTransactionUncheckedCreateNestedManyWithoutPartyInput
   }
 
   export type PartyCreateOrConnectWithoutPaymentMethodsInput = {
@@ -43022,6 +43263,7 @@ export namespace Prisma {
     quotations?: DocumentQuotationUpdateManyWithoutCustomerNestedInput
     invoices?: InvoiceUpdateManyWithoutCustomerNestedInput
     proformas?: ProformaUpdateManyWithoutCustomerNestedInput
+    finAccountTransactions?: FinAccountTransactionUpdateManyWithoutPartyNestedInput
   }
 
   export type PartyUncheckedUpdateWithoutPaymentMethodsInput = {
@@ -43035,6 +43277,7 @@ export namespace Prisma {
     quotations?: DocumentQuotationUncheckedUpdateManyWithoutCustomerNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutCustomerNestedInput
     proformas?: ProformaUncheckedUpdateManyWithoutCustomerNestedInput
+    finAccountTransactions?: FinAccountTransactionUncheckedUpdateManyWithoutPartyNestedInput
   }
 
   export type AccountCreateWithoutAssetGroupsInput = {
@@ -43178,12 +43421,14 @@ export namespace Prisma {
     direction: string
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn: Date | string
+    party?: PartyCreateNestedOneWithoutFinAccountTransactionsInput
   }
 
   export type FinAccountTransactionUncheckedCreateWithoutFinAccountInput = {
     id?: string
     title: string
     description?: string | null
+    partyId?: string | null
     currency: string
     amount: Decimal | DecimalJsLike | number | string
     direction: string
@@ -43352,21 +43597,6 @@ export namespace Prisma {
   export type FinAccountTransactionUpdateManyWithWhereWithoutFinAccountInput = {
     where: FinAccountTransactionScalarWhereInput
     data: XOR<FinAccountTransactionUpdateManyMutationInput, FinAccountTransactionUncheckedUpdateManyWithoutFinAccountInput>
-  }
-
-  export type FinAccountTransactionScalarWhereInput = {
-    AND?: FinAccountTransactionScalarWhereInput | FinAccountTransactionScalarWhereInput[]
-    OR?: FinAccountTransactionScalarWhereInput[]
-    NOT?: FinAccountTransactionScalarWhereInput | FinAccountTransactionScalarWhereInput[]
-    id?: UuidFilter<"FinAccountTransaction"> | string
-    title?: StringFilter<"FinAccountTransaction"> | string
-    description?: StringNullableFilter<"FinAccountTransaction"> | string | null
-    finAccountId?: StringFilter<"FinAccountTransaction"> | string
-    currency?: StringFilter<"FinAccountTransaction"> | string
-    amount?: DecimalFilter<"FinAccountTransaction"> | Decimal | DecimalJsLike | number | string
-    direction?: StringFilter<"FinAccountTransaction"> | string
-    details?: JsonNullableFilter<"FinAccountTransaction">
-    activityOn?: DateTimeFilter<"FinAccountTransaction"> | Date | string
   }
 
   export type ProjectCreateWithoutFinAccountsInput = {
@@ -43832,6 +44062,39 @@ export namespace Prisma {
     create: XOR<AssetGroupCreateWithoutAccountTransactionsInput, AssetGroupUncheckedCreateWithoutAccountTransactionsInput>
   }
 
+  export type PartyCreateWithoutFinAccountTransactionsInput = {
+    id?: string
+    name: string
+    type: string
+    taxinfo?: NullableJsonNullValueInput | InputJsonValue
+    account: AccountCreateNestedOneWithoutPartiesInput
+    project: ProjectCreateNestedOneWithoutPartiesInput
+    contacts?: PartyContactCreateNestedManyWithoutPartyInput
+    paymentMethods?: PartyPaymentMethodCreateNestedManyWithoutPartyInput
+    quotations?: DocumentQuotationCreateNestedManyWithoutCustomerInput
+    invoices?: InvoiceCreateNestedManyWithoutCustomerInput
+    proformas?: ProformaCreateNestedManyWithoutCustomerInput
+  }
+
+  export type PartyUncheckedCreateWithoutFinAccountTransactionsInput = {
+    id?: string
+    accountId: string
+    projectId: string
+    name: string
+    type: string
+    taxinfo?: NullableJsonNullValueInput | InputJsonValue
+    contacts?: PartyContactUncheckedCreateNestedManyWithoutPartyInput
+    paymentMethods?: PartyPaymentMethodUncheckedCreateNestedManyWithoutPartyInput
+    quotations?: DocumentQuotationUncheckedCreateNestedManyWithoutCustomerInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutCustomerInput
+    proformas?: ProformaUncheckedCreateNestedManyWithoutCustomerInput
+  }
+
+  export type PartyCreateOrConnectWithoutFinAccountTransactionsInput = {
+    where: PartyWhereUniqueInput
+    create: XOR<PartyCreateWithoutFinAccountTransactionsInput, PartyUncheckedCreateWithoutFinAccountTransactionsInput>
+  }
+
   export type AssetGroupUpsertWithoutAccountTransactionsInput = {
     update: XOR<AssetGroupUpdateWithoutAccountTransactionsInput, AssetGroupUncheckedUpdateWithoutAccountTransactionsInput>
     create: XOR<AssetGroupCreateWithoutAccountTransactionsInput, AssetGroupUncheckedCreateWithoutAccountTransactionsInput>
@@ -43871,6 +44134,45 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     activityStock?: ActivityStockUncheckedUpdateManyWithoutAssetGroupNestedInput
     transactionLines?: TransactionLineUncheckedUpdateManyWithoutBookNestedInput
+  }
+
+  export type PartyUpsertWithoutFinAccountTransactionsInput = {
+    update: XOR<PartyUpdateWithoutFinAccountTransactionsInput, PartyUncheckedUpdateWithoutFinAccountTransactionsInput>
+    create: XOR<PartyCreateWithoutFinAccountTransactionsInput, PartyUncheckedCreateWithoutFinAccountTransactionsInput>
+    where?: PartyWhereInput
+  }
+
+  export type PartyUpdateToOneWithWhereWithoutFinAccountTransactionsInput = {
+    where?: PartyWhereInput
+    data: XOR<PartyUpdateWithoutFinAccountTransactionsInput, PartyUncheckedUpdateWithoutFinAccountTransactionsInput>
+  }
+
+  export type PartyUpdateWithoutFinAccountTransactionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    taxinfo?: NullableJsonNullValueInput | InputJsonValue
+    account?: AccountUpdateOneRequiredWithoutPartiesNestedInput
+    project?: ProjectUpdateOneRequiredWithoutPartiesNestedInput
+    contacts?: PartyContactUpdateManyWithoutPartyNestedInput
+    paymentMethods?: PartyPaymentMethodUpdateManyWithoutPartyNestedInput
+    quotations?: DocumentQuotationUpdateManyWithoutCustomerNestedInput
+    invoices?: InvoiceUpdateManyWithoutCustomerNestedInput
+    proformas?: ProformaUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type PartyUncheckedUpdateWithoutFinAccountTransactionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accountId?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    taxinfo?: NullableJsonNullValueInput | InputJsonValue
+    contacts?: PartyContactUncheckedUpdateManyWithoutPartyNestedInput
+    paymentMethods?: PartyPaymentMethodUncheckedUpdateManyWithoutPartyNestedInput
+    quotations?: DocumentQuotationUncheckedUpdateManyWithoutCustomerNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutCustomerNestedInput
+    proformas?: ProformaUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type ProjectCreateWithoutProjectionsInput = {
@@ -44457,6 +44759,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodCreateNestedManyWithoutPartyInput
     invoices?: InvoiceCreateNestedManyWithoutCustomerInput
     proformas?: ProformaCreateNestedManyWithoutCustomerInput
+    finAccountTransactions?: FinAccountTransactionCreateNestedManyWithoutPartyInput
   }
 
   export type PartyUncheckedCreateWithoutQuotationsInput = {
@@ -44470,6 +44773,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodUncheckedCreateNestedManyWithoutPartyInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutCustomerInput
     proformas?: ProformaUncheckedCreateNestedManyWithoutCustomerInput
+    finAccountTransactions?: FinAccountTransactionUncheckedCreateNestedManyWithoutPartyInput
   }
 
   export type PartyCreateOrConnectWithoutQuotationsInput = {
@@ -44604,6 +44908,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodUpdateManyWithoutPartyNestedInput
     invoices?: InvoiceUpdateManyWithoutCustomerNestedInput
     proformas?: ProformaUpdateManyWithoutCustomerNestedInput
+    finAccountTransactions?: FinAccountTransactionUpdateManyWithoutPartyNestedInput
   }
 
   export type PartyUncheckedUpdateWithoutQuotationsInput = {
@@ -44617,6 +44922,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodUncheckedUpdateManyWithoutPartyNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutCustomerNestedInput
     proformas?: ProformaUncheckedUpdateManyWithoutCustomerNestedInput
+    finAccountTransactions?: FinAccountTransactionUncheckedUpdateManyWithoutPartyNestedInput
   }
 
   export type DocumentQuotationAdjustmentUpsertWithWhereUniqueWithoutQuotationInput = {
@@ -44946,6 +45252,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodCreateNestedManyWithoutPartyInput
     quotations?: DocumentQuotationCreateNestedManyWithoutCustomerInput
     proformas?: ProformaCreateNestedManyWithoutCustomerInput
+    finAccountTransactions?: FinAccountTransactionCreateNestedManyWithoutPartyInput
   }
 
   export type PartyUncheckedCreateWithoutInvoicesInput = {
@@ -44959,6 +45266,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodUncheckedCreateNestedManyWithoutPartyInput
     quotations?: DocumentQuotationUncheckedCreateNestedManyWithoutCustomerInput
     proformas?: ProformaUncheckedCreateNestedManyWithoutCustomerInput
+    finAccountTransactions?: FinAccountTransactionUncheckedCreateNestedManyWithoutPartyInput
   }
 
   export type PartyCreateOrConnectWithoutInvoicesInput = {
@@ -45093,6 +45401,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodUpdateManyWithoutPartyNestedInput
     quotations?: DocumentQuotationUpdateManyWithoutCustomerNestedInput
     proformas?: ProformaUpdateManyWithoutCustomerNestedInput
+    finAccountTransactions?: FinAccountTransactionUpdateManyWithoutPartyNestedInput
   }
 
   export type PartyUncheckedUpdateWithoutInvoicesInput = {
@@ -45106,6 +45415,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodUncheckedUpdateManyWithoutPartyNestedInput
     quotations?: DocumentQuotationUncheckedUpdateManyWithoutCustomerNestedInput
     proformas?: ProformaUncheckedUpdateManyWithoutCustomerNestedInput
+    finAccountTransactions?: FinAccountTransactionUncheckedUpdateManyWithoutPartyNestedInput
   }
 
   export type InvoiceAdjustmentUpsertWithWhereUniqueWithoutInvoiceInput = {
@@ -45435,6 +45745,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodCreateNestedManyWithoutPartyInput
     quotations?: DocumentQuotationCreateNestedManyWithoutCustomerInput
     invoices?: InvoiceCreateNestedManyWithoutCustomerInput
+    finAccountTransactions?: FinAccountTransactionCreateNestedManyWithoutPartyInput
   }
 
   export type PartyUncheckedCreateWithoutProformasInput = {
@@ -45448,6 +45759,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodUncheckedCreateNestedManyWithoutPartyInput
     quotations?: DocumentQuotationUncheckedCreateNestedManyWithoutCustomerInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutCustomerInput
+    finAccountTransactions?: FinAccountTransactionUncheckedCreateNestedManyWithoutPartyInput
   }
 
   export type PartyCreateOrConnectWithoutProformasInput = {
@@ -45582,6 +45894,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodUpdateManyWithoutPartyNestedInput
     quotations?: DocumentQuotationUpdateManyWithoutCustomerNestedInput
     invoices?: InvoiceUpdateManyWithoutCustomerNestedInput
+    finAccountTransactions?: FinAccountTransactionUpdateManyWithoutPartyNestedInput
   }
 
   export type PartyUncheckedUpdateWithoutProformasInput = {
@@ -45595,6 +45908,7 @@ export namespace Prisma {
     paymentMethods?: PartyPaymentMethodUncheckedUpdateManyWithoutPartyNestedInput
     quotations?: DocumentQuotationUncheckedUpdateManyWithoutCustomerNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutCustomerNestedInput
+    finAccountTransactions?: FinAccountTransactionUncheckedUpdateManyWithoutPartyNestedInput
   }
 
   export type ProformaAdjustmentUpsertWithWhereUniqueWithoutProformaInput = {
@@ -45988,6 +46302,7 @@ export namespace Prisma {
     quotations?: DocumentQuotationUpdateManyWithoutCustomerNestedInput
     invoices?: InvoiceUpdateManyWithoutCustomerNestedInput
     proformas?: ProformaUpdateManyWithoutCustomerNestedInput
+    finAccountTransactions?: FinAccountTransactionUpdateManyWithoutPartyNestedInput
   }
 
   export type PartyUncheckedUpdateWithoutAccountInput = {
@@ -46001,6 +46316,7 @@ export namespace Prisma {
     quotations?: DocumentQuotationUncheckedUpdateManyWithoutCustomerNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutCustomerNestedInput
     proformas?: ProformaUncheckedUpdateManyWithoutCustomerNestedInput
+    finAccountTransactions?: FinAccountTransactionUncheckedUpdateManyWithoutPartyNestedInput
   }
 
   export type PartyUncheckedUpdateManyWithoutAccountInput = {
@@ -46214,6 +46530,7 @@ export namespace Prisma {
     quotations?: DocumentQuotationUpdateManyWithoutCustomerNestedInput
     invoices?: InvoiceUpdateManyWithoutCustomerNestedInput
     proformas?: ProformaUpdateManyWithoutCustomerNestedInput
+    finAccountTransactions?: FinAccountTransactionUpdateManyWithoutPartyNestedInput
   }
 
   export type PartyUncheckedUpdateWithoutProjectInput = {
@@ -46227,6 +46544,7 @@ export namespace Prisma {
     quotations?: DocumentQuotationUncheckedUpdateManyWithoutCustomerNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutCustomerNestedInput
     proformas?: ProformaUncheckedUpdateManyWithoutCustomerNestedInput
+    finAccountTransactions?: FinAccountTransactionUncheckedUpdateManyWithoutPartyNestedInput
   }
 
   export type PartyUncheckedUpdateManyWithoutProjectInput = {
@@ -46572,6 +46890,18 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type FinAccountTransactionCreateManyPartyInput = {
+    id?: string
+    title: string
+    description?: string | null
+    finAccountId: string
+    currency: string
+    amount: Decimal | DecimalJsLike | number | string
+    direction: string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    activityOn: Date | string
+  }
+
   export type PartyContactUpdateWithoutPartyInput = {
     id?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
@@ -46830,6 +47160,42 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type FinAccountTransactionUpdateWithoutPartyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    currency?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    direction?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    activityOn?: DateTimeFieldUpdateOperationsInput | Date | string
+    finAccount?: AssetGroupUpdateOneRequiredWithoutAccountTransactionsNestedInput
+  }
+
+  export type FinAccountTransactionUncheckedUpdateWithoutPartyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    finAccountId?: StringFieldUpdateOperationsInput | string
+    currency?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    direction?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    activityOn?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FinAccountTransactionUncheckedUpdateManyWithoutPartyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    finAccountId?: StringFieldUpdateOperationsInput | string
+    currency?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    direction?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    activityOn?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ActivityStockCreateManyAssetGroupInput = {
     id?: string
     stockName: string
@@ -46861,6 +47227,7 @@ export namespace Prisma {
     id?: string
     title: string
     description?: string | null
+    partyId?: string | null
     currency: string
     amount: Decimal | DecimalJsLike | number | string
     direction: string
@@ -46958,12 +47325,14 @@ export namespace Prisma {
     direction?: StringFieldUpdateOperationsInput | string
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn?: DateTimeFieldUpdateOperationsInput | Date | string
+    party?: PartyUpdateOneWithoutFinAccountTransactionsNestedInput
   }
 
   export type FinAccountTransactionUncheckedUpdateWithoutFinAccountInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    partyId?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     direction?: StringFieldUpdateOperationsInput | string
@@ -46975,6 +47344,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    partyId?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     direction?: StringFieldUpdateOperationsInput | string

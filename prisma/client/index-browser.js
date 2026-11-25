@@ -249,6 +249,7 @@ exports.Prisma.FinAccountTransactionScalarFieldEnum = {
   title: 'title',
   description: 'description',
   finAccountId: 'finAccountId',
+  partyId: 'partyId',
   currency: 'currency',
   amount: 'amount',
   direction: 'direction',
