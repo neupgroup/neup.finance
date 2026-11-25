@@ -3,7 +3,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@neup/components/ui/button';
 import { LinkButton } from '@neup/components/ui/link-button';
 import { Input } from '@neup/components/ui/input';
@@ -47,6 +47,27 @@ import {
 } from '@/services/transactions/blocks';
 
 type TransactionDirection = 'incoming' | 'outgoing';
+
+const recordTypeDetails: Record<string, { label: string; direction: TransactionDirection; category: string; status: TransactionStatus }> = {
+  quotation: { label: 'Quotation', direction: 'incoming', category: 'sales', status: 'unpaid' },
+  'sales-order': { label: 'Sales Order', direction: 'incoming', category: 'sales', status: 'unpaid' },
+  'proforma-invoice': { label: 'Proforma Invoice', direction: 'incoming', category: 'sales', status: 'unpaid' },
+  invoice: { label: 'Invoice', direction: 'incoming', category: 'sales', status: 'unpaid' },
+  'customer-payment': { label: 'Customer Payment', direction: 'incoming', category: 'receivable', status: 'paid' },
+  'credit-note': { label: 'Credit Note', direction: 'outgoing', category: 'sales', status: 'unpaid' },
+  'purchase-order': { label: 'Purchase Order', direction: 'outgoing', category: 'purchase', status: 'unpaid' },
+  'purchase-bill': { label: 'Purchase Bill', direction: 'outgoing', category: 'purchase', status: 'unpaid' },
+  'supplier-payment': { label: 'Supplier Payment', direction: 'outgoing', category: 'payable', status: 'paid' },
+  'debit-note': { label: 'Debit Note', direction: 'incoming', category: 'purchase', status: 'unpaid' },
+  'cash-transfer': { label: 'Cash Transfer', direction: 'outgoing', category: 'general', status: 'paid' },
+  'quick-receipt': { label: 'Quick Receipt (in)', direction: 'incoming', category: 'general', status: 'paid' },
+  'quick-payment': { label: 'Quick Payment (out)', direction: 'outgoing', category: 'general', status: 'paid' },
+  'journal-voucher': { label: 'Journal Voucher', direction: 'outgoing', category: 'general', status: 'unpaid' },
+};
+
+const salesDocumentTypes = new Set([
+  'quotation', 'sales-order', 'proforma-invoice', 'invoice', 'customer-payment', 'credit-note',
+]);
 
 const baseTransactionSubblock: TransactionSubblock = {
   id: 'transaction-amount',
@@ -105,6 +126,15 @@ type FormErrors = Partial<{
 
 export default function AddTransactionPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const recordType = searchParams.get('record') ?? searchParams.get('type') ?? '';
+  const recordDetails = recordTypeDetails[recordType];
+  const isSalesDocument = salesDocumentTypes.has(recordType);
+  const isProformaInvoice = recordType === 'proforma-invoice';
+  const projectId = searchParams.get('project')?.trim();
+  const backHref = isSalesDocument
+    ? `/documents/sales?type=${encodeURIComponent(recordType)}${projectId ? `&project=${encodeURIComponent(projectId)}` : ''}`
+    : `/transactions${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
   const { toast } = useToast();
   const { user } = useUser();
   const { data: parties } = useParties();
@@ -122,11 +152,11 @@ export default function AddTransactionPage() {
   const [description, setDescription] = useState('');
   const [showDescription, setShowDescription] = useState(false);
   const [date, setDate] = useState('');
-  const [direction, setDirection] = useState<TransactionDirection | ''>('');
-  const [category, setCategory] = useState<TransactionCategory | ''>('');
+  const [direction, setDirection] = useState<TransactionDirection | ''>(recordDetails?.direction ?? '');
+  const [category, setCategory] = useState<TransactionCategory | ''>((recordDetails?.category as TransactionCategory | undefined) ?? '');
   const [totalAmountCurrency, setTotalAmountCurrency] = useState('');
   const [totalAmount, setTotalAmount] = useState<number | ''>('');
-  const [status, setStatus] = useState<TransactionStatus | ''>('');
+  const [status, setStatus] = useState<TransactionStatus | ''>(recordDetails?.status ?? '');
   const [accountId, setAccountId] = useState('');
   const [partyId, setPartyId] = useState('');
   const [amountPaid, setAmountPaid] = useState<number | ''>('');
@@ -252,11 +282,11 @@ export default function AddTransactionPage() {
 
     if (!title.trim()) nextErrors.title = 'Title is required.';
     if (!date) nextErrors.date = 'Date is required.';
-    if (!direction) nextErrors.direction = 'Direction is required.';
-    if (!category) nextErrors.category = 'Category is required.';
+    if (!isSalesDocument && !direction) nextErrors.direction = 'Direction is required.';
+    if (!isSalesDocument && !category) nextErrors.category = 'Category is required.';
     if (!totalAmountCurrency) nextErrors.currency = 'Currency is required. Type a country name and press space to select it.';
-    if (totalAmount === '' || Number.isNaN(totalAmount)) nextErrors.totalAmount = 'Amount is required.';
-    if (!status) nextErrors.status = 'Status is required.';
+    if (!isSalesDocument && (totalAmount === '' || Number.isNaN(totalAmount))) nextErrors.totalAmount = 'Amount is required.';
+    if (!isProformaInvoice && !status) nextErrors.status = 'Status is required.';
 
     if ((status === 'paid' || status === 'partially_paid') && !accountId) {
       nextErrors.accountId = 'Account is required for paid or partially paid transactions.';
@@ -473,10 +503,10 @@ export default function AddTransactionPage() {
 
       <div className="space-y-4">
         <div className="space-y-2">
-          <LinkButton href="/transactions" variant="ghost" className="w-fit -ml-3 text-muted-foreground hover:text-foreground" preIcon={<ArrowLeft className="h-4 w-4" />}>Back to transactions</LinkButton>
+          <LinkButton href={backHref} variant="ghost" className="w-fit -ml-3 text-muted-foreground hover:text-foreground" preIcon={<ArrowLeft className="h-4 w-4" />}>{isSalesDocument ? 'Back to sales documents' : 'Back to transactions'}</LinkButton>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Add Transaction</h1>
-            <p className="text-muted-foreground">Fill in the essentials and save.</p>
+            <h1 className="text-3xl font-bold tracking-tight">{recordDetails ? `Record ${recordDetails.label}` : 'Add Transaction'}</h1>
+            <p className="text-muted-foreground">{recordDetails ? `Enter the details for this ${recordDetails.label.toLowerCase()}.` : 'Fill in the essentials and save.'}</p>
           </div>
         </div>
 
@@ -579,6 +609,7 @@ export default function AddTransactionPage() {
               />
               {errors.date ? <p className="text-sm font-medium text-destructive">{errors.date}</p> : null}
             </div>
+            {!isSalesDocument ? <>
             <div ref={(node) => {
               setFieldErrorRef('direction')(node);
               directionFieldRef.current = node;
@@ -646,12 +677,14 @@ export default function AddTransactionPage() {
               />
               {errors.category ? <p className="text-sm font-medium text-destructive">{errors.category}</p> : null}
             </div>
+            </> : null}
             <div ref={setFieldErrorRef('totalAmount')} className="space-y-2">
-              <Label htmlFor="amount">Transaction amount</Label>
+              <Label htmlFor="amount">{isSalesDocument ? 'Currency' : 'Transaction amount'}</Label>
               <CurrencyAmountInput
                 id="amount"
                 currency={totalAmountCurrency}
                 amount={totalAmount}
+                amountHidden={isSalesDocument}
                 onCurrencyChange={(value) => {
                   setTotalAmountCurrency(value);
                   clearError('currency');
@@ -851,7 +884,7 @@ export default function AddTransactionPage() {
                 </div>
               </div>
             </div>
-            <div ref={setFieldErrorRef('status')} className="space-y-2">
+            {!isProformaInvoice ? <div ref={setFieldErrorRef('status')} className="space-y-2">
               <Label htmlFor="status">Status</Label>
               <Combobox
                 options={transactionStatusOptions}
@@ -868,7 +901,7 @@ export default function AddTransactionPage() {
                 ariaInvalid={Boolean(errors.status)}
               />
               {errors.status ? <p className="text-sm font-medium text-destructive">{errors.status}</p> : null}
-            </div>
+            </div> : null}
 
             {(status === 'paid' || status === 'partially_paid') && (
               <div ref={setFieldErrorRef('accountId')} className="space-y-2">

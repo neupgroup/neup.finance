@@ -80,6 +80,8 @@ export interface CurrencyAmountInputProps extends Omit<React.ComponentProps<"inp
   onCurrencyChange: (value: string) => void;
   amountPlaceholder?: string;
   currencyPlaceholder?: string;
+  amountHidden?: boolean;
+  amountClassName?: string;
 }
 
 const CurrencyAmountInput = React.forwardRef<HTMLInputElement, CurrencyAmountInputProps>(
@@ -92,6 +94,8 @@ const CurrencyAmountInput = React.forwardRef<HTMLInputElement, CurrencyAmountInp
       onCurrencyChange,
       amountPlaceholder = "0.00",
       currencyPlaceholder = "Type a country name, then press space",
+      amountHidden = false,
+      amountClassName,
       ...props
     },
     ref
@@ -180,7 +184,7 @@ const CurrencyAmountInput = React.forwardRef<HTMLInputElement, CurrencyAmountInp
               }}
               value={draftCurrency}
               placeholder={currencyPlaceholder}
-              className="h-6 w-full border-0 bg-transparent p-0 text-sm outline-none placeholder:text-muted-foreground focus-visible:outline-none"
+              className={cn("h-6 w-full border-0 bg-transparent p-0 text-sm outline-none placeholder:text-muted-foreground focus-visible:outline-none", amountClassName)}
               onChange={handleCurrencyChange}
               onKeyDown={handleCurrencyKeyDown}
             />
@@ -207,23 +211,25 @@ const CurrencyAmountInput = React.forwardRef<HTMLInputElement, CurrencyAmountInp
             <span>{selectedCountry.code}</span>
           </button>
 
-          <input
-            {...props}
-            ref={(node) => {
-              amountInputRef.current = node;
-              if (typeof ref === "function") {
-                ref(node);
-              } else if (ref) {
-                (ref as React.MutableRefObject<HTMLInputElement | null>).current = node;
-              }
-            }}
-            type="number"
-            inputMode="decimal"
-            value={amount === "" ? "" : amount}
-            placeholder={amountPlaceholder}
-            className="h-6 w-full border-0 bg-transparent p-0 text-sm outline-none placeholder:text-muted-foreground focus-visible:outline-none"
-            onChange={handleAmountChange}
-          />
+          {!amountHidden ? (
+            <input
+              {...props}
+              ref={(node) => {
+                amountInputRef.current = node;
+                if (typeof ref === "function") {
+                  ref(node);
+                } else if (ref) {
+                  (ref as React.MutableRefObject<HTMLInputElement | null>).current = node;
+                }
+              }}
+              type="number"
+              inputMode="decimal"
+              value={amount === "" ? "" : amount}
+              placeholder={amountPlaceholder}
+              className="h-6 w-full border-0 bg-transparent p-0 text-sm outline-none placeholder:text-muted-foreground focus-visible:outline-none"
+              onChange={handleAmountChange}
+            />
+          ) : null}
         </div>
       </div>
     );

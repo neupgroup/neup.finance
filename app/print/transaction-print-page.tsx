@@ -33,8 +33,18 @@ The printable transaction invoice UI.
 
 ::end
 */
-export function TransactionPrintPage({ id }: { id: string }) {
+const documentLabels: Record<string, string> = {
+    quotation: 'Quotation',
+    'sales-order': 'Sales Order',
+    'proforma-invoice': 'Proforma Invoice',
+    invoice: 'Invoice',
+    'customer-payment': 'Customer Payment',
+    'credit-note': 'Credit Note',
+};
+
+export function TransactionPrintPage({ id, type = 'invoice' }: { id: string; type?: string }) {
     const router = useRouter();
+    const documentLabel = documentLabels[type] ?? 'Invoice';
 
     const { data: userProfile } = useAccountProfile();
 
@@ -98,7 +108,7 @@ export function TransactionPrintPage({ id }: { id: string }) {
                         <ArrowLeft className="mr-2 h-4 w-4" /> Back to Transaction
                     </Button>
                     <Button onClick={handlePrint}>
-                        <Printer className="mr-2 h-4 w-4" /> Print Invoice
+                        <Printer className="mr-2 h-4 w-4" /> Print {documentLabel}
                     </Button>
                 </div>
             </div>
@@ -118,10 +128,10 @@ export function TransactionPrintPage({ id }: { id: string }) {
                             </div>
 
                             <div>
-                                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500">Invoice to</p>
+                                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500">{documentLabel} for</p>
                                 <p className="mt-2 text-xl font-semibold">{recipientName}</p>
                                 <p className="mt-1 max-w-sm text-sm leading-6 text-slate-500">
-                                    {transaction.description || 'Transaction invoice generated from your finance ledger.'}
+                                    {transaction.description || `${documentLabel} generated from your finance ledger.`}
                                 </p>
                             </div>
                         </div>

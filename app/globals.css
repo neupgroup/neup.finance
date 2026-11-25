@@ -130,3 +130,16 @@
     box-shadow: none;
   }
 }
+/* Keep underlined numeric steppers visible while keeping their visual weight low. */
+.underlined-stepper {
+  appearance: textfield;
+  -moz-appearance: textfield;
+  padding-right: 0;
+}
+
+.underlined-stepper::-webkit-inner-spin-button,
+.underlined-stepper::-webkit-outer-spin-button {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+}

@@ -45,5 +45,11 @@ firestore-debug.log
 
 # Neup.System
 @neup
+!/@neup/
+@neup/*
+!/@neup/elements/
+@neup/elements/*
+!/@neup/elements/ui/
+!/@neup/elements/ui/*.tsx
 
 certificates

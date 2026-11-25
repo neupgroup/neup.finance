@@ -22,6 +22,7 @@ import {
   Users,
   BriefcaseBusiness,
   Repeat2,
+  PlusCircle,
 } from 'lucide-react';
 import { NavLink } from '@neup/components/ui/nav-link';
 import { useSidebar } from '@neup/components/ui/sidebar';
@@ -31,6 +32,7 @@ const menuItems = [
   { href: '/home', label: 'Dashboard', icon: Home },
   { href: '/finaccounts', label: 'Accounts', icon: Landmark },
   { href: '/party', label: 'Party', icon: Users },
+  { href: '/documents', label: 'Documents', icon: PlusCircle },
   { href: '/transactions', label: 'Transactions', icon: ArrowLeftRight },
   { href: '/projections', label: 'Projections', icon: BarChart },
   { href: '/report', label: 'Reports', icon: FileText },

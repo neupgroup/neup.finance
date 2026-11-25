@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@neup/components/ui/button';
 import { Input } from '@neup/components/ui/input';
 import { Label } from '@neup/components/ui/label';
@@ -22,7 +22,10 @@ Creates a new party, then forwards the user to the generated id detail page.
 
 export default function AddPartyPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { toast } = useToast();
+  const project = searchParams.get('project');
+  const projectQuery = project ? `?project=${encodeURIComponent(project)}` : '';
 
   const [name, setName] = useState('');
   const [type, setType] = useState('');
@@ -63,7 +66,7 @@ export default function AddPartyPage() {
         description: `${name} has been successfully added.`,
       });
 
-      router.push(`/party/${createdParty.id}`);
+      router.push(`/party/${createdParty.id}${projectQuery}`);
     } catch (error) {
       console.error('Failed to create party', error);
       toast({
@@ -146,7 +149,7 @@ export default function AddPartyPage() {
               <PlusCircle className="mr-2 h-4 w-4" />
               Save Party
             </Button>
-            <Button type="button" variant="outline" onClick={() => router.push('/party')}>
+            <Button type="button" variant="outline" onClick={() => router.push(`/party${projectQuery}`)}>
               Cancel
             </Button>
           </div>

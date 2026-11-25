@@ -15,6 +15,7 @@ import {
   Home,
   Landmark,
   Repeat2,
+  PlusCircle,
   Settings,
   Users,
 } from 'lucide-react';
@@ -28,6 +29,7 @@ const sidebarGroups: SidebarLinkGroup[] = [
       { href: '/home', label: 'Dashboard', icon: Home },
       { href: '/finaccounts', label: 'Accounts', icon: Landmark },
       { href: '/party', label: 'Party', icon: Users },
+      { href: '/documents', label: 'Documents', icon: PlusCircle },
       { href: '/transactions', label: 'Transactions', icon: ArrowLeftRight },
       { href: '/projections', label: 'Projections', icon: BarChart },
       { href: '/report', label: 'Reports', icon: FileText },

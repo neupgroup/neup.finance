@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { Badge } from '@neup/components/ui/badge';
 import { Skeleton } from '@neup/components/ui/skeleton';
 import { cn } from '@neup/core/utils';
@@ -19,7 +20,12 @@ Renders the account party list and links each party into its detail id route.
 */
 
 export default function PartyPage() {
+  const searchParams = useSearchParams();
   const { data: parties, isLoading } = useParties();
+  const project = searchParams.get('project');
+  const addPartyHref = project
+    ? `/party/add?project=${encodeURIComponent(project)}`
+    : '/party/add';
   const recipients = parties ?? [];
   const stackedTotal = recipients.length > 0 ? recipients.length + 1 : 2;
 
@@ -44,7 +50,7 @@ export default function PartyPage() {
           <div className="overflow-hidden rounded-lg border">
             {isLoading ? (
               <div className="divide-y">
-                <Link href="/party/add" className="block">
+                <Link href={addPartyHref} className="block">
                   <div className={stackedCardClassName(0, 4, 'flex items-start justify-between p-4')}>
                     <div className="flex items-start gap-4">
                       <div className="mt-1 rounded-full bg-muted p-2">
@@ -96,7 +102,7 @@ export default function PartyPage() {
               </div>
             ) : (
               <>
-                <Link href="/party/add" className="block">
+                <Link href={addPartyHref} className="block">
                   <div className={stackedCardClassName(0, stackedTotal, 'flex items-start justify-between p-4')}>
                     <div className="flex items-start gap-4">
                       <div className="mt-1 rounded-full bg-muted p-2">
