@@ -2,28 +2,18 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@neup/core/database/prisma';
 import { OWNER_ROLE_ID } from '@/server/roles';
 import { ensureAccountRecord } from '@/server/account';
+import { getProjectsForAccount } from '@/services/projects';
 
 export async function GET(req: NextRequest) {
   const account = await ensureAccountRecord(req.cookies.get('auth')?.value);
   if (!account) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const grants = await prisma.access.findMany({
-    where: { accountId: account.id, status: 'active', project: { status: 'active' } },
-    include: { project: true, role: true },
-    orderBy: { permittedOn: 'asc' },
-  });
-  const projects = new Map<string, { id: string; name: string; roles: string[]; selected: boolean }>();
-  for (const grant of grants) {
-    const current = projects.get(grant.projectId);
-    if (current) current.roles.push(grant.role.name);
-    else projects.set(grant.projectId, {
-      id: grant.projectId,
-      name: grant.project.name,
-      roles: [grant.role.name],
-      selected: grant.projectId === req.nextUrl.searchParams.get('project'),
-    });
-  }
-  return NextResponse.json([...projects.values()]);
+  const selectedProjectId = req.nextUrl.searchParams.get('project');
+  const projects = await getProjectsForAccount(account.id);
+  return NextResponse.json(projects.map((project) => ({
+    ...project,
+    selected: project.id === selectedProjectId,
+  })));
 }
 
 export async function POST(req: NextRequest) {

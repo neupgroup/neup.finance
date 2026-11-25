@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@neup/core/database/prisma'
 import { getProjectAccess, canAccess } from '@/server/access'
+import { getBooksForProject } from '@/services/books'
 
 /*
 ::neup.documentation::project-books-route
@@ -13,84 +14,12 @@ transaction line amounts stored against that book.
 ::end
 */
 
-function calculateBalance(
-  lines: Array<{ id: string; baseAmount: unknown; transaction: { status: string } | null }>,
-  accountTransactions: Array<{ amount: unknown; direction: string; details: unknown }>,
-) {
-  const mirroredLineIds = new Set(accountTransactions.flatMap((transaction) => {
-    const details = transaction.details;
-    if (!details || typeof details !== 'object' || Array.isArray(details)) return [];
-    const sourceLineId = (details as Record<string, unknown>).sourceTransactionLineId;
-    return typeof sourceLineId === 'string' ? [sourceLineId] : [];
-  }));
-  const legacyBalance = lines.reduce((sum, line) => {
-    if (mirroredLineIds.has(line.id)) return sum;
-    if (line.transaction?.status === 'canceled') return sum
-    const amount = Number(line.baseAmount)
-    if (Number.isNaN(amount)) return sum
-    return sum + amount
-  }, 0)
-  return accountTransactions.reduce((sum, transaction) => {
-    const details = transaction.details;
-    if (details && typeof details === 'object' && !Array.isArray(details) && (details as Record<string, unknown>).status === 'canceled') return sum;
-    const amount = Number(transaction.amount);
-    if (!Number.isFinite(amount)) return sum;
-    return sum + (transaction.direction === 'in' ? amount : -amount);
-  }, legacyBalance);
-}
-
-function calculateLatestStockBalance(activityStock: Array<{ balance: unknown }>) {
-  if (activityStock.length === 0) return 0
-  const latestBalance = Number(activityStock[0]?.balance)
-  return Number.isNaN(latestBalance) ? 0 : latestBalance
-}
-
 export async function GET(req: NextRequest) {
   const access = await getProjectAccess(req)
   if (!access || !canAccess(access, 'books.read')) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
-  const accounts = await prisma.assetGroup.findMany({
-    where: { projectId: access.projectId },
-    orderBy: { createdAt: 'desc' },
-    include: {
-      activityStock: {
-        orderBy: { recordedOn: 'desc' },
-        take: 1,
-        select: {
-          balance: true,
-        },
-      },
-      transactionLines: {
-        where: { transaction: { projectId: access.projectId } },
-        select: {
-          id: true,
-          baseAmount: true,
-          transaction: {
-            select: {
-              status: true,
-            },
-          },
-        },
-      },
-      accountTransactions: {
-        select: { amount: true, direction: true, details: true },
-      },
-    },
-  })
-  return NextResponse.json(
-    accounts.map((a) => ({
-      id: a.id,
-      name: a.name,
-      type: a.type,
-      bankName: a.bankName,
-      branch: a.branch,
-      accountType: a.accountType,
-      balance: a.type === 'Stock' ? calculateLatestStockBalance(a.activityStock) : calculateBalance(a.transactionLines, a.accountTransactions),
-      currency: a.currency,
-      projectId: a.projectId,
-    }))
-  )
+  return NextResponse.json(await getBooksForProject(access.projectId))
 }
 
 export async function POST(req: NextRequest) {
