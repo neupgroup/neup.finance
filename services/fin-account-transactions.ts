@@ -8,6 +8,7 @@ export type FinAccountTransactionInput = {
   direction: 'in' | 'out';
   activityOn: string;
   partyId?: string | null;
+  tags?: unknown;
   details?: unknown;
 };
 
@@ -20,6 +21,7 @@ export function serializeFinAccountTransaction(transaction: {
   currency: string;
   amount: unknown;
   direction: string;
+  tags: unknown;
   details: unknown;
   activityOn: Date;
 }, party: { id: string; name: string; type: string } | null = null) {
@@ -31,6 +33,7 @@ export function serializeFinAccountTransaction(transaction: {
     currency: transaction.currency,
     amount: Number(transaction.amount),
     direction: transaction.direction,
+    tags: transaction.tags,
     partyId: party?.id ?? null,
     party,
     details: transaction.details,
@@ -48,6 +51,45 @@ export async function getFinAccountTransactionHistory(projectId: string, account
     include: { party: { select: { id: true, name: true, type: true } } },
   });
   return transactions.map((transaction) => serializeFinAccountTransaction(transaction, transaction.party));
+}
+
+// Update one transaction only when both its account and project match the request.
+export async function updateFinAccountTransactionForProject(
+  projectId: string,
+  accountId: string,
+  transactionId: string,
+  input: FinAccountTransactionInput,
+) {
+  const normalizedTitle = input.title.trim();
+  const normalizedCurrency = input.currency.trim().toUpperCase();
+  const amount = Number(input.amount);
+  const activityOn = new Date(input.activityOn);
+  if (!normalizedTitle || !normalizedCurrency || !Number.isFinite(amount) || amount <= 0 || !['in', 'out'].includes(input.direction) || Number.isNaN(activityOn.getTime())) {
+    throw new Error('Invalid transaction details');
+  }
+  if (input.partyId) {
+    const party = await prisma.party.findFirst({ where: { id: input.partyId, projectId }, select: { id: true } });
+    if (!party) throw new Error('Recipient party is outside the current project');
+  }
+  const updated = await prisma.finAccountTransaction.updateMany({
+    where: { id: transactionId, finAccountId: accountId, finAccount: { projectId } },
+    data: {
+      title: normalizedTitle,
+      description: input.description?.trim() || null,
+      currency: normalizedCurrency,
+      amount,
+      direction: input.direction,
+      activityOn,
+      partyId: input.partyId ?? null,
+      ...(input.tags == null ? {} : { tags: JSON.parse(JSON.stringify(input.tags)) as Prisma.InputJsonValue }),
+    },
+  });
+  if (!updated.count) return null;
+  const transaction = await prisma.finAccountTransaction.findFirst({
+    where: { id: transactionId, finAccountId: accountId },
+    include: { party: { select: { id: true, name: true, type: true } } },
+  });
+  return transaction ? serializeFinAccountTransaction(transaction, transaction.party) : null;
 }
 
 // Create an account transaction through the shared account transaction service.
@@ -103,6 +145,7 @@ export async function createFinAccountTransactionsForProject(
       amount: input.amount,
       direction: input.direction,
       partyId: input.partyId ?? null,
+      tags: input.tags == null ? undefined : JSON.parse(JSON.stringify(input.tags)) as Prisma.InputJsonValue,
       details: input.details == null ? undefined : JSON.parse(JSON.stringify(input.details)) as Prisma.InputJsonValue,
       activityOn: input.activityOn,
     }, include: { party: { select: { id: true, name: true, type: true } } },

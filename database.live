@@ -79,6 +79,7 @@ Fields:
 > currency: string;
 > amount: decimal(18,2);
 > direction: string, values: in, out;
+> tags: JSONB, nullable;
 > details: JSONB, nullable;
 > activity_on: timestamp with time zone;
 

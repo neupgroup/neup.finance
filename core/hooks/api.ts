@@ -80,6 +80,7 @@ export type FinAccountTransaction = {
   direction: 'in' | 'out';
   partyId: string | null;
   party: { id: string; name: string; type: string } | null;
+  tags: unknown;
   details: Record<string, unknown> | null;
   activityOn: string;
 };
@@ -159,9 +160,17 @@ export async function createFinBook(data: Pick<FinBook, "name" | "type" | "curre
   });
 }
 
-export async function createFinAccountTransaction(accountId: string, data: Pick<FinAccountTransaction, 'title' | 'currency' | 'amount' | 'direction' | 'activityOn'> & Partial<Pick<FinAccountTransaction, 'description' | 'partyId' | 'details'>>) {
+export async function createFinAccountTransaction(accountId: string, data: Pick<FinAccountTransaction, 'title' | 'currency' | 'amount' | 'direction' | 'activityOn'> & Partial<Pick<FinAccountTransaction, 'description' | 'partyId' | 'tags' | 'details'>>) {
   return requestJson<FinAccountTransaction>(`/bridge/api.v1/books/${encodeURIComponent(accountId)}/transactions`, {
     method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+// Update a transaction using the account-scoped API route.
+export async function updateFinAccountTransaction(accountId: string, transactionId: string, data: Pick<FinAccountTransaction, 'title' | 'currency' | 'amount' | 'direction' | 'activityOn'> & Partial<Pick<FinAccountTransaction, 'description' | 'partyId' | 'tags'>>) {
+  return requestJson<FinAccountTransaction>(`/bridge/api.v1/books/${encodeURIComponent(accountId)}/transactions/${encodeURIComponent(transactionId)}`, {
+    method: 'PUT',
     body: JSON.stringify(data),
   });
 }

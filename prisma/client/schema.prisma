@@ -227,6 +227,7 @@ model FinAccountTransaction {
   currency     String
   amount       Decimal    @db.Decimal(18, 2)
   direction    String
+  tags         Json?      @db.JsonB
   details      Json?      @db.JsonB
   activityOn   DateTime   @map("activity_on") @db.Timestamptz(3)
   finAccount   AssetGroup @relation(fields: [finAccountId], references: [id], onDelete: Cascade)

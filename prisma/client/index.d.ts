@@ -16412,6 +16412,7 @@ export namespace Prisma {
     currency: number
     amount: number
     direction: number
+    tags: number
     details: number
     activityOn: number
     _all: number
@@ -16459,6 +16460,7 @@ export namespace Prisma {
     currency?: true
     amount?: true
     direction?: true
+    tags?: true
     details?: true
     activityOn?: true
     _all?: true
@@ -16559,6 +16561,7 @@ export namespace Prisma {
     currency: string
     amount: Decimal
     direction: string
+    tags: JsonValue | null
     details: JsonValue | null
     activityOn: Date
     _count: FinAccountTransactionCountAggregateOutputType | null
@@ -16591,6 +16594,7 @@ export namespace Prisma {
     currency?: boolean
     amount?: boolean
     direction?: boolean
+    tags?: boolean
     details?: boolean
     activityOn?: boolean
     finAccount?: boolean | AssetGroupDefaultArgs<ExtArgs>
@@ -16606,6 +16610,7 @@ export namespace Prisma {
     currency?: boolean
     amount?: boolean
     direction?: boolean
+    tags?: boolean
     details?: boolean
     activityOn?: boolean
     finAccount?: boolean | AssetGroupDefaultArgs<ExtArgs>
@@ -16621,6 +16626,7 @@ export namespace Prisma {
     currency?: boolean
     amount?: boolean
     direction?: boolean
+    tags?: boolean
     details?: boolean
     activityOn?: boolean
     finAccount?: boolean | AssetGroupDefaultArgs<ExtArgs>
@@ -16636,11 +16642,12 @@ export namespace Prisma {
     currency?: boolean
     amount?: boolean
     direction?: boolean
+    tags?: boolean
     details?: boolean
     activityOn?: boolean
   }
 
-  export type FinAccountTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "finAccountId" | "partyId" | "currency" | "amount" | "direction" | "details" | "activityOn", ExtArgs["result"]["finAccountTransaction"]>
+  export type FinAccountTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "finAccountId" | "partyId" | "currency" | "amount" | "direction" | "tags" | "details" | "activityOn", ExtArgs["result"]["finAccountTransaction"]>
   export type FinAccountTransactionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     finAccount?: boolean | AssetGroupDefaultArgs<ExtArgs>
     party?: boolean | FinAccountTransaction$partyArgs<ExtArgs>
@@ -16669,6 +16676,7 @@ export namespace Prisma {
       currency: string
       amount: Prisma.Decimal
       direction: string
+      tags: Prisma.JsonValue | null
       details: Prisma.JsonValue | null
       activityOn: Date
     }, ExtArgs["result"]["finAccountTransaction"]>
@@ -17104,6 +17112,7 @@ export namespace Prisma {
     readonly currency: FieldRef<"FinAccountTransaction", 'String'>
     readonly amount: FieldRef<"FinAccountTransaction", 'Decimal'>
     readonly direction: FieldRef<"FinAccountTransaction", 'String'>
+    readonly tags: FieldRef<"FinAccountTransaction", 'Json'>
     readonly details: FieldRef<"FinAccountTransaction", 'Json'>
     readonly activityOn: FieldRef<"FinAccountTransaction", 'DateTime'>
   }
@@ -32530,6 +32539,7 @@ export namespace Prisma {
     currency: 'currency',
     amount: 'amount',
     direction: 'direction',
+    tags: 'tags',
     details: 'details',
     activityOn: 'activityOn'
   };
@@ -33874,6 +33884,7 @@ export namespace Prisma {
     currency?: StringFilter<"FinAccountTransaction"> | string
     amount?: DecimalFilter<"FinAccountTransaction"> | Decimal | DecimalJsLike | number | string
     direction?: StringFilter<"FinAccountTransaction"> | string
+    tags?: JsonNullableFilter<"FinAccountTransaction">
     details?: JsonNullableFilter<"FinAccountTransaction">
     activityOn?: DateTimeFilter<"FinAccountTransaction"> | Date | string
     finAccount?: XOR<AssetGroupScalarRelationFilter, AssetGroupWhereInput>
@@ -33889,6 +33900,7 @@ export namespace Prisma {
     currency?: SortOrder
     amount?: SortOrder
     direction?: SortOrder
+    tags?: SortOrderInput | SortOrder
     details?: SortOrderInput | SortOrder
     activityOn?: SortOrder
     finAccount?: AssetGroupOrderByWithRelationInput
@@ -33907,6 +33919,7 @@ export namespace Prisma {
     currency?: StringFilter<"FinAccountTransaction"> | string
     amount?: DecimalFilter<"FinAccountTransaction"> | Decimal | DecimalJsLike | number | string
     direction?: StringFilter<"FinAccountTransaction"> | string
+    tags?: JsonNullableFilter<"FinAccountTransaction">
     details?: JsonNullableFilter<"FinAccountTransaction">
     activityOn?: DateTimeFilter<"FinAccountTransaction"> | Date | string
     finAccount?: XOR<AssetGroupScalarRelationFilter, AssetGroupWhereInput>
@@ -33922,6 +33935,7 @@ export namespace Prisma {
     currency?: SortOrder
     amount?: SortOrder
     direction?: SortOrder
+    tags?: SortOrderInput | SortOrder
     details?: SortOrderInput | SortOrder
     activityOn?: SortOrder
     _count?: FinAccountTransactionCountOrderByAggregateInput
@@ -33943,6 +33957,7 @@ export namespace Prisma {
     currency?: StringWithAggregatesFilter<"FinAccountTransaction"> | string
     amount?: DecimalWithAggregatesFilter<"FinAccountTransaction"> | Decimal | DecimalJsLike | number | string
     direction?: StringWithAggregatesFilter<"FinAccountTransaction"> | string
+    tags?: JsonNullableWithAggregatesFilter<"FinAccountTransaction">
     details?: JsonNullableWithAggregatesFilter<"FinAccountTransaction">
     activityOn?: DateTimeWithAggregatesFilter<"FinAccountTransaction"> | Date | string
   }
@@ -36099,6 +36114,7 @@ export namespace Prisma {
     currency: string
     amount: Decimal | DecimalJsLike | number | string
     direction: string
+    tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn: Date | string
     finAccount: AssetGroupCreateNestedOneWithoutAccountTransactionsInput
@@ -36114,6 +36130,7 @@ export namespace Prisma {
     currency: string
     amount: Decimal | DecimalJsLike | number | string
     direction: string
+    tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn: Date | string
   }
@@ -36125,6 +36142,7 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     direction?: StringFieldUpdateOperationsInput | string
+    tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn?: DateTimeFieldUpdateOperationsInput | Date | string
     finAccount?: AssetGroupUpdateOneRequiredWithoutAccountTransactionsNestedInput
@@ -36140,6 +36158,7 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     direction?: StringFieldUpdateOperationsInput | string
+    tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -36153,6 +36172,7 @@ export namespace Prisma {
     currency: string
     amount: Decimal | DecimalJsLike | number | string
     direction: string
+    tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn: Date | string
   }
@@ -36164,6 +36184,7 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     direction?: StringFieldUpdateOperationsInput | string
+    tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -36177,6 +36198,7 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     direction?: StringFieldUpdateOperationsInput | string
+    tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -38470,6 +38492,7 @@ export namespace Prisma {
     currency?: SortOrder
     amount?: SortOrder
     direction?: SortOrder
+    tags?: SortOrder
     details?: SortOrder
     activityOn?: SortOrder
   }
@@ -42825,6 +42848,7 @@ export namespace Prisma {
     currency: string
     amount: Decimal | DecimalJsLike | number | string
     direction: string
+    tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn: Date | string
     finAccount: AssetGroupCreateNestedOneWithoutAccountTransactionsInput
@@ -42838,6 +42862,7 @@ export namespace Prisma {
     currency: string
     amount: Decimal | DecimalJsLike | number | string
     direction: string
+    tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn: Date | string
   }
@@ -43132,6 +43157,7 @@ export namespace Prisma {
     currency?: StringFilter<"FinAccountTransaction"> | string
     amount?: DecimalFilter<"FinAccountTransaction"> | Decimal | DecimalJsLike | number | string
     direction?: StringFilter<"FinAccountTransaction"> | string
+    tags?: JsonNullableFilter<"FinAccountTransaction">
     details?: JsonNullableFilter<"FinAccountTransaction">
     activityOn?: DateTimeFilter<"FinAccountTransaction"> | Date | string
   }
@@ -43419,6 +43445,7 @@ export namespace Prisma {
     currency: string
     amount: Decimal | DecimalJsLike | number | string
     direction: string
+    tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn: Date | string
     party?: PartyCreateNestedOneWithoutFinAccountTransactionsInput
@@ -43432,6 +43459,7 @@ export namespace Prisma {
     currency: string
     amount: Decimal | DecimalJsLike | number | string
     direction: string
+    tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn: Date | string
   }
@@ -46898,6 +46926,7 @@ export namespace Prisma {
     currency: string
     amount: Decimal | DecimalJsLike | number | string
     direction: string
+    tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn: Date | string
   }
@@ -47167,6 +47196,7 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     direction?: StringFieldUpdateOperationsInput | string
+    tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn?: DateTimeFieldUpdateOperationsInput | Date | string
     finAccount?: AssetGroupUpdateOneRequiredWithoutAccountTransactionsNestedInput
@@ -47180,6 +47210,7 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     direction?: StringFieldUpdateOperationsInput | string
+    tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -47192,6 +47223,7 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     direction?: StringFieldUpdateOperationsInput | string
+    tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -47231,6 +47263,7 @@ export namespace Prisma {
     currency: string
     amount: Decimal | DecimalJsLike | number | string
     direction: string
+    tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn: Date | string
   }
@@ -47323,6 +47356,7 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     direction?: StringFieldUpdateOperationsInput | string
+    tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn?: DateTimeFieldUpdateOperationsInput | Date | string
     party?: PartyUpdateOneWithoutFinAccountTransactionsNestedInput
@@ -47336,6 +47370,7 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     direction?: StringFieldUpdateOperationsInput | string
+    tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -47348,6 +47383,7 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     direction?: StringFieldUpdateOperationsInput | string
+    tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn?: DateTimeFieldUpdateOperationsInput | Date | string
   }

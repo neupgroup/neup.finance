@@ -10,7 +10,8 @@ transactions against that selected account.
 ::end
 */
 
-import { useEffect, useState, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
+import Link from 'next/link';
 import { useParams, useSearchParams } from 'next/navigation';
 import { ArrowLeft, FileUp, Loader, PlusCircle, TrendingDown, TrendingUp } from 'lucide-react';
 import { Button } from '@neup/components/ui/button';
@@ -18,18 +19,12 @@ import { LinkButton } from '@neup/components/ui/link-button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@neup/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@neup/components/ui/dialog';
 import { Input } from '@neup/components/ui/input';
-import { DateTimePicker } from '@neup/components/ui/date-time-picker';
 import { Label } from '@neup/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@neup/components/ui/select';
-import { useUser } from '@/core/providers/auth';
-import { createFinAccountTransaction, useFinAccountTransactions, useTransactionsList, useProjectBooks, useParties, type FinAccountTransaction } from '@/core/hooks/api';
-import { useToast } from '@neup/core/hooks/useToast';
 import { Textarea } from '@neup/components/ui/textarea';
-import {
-  currencyOptions,
-  isCreditTransactionType,
-  type Transaction,
-} from '@/core/lib/ledger';
+import { useUser } from '@/core/providers/auth';
+import { createFinAccountTransaction, useFinAccountTransactions, useTransactionsList, useProjectBooks, type FinAccountTransaction } from '@/core/hooks/api';
+import { useToast } from '@neup/core/hooks/useToast';
+import { isCreditTransactionType, type Transaction } from '@/core/lib/ledger';
 
 function formatDate(value: string) {
   return new Date(value).toLocaleString('en-US', {
@@ -66,16 +61,15 @@ export default function FinAccountPage() {
   const projectId = searchParams.get('project')?.trim();
   const accountsHref = `/finaccounts${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
   const importHref = `/finaccounts/${encodeURIComponent(finAccountId)}/import${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
+  const newTransactionHref = `/finaccounts/${encodeURIComponent(finAccountId)}/new${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
 
   const { user, isUserLoading } = useUser();
   const { toast } = useToast();
   const { data: accounts, isLoading: areAccountsLoading } = useProjectBooks();
-  const { data: parties } = useParties();
   const { data: legacyTransactions, isLoading: areLegacyTransactionsLoading } = useTransactionsList(undefined, finAccountId);
   const { data: accountTransactions, isLoading: areAccountTransactionsLoading } = useFinAccountTransactions(finAccountId);
 
   const finAccount = accounts?.find((account) => account.id === finAccountId);
-  const [isAddOpen, setIsAddOpen] = useState(false);
   const [isOpeningBalanceOpen, setIsOpeningBalanceOpen] = useState(false);
   const [openingBalance, setOpeningBalance] = useState('');
   const [openingBalanceDate, setOpeningBalanceDate] = useState(() => {
@@ -89,14 +83,6 @@ export default function FinAccountPage() {
   const [openingBalanceSaved, setOpeningBalanceSaved] = useState(false);
   const [newTransactions, setNewTransactions] = useState<FinAccountTransaction[]>([]);
   const [balanceAdjustment, setBalanceAdjustment] = useState(0);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [date, setDate] = useState('');
-  const [isDateTimePickerOpen, setIsDateTimePickerOpen] = useState(false);
-  const [currency, setCurrency] = useState('');
-  const [totalAmount, setTotalAmount] = useState<number | ''>('');
-  const [partyId, setPartyId] = useState('none');
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const hasOpeningBalance = openingBalanceSaved || Boolean(accountTransactions?.some(isOpeningBalanceTransaction)) || Boolean(legacyTransactions?.some(isOpeningBalanceTransaction));
   const mirroredLegacyLineIds = new Set((accountTransactions ?? []).flatMap((transaction) => {
@@ -151,66 +137,6 @@ export default function FinAccountPage() {
       toast({ name: 'app', state: 'error', title: 'Could not add opening balance', description: 'Please try again.' });
     } finally {
       setIsSavingOpeningBalance(false);
-    }
-  };
-
-  useEffect(() => {
-    if (finAccount?.currency) {
-      setCurrency(finAccount.currency);
-    }
-  }, [finAccount?.currency]);
-
-  const handleAddTransaction = async (e: FormEvent) => {
-    e.preventDefault();
-    if (!user || !finAccount || !title.trim() || !date || !currency || totalAmount === '' || !Number.isFinite(totalAmount) || totalAmount === 0) {
-      toast({
-        name: 'app',
-        state: 'error',
-        title: 'Missing Fields',
-        description: 'Enter a title, date and time, currency, and a non-zero amount.',
-      });
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    const signedAmount = typeof totalAmount === 'number' ? totalAmount : 0;
-    try {
-      const saved = await createFinAccountTransaction(finAccountId, {
-        title: title.trim(),
-        description: description || undefined,
-        currency,
-        amount: Math.abs(signedAmount),
-        direction: signedAmount > 0 ? 'in' : 'out',
-        activityOn: new Date(date).toISOString(),
-        partyId: partyId === 'none' ? null : partyId,
-      });
-
-      setNewTransactions((current) => [saved, ...current]);
-      setBalanceAdjustment((current) => current + signedAmount);
-
-      toast({
-        name: 'app',
-        title: 'Transaction Added',
-        description: `${title} was added to this account.`,
-      });
-
-      setTitle('');
-      setDescription('');
-      setDate('');
-      setTotalAmount('');
-      setPartyId('none');
-      setIsAddOpen(false);
-    } catch (error) {
-      console.error('Error creating transaction:', error);
-      toast({
-        name: 'app',
-        state: 'error',
-        title: 'Error',
-        description: 'Could not create transaction. Please try again.',
-      });
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -280,109 +206,9 @@ export default function FinAccountPage() {
                   </DialogContent>
                 </Dialog>
               ) : null}
-              <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-                <DialogTrigger asChild>
-                  <Button disabled={!finAccount || isLoading}>
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Add Transaction
-                  </Button>
-                </DialogTrigger>
-              <DialogContent className="sm:max-w-[560px]">
-                <DialogHeader>
-                  <DialogTitle>Add Transaction</DialogTitle>
-                  <DialogDescription>
-                    Record a transaction against this account.
-                  </DialogDescription>
-                </DialogHeader>
-                <form onSubmit={handleAddTransaction} className="space-y-4 py-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="title">Title</Label>
-                    <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g., Stock purchase" required />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="description">Description (optional)</Label>
-                    <Textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Optional notes" />
-                  </div>
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="space-y-2">
-                      <Label htmlFor="date">Transaction date and time</Label>
-                      <Button
-                        id="date"
-                        type="button"
-                        variant="outline"
-                        className="w-full justify-start text-left font-normal"
-                        aria-required="true"
-                        onClick={() => setIsDateTimePickerOpen(true)}
-                      >
-                        {date ? formatDate(new Date(date).toISOString()) : 'Choose date and time'}
-                      </Button>
-                      {isDateTimePickerOpen ? (
-                        <DateTimePicker
-                          kind="when"
-                          initialDate={date ? date.slice(0, 10) : ''}
-                          initialTime={date ? date.slice(11, 16) : ''}
-                          onClose={() => setIsDateTimePickerOpen(false)}
-                          onComplete={(selectedDate, selectedTime) => {
-                            if (selectedDate && selectedTime) setDate(`${selectedDate}T${selectedTime}`);
-                            setIsDateTimePickerOpen(false);
-                          }}
-                        />
-                      ) : null}
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="currency">Currency</Label>
-                      <Select value={currency} onValueChange={setCurrency} required>
-                        <SelectTrigger id="currency">
-                          <SelectValue placeholder="Select currency" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {currencyOptions.map((option) => (
-                            <SelectItem key={option.value} value={option.value}>
-                              {option.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="space-y-2">
-                      <Label htmlFor="amount">Amount</Label>
-                      <Input
-                        id="amount"
-                        type="number"
-                        step="0.01"
-                        value={totalAmount}
-                        onChange={(e) => setTotalAmount(e.target.value === '' ? '' : parseFloat(e.target.value))}
-                        placeholder="0.00"
-                        required
-                      />
-                      <p className="text-xs text-muted-foreground">Positive for money in; negative for money out.</p>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="recipient-party">Recipient (party, optional)</Label>
-                      <Select value={partyId} onValueChange={setPartyId}>
-                        <SelectTrigger id="recipient-party">
-                          <SelectValue placeholder="No recipient" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="none">No recipient</SelectItem>
-                          {(parties ?? []).map((party: { id: string; name: string; type: string }) => (
-                            <SelectItem key={party.id} value={party.id}>{party.name}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  <DialogFooter>
-                    <Button type="submit" disabled={isSubmitting}>
-                      {isSubmitting ? <Loader className="mr-2 h-4 w-4 animate-spin" /> : null}
-                      Save Transaction
-                    </Button>
-                  </DialogFooter>
-                </form>
-                </DialogContent>
-              </Dialog>
+              <LinkButton href={newTransactionHref} variant="default" aria-disabled={!finAccount || isLoading} tabIndex={!finAccount || isLoading ? -1 : undefined} className={!finAccount || isLoading ? 'pointer-events-none opacity-50' : undefined} preIcon={<PlusCircle className="mr-2 h-4 w-4" />}>
+                Add Transaction
+              </LinkButton>
             </div>
           </div>
         </div>
@@ -403,33 +229,34 @@ export default function FinAccountPage() {
               const activityLabel = isOpeningBalance ? 'Opening Balance' : String(details.transactionType ?? (transaction as FinAccountTransaction).direction ?? 'transaction');
               const activityCategory = String(details.category ?? (isOpeningBalance ? 'general' : ''));
               const recipientName = transaction.party?.name ?? (typeof details.recipient === 'string' ? details.recipient : '');
+              const transactionHref = `/finaccounts/${encodeURIComponent(finAccountId)}/${encodeURIComponent(transaction.id)}${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
 
               return (
-                <Card key={transaction.id}>
-                  <CardContent className="flex items-center justify-between gap-4 p-4">
-                    <div className="flex items-center gap-4">
-                      <div className={`rounded-full p-2 ${isCredit ? 'bg-green-500/10 text-green-600' : 'bg-red-500/10 text-red-600'}`}>
-                        {isCredit ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
+                <Link key={transaction.id} href={transactionHref} className="block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                  <Card className="transition-colors hover:bg-muted/40">
+                    <CardContent className="flex items-center justify-between gap-4 p-4">
+                      <div className="flex items-center gap-4">
+                        <div className={`rounded-full p-2 ${isCredit ? 'bg-green-500/10 text-green-600' : 'bg-red-500/10 text-red-600'}`}>
+                          {isCredit ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
+                        </div>
+                        <div>
+                          <p className="font-semibold">{transaction.title}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {formatDate(transaction.activityOn)}{activityCategory ? ` · ${activityCategory}` : ''}
+                          </p>
+                          {transaction.description ? <p className="text-sm text-muted-foreground">{transaction.description}</p> : null}
+                          {recipientName ? <p className="text-xs text-muted-foreground">Recipient: {recipientName}</p> : null}
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-semibold">{transaction.title}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {formatDate(transaction.activityOn)}{activityCategory ? ` · ${activityCategory}` : ''}
+                      <div className="text-right">
+                        <p className={`font-semibold ${isCredit ? 'text-green-600' : 'text-red-600'}`}>
+                          {isCredit ? '+' : '-'}{formatCurrency(amount, transaction.currency)}
                         </p>
-                        {transaction.description ? <p className="text-sm text-muted-foreground">{transaction.description}</p> : null}
-                        {recipientName ? <p className="text-xs text-muted-foreground">Recipient: {recipientName}</p> : null}
+                        <p className="text-xs text-muted-foreground capitalize">{activityLabel}</p>
                       </div>
-                    </div>
-                    <div className="text-right">
-                      <p className={`font-semibold ${isCredit ? 'text-green-600' : 'text-red-600'}`}>
-                        {isCredit ? '+' : '-'}{formatCurrency(amount, transaction.currency)}
-                      </p>
-                      <p className="text-xs text-muted-foreground capitalize">
-                          {activityLabel}
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </Link>
               );
             })}
           </div>

@@ -29,10 +29,10 @@ export async function POST(request: NextRequest, context: RouteContext) {
   const title = typeof body?.title === 'string' ? body.title.trim() : '';
   const currency = typeof body?.currency === 'string' ? body.currency.trim().toUpperCase() : '';
   const requestedAmount = Number(body?.amount);
-  const signedAmount = body?.direction === 'out' ? -Math.abs(requestedAmount) : body?.direction === 'in' ? Math.abs(requestedAmount) : requestedAmount;
+  const direction = body?.direction;
   const activityOn = typeof body?.activityOn === 'string' ? body.activityOn : '';
 
-  if (!title || !currency || !Number.isFinite(signedAmount) || signedAmount === 0 || !activityOn) {
+  if (!title || !currency || !Number.isFinite(requestedAmount) || requestedAmount <= 0 || !['in', 'out'].includes(direction) || !activityOn) {
     return NextResponse.json({ error: 'Invalid transaction details' }, { status: 400 });
   }
 
@@ -41,10 +41,11 @@ export async function POST(request: NextRequest, context: RouteContext) {
       title,
       description: typeof body.description === 'string' ? body.description : undefined,
       currency,
-      amount: Math.abs(signedAmount),
-      direction: signedAmount > 0 ? 'in' : 'out',
+      amount: requestedAmount,
+      direction,
       activityOn,
       partyId: typeof body.partyId === 'string' && body.partyId ? body.partyId : null,
+      tags: body.tags,
       details: body.details,
     });
     if (!transaction) return NextResponse.json({ error: 'Account not found' }, { status: 404 });

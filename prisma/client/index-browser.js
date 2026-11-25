@@ -253,6 +253,7 @@ exports.Prisma.FinAccountTransactionScalarFieldEnum = {
   currency: 'currency',
   amount: 'amount',
   direction: 'direction',
+  tags: 'tags',
   details: 'details',
   activityOn: 'activityOn'
 };
