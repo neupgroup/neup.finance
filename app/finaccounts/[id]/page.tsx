@@ -13,7 +13,7 @@ transactions against that selected account.
 import { useState, type FormEvent } from 'react';
 import Link from 'next/link';
 import { useParams, useSearchParams } from 'next/navigation';
-import { ArrowLeft, FileUp, Loader, PlusCircle, TrendingDown, TrendingUp } from 'lucide-react';
+import { ArrowLeft, FileUp, GitCompareArrows, Loader, PlusCircle, Search, TrendingDown, TrendingUp } from 'lucide-react';
 import { Button } from '@neup/components/ui/button';
 import { LinkButton } from '@neup/components/ui/link-button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@neup/components/ui/card';
@@ -54,6 +54,97 @@ function isOpeningBalanceTransaction(transaction: Transaction | FinAccountTransa
   );
 }
 
+type SearchableAccountTransaction = {
+  id: string;
+  title: string;
+  description: string | null;
+  currency: string;
+  amount: number;
+  direction: 'in' | 'out';
+  activityOn: string;
+  details: Record<string, unknown> | null;
+  party?: { name?: string; type?: string; taxinfo?: unknown } | null;
+};
+
+// Validate compact YYYYMMDD or YYYYMMDD.HHMMSS filter values.
+function isValidDateFilter(value: string, includesTime: boolean) {
+  const [datePart, timePart] = includesTime ? value.split('.') : [value, undefined];
+  if (!/^\d{8}$/.test(datePart) || (includesTime && (!timePart || !/^\d{6}$/.test(timePart)))) return false;
+  const year = Number(datePart.slice(0, 4));
+  const month = Number(datePart.slice(4, 6));
+  const day = Number(datePart.slice(6, 8));
+  const date = new Date(Date.UTC(year, month - 1, day));
+  if (date.getUTCFullYear() !== year || date.getUTCMonth() !== month - 1 || date.getUTCDate() !== day) return false;
+  if (!timePart) return true;
+  return Number(timePart.slice(0, 2)) <= 23 && Number(timePart.slice(2, 4)) <= 59 && Number(timePart.slice(4, 6)) <= 59;
+}
+
+// Normalize transaction timestamps to sortable compact date and datetime strings.
+function transactionDateValue(transaction: SearchableAccountTransaction, includeTime: boolean) {
+  const value = new Date(transaction.activityOn).toISOString();
+  const date = value.slice(0, 10).replace(/-/g, '');
+  return includeTime ? `${date}.${value.slice(11, 19).replace(/:/g, '')}` : date;
+}
+
+// Apply the documented account search syntax, duplicate groups, and plain text terms.
+function searchAccountTransactions<T extends SearchableAccountTransaction>(transactions: T[], query: string) {
+  const expression = /duplicates\s*\{[^}]*\}|(?:recipient|receipent)\.(?:type|taxType)\s*=\s*[^\s]+|(?:amount|date|datetime)\s*(?:[<>]=?|=)\s*[^\s]+/gi;
+  const filters = query.match(expression) ?? [];
+  const remainder = query.replace(expression, '').trim().toLowerCase();
+  const parsed = filters.map((filter) => {
+    if (/^duplicates/i.test(filter)) {
+      return { type: 'duplicates', fields: filter.slice(filter.indexOf('{') + 1, filter.lastIndexOf('}')).split(',').map((field) => field.trim().toLowerCase()) };
+    }
+    const recipient = filter.match(/^(?:recipient|receipent)\.(type|taxType)\s*=\s*(.+)$/i);
+    if (recipient) return { type: recipient[1].toLowerCase(), operator: '=', value: recipient[2].toLowerCase() };
+    const comparison = filter.match(/^(amount|date|datetime)\s*([<>]=?|=)\s*(.+)$/i);
+    if (!comparison) return { type: 'invalid', value: filter };
+    return { type: comparison[1].toLowerCase(), operator: comparison[2], value: comparison[3] };
+  });
+  for (const filter of parsed) {
+    if (filter.type === 'invalid') return { transactions: [], error: `Invalid filter: ${filter.value}` };
+    if (filter.type === 'duplicates') {
+      const supported = ['direction', 'amount', 'currency', 'date', 'datetime'];
+      if (!filter.fields?.length || filter.fields.some((field) => !supported.includes(field))) return { transactions: [], error: 'Duplicate filters support direction, amount, currency, date, and datetime.' };
+    } else if (filter.type === 'amount' && !Number.isFinite(Number(filter.value))) {
+      return { transactions: [], error: `Invalid amount value: ${filter.value}` };
+    } else if ((filter.type === 'date' || filter.type === 'datetime') && !isValidDateFilter(filter.value ?? '', filter.type === 'datetime')) {
+      return { transactions: [], error: `Invalid ${filter.type} value. Use YYYYMMDD${filter.type === 'datetime' ? '.HHMMSS' : ''} and a valid calendar date/time.` };
+    }
+  }
+
+  const filtered = transactions.filter((transaction) => {
+    const party = transaction.party;
+    const taxinfo = party?.taxinfo && typeof party.taxinfo === 'object' ? party.taxinfo as Record<string, unknown> : {};
+    for (const filter of parsed) {
+      if (filter.type === 'duplicates') {
+        const duplicate = transactions.some((other) => other.id !== transaction.id && filter.fields!.every((field) => {
+          if (field === 'direction') return transaction.direction === other.direction;
+          if (field === 'amount') return Math.abs(transaction.amount) === Math.abs(other.amount);
+          if (field === 'currency') return transaction.currency.toUpperCase() === other.currency.toUpperCase();
+          return transactionDateValue(transaction, field === 'datetime') === transactionDateValue(other, field === 'datetime');
+        }));
+        if (!duplicate) return false;
+      } else if (filter.type === 'type' && party?.type?.toLowerCase() !== filter.value) return false;
+      else if (filter.type === 'taxtype' && String(taxinfo.taxType ?? '').toLowerCase() !== filter.value) return false;
+      else if (filter.type === 'amount') {
+        const actual = Math.abs(transaction.amount);
+        const expected = Number(filter.value);
+        if (filter.operator === '>' && actual <= expected || filter.operator === '<' && actual >= expected || filter.operator === '>=' && actual < expected || filter.operator === '<=' && actual > expected) return false;
+        if (filter.operator === '=' && Math.round(actual * 100) !== Math.round(expected * 100)) return false;
+      } else if (filter.type === 'date' || filter.type === 'datetime') {
+        const actual = transactionDateValue(transaction, filter.type === 'datetime');
+        const expected = filter.type === 'date' ? filter.value! : `${filter.value!.slice(0, 8)}.${filter.value!.slice(9)}`;
+        if (filter.operator === '>' && actual <= expected || filter.operator === '<' && actual >= expected || filter.operator === '>=' && actual < expected || filter.operator === '<=' && actual > expected) return false;
+      }
+    }
+    const recipientName = party?.name ?? (typeof transaction.details?.recipient === 'string' ? transaction.details.recipient : '');
+    const searchable = [transaction.title, transaction.description, transaction.currency, transaction.direction, transaction.activityOn, recipientName].join(' ').toLowerCase();
+    return !remainder || searchable.includes(remainder);
+  });
+  return { transactions: filtered, error: '' };
+}
+
 export default function FinAccountPage() {
   const params = useParams<{ id: string }>();
   const searchParams = useSearchParams();
@@ -61,6 +152,7 @@ export default function FinAccountPage() {
   const projectId = searchParams.get('project')?.trim();
   const accountsHref = `/finaccounts${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
   const importHref = `/finaccounts/${encodeURIComponent(finAccountId)}/import${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
+  const reconcileHref = `/finaccounts/${encodeURIComponent(finAccountId)}/reconcile${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
   const newTransactionHref = `/finaccounts/${encodeURIComponent(finAccountId)}/new${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
 
   const { user, isUserLoading } = useUser();
@@ -83,6 +175,7 @@ export default function FinAccountPage() {
   const [openingBalanceSaved, setOpeningBalanceSaved] = useState(false);
   const [newTransactions, setNewTransactions] = useState<FinAccountTransaction[]>([]);
   const [balanceAdjustment, setBalanceAdjustment] = useState(0);
+  const [transactionSearch, setTransactionSearch] = useState('');
 
   const hasOpeningBalance = openingBalanceSaved || Boolean(accountTransactions?.some(isOpeningBalanceTransaction)) || Boolean(legacyTransactions?.some(isOpeningBalanceTransaction));
   const mirroredLegacyLineIds = new Set((accountTransactions ?? []).flatMap((transaction) => {
@@ -103,6 +196,8 @@ export default function FinAccountPage() {
       legacy: true as const,
     })),
   ].sort((left, right) => new Date(right.activityOn).getTime() - new Date(left.activityOn).getTime());
+  const { transactions: filteredTransactions, error: searchError } = searchAccountTransactions(visibleTransactions, transactionSearch);
+  const calculatedBalance = visibleTransactions.reduce((balance, transaction) => balance + (transaction.direction === 'in' ? Math.abs(transaction.amount) : -Math.abs(transaction.amount)), 0);
 
   // Save the initial balance as an opening entry in the account transaction table.
   const handleAddOpeningBalance = async (event: FormEvent) => {
@@ -164,7 +259,7 @@ export default function FinAccountPage() {
                 <CardHeader className="pb-2">
                   <CardDescription>Current balance</CardDescription>
                   <CardTitle className="text-2xl">
-                    {formatCurrency(finAccount.balance + balanceAdjustment, finAccount.currency)}
+                    {formatCurrency(calculatedBalance + balanceAdjustment, finAccount.currency)}
                   </CardTitle>
                 </CardHeader>
               </Card>
@@ -172,6 +267,9 @@ export default function FinAccountPage() {
             <div className="flex flex-wrap justify-end gap-2">
               <LinkButton href={importHref} variant="outlined" aria-disabled={!finAccount || isLoading} tabIndex={!finAccount || isLoading ? -1 : undefined} className={!finAccount || isLoading ? 'pointer-events-none opacity-50' : undefined} preIcon={<FileUp className="mr-2 h-4 w-4" />}>
                 Import transactions
+              </LinkButton>
+              <LinkButton href={reconcileHref} variant="outlined" aria-disabled={!finAccount || isLoading} tabIndex={!finAccount || isLoading ? -1 : undefined} className={!finAccount || isLoading ? 'pointer-events-none opacity-50' : undefined} preIcon={<GitCompareArrows className="mr-2 h-4 w-4" />}>
+                Reconcile
               </LinkButton>
               {!hasOpeningBalance ? (
                 <Dialog open={isOpeningBalanceOpen} onOpenChange={setIsOpeningBalanceOpen}>
@@ -214,14 +312,19 @@ export default function FinAccountPage() {
         </div>
 
         <h2 className="text-xl font-semibold tracking-tight">Transaction history</h2>
+        <div className="relative w-full max-w-xl">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input value={transactionSearch} onChange={(event) => setTransactionSearch(event.target.value)} placeholder="Search or filter: duplicates{amount,date}, amount>20000, recipient.type=person, date>20250201" aria-label="Search transactions" className="pl-9" />
+        </div>
+        {searchError ? <p role="alert" className="text-sm text-destructive">{searchError}</p> : null}
         {isLoading ? (
           <div className="flex items-center justify-center py-16 text-muted-foreground">
             <Loader className="mr-3 h-6 w-6 animate-spin" />
             <p>Loading transactions...</p>
           </div>
-        ) : visibleTransactions.length > 0 ? (
+        ) : filteredTransactions.length > 0 ? (
           <div className="space-y-3">
-            {visibleTransactions.map((transaction) => {
+            {filteredTransactions.map((transaction) => {
               const isOpeningBalance = isOpeningBalanceTransaction(transaction);
               const isCredit = transaction.direction === 'in';
               const amount = Math.abs(transaction.amount);
@@ -263,7 +366,7 @@ export default function FinAccountPage() {
         ) : (
           <Card>
             <CardContent className="py-16 text-center text-muted-foreground">
-              No transactions found for this account.
+              {transactionSearch.trim() ? 'No transactions match your search.' : 'No transactions found for this account.'}
             </CardContent>
           </Card>
         )}

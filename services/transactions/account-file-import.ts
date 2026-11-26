@@ -6,12 +6,13 @@ import { createNiaResponse } from '@neup/logica/intelligence/responses';
 
 const MAX_FILE_BYTES = 15 * 1024 * 1024;
 const MAX_EXTRACTED_CHARACTERS = 70_000;
-const SUPPORTED_EXTENSIONS = new Set(['xlsx', 'xls', 'pdf', 'doc', 'docx', 'csv', 'tsv', 'tsx', 'txt']);
+const SUPPORTED_EXTENSIONS = new Set(['xlsx', 'xls', 'pdf', 'doc', 'docx', 'csv', 'tsv', 'tsx', 'txt', 'json']);
 
 const ExtractedTransactionSchema = z.object({
   date: z.string(),
   title: z.string().min(1),
   description: z.string().nullable().optional(),
+  tags: z.array(z.string()).nullable().optional(),
   amount: z.coerce.number().positive(),
   direction: z.enum(['in', 'out']),
   currency: z.string().regex(/^[a-z]{3}$/i),
@@ -52,6 +53,8 @@ async function extractDocumentText(fileName: string, buffer: Buffer) {
       const sheet = workbook.Sheets[sheetName];
       return `Sheet: ${sheetName}\n${XLSX.utils.sheet_to_csv(sheet, { FS: '\t' })}`;
     }).join('\n\n');
+  } else if (extension === 'json') {
+    text = buffer.toString('utf8');
   } else if (extension === 'pdf') {
     const parser = new PDFParse({ data: new Uint8Array(buffer) });
     try {
@@ -69,6 +72,155 @@ async function extractDocumentText(fileName: string, buffer: Buffer) {
   const normalized = text.replace(/\u0000/g, '').trim();
   if (!normalized) throw new Error('No readable text was found in this file.');
   return normalized.slice(0, MAX_EXTRACTED_CHARACTERS);
+}
+
+type DirectImportRow = {
+  date: string;
+  title?: string;
+  description?: string;
+  direction: 'in' | 'out';
+  amount: number;
+  currency: string;
+  tags?: string[];
+};
+
+const requiredDirectFields = ['datetime', 'direction', 'amount', 'currency'];
+
+// Parse a date value and return a stable ISO date for account transaction storage.
+function normalizeImportDate(value: unknown) {
+  if (value instanceof Date && !Number.isNaN(value.getTime())) return value.toISOString();
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    const excelDate = XLSX.SSF.parse_date_code(value);
+    if (excelDate) {
+      const date = new Date(Date.UTC(excelDate.y, excelDate.m - 1, excelDate.d, excelDate.H, excelDate.M, Math.floor(excelDate.S)));
+      if (!Number.isNaN(date.getTime())) return date.toISOString();
+    }
+  }
+  const text = String(value ?? '').trim();
+  if (!text) return '';
+  const date = new Date(text);
+  return Number.isNaN(date.getTime()) ? '' : date.toISOString();
+}
+
+// Convert JSON values into direct import rows, enforcing the required transaction fields.
+function parseDirectJson(content: string) {
+  let decoded: unknown;
+  try {
+    decoded = JSON.parse(content);
+  } catch {
+    throw new Error('Invalid JSON. Use an array of transaction objects with datetime, direction, amount, and currency.');
+  }
+  const rows = Array.isArray(decoded) ? decoded : decoded && typeof decoded === 'object' && Array.isArray((decoded as { transactions?: unknown }).transactions)
+    ? (decoded as { transactions: unknown[] }).transactions
+    : [decoded];
+  return rows.map((value, index) => {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error(`JSON transaction ${index + 1} must be an object.`);
+    const row = value as Record<string, unknown>;
+    const missing = requiredDirectFields.filter((field) => row[field] == null || String(row[field]).trim() === '');
+    if (missing.length) throw new Error(`JSON transaction ${index + 1} is missing ${missing.join(', ')}. Required format: datetime, title (optional), description (optional), direction (in/out), amount, currency, tags (optional JSON array).`);
+    const direction = String(row.direction).toLowerCase();
+    if (direction !== 'in' && direction !== 'out') throw new Error(`JSON transaction ${index + 1} direction must be "in" or "out".`);
+    if (row.tags != null && (!Array.isArray(row.tags) || row.tags.some((tag) => typeof tag !== 'string'))) throw new Error(`JSON transaction ${index + 1} tags must be a JSON array of strings.`);
+    return {
+      date: normalizeImportDate(row.datetime), title: typeof row.title === 'string' ? row.title : undefined,
+      description: typeof row.description === 'string' ? row.description : undefined,
+      direction, amount: Number(row.amount), currency: String(row.currency), tags: row.tags as string[] | undefined,
+    } satisfies DirectImportRow;
+  });
+}
+
+// Parse TXT blocks with field labels and `--` separators.
+function parseTextBlocks(content: string) {
+  return content.split(/^\s*--\s*$/m).map((block) => {
+    const row: Record<string, unknown> = {};
+    const lines = block.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+    const fieldOrder = ['datetime', 'title', 'description', 'tags', 'direction', 'currency', 'amount'];
+    const headerIndex = lines.findIndex((line) => /^datetime\s*$/i.test(line));
+    if (headerIndex >= 0) {
+      const headers = lines.slice(headerIndex).filter((line) => fieldOrder.includes(line.toLowerCase()));
+      const values = lines.slice(headerIndex + headers.length);
+      headers.forEach((header, index) => { row[header.toLowerCase()] = values[index] ?? ''; });
+    } else if (lines.some((line) => line.includes(':'))) {
+      for (const line of lines) {
+        const separator = line.indexOf(':');
+        if (separator < 0) continue;
+        row[line.slice(0, separator).trim().toLowerCase()] = line.slice(separator + 1).trim();
+      }
+    } else {
+      fieldOrder.forEach((field, index) => { if (lines[index] != null) row[field] = lines[index]; });
+    }
+    return row;
+  }).filter((row) => Object.keys(row).length > 0);
+}
+
+// Map common spreadsheet header variations to the documented import field names.
+function normalizeDirectHeaders(raw: Record<string, unknown>) {
+  const aliases: Record<string, string> = {
+    datetime: 'datetime', 'date time': 'datetime', 'activity on': 'datetime', 'transaction date': 'datetime', date: 'datetime', timestamp: 'datetime',
+    title: 'title', name: 'title', description: 'description', details: 'description', notes: 'description',
+    direction: 'direction', type: 'direction', flow: 'direction', currency: 'currency', currencycode: 'currency', 'currency code': 'currency',
+    amount: 'amount', value: 'amount', tags: 'tags',
+  };
+  return Object.fromEntries(Object.entries(raw).map(([key, value]) => {
+    const normalizedKey = key.replace(/[_-]+/g, ' ').trim().toLowerCase().replace(/\s+/g, ' ');
+    return [aliases[normalizedKey] ?? normalizedKey.replace(/\s+/g, ''), value];
+  }));
+}
+
+// Convert supported structured file content into normalized account transaction candidates.
+export function parseDirectAccountTransactions(fileName: string, buffer: Buffer, accountCurrency: string) {
+  if (buffer.byteLength > MAX_FILE_BYTES) throw new Error('Files must be 15 MB or smaller.');
+  const extension = fileName.split('.').pop()?.toLowerCase() ?? '';
+  let rawRows: Record<string, unknown>[];
+  if (extension === 'json') return parseDirectJson(buffer.toString('utf8')).map((row, index) => normalizeDirectRow(row, index, accountCurrency));
+  if (extension === 'xlsx' || extension === 'xls') {
+    const workbook = XLSX.read(buffer, { type: 'buffer', cellDates: true });
+    rawRows = workbook.SheetNames.flatMap((sheet) => XLSX.utils.sheet_to_json<Record<string, unknown>>(workbook.Sheets[sheet], { defval: '' }));
+  } else if (extension === 'csv' || extension === 'tsv') {
+    const delimiter = extension === 'tsv' ? '\t' : ',';
+    const workbook = XLSX.read(buffer.toString('utf8'), { type: 'string', FS: delimiter });
+    rawRows = workbook.SheetNames.flatMap((sheet) => XLSX.utils.sheet_to_json<Record<string, unknown>>(workbook.Sheets[sheet], { defval: '' }));
+  } else if (extension === 'txt') {
+    rawRows = parseTextBlocks(buffer.toString('utf8'));
+  } else {
+    throw new Error('Direct import supports JSON, XLSX, XLS, CSV, TSV, and TXT files.');
+  }
+  if (!rawRows.length) throw new Error('No transaction rows were found.');
+  try {
+    return rawRows.map((row, index) => normalizeDirectRow(row, index, accountCurrency));
+  } catch (error) {
+    const keys = [...new Set(rawRows.flatMap((row) => Object.keys(row)))];
+    const message = error instanceof Error ? error.message : 'Invalid transaction data.';
+    if (extension === 'csv' || extension === 'tsv' || extension === 'xlsx' || extension === 'xls') {
+      throw new Error(`${message} Detected columns: ${keys.join(', ') || 'none'}. Expected datetime, direction, amount, and currency; title, description, and tags are optional.`);
+    }
+    throw error;
+  }
+}
+
+// Validate column names and values, then apply the documented default transaction title.
+function normalizeDirectRow(raw: DirectImportRow | Record<string, unknown>, index: number, accountCurrency: string): ImportedAccountTransaction {
+  const row = raw as Record<string, unknown>;
+  const normalized = normalizeDirectHeaders(row);
+  const datetime = normalized.datetime ?? normalized.date;
+  const direction = String(normalized.direction ?? '').trim().toLowerCase();
+  const amount = Number(String(normalized.amount ?? '').replace(/,/g, ''));
+  const currency = String(normalized.currency ?? '').trim().toUpperCase();
+  const date = normalizeImportDate(datetime);
+  const rowNumber = index + 1;
+  if (!date || !['in', 'out'].includes(direction) || !Number.isFinite(amount) || amount <= 0 || !/^[A-Z]{3}$/.test(currency)) {
+    throw new Error(`Transaction ${rowNumber} needs a valid datetime, direction (in/out), positive amount, and 3-letter currency.`);
+  }
+  let tags: string[] | undefined;
+  if (normalized.tags != null && normalized.tags !== '') {
+    if (Array.isArray(normalized.tags)) tags = normalized.tags.map(String);
+    else if (typeof normalized.tags === 'string') {
+      try { const parsed: unknown = JSON.parse(normalized.tags); if (Array.isArray(parsed)) tags = parsed.map(String); else tags = normalized.tags.split(',').map((tag) => tag.trim()).filter(Boolean); }
+      catch { tags = normalized.tags.split(',').map((tag) => tag.trim()).filter(Boolean); }
+    }
+  }
+  const title = String(normalized.title ?? '').trim() || `Money ${direction === 'in' ? 'in' : 'out'} on ${date.slice(0, 10)}`;
+  return { date, title, description: String(normalized.description ?? '').trim() || null, amount, direction: direction as 'in' | 'out', currency: currency || accountCurrency.toUpperCase(), tags, duplicate: false, duplicateReason: null };
 }
 
 // Parse a JSON object from the model's text output, including fenced JSON.

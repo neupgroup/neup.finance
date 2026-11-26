@@ -17,7 +17,7 @@ import { Skeleton } from '@neup/components/ui/skeleton';
 import { PlusCircle, Landmark, Wallet, Activity, MoreVertical, Inbox } from 'lucide-react';
 import { cn } from '@neup/core/utils';
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationLink } from '@/components/ui/pagination';
-import { useProjectBooks } from '@/core/hooks/api';
+import { useFinAccountTransactions, useProjectBooks } from '@/core/hooks/api';
 import Link from 'next/link';
 import { stackedCardClassName } from '@/components/ui/stacked-card';
 import { StackedEmptyStateRow } from '@/components/ui/stacked-empty-state';
@@ -31,6 +31,22 @@ const accountTypeIcons = {
 };
 
 const ITEMS_PER_PAGE = 10;
+
+// Load account transactions so list balances reflect the account history shown on detail pages.
+function AccountBalance({ accountId, currency, fallbackBalance }: { accountId: string; currency: string; fallbackBalance: number }) {
+  const { data: transactions, isLoading } = useFinAccountTransactions(accountId);
+  const balance = transactions
+    ? transactions.reduce((total, transaction) => total + (transaction.direction === 'in' ? transaction.amount : -transaction.amount), 0)
+    : fallbackBalance;
+  return (
+    <div className="min-w-36 rounded-lg border bg-muted/30 px-4 py-2 text-right">
+      <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Current balance</p>
+      <p className="font-bold text-xl tabular-nums">
+        {isLoading ? 'Loading…' : new Intl.NumberFormat('en-US', { style: 'currency', currency, minimumFractionDigits: 2 }).format(balance)}
+      </p>
+    </div>
+  );
+}
 
 function AccountCardSkeleton({ className = '' }: { className?: string }) {
   return (
@@ -140,12 +156,7 @@ export default function FinAccountsPage() {
                             </div>
                           </div>
                           <div className="flex items-center gap-4">
-                            <div className="text-right">
-                              <p className="font-semibold text-lg">
-                                {new Intl.NumberFormat('en-US', { style: 'currency', currency: account.currency, minimumFractionDigits: 2 }).format(account.balance)}
-                              </p>
-                              <p className="text-sm text-muted-foreground">Current Balance</p>
-                            </div>
+                            <AccountBalance accountId={account.id} currency={account.currency} fallbackBalance={account.balance} />
                             <Button variant="text" size="icon">
                               <MoreVertical className="h-5 w-5" />
                             </Button>

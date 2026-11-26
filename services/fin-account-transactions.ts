@@ -24,7 +24,7 @@ export function serializeFinAccountTransaction(transaction: {
   tags: unknown;
   details: unknown;
   activityOn: Date;
-}, party: { id: string; name: string; type: string } | null = null) {
+}, party: { id: string; name: string; type: string; taxinfo?: unknown } | null = null) {
   return {
     id: transaction.id,
     title: transaction.title,
@@ -48,7 +48,7 @@ export async function getFinAccountTransactionHistory(projectId: string, account
   const transactions = await prisma.finAccountTransaction.findMany({
     where: { finAccountId: accountId },
     orderBy: [{ activityOn: 'desc' }, { id: 'desc' }],
-    include: { party: { select: { id: true, name: true, type: true } } },
+    include: { party: { select: { id: true, name: true, type: true, taxinfo: true } } },
   });
   return transactions.map((transaction) => serializeFinAccountTransaction(transaction, transaction.party));
 }
@@ -87,7 +87,7 @@ export async function updateFinAccountTransactionForProject(
   if (!updated.count) return null;
   const transaction = await prisma.finAccountTransaction.findFirst({
     where: { id: transactionId, finAccountId: accountId },
-    include: { party: { select: { id: true, name: true, type: true } } },
+    include: { party: { select: { id: true, name: true, type: true, taxinfo: true } } },
   });
   return transaction ? serializeFinAccountTransaction(transaction, transaction.party) : null;
 }
@@ -148,7 +148,7 @@ export async function createFinAccountTransactionsForProject(
       tags: input.tags == null ? undefined : JSON.parse(JSON.stringify(input.tags)) as Prisma.InputJsonValue,
       details: input.details == null ? undefined : JSON.parse(JSON.stringify(input.details)) as Prisma.InputJsonValue,
       activityOn: input.activityOn,
-    }, include: { party: { select: { id: true, name: true, type: true } } },
+    }, include: { party: { select: { id: true, name: true, type: true, taxinfo: true } } },
   }))));
   return transactions.map((transaction) => serializeFinAccountTransaction(transaction, transaction.party));
 }

@@ -13,7 +13,8 @@ import { useParties } from '@/core/hooks/api';
 import { getApiPath } from '@/core/helpers/app-path';
 import type { ImportedAccountTransaction } from '@/services/transactions/account-file-import';
 
-const supportedExtensions = ['xlsx', 'xls', 'pdf', 'doc', 'docx', 'csv', 'tsv', 'tsx', 'txt'];
+const supportedExtensions = ['xlsx', 'xls', 'pdf', 'doc', 'docx', 'csv', 'tsv', 'tsx', 'txt', 'json'];
+const directExtensions = new Set(['xlsx', 'xls', 'csv', 'tsv', 'txt', 'json']);
 
 type ImportTransactionsClientProps = {
   accountId: string;
@@ -22,7 +23,7 @@ type ImportTransactionsClientProps = {
 };
 
 type ImportAnalysisResponse = { transactions: ImportedAccountTransaction[]; error?: string };
-type ImportResult = { imported: number; skippedAsDuplicate: number; error?: string };
+type ImportResult = { imported: number; transaction?: { title: string }; error?: string };
 
 // Build the account-specific import API path while preserving selected project context.
 function getImportApiPath(accountId: string, projectId: string | null) {
@@ -43,12 +44,12 @@ export default function ImportTransactionsClient({ accountId, accountCurrency, a
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const [error, setError] = useState('');
-  const [result, setResult] = useState<ImportResult | null>(null);
+  const [successMessage, setSuccessMessage] = useState('');
   const [isDragActive, setIsDragActive] = useState(false);
   const [hasAnalyzed, setHasAnalyzed] = useState(false);
+  const [transactionSource, setTransactionSource] = useState<'direct' | 'ai'>('ai');
 
-  const newTransactions = useMemo(() => transactions.filter((transaction) => !transaction.duplicate), [transactions]);
-  const invalidTransactions = useMemo(() => newTransactions.filter((transaction) => !transaction.title.trim() || !Number.isFinite(transaction.amount) || transaction.amount <= 0), [newTransactions]);
+  const invalidTransactions = useMemo(() => transactions.filter((transaction) => !transaction.title.trim() || !Number.isFinite(transaction.amount) || transaction.amount <= 0), [transactions]);
 
   useEffect(() => {
     if (hasAnalyzed) return;
@@ -60,7 +61,7 @@ export default function ImportTransactionsClient({ accountId, accountCurrency, a
       setSourceText(pastedText);
       setFile(null);
       setTransactions([]);
-      setResult(null);
+      setSuccessMessage('');
       setError('');
     };
     window.addEventListener('paste', pasteTextIntoImport);
@@ -78,7 +79,7 @@ export default function ImportTransactionsClient({ accountId, accountCurrency, a
   const handleSelectedFile = (nextFile: File | null) => {
     setFile(nextFile);
     setTransactions([]);
-    setResult(null);
+    setSuccessMessage('');
     setError('');
     if (nextFile) {
       const extension = nextFile.name.split('.').pop()?.toLowerCase() ?? '';
@@ -105,27 +106,29 @@ export default function ImportTransactionsClient({ accountId, accountCurrency, a
     handleSelectedFile(event.dataTransfer.files?.[0] ?? null);
   };
 
-  // Send the selected file for text extraction and AI duplicate analysis.
-  const handleAnalyze = async () => {
+  // Parse a structured file directly or analyze it with AI for less structured documents.
+  const handleFileAction = async (mode: 'direct' | 'analyze') => {
     if (!file) return;
     setError('');
-    setResult(null);
+    setSuccessMessage('');
     setIsAnalyzing(true);
     try {
       const formData = new FormData();
       formData.set('file', file);
+      formData.set('mode', mode);
       const response = await fetch(getImportApiPath(accountId, projectId), {
         method: 'POST',
         credentials: 'include',
         body: formData,
       });
       const body = await response.json() as ImportAnalysisResponse;
-      if (!response.ok) throw new Error(body.error ?? 'Could not analyze the selected file.');
+      if (!response.ok) throw new Error(body.error ?? (mode === 'direct' ? 'Could not parse the selected file.' : 'Could not analyze the selected file.'));
       setTransactions(body.transactions ?? []);
+      setTransactionSource(mode === 'direct' ? 'direct' : 'ai');
       setHasAnalyzed(true);
       if (!body.transactions?.length) setError('No transactions were found in this file.');
     } catch (reason) {
-      setError(reason instanceof Error ? reason.message : 'Could not analyze the selected file.');
+      setError(reason instanceof Error ? reason.message : 'Could not import the selected file.');
     } finally {
       setIsAnalyzing(false);
     }
@@ -135,7 +138,7 @@ export default function ImportTransactionsClient({ accountId, accountCurrency, a
   const handleAnalyzeText = async () => {
     if (!sourceText.trim()) return;
     setError('');
-    setResult(null);
+    setSuccessMessage('');
     setIsAnalyzing(true);
     try {
       const response = await fetch(getImportApiPath(accountId, projectId), {
@@ -147,6 +150,7 @@ export default function ImportTransactionsClient({ accountId, accountCurrency, a
       const body = await response.json() as ImportAnalysisResponse;
       if (!response.ok) throw new Error(body.error ?? 'Could not analyze the pasted text.');
       setTransactions(body.transactions ?? []);
+      setTransactionSource('ai');
       setHasAnalyzed(true);
       if (!body.transactions?.length) setError('No transactions were found in the pasted text.');
     } catch (reason) {
@@ -163,27 +167,28 @@ export default function ImportTransactionsClient({ accountId, accountCurrency, a
     setFile(null);
     setSourceText('');
     setSourceMode('file');
-    setResult(null);
+    setSuccessMessage('');
     setError('');
   };
 
-  // Submit reviewed candidates so the server can skip duplicates and save the rest atomically.
-  const handleImport = async () => {
-    if (newTransactions.length === 0) return;
+  // Save one reviewed transaction and leave the remaining candidates for individual review.
+  const handleImport = async (index: number) => {
+    const transaction = transactions[index];
+    if (!transaction || transaction.duplicate) return;
     setError('');
+    setSuccessMessage('');
     setIsImporting(true);
     try {
       const response = await fetch(getImportApiPath(accountId, projectId), {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ transactions }),
+        body: JSON.stringify({ transactions: [transaction], source: transactionSource }),
       });
       const body = await response.json() as ImportResult;
       if (!response.ok) throw new Error(body.error ?? 'Could not import transactions.');
-      setResult(body);
-      setTransactions([]);
-      setFile(null);
+      setTransactions((current) => current.filter((_, transactionIndex) => transactionIndex !== index));
+      setSuccessMessage(`Added transaction successfully: ${transaction.title}`);
       router.refresh();
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : 'Could not import transactions.');
@@ -197,12 +202,12 @@ export default function ImportTransactionsClient({ accountId, accountCurrency, a
       {!hasAnalyzed ? <Card>
         <CardHeader>
           <CardTitle>Import transactions</CardTitle>
-          <CardDescription>Choose a file or paste transaction text. AI will extract entries and check them against this account’s history before import.</CardDescription>
+          <CardDescription>Import structured transaction files directly, or use AI to analyze statements and unstructured notes.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {sourceMode === 'file' ? (
             <div className="space-y-3">
-              <input ref={fileInputRef} className="sr-only" type="file" accept=".xlsx,.xls,.pdf,.doc,.docx,.csv,.tsv,.tsx,.txt" onChange={handleFileChange} />
+              <input ref={fileInputRef} className="sr-only" type="file" accept=".xlsx,.xls,.pdf,.doc,.docx,.csv,.tsv,.tsx,.txt,.json" onChange={handleFileChange} />
               <div
                 onDragOver={(event) => { event.preventDefault(); setIsDragActive(true); }}
                 onDragLeave={() => setIsDragActive(false)}
@@ -222,28 +227,49 @@ export default function ImportTransactionsClient({ accountId, accountCurrency, a
                     <p className="text-muted-foreground">Drag and drop your file or{' '}
                       <Button type="button" variant="text" className="h-auto px-0 py-0" onClick={() => fileInputRef.current?.click()}>Browse</Button>
                     </p>
-                    <p className="text-sm text-muted-foreground">Supported formats: XLSX, XLS, PDF, DOC, DOCX, CSV, TSV, TSX, TXT · Maximum size: 15 MB</p>
+                    <p className="text-sm text-muted-foreground">Supported formats: XLSX, XLS, CSV, TSV, JSON, TXT, PDF, DOC, DOCX, TSX · Maximum size: 15 MB</p>
                     <p className="text-sm text-muted-foreground">Or enter or paste transaction text instead.</p>
                   </>
                 )}
               </div>
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <Button type="button" variant="text" className="px-0" onClick={() => setSourceMode('text')}>Enter or paste text instead</Button>
-                <Button onClick={handleAnalyze} disabled={!file || isAnalyzing || isImporting}>
+                {file && directExtensions.has(file.name.split('.').pop()?.toLowerCase() ?? '') ? <Button onClick={() => handleFileAction('direct')} disabled={!file || isAnalyzing || isImporting}>
                   {isAnalyzing ? <Loader className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
-                  {isAnalyzing ? 'Analyzing file…' : 'Analyze transactions'}
+                  {isAnalyzing ? 'Parsing file…' : 'Import directly'}
+                </Button> : null}
+                <Button variant={file && directExtensions.has(file.name.split('.').pop()?.toLowerCase() ?? '') ? 'outlined' : 'solid'} onClick={() => handleFileAction('analyze')} disabled={!file || isAnalyzing || isImporting}>
+                  {isAnalyzing ? <Loader className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
+                  {isAnalyzing ? 'Analyzing file…' : 'Analyze with AI'}
                 </Button>
               </div>
             </div>
           ) : null}
           {sourceMode === 'text' ? (
             <div className="space-y-3">
-              <p className="text-sm text-muted-foreground">Paste or type transaction details. Pasting anywhere on the page will fill this field.</p>
+              <p className="text-sm text-muted-foreground">For direct import, use one field per line in this order, with `--` between records: datetime, title, description, tags, direction, currency, amount. Required: datetime, direction, currency, amount. Title, description, and tags are optional. Or use AI to analyze free-form text.</p>
               <Textarea value={sourceText} onChange={(event) => setSourceText(event.target.value)} placeholder="Paste a statement, transaction list, or notes here…" rows={7} />
+              <div className="flex flex-wrap gap-3">
               <Button onClick={handleAnalyzeText} disabled={!sourceText.trim() || isAnalyzing || isImporting}>
                 {isAnalyzing ? <Loader className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
                 {isAnalyzing ? 'Analyzing text…' : 'Analyze pasted text'}
               </Button>
+              <Button variant="outlined" onClick={async () => {
+                if (!sourceText.trim()) return;
+                setIsAnalyzing(true); setError(''); setSuccessMessage('');
+                try {
+                  const formData = new FormData();
+                  formData.set('mode', 'direct');
+                  formData.set('file', new File([sourceText], 'transactions.txt', { type: 'text/plain' }));
+                  const response = await fetch(getImportApiPath(accountId, projectId), { method: 'POST', credentials: 'include', body: formData });
+                  const body = await response.json() as ImportAnalysisResponse;
+                  if (!response.ok) throw new Error(body.error ?? 'Could not parse transaction text.');
+                  setTransactions(body.transactions ?? []); setTransactionSource('direct'); setHasAnalyzed(true);
+                  if (!body.transactions?.length) setError('No transactions were found in the text.');
+                } catch (reason) { setError(reason instanceof Error ? reason.message : 'Could not parse transaction text.'); }
+                finally { setIsAnalyzing(false); }
+              }} disabled={!sourceText.trim() || isAnalyzing || isImporting}>{isAnalyzing ? 'Parsing text…' : 'Import formatted text'}</Button>
+              </div>
               <Button type="button" variant="text" className="px-0" onClick={() => { setSourceMode('file'); setSourceText(''); }}>Choose a file instead</Button>
             </div>
           ) : null}
@@ -251,17 +277,16 @@ export default function ImportTransactionsClient({ accountId, accountCurrency, a
         </CardContent>
       </Card> : null}
 
-      {hasAnalyzed && !result ? <Button type="button" variant="outlined" onClick={handleChooseAnotherSource}>Choose another source</Button> : null}
+      {hasAnalyzed ? <Button type="button" variant="outlined" onClick={handleChooseAnotherSource}>Choose another source</Button> : null}
 
       {error ? <div role="alert" className="flex items-start gap-2 rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive"><AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />{error}</div> : null}
-      {result ? (
+      {successMessage ? (
         <Card>
           <CardContent className="flex items-start gap-3 p-5">
             <CheckCircle2 className="mt-0.5 h-5 w-5 text-green-600" />
             <div>
-              <p className="font-medium">Import complete</p>
-              <p className="text-sm text-muted-foreground">{result.imported} added; {result.skippedAsDuplicate} duplicate entries skipped.</p>
-              <LinkButton href={accountHref} variant="text" className="mt-2 h-auto px-0 py-0">Return to transaction history</LinkButton>
+              <p className="font-medium">{successMessage}</p>
+              <LinkButton href={accountHref} variant="text" className="mt-2 h-auto px-0 py-0">View transaction history</LinkButton>
             </div>
           </CardContent>
         </Card>
@@ -270,8 +295,8 @@ export default function ImportTransactionsClient({ accountId, accountCurrency, a
       {transactions.length > 0 ? (
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2"><FileSpreadsheet className="h-5 w-5" />Review extracted transactions</CardTitle>
-            <CardDescription>{newTransactions.length} new entries will be imported. {transactions.length - newTransactions.length} likely duplicates or invalid dates will be skipped.</CardDescription>
+            <CardTitle className="flex items-center gap-2"><FileSpreadsheet className="h-5 w-5" />Review transactions</CardTitle>
+            <CardDescription>{transactions.length} transaction{transactions.length === 1 ? '' : 's'} remain. Save each transaction individually after reviewing it.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-4">
@@ -296,6 +321,10 @@ export default function ImportTransactionsClient({ accountId, accountCurrency, a
                       <label htmlFor={`import-description-${index}`} className="text-sm font-medium">Description</label>
                       <Textarea id={`import-description-${index}`} value={transaction.description ?? ''} onChange={(event) => updateTransaction(index, { description: event.target.value })} placeholder="Optional description" rows={2} />
                     </div>
+                    {transactionSource === 'direct' ? <div className="space-y-2 sm:col-span-2">
+                      <label htmlFor={`import-tags-${index}`} className="text-sm font-medium">Tags (comma-separated)</label>
+                      <Input id={`import-tags-${index}`} value={(transaction.tags ?? []).join(', ')} placeholder="Optional tags" onChange={(event) => updateTransaction(index, { tags: event.target.value.split(',').map((tag) => tag.trim()).filter(Boolean) })} />
+                    </div> : null}
                     <div className="space-y-2">
                       <label className="text-sm font-medium" htmlFor={`import-direction-${index}`}>Direction</label>
                       <Select value={transaction.direction} onValueChange={(value: 'in' | 'out') => updateTransaction(index, { direction: value })}>
@@ -316,15 +345,17 @@ export default function ImportTransactionsClient({ accountId, accountCurrency, a
                       </Select>
                     </div>
                   </CardContent>
+                  {!transaction.duplicate ? <CardContent className="flex justify-end pt-0">
+                    <Button onClick={() => handleImport(index)} disabled={invalidTransactions.includes(transaction) || isImporting || isAnalyzing}>
+                      {isImporting ? <Loader className="mr-2 h-4 w-4 animate-spin" /> : null}
+                      {isImporting ? 'Adding transaction…' : 'Add transaction'}
+                    </Button>
+                  </CardContent> : null}
                 </Card>
               ))}
             </div>
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <p className="text-sm text-muted-foreground">You can review the detected rows before saving them.</p>
-              <Button onClick={handleImport} disabled={newTransactions.length === 0 || invalidTransactions.length > 0 || isImporting || isAnalyzing}>
-                {isImporting ? <Loader className="mr-2 h-4 w-4 animate-spin" /> : null}
-                {isImporting ? 'Importing…' : `Import ${newTransactions.length} new transaction${newTransactions.length === 1 ? '' : 's'}`}
-              </Button>
+              <p className="text-sm text-muted-foreground">Each transaction is saved individually after review.</p>
             </div>
           </CardContent>
         </Card>

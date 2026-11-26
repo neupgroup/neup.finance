@@ -25,6 +25,26 @@ function calculateBalance(lines: BookLines, accountTransactions: BookTransaction
   }, legacyBalance);
 }
 
+// Recalculate one account's balance from all ledger lines and account transactions.
+export async function recalculateBookBalanceFromHistory(projectId: string, accountId: string) {
+  const account = await prisma.assetGroup.findFirst({
+    where: { id: accountId, projectId },
+    select: {
+      id: true,
+      type: true,
+      activityStock: { orderBy: { recordedOn: 'desc' }, take: 1, select: { balance: true } },
+      transactionLines: {
+        where: { transaction: { projectId } },
+        select: { id: true, baseAmount: true, transaction: { select: { status: true } } },
+      },
+      accountTransactions: { select: { amount: true, direction: true, details: true } },
+    },
+  });
+  if (!account) return null;
+  if (account.type === 'Stock') return Number(account.activityStock[0]?.balance) || 0;
+  return calculateBalance(account.transactionLines, account.accountTransactions);
+}
+
 // Read books and calculate their balances for one project.
 export async function getBooksForProject(projectId: string) {
   const accounts = await prisma.assetGroup.findMany({

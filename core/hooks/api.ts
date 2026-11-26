@@ -77,7 +77,7 @@ export type FinAccountTransaction = {
   amount: number;
   direction: 'in' | 'out';
   partyId: string | null;
-  party: { id: string; name: string; type: string } | null;
+  party: { id: string; name: string; type: string; taxinfo?: unknown } | null;
   tags: unknown;
   details: Record<string, unknown> | null;
   activityOn: string;

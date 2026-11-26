@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@neup/core/database/prisma';
 import { canAccess, getProjectAccess } from '@/server/access';
-import { createFinAccountTransactionsForProject, getFinAccountTransactionHistory, type FinAccountTransactionInput } from '@/services/fin-account-transactions';
-import { analyzeAccountTransactionFile, isDuplicateAccountTransaction, validateImportedAccountTransactions, type ExistingAccountTransaction } from '@/services/transactions/account-file-import';
+import { createFinAccountTransactionForProject, getFinAccountTransactionHistory } from '@/services/fin-account-transactions';
+import { analyzeAccountTransactionFile, isDuplicateAccountTransaction, parseDirectAccountTransactions, validateImportedAccountTransactions, type ExistingAccountTransaction } from '@/services/transactions/account-file-import';
 import { getTransactionsForProject } from '@/services/transactions/list';
 
 type RouteContext = { params: Promise<{ id: string }> };
@@ -50,8 +50,13 @@ export async function POST(request: NextRequest, context: RouteContext) {
   if (request.headers.get('content-type')?.includes('multipart/form-data')) {
     const formData = await request.formData();
     const file = formData.get('file');
-    if (!(file instanceof File)) return NextResponse.json({ error: 'Choose a file to analyze.' }, { status: 400 });
+    if (!(file instanceof File)) return NextResponse.json({ error: 'Choose a file.' }, { status: 400 });
+    const mode = String(formData.get('mode') ?? 'analyze');
     try {
+      if (mode === 'direct') {
+        const transactions = parseDirectAccountTransactions(file.name, Buffer.from(await file.arrayBuffer()), accountHistory.currency);
+        return NextResponse.json({ transactions });
+      }
       const transactions = await analyzeAccountTransactionFile(
         file.name,
         Buffer.from(await file.arrayBuffer()),
@@ -82,38 +87,30 @@ export async function POST(request: NextRequest, context: RouteContext) {
   }
 
   const validated = validateImportedAccountTransactions(body);
-  if (!validated.success || validated.data.transactions.length === 0) {
-    return NextResponse.json({ error: 'Select between 1 and 500 new transactions to import.' }, { status: 400 });
+  if (!validated.success || validated.data.transactions.length !== 1) {
+    return NextResponse.json({ error: 'Select one transaction to import.' }, { status: 400 });
   }
   const transactions = validated.data.transactions;
+  const source = body && typeof body === 'object' && 'source' in body && (body as { source?: unknown }).source === 'direct' ? 'direct' : 'ai';
 
-  let importedInputs: FinAccountTransactionInput[] = [];
-  let skippedAsDuplicate = 0;
+  const transaction = transactions[0];
+  if (transaction.duplicate || isDuplicateAccountTransaction(transaction, accountHistory.history)) {
+    return NextResponse.json({ error: 'This transaction already exists in account history.' }, { status: 409 });
+  }
   try {
-    for (const transaction of transactions) {
-      if (transaction.duplicate || isDuplicateAccountTransaction(transaction, accountHistory.history)) {
-        skippedAsDuplicate += 1;
-        continue;
-      }
-      importedInputs.push({
-        title: transaction.title,
-        description: transaction.description ?? undefined,
-        currency: transaction.currency || accountHistory.currency,
-        amount: transaction.amount,
-        direction: transaction.direction,
-        activityOn: transaction.date,
-        partyId: transaction.partyId ?? null,
-        details: {
-          source: 'file_import_ai',
-          duplicateChecked: true,
-        },
-      });
-      accountHistory.history.push({ title: transaction.title, date: transaction.date, amount: transaction.amount, direction: transaction.direction, currency: transaction.currency });
-    }
-    if (importedInputs.length === 0) return NextResponse.json({ imported: 0, skippedAsDuplicate });
-    const savedTransactions = await createFinAccountTransactionsForProject(access.projectId, id, importedInputs);
-    if (!savedTransactions) return NextResponse.json({ error: 'Account not found' }, { status: 404 });
-    return NextResponse.json({ imported: savedTransactions.length, skippedAsDuplicate });
+    const savedTransaction = await createFinAccountTransactionForProject(access.projectId, id, {
+      title: transaction.title,
+      description: transaction.description ?? undefined,
+      currency: transaction.currency || accountHistory.currency,
+      amount: transaction.amount,
+      direction: transaction.direction,
+      activityOn: transaction.date,
+      partyId: transaction.partyId ?? null,
+      tags: transaction.tags,
+      details: { source: `file_import_${source}`, duplicateChecked: true },
+    });
+    if (!savedTransaction) return NextResponse.json({ error: 'Account not found' }, { status: 404 });
+    return NextResponse.json({ imported: 1, transaction: savedTransaction });
   } catch (error) {
     return NextResponse.json({ error: error instanceof Error ? error.message : 'Could not import transactions.' }, { status: 400 });
   }
