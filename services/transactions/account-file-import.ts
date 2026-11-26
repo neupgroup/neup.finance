@@ -15,6 +15,7 @@ const ExtractedTransactionSchema = z.object({
   amount: z.coerce.number().positive(),
   direction: z.enum(['in', 'out']),
   currency: z.string().regex(/^[a-z]{3}$/i),
+  partyId: z.string().nullable().optional(),
   duplicate: z.boolean().default(false),
   duplicateReason: z.string().nullable().optional(),
 });
@@ -79,6 +80,32 @@ function parseModelJson(value: string) {
   return JSON.parse(withoutFence.slice(start, end + 1)) as unknown;
 }
 
+// Retry malformed model JSON once with a strict format-repair prompt.
+async function parseModelTransactions(rawText: string) {
+  try {
+    return ExtractedTransactionsSchema.parse(parseModelJson(rawText));
+  } catch {
+    const repaired = await createNiaResponse({
+      model: 'auto',
+      input: [
+        {
+          type: 'text',
+          role: 'system',
+          text: [
+            'Repair the supplied transaction response into valid JSON only.',
+            'Preserve its data exactly; do not add, remove, or infer transactions or values.',
+            'Return this exact structure: {"transactions":[{"date":"YYYY-MM-DD","title":"...","description":null,"amount":12.34,"direction":"in","currency":"USD","duplicate":false,"duplicateReason":null}]}.',
+            'Use double quotes for every JSON key and string, escape string content correctly, and do not use markdown fences.',
+          ].join('\n'),
+        },
+        { type: 'text', role: 'user', text: rawText.slice(0, 100_000) },
+      ],
+    });
+    const repairedText = repaired.data.output.map((part) => part.value).join('\n');
+    return ExtractedTransactionsSchema.parse(parseModelJson(repairedText));
+  }
+}
+
 // Normalize transaction labels for duplicate comparison.
 function normalizeTitle(value: string) {
   return value.normalize('NFKD').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().replace(/\s+/g, ' ');
@@ -128,10 +155,14 @@ export async function analyzeAccountTransactionFile(
   });
 
   const rawText = response.data.output.map((part) => part.value).join('\n');
-  const parsed = ExtractedTransactionsSchema.safeParse(parseModelJson(rawText));
-  if (!parsed.success) throw new Error('AI returned transaction data in an unexpected format. Please try a clearer file.');
+  let transactions: z.infer<typeof ExtractedTransactionsSchema>['transactions'];
+  try {
+    transactions = (await parseModelTransactions(rawText)).transactions;
+  } catch {
+    throw new Error('AI returned transaction data in an invalid format. Please try a clearer file or paste the transaction text.');
+  }
 
-  return parsed.data.transactions.map((transaction) => {
+  return transactions.map((transaction) => {
     const date = transaction.date.slice(0, 10);
     const parsedDate = new Date(`${date}T00:00:00.000Z`);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || Number.isNaN(parsedDate.getTime()) || parsedDate.toISOString().slice(0, 10) !== date) {

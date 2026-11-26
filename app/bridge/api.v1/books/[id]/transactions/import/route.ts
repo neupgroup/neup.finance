@@ -65,6 +65,22 @@ export async function POST(request: NextRequest, context: RouteContext) {
   }
 
   const body = await request.json().catch(() => null) as unknown;
+  if (body && typeof body === 'object' && 'sourceText' in body) {
+    const sourceText = typeof body.sourceText === 'string' ? body.sourceText.trim() : '';
+    if (!sourceText) return NextResponse.json({ error: 'Paste transaction text to analyze.' }, { status: 400 });
+    try {
+      const transactions = await analyzeAccountTransactionFile(
+        'pasted-transactions.txt',
+        Buffer.from(sourceText, 'utf8'),
+        accountHistory.currency,
+        accountHistory.history,
+      );
+      return NextResponse.json({ transactions });
+    } catch (error) {
+      return NextResponse.json({ error: error instanceof Error ? error.message : 'Could not analyze the pasted text.' }, { status: 422 });
+    }
+  }
+
   const validated = validateImportedAccountTransactions(body);
   if (!validated.success || validated.data.transactions.length === 0) {
     return NextResponse.json({ error: 'Select between 1 and 500 new transactions to import.' }, { status: 400 });
@@ -86,6 +102,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
         amount: transaction.amount,
         direction: transaction.direction,
         activityOn: transaction.date,
+        partyId: transaction.partyId ?? null,
         details: {
           source: 'file_import_ai',
           duplicateChecked: true,

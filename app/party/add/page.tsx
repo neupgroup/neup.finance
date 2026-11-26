@@ -8,8 +8,8 @@ import { Label } from '@neup/components/ui/label';
 import { useToast } from '@neup/core/hooks/useToast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@neup/components/ui/select';
 import { Textarea } from '@neup/components/ui/textarea';
-import { PlusCircle } from 'lucide-react';
-import { createParty } from '@/core/hooks/api';
+import { Loader, PlusCircle, Sparkles } from 'lucide-react';
+import { createParty, extractPartyName } from '@/core/hooks/api';
 
 /*
 ::neup.documentation::party-add-page
@@ -28,6 +28,10 @@ export default function AddPartyPage() {
   const projectQuery = project ? `?project=${encodeURIComponent(project)}` : '';
 
   const [name, setName] = useState('');
+  const [nameInformation, setNameInformation] = useState('');
+  const [isInformationVisible, setIsInformationVisible] = useState(false);
+  const [isExtracting, setIsExtracting] = useState(false);
+  const [extractError, setExtractError] = useState('');
   const [type, setType] = useState('');
   const [taxType, setTaxType] = useState('');
   const [taxNumber, setTaxNumber] = useState('');
@@ -36,6 +40,24 @@ export default function AddPartyPage() {
   const [address, setAddress] = useState('');
   const [bankInfo, setBankInfo] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Use entered name and optional Shift+Enter notes to improve only the party name.
+  const handleExtractName = async () => {
+    if ((!name.trim() && !nameInformation.trim()) || isExtracting) return;
+    setIsExtracting(true);
+    setExtractError('');
+    try {
+      const { result } = await extractPartyName({
+        ...(name.trim() ? { name: name.trim() } : {}),
+        ...(nameInformation.trim() ? { information: nameInformation.trim() } : {}),
+      });
+      setName(result.name);
+    } catch (error) {
+      setExtractError(error instanceof Error ? error.message : 'Could not extract the party name.');
+    } finally {
+      setIsExtracting(false);
+    }
+  };
 
   const handleAddParty = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,7 +113,48 @@ export default function AddPartyPage() {
         <form onSubmit={handleAddParty} className="space-y-4 py-4">
           <div className="space-y-2">
             <Label htmlFor="partyName">Name</Label>
-            <Input id="partyName" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g., John Doe" required />
+            <div className="overflow-hidden rounded-md border border-input bg-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
+              <Input
+                id="partyName"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' && event.shiftKey) {
+                    event.preventDefault();
+                    setIsInformationVisible(true);
+                  }
+                }}
+                placeholder="e.g., John Doe"
+                required
+                className="h-11 rounded-none border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
+              />
+              {isInformationVisible ? (
+                <div className="border-t border-dashed border-border px-3 pt-2">
+                  <p className="mb-1 text-xs font-medium text-muted-foreground">Add more information</p>
+                  <Textarea
+                    id="partyNameInformation"
+                    autoFocus
+                    value={nameInformation}
+                    onChange={(event) => setNameInformation(event.target.value)}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Backspace' && !nameInformation) {
+                        event.preventDefault();
+                        setIsInformationVisible(false);
+                        document.getElementById('partyName')?.focus();
+                      }
+                    }}
+                    placeholder="Type extra details to help identify the name…"
+                    rows={3}
+                    className="min-h-20 resize-y rounded-none border-0 px-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                  />
+                </div>
+              ) : null}
+            </div>
+            <button type="button" onClick={handleExtractName} disabled={isExtracting || (!name.trim() && !nameInformation.trim())} className="inline-flex items-center gap-1 text-sm font-medium text-primary underline-offset-4 hover:underline disabled:cursor-not-allowed disabled:opacity-50">
+              {isExtracting ? <Loader className="h-3.5 w-3.5 animate-spin" /> : <Sparkles className="h-3.5 w-3.5" />}
+              {isExtracting ? 'Extracting…' : 'Extract from it'}
+            </button>
+            {extractError ? <p className="text-sm font-medium text-destructive" role="alert">{extractError}</p> : null}
           </div>
 
           <div className="space-y-2">

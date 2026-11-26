@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from 'react';
 import { useParams, useSearchParams, useRouter } from 'next/navigation';
-import { ArrowLeft, Loader, PlusCircle } from 'lucide-react';
+import { ArrowLeft, Loader, PlusCircle, Sparkles } from 'lucide-react';
 import { Button } from '@neup/components/ui/button';
 import { LinkButton } from '@neup/components/ui/link-button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@neup/components/ui/card';
@@ -11,7 +11,7 @@ import { Input } from '@neup/components/ui/input';
 import { Label } from '@neup/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@neup/components/ui/select';
 import { Textarea } from '@neup/components/ui/textarea';
-import { createFinAccountTransaction, useParties, useProjectBooks } from '@/core/hooks/api';
+import { createFinAccountTransaction, extractFinAccountTransaction, useParties, useProjectBooks } from '@/core/hooks/api';
 import { useToast } from '@neup/core/hooks/useToast';
 import { currencyOptions } from '@/core/lib/ledger';
 
@@ -40,9 +40,61 @@ export default function NewFinAccountTransactionPage() {
   const [amount, setAmount] = useState<number | ''>('');
   const [direction, setDirection] = useState<'in' | 'out' | ''>('');
   const [partyId, setPartyId] = useState('none');
+  const [tags, setTags] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isExtracting, setIsExtracting] = useState(false);
+  const [extractError, setExtractError] = useState('');
   const [errors, setErrors] = useState<{ title?: string; date?: string; currency?: string; amount?: string; direction?: string }>({});
   const selectedCurrency = currency || account?.currency || '';
+
+  // Send only non-empty form values and apply the structured extraction to matching controls.
+  const handleExtract = async () => {
+    const selectedParty = (parties ?? []).find((party: { id: string; name: string }) => party.id === partyId);
+    const enteredFields = Object.fromEntries(Object.entries({
+      title,
+      description,
+      direction,
+      datetime: date,
+      currency: selectedCurrency,
+      amount: amount === '' ? '' : String(amount),
+      receipent: selectedParty?.name ?? '',
+      tags: tags.length ? JSON.stringify(tags) : '',
+    }).filter(([, value]) => value.trim()));
+    if (!Object.keys(enteredFields).length || isExtracting) return;
+
+    setIsExtracting(true);
+    setExtractError('');
+    try {
+      const { result } = await extractFinAccountTransaction(accountId, enteredFields);
+      if (result.title?.trim()) {
+        setTitle(result.title.trim());
+        setErrors((current) => ({ ...current, title: undefined }));
+      }
+      if (typeof result.description === 'string' && result.description.trim()) {
+        setDescription(result.description.trim());
+        setIsDescriptionVisible(true);
+      }
+      if (result.direction) setDirection(result.direction);
+      if (result.datetime && Number.isFinite(new Date(result.datetime).getTime())) {
+        const extractedDate = new Date(result.datetime);
+        const pad = (part: number) => String(part).padStart(2, '0');
+        setDate(`${extractedDate.getFullYear()}-${pad(extractedDate.getMonth() + 1)}-${pad(extractedDate.getDate())}T${pad(extractedDate.getHours())}:${pad(extractedDate.getMinutes())}`);
+      }
+      if (result.currency) setCurrency(result.currency.toUpperCase());
+      if (typeof result.amount === 'number' && result.amount > 0) setAmount(result.amount);
+      if (result.receipent) {
+        const match = (parties ?? []).find((party: { id: string; name: string }) => party.name.toLowerCase() === result.receipent?.trim().toLowerCase());
+        if (match) setPartyId(match.id);
+      }
+      if (Array.isArray(result.tags)) {
+        setTags(result.tags.map(String));
+      }
+    } catch (error) {
+      setExtractError(error instanceof Error ? error.message : 'Could not extract transaction details.');
+    } finally {
+      setIsExtracting(false);
+    }
+  };
 
   // Validate required fields inline, then persist through the shared account transaction API.
   const handleSubmit = async (event: FormEvent) => {
@@ -71,6 +123,7 @@ export default function NewFinAccountTransactionPage() {
         direction,
         activityOn: new Date(date).toISOString(),
         partyId: partyId === 'none' ? null : partyId,
+        tags,
       });
       toast({ name: 'app', title: 'Transaction Added', description: `${title.trim()} was added to this account.` });
       router.push(accountHref);
@@ -136,6 +189,11 @@ export default function NewFinAccountTransactionPage() {
                 ) : null}
               </div>
               {errors.title ? <p className="text-sm font-medium text-destructive" role="alert">{errors.title}</p> : null}
+              <button type="button" onClick={handleExtract} disabled={isExtracting || !title.trim() && !description.trim() && !date && !currency && amount === '' && !direction && partyId === 'none'} className="inline-flex items-center gap-1 text-sm font-medium text-primary underline-offset-4 hover:underline disabled:cursor-not-allowed disabled:opacity-50">
+                {isExtracting ? <Loader className="h-3.5 w-3.5 animate-spin" /> : <Sparkles className="h-3.5 w-3.5" />}
+                {isExtracting ? 'Extracting…' : 'Extract from it'}
+              </button>
+              {extractError ? <p className="text-sm font-medium text-destructive" role="alert">{extractError}</p> : null}
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
@@ -180,6 +238,11 @@ export default function NewFinAccountTransactionPage() {
                   <SelectTrigger id="recipient-party"><SelectValue placeholder="No recipient" /></SelectTrigger>
                   <SelectContent><SelectItem value="none">No recipient</SelectItem>{(parties ?? []).map((party: { id: string; name: string; type: string }) => <SelectItem key={party.id} value={party.id}>{party.name}</SelectItem>)}</SelectContent>
                 </Select>
+              </div>
+              <div className="space-y-2 sm:col-span-2">
+                <Label htmlFor="transaction-tags">Tags</Label>
+                <Input id="transaction-tags" value={tags.join(', ')} onChange={(event) => setTags(event.target.value.split(',').map((tag) => tag.trim()).filter(Boolean))} placeholder="e.g., travel, supplies" />
+                <p className="text-xs text-muted-foreground">Separate tags with commas.</p>
               </div>
             </div>
             <div className="flex justify-end">

@@ -48,6 +48,7 @@ export default function AmendFinAccountTransactionPage() {
   const [amount, setAmount] = useState<number | ''>('');
   const [direction, setDirection] = useState<'in' | 'out' | ''>('');
   const [partyId, setPartyId] = useState('none');
+  const [tags, setTags] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
   const [errors, setErrors] = useState<{ title?: string; date?: string; currency?: string; amount?: string; direction?: string }>({});
@@ -62,6 +63,7 @@ export default function AmendFinAccountTransactionPage() {
     setAmount(transaction.amount);
     setDirection(transaction.direction);
     setPartyId(transaction.partyId ?? 'none');
+    setTags(Array.isArray(transaction.tags) ? transaction.tags.map(String) : []);
     setIsInitialized(true);
   }, [transaction, isInitialized]);
 
@@ -88,6 +90,7 @@ export default function AmendFinAccountTransactionPage() {
         direction,
         activityOn: new Date(date).toISOString(),
         partyId: partyId === 'none' ? null : partyId,
+        tags,
       });
       toast({ name: 'app', title: 'Transaction amended', description: `${title.trim()} was updated.` });
       router.push(detailHref);
@@ -121,6 +124,7 @@ export default function AmendFinAccountTransactionPage() {
                 <div className="space-y-2"><Label htmlFor="currency">Currency</Label><Select value={currency} onValueChange={(value) => { setCurrency(value); setErrors((current) => ({ ...current, currency: undefined })); }}><SelectTrigger id="currency" aria-invalid={Boolean(errors.currency)}><SelectValue placeholder="Select currency" /></SelectTrigger><SelectContent>{currencyOptions.map((option) => <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>)}</SelectContent></Select>{errors.currency ? <p className="text-sm font-medium text-destructive" role="alert">{errors.currency}</p> : null}</div>
                 <div className="space-y-2"><Label htmlFor="amount">Amount</Label><Input id="amount" type="number" min="0.01" step="0.01" value={amount} onChange={(event) => { setAmount(event.target.value === '' ? '' : parseFloat(event.target.value)); setErrors((current) => ({ ...current, amount: undefined })); }} aria-invalid={Boolean(errors.amount)} />{errors.amount ? <p className="text-sm font-medium text-destructive" role="alert">{errors.amount}</p> : null}<p className="text-xs text-muted-foreground">Enter a positive amount. Direction determines whether it is money in or out.</p></div>
                 <div className="space-y-2 sm:col-span-2"><Label htmlFor="recipient-party">Recipient (party, optional)</Label><Select value={partyId} onValueChange={setPartyId}><SelectTrigger id="recipient-party"><SelectValue placeholder="No recipient" /></SelectTrigger><SelectContent><SelectItem value="none">No recipient</SelectItem>{(parties ?? []).map((party: { id: string; name: string; type: string }) => <SelectItem key={party.id} value={party.id}>{party.name}</SelectItem>)}</SelectContent></Select></div>
+                <div className="space-y-2 sm:col-span-2"><Label htmlFor="transaction-tags">Tags</Label><Input id="transaction-tags" value={tags.join(', ')} onChange={(event) => setTags(event.target.value.split(',').map((tag) => tag.trim()).filter(Boolean))} placeholder="e.g., travel, supplies" /><p className="text-xs text-muted-foreground">Separate tags with commas.</p></div>
               </div>
               <div className="flex justify-end"><Button type="submit" disabled={isSubmitting || !isInitialized}>{isSubmitting ? <Loader className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}Save Changes</Button></div>
             </form>

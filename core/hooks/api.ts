@@ -167,6 +167,14 @@ export async function createFinAccountTransaction(accountId: string, data: Pick<
   });
 }
 
+// Ask the account transaction intelligence endpoint to extract structured form values.
+export async function extractFinAccountTransaction(accountId: string, data: Record<string, string>) {
+  return requestJson<{ status: boolean; result: { title?: string | null; description?: string | null; direction?: 'in' | 'out' | null; datetime?: string | null; currency?: string | null; amount?: number | null; receipent?: string | null; tags?: unknown } }>(`/bridge/api.v1/books/${encodeURIComponent(accountId)}/transactions/extract`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
 // Update a transaction using the account-scoped API route.
 export async function updateFinAccountTransaction(accountId: string, transactionId: string, data: Pick<FinAccountTransaction, 'title' | 'currency' | 'amount' | 'direction' | 'activityOn'> & Partial<Pick<FinAccountTransaction, 'description' | 'partyId' | 'tags'>>) {
   return requestJson<FinAccountTransaction>(`/bridge/api.v1/books/${encodeURIComponent(accountId)}/transactions/${encodeURIComponent(transactionId)}`, {
@@ -177,6 +185,14 @@ export async function updateFinAccountTransaction(accountId: string, transaction
 
 export async function createParty(data: Record<string, unknown>) {
   return requestJson<any>("/bridge/api.v1/parties", { method: "POST", body: JSON.stringify(data) });
+}
+
+// Extract a party name from name and optional context without saving the context.
+export async function extractPartyName(data: { name?: string; information?: string }) {
+  return requestJson<{ status: boolean; result: { name: string } }>("/bridge/api.v1/parties/extract", {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
 }
 
 export async function createProjection(data: Record<string, unknown>) {

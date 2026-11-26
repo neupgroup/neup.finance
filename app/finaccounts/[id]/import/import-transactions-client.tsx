@@ -1,12 +1,15 @@
 'use client';
 
-import { useMemo, useState, type ChangeEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type ChangeEvent, type DragEvent } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { AlertCircle, CheckCircle2, FileSpreadsheet, Loader, Upload } from 'lucide-react';
+import { AlertCircle, CheckCircle2, CloudUpload, FileSpreadsheet, Loader, Upload } from 'lucide-react';
 import { Button } from '@neup/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@neup/components/ui/card';
 import { Input } from '@neup/components/ui/input';
 import { LinkButton } from '@neup/components/ui/link-button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@neup/components/ui/select';
+import { Textarea } from '@neup/components/ui/textarea';
+import { useParties } from '@/core/hooks/api';
 import type { ImportedAccountTransaction } from '@/services/transactions/account-file-import';
 
 const basePath = process.env.NEXT_PUBLIC_APP_BASEPATH ?? '';
@@ -21,11 +24,6 @@ type ImportTransactionsClientProps = {
 type ImportAnalysisResponse = { transactions: ImportedAccountTransaction[]; error?: string };
 type ImportResult = { imported: number; skippedAsDuplicate: number; error?: string };
 
-// Format transaction amounts using the account currency.
-function formatAmount(amount: number, currency: string) {
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(amount);
-}
-
 // Build the account-specific import API path while preserving selected project context.
 function getImportApiPath(accountId: string, projectId: string | null) {
   const query = projectId ? `?project=${encodeURIComponent(projectId)}` : '';
@@ -35,19 +33,49 @@ function getImportApiPath(accountId: string, projectId: string | null) {
 // Upload, review, and import AI-extracted transactions for one account.
 export default function ImportTransactionsClient({ accountId, accountCurrency, accountHref }: ImportTransactionsClientProps) {
   const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const projectId = useSearchParams().get('project');
+  const { data: parties } = useParties();
+  const [sourceMode, setSourceMode] = useState<'file' | 'text'>('file');
   const [file, setFile] = useState<File | null>(null);
+  const [sourceText, setSourceText] = useState('');
   const [transactions, setTransactions] = useState<ImportedAccountTransaction[]>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState<ImportResult | null>(null);
+  const [isDragActive, setIsDragActive] = useState(false);
+  const [hasAnalyzed, setHasAnalyzed] = useState(false);
 
   const newTransactions = useMemo(() => transactions.filter((transaction) => !transaction.duplicate), [transactions]);
+  const invalidTransactions = useMemo(() => newTransactions.filter((transaction) => !transaction.title.trim() || !Number.isFinite(transaction.amount) || transaction.amount <= 0), [newTransactions]);
+
+  useEffect(() => {
+    if (hasAnalyzed) return;
+    const pasteTextIntoImport = (event: ClipboardEvent) => {
+      const pastedText = event.clipboardData?.getData('text/plain')?.trim();
+      if (!pastedText) return;
+      event.preventDefault();
+      setSourceMode('text');
+      setSourceText(pastedText);
+      setFile(null);
+      setTransactions([]);
+      setResult(null);
+      setError('');
+    };
+    window.addEventListener('paste', pasteTextIntoImport);
+    return () => window.removeEventListener('paste', pasteTextIntoImport);
+  }, [hasAnalyzed]);
+
+  // Update an extracted row and let edited duplicate fields be checked again on import.
+  const updateTransaction = (index: number, updates: Partial<ImportedAccountTransaction>) => {
+    setTransactions((current) => current.map((transaction, transactionIndex) => transactionIndex === index
+      ? { ...transaction, ...updates, ...(Object.keys(updates).some((key) => ['title', 'amount', 'direction'].includes(key)) ? { duplicate: false, duplicateReason: null } : {}) }
+      : transaction));
+  };
 
   // Store an accepted file and reset prior analysis results.
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const nextFile = event.target.files?.[0] ?? null;
+  const handleSelectedFile = (nextFile: File | null) => {
     setFile(nextFile);
     setTransactions([]);
     setResult(null);
@@ -62,6 +90,19 @@ export default function ImportTransactionsClient({ accountId, accountCurrency, a
         setFile(null);
       }
     }
+  };
+
+  // Read a selected file and clear the input so the same file can be selected again.
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    handleSelectedFile(event.target.files?.[0] ?? null);
+    event.currentTarget.value = '';
+  };
+
+  // Accept dragged files in the upload target.
+  const handleFileDrop = (event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setIsDragActive(false);
+    handleSelectedFile(event.dataTransfer.files?.[0] ?? null);
   };
 
   // Send the selected file for text extraction and AI duplicate analysis.
@@ -81,12 +122,49 @@ export default function ImportTransactionsClient({ accountId, accountCurrency, a
       const body = await response.json() as ImportAnalysisResponse;
       if (!response.ok) throw new Error(body.error ?? 'Could not analyze the selected file.');
       setTransactions(body.transactions ?? []);
+      setHasAnalyzed(true);
       if (!body.transactions?.length) setError('No transactions were found in this file.');
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : 'Could not analyze the selected file.');
     } finally {
       setIsAnalyzing(false);
     }
+  };
+
+  // Send pasted transaction notes through the same AI extraction and duplicate review flow.
+  const handleAnalyzeText = async () => {
+    if (!sourceText.trim()) return;
+    setError('');
+    setResult(null);
+    setIsAnalyzing(true);
+    try {
+      const response = await fetch(getImportApiPath(accountId, projectId), {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sourceText: sourceText.trim() }),
+      });
+      const body = await response.json() as ImportAnalysisResponse;
+      if (!response.ok) throw new Error(body.error ?? 'Could not analyze the pasted text.');
+      setTransactions(body.transactions ?? []);
+      setHasAnalyzed(true);
+      if (!body.transactions?.length) setError('No transactions were found in the pasted text.');
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : 'Could not analyze the pasted text.');
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
+  // Clear reviewed data so another file or text source can be analyzed.
+  const handleChooseAnotherSource = () => {
+    setHasAnalyzed(false);
+    setTransactions([]);
+    setFile(null);
+    setSourceText('');
+    setSourceMode('file');
+    setResult(null);
+    setError('');
   };
 
   // Submit reviewed candidates so the server can skip duplicates and save the rest atomically.
@@ -116,23 +194,64 @@ export default function ImportTransactionsClient({ accountId, accountCurrency, a
 
   return (
     <div className="space-y-6">
-      <Card>
+      {!hasAnalyzed ? <Card>
         <CardHeader>
-          <CardTitle>Choose a file</CardTitle>
-          <CardDescription>Upload a statement or transaction report. AI will extract entries and compare them with this account’s history before you import.</CardDescription>
+          <CardTitle>Import transactions</CardTitle>
+          <CardDescription>Choose a file or paste transaction text. AI will extract entries and check them against this account’s history before import.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Input type="file" accept=".xlsx,.xls,.pdf,.doc,.docx,.csv,.tsv,.tsx,.txt" onChange={handleFileChange} />
-          <p className="text-sm text-muted-foreground">Supported: XLSX, XLS, PDF, DOC, DOCX, CSV, TSV, TSX, and TXT. Maximum file size: 15 MB.</p>
-          <div className="flex flex-wrap gap-3">
-            <Button onClick={handleAnalyze} disabled={!file || isAnalyzing || isImporting}>
-              {isAnalyzing ? <Loader className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
-              {isAnalyzing ? 'Analyzing file…' : 'Analyze transactions'}
-            </Button>
-            <LinkButton href={accountHref} variant="outline">Cancel</LinkButton>
-          </div>
+          {sourceMode === 'file' ? (
+            <div className="space-y-3">
+              <input ref={fileInputRef} className="sr-only" type="file" accept=".xlsx,.xls,.pdf,.doc,.docx,.csv,.tsv,.tsx,.txt" onChange={handleFileChange} />
+              <div
+                onDragOver={(event) => { event.preventDefault(); setIsDragActive(true); }}
+                onDragLeave={() => setIsDragActive(false)}
+                onDrop={handleFileDrop}
+                className={`flex min-h-64 flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed px-6 py-8 text-center transition-colors ${isDragActive ? 'border-primary bg-primary/10' : 'border-blue-400 bg-blue-50/70 dark:bg-blue-950/20'}`}
+              >
+                {file ? (
+                  <>
+                    <FileSpreadsheet className="h-8 w-8 text-primary" />
+                    <p className="max-w-full truncate font-medium">{file.name}</p>
+                    <p className="text-sm text-muted-foreground">{(file.size / (1024 * 1024)).toFixed(2)} MB</p>
+                    <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()}>Change file</Button>
+                  </>
+                ) : (
+                  <>
+                    <CloudUpload className="h-9 w-9 text-primary" />
+                    <p className="text-muted-foreground">Drag and drop your file or{' '}
+                      <button type="button" className="font-medium text-primary underline underline-offset-4" onClick={() => fileInputRef.current?.click()}>Browse</button>
+                    </p>
+                    <p className="text-sm text-muted-foreground">Supported formats: XLSX, XLS, PDF, DOC, DOCX, CSV, TSV, TSX, TXT · Maximum size: 15 MB</p>
+                    <p className="text-sm text-muted-foreground">Or enter or paste transaction text instead.</p>
+                  </>
+                )}
+              </div>
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <Button type="button" variant="link" className="px-0" onClick={() => setSourceMode('text')}>Enter or paste text instead</Button>
+                <Button onClick={handleAnalyze} disabled={!file || isAnalyzing || isImporting}>
+                  {isAnalyzing ? <Loader className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
+                  {isAnalyzing ? 'Analyzing file…' : 'Analyze transactions'}
+                </Button>
+              </div>
+            </div>
+          ) : null}
+          {sourceMode === 'text' ? (
+            <div className="space-y-3">
+              <p className="text-sm text-muted-foreground">Paste or type transaction details. Pasting anywhere on the page will fill this field.</p>
+              <Textarea value={sourceText} onChange={(event) => setSourceText(event.target.value)} placeholder="Paste a statement, transaction list, or notes here…" rows={7} />
+              <Button onClick={handleAnalyzeText} disabled={!sourceText.trim() || isAnalyzing || isImporting}>
+                {isAnalyzing ? <Loader className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
+                {isAnalyzing ? 'Analyzing text…' : 'Analyze pasted text'}
+              </Button>
+              <Button type="button" variant="link" className="px-0" onClick={() => { setSourceMode('file'); setSourceText(''); }}>Choose a file instead</Button>
+            </div>
+          ) : null}
+          <LinkButton href={accountHref} variant="outline">Cancel</LinkButton>
         </CardContent>
-      </Card>
+      </Card> : null}
+
+      {hasAnalyzed && !result ? <Button type="button" variant="outline" onClick={handleChooseAnotherSource}>Choose another source</Button> : null}
 
       {error ? <div role="alert" className="flex items-start gap-2 rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive"><AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />{error}</div> : null}
       {result ? (
@@ -155,27 +274,54 @@ export default function ImportTransactionsClient({ accountId, accountCurrency, a
             <CardDescription>{newTransactions.length} new entries will be imported. {transactions.length - newTransactions.length} likely duplicates or invalid dates will be skipped.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="overflow-x-auto rounded-md border">
-              <table className="w-full min-w-[700px] text-left text-sm">
-                <thead className="bg-muted/60 text-muted-foreground">
-                  <tr><th className="p-3">Date</th><th className="p-3">Description</th><th className="p-3">Direction</th><th className="p-3 text-right">Amount</th><th className="p-3">Review</th></tr>
-                </thead>
-                <tbody>
-                  {transactions.map((transaction, index) => (
-                    <tr key={`${transaction.date}-${transaction.title}-${index}`} className="border-t align-top">
-                      <td className="p-3 whitespace-nowrap">{transaction.date}</td>
-                      <td className="p-3"><div className="font-medium">{transaction.title}</div>{transaction.description ? <div className="text-xs text-muted-foreground">{transaction.description}</div> : null}</td>
-                      <td className="p-3 capitalize">{transaction.direction}</td>
-                      <td className="p-3 text-right whitespace-nowrap">{formatAmount(transaction.amount, transaction.currency || accountCurrency)}</td>
-                      <td className="p-3">{transaction.duplicate ? <span className="text-amber-700">Skip · {transaction.duplicateReason || 'Likely already reported'}</span> : <span className="text-green-700">New</span>}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="space-y-4">
+              {transactions.map((transaction, index) => (
+                <Card key={index} className="bg-muted/20">
+                  <CardHeader className="flex flex-row items-start justify-between gap-4 space-y-0 pb-3">
+                    <div className="min-w-0 flex-1">
+                      <CardTitle className="text-base">Transaction {index + 1}</CardTitle>
+                      <CardDescription>{transaction.date}</CardDescription>
+                    </div>
+                    {transaction.duplicate
+                      ? <span className="shrink-0 text-sm font-medium text-amber-700">Skip · {transaction.duplicateReason || 'Likely already reported'}</span>
+                      : <span className="shrink-0 text-sm font-medium text-green-700">New</span>}
+                  </CardHeader>
+                  <CardContent className="grid gap-4 sm:grid-cols-2">
+                    <div className="space-y-2">
+                      <label htmlFor={`import-title-${index}`} className="text-sm font-medium">Title</label>
+                      <Input id={`import-title-${index}`} value={transaction.title} aria-invalid={!transaction.title.trim()} onChange={(event) => updateTransaction(index, { title: event.target.value })} />
+                      {!transaction.title.trim() ? <span className="text-xs text-destructive">Title is required.</span> : null}
+                    </div>
+                    <div className="space-y-2">
+                      <label htmlFor={`import-description-${index}`} className="text-sm font-medium">Description</label>
+                      <Textarea id={`import-description-${index}`} value={transaction.description ?? ''} onChange={(event) => updateTransaction(index, { description: event.target.value })} placeholder="Optional description" rows={2} />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium" htmlFor={`import-direction-${index}`}>Direction</label>
+                      <Select value={transaction.direction} onValueChange={(value: 'in' | 'out') => updateTransaction(index, { direction: value })}>
+                        <SelectTrigger id={`import-direction-${index}`}><SelectValue /></SelectTrigger>
+                        <SelectContent><SelectItem value="in">Money in</SelectItem><SelectItem value="out">Money out</SelectItem></SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium" htmlFor={`import-amount-${index}`}>Amount ({transaction.currency || accountCurrency})</label>
+                      <Input id={`import-amount-${index}`} type="number" min="0.01" step="0.01" value={transaction.amount} aria-invalid={!Number.isFinite(transaction.amount) || transaction.amount <= 0} onChange={(event) => updateTransaction(index, { amount: event.target.value === '' ? 0 : Number(event.target.value) })} />
+                      {transaction.amount <= 0 ? <span className="text-xs text-destructive">Amount must be greater than zero.</span> : null}
+                    </div>
+                    <div className="space-y-2 sm:col-span-2">
+                      <label className="text-sm font-medium" htmlFor={`import-party-${index}`}>Party (optional)</label>
+                      <Select value={transaction.partyId ?? 'none'} onValueChange={(value) => updateTransaction(index, { partyId: value === 'none' ? null : value })}>
+                        <SelectTrigger id={`import-party-${index}`}><SelectValue placeholder="No party" /></SelectTrigger>
+                        <SelectContent><SelectItem value="none">No party</SelectItem>{(parties ?? []).map((party: { id: string; name: string }) => <SelectItem key={party.id} value={party.id}>{party.name}</SelectItem>)}</SelectContent>
+                      </Select>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
             <div className="flex flex-wrap items-center justify-between gap-3">
               <p className="text-sm text-muted-foreground">You can review the detected rows before saving them.</p>
-              <Button onClick={handleImport} disabled={newTransactions.length === 0 || isImporting || isAnalyzing}>
+              <Button onClick={handleImport} disabled={newTransactions.length === 0 || invalidTransactions.length > 0 || isImporting || isAnalyzing}>
                 {isImporting ? <Loader className="mr-2 h-4 w-4 animate-spin" /> : null}
                 {isImporting ? 'Importing…' : `Import ${newTransactions.length} new transaction${newTransactions.length === 1 ? '' : 's'}`}
               </Button>
