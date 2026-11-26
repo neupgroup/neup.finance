@@ -77,7 +77,7 @@ export default function TransactionsPage() {
                   {formatCurrency(transaction.total_amount, transaction.currency)}
                 </p>
               </div>
-              <Button variant="ghost" size="icon">
+              <Button variant="text" size="icon">
                 <MoreVertical className="h-5 w-5" />
               </Button>
             </div>
@@ -179,7 +179,7 @@ export default function TransactionsPage() {
                       </p>
                     </div>
                   </div>
-                  <Button variant="ghost" size="icon">
+                  <Button variant="text" size="icon">
                     <PlusCircle className="h-5 w-5" />
                   </Button>
                 </div>
@@ -201,7 +201,7 @@ export default function TransactionsPage() {
                       </p>
                     </div>
                   </div>
-                  <Button variant="ghost" size="icon">
+                  <Button variant="text" size="icon">
                     <PlusCircle className="h-5 w-5" />
                   </Button>
                 </div>

@@ -13,6 +13,7 @@ import {
   BookText,
   BriefcaseBusiness,
   FileText,
+  FolderKanban,
   Home,
   Landmark,
   ListTree,
@@ -43,6 +44,7 @@ const sidebarGroups: SidebarLinkGroup[] = [
     label: 'Manage',
     links: [
       { href: '/switch', label: 'Switch project', icon: Repeat2 },
+      { href: '/projects', label: 'Projects', icon: FolderKanban },
       { href: '/manage/accounts', label: 'Accounts', icon: BriefcaseBusiness },
       { href: '/settings', label: 'Settings', icon: Settings },
     ],

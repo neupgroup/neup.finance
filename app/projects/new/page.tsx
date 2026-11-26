@@ -49,7 +49,7 @@ export default function NewProjectPage() {
         {error && <p className="text-sm text-destructive" role="alert">{error}</p>}
         <div className="flex gap-2">
           <Button type="submit" disabled={saving || !name.trim()}>{saving ? 'Creating…' : 'Create project'}</Button>
-          <Button type="button" variant="outline" onClick={() => router.back()}>Cancel</Button>
+          <Button type="button" variant="outlined" onClick={() => router.back()}>Cancel</Button>
         </div>
       </form>
     </div>

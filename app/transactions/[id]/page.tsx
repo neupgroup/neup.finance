@@ -211,7 +211,7 @@ export default function TransactionDetailPage() {
 
         <div className="mx-auto space-y-4">
              <div className="flex justify-between items-center">
-                <Button variant="ghost" onClick={() => router.back()} className="-ml-4">
+                <Button variant="text" onClick={() => router.back()} className="-ml-4">
                     <ArrowLeft className="mr-2 h-4 w-4" />
                     Back
                 </Button>
@@ -266,7 +266,7 @@ export default function TransactionDetailPage() {
                 <div>
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-2xl font-bold">Line Items</h2>
-                        <Button variant="outline" onClick={() => setShowAddLineForm(prev => !prev)}>
+                        <Button variant="outlined" onClick={() => setShowAddLineForm(prev => !prev)}>
                             <PlusCircle className="mr-2 h-4 w-4" />
                             {showAddLineForm ? 'Cancel' : 'Add Line Item'}
                         </Button>

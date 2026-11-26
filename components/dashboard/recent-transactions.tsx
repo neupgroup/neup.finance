@@ -93,7 +93,7 @@ export function RecentTransactions({ variant = 'table', stackedStartIndex = 0, s
                         {new Intl.NumberFormat('en-US', { style: 'currency', currency: transaction.currency }).format(transaction.total_amount)}
                       </p>
                     </div>
-                    <Button variant="ghost" size="icon">
+                    <Button variant="text" size="icon">
                       <MoreVertical className="h-5 w-5" />
                     </Button>
                   </div>

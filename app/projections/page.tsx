@@ -157,7 +157,7 @@ export default function ProjectionsPage() {
                                   <p className="text-sm text-muted-foreground">Create a future income or expense projection.</p>
                                 </div>
                               </div>
-                              <Button variant="ghost" size="icon">
+                              <Button variant="text" size="icon">
                                 <PlusCircle className="h-4 w-4" />
                               </Button>
                             </div>
@@ -197,7 +197,7 @@ export default function ProjectionsPage() {
                                       {item.status !== 'Canceled' && (
                                       <AlertDialog>
                                           <AlertDialogTrigger asChild>
-                                              <Button variant="ghost" size="icon">
+                                              <Button variant="text" size="icon">
                                                   <XCircle className="h-4 w-4 text-muted-foreground hover:text-destructive" />
                                               </Button>
                                           </AlertDialogTrigger>

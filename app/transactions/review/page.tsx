@@ -4,6 +4,7 @@
 import { useState, useMemo, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@neup/components/ui/button';
+import { LinkButton } from '@neup/components/ui/link-button';
 import { Input } from '@neup/components/ui/input';
 import { Label } from '@neup/components/ui/label';
 import { Combobox } from '@/components/ui/combobox';
@@ -246,13 +247,15 @@ function ReviewTransactionForm() {
                         {transactionDirections.map((item) => {
                             const isActive = direction === item.value;
                             return (
-                                <button
+                                <Button
                                     key={item.value}
                                     type="button"
+                                    variant="text"
+                                    alignment="left"
                                     onClick={() => setDirection(item.value)}
                                     aria-pressed={isActive}
                                     className={cn(
-                                        "flex items-start gap-3 rounded-lg border p-4 text-left transition-colors",
+                                        "h-auto w-full whitespace-normal flex items-start gap-3 rounded-lg border p-4 text-left transition-colors",
                                         isActive
                                             ? "border-primary bg-primary/5 ring-2 ring-primary/20"
                                             : "border-border hover:border-primary/40 hover:bg-muted/40"
@@ -268,7 +271,7 @@ function ReviewTransactionForm() {
                                         <div className="font-medium">{item.label}</div>
                                         <div className="text-sm text-muted-foreground">{item.description}</div>
                                     </div>
-                                </button>
+                                </Button>
                             );
                         })}
                     </div>
@@ -353,7 +356,7 @@ function ReviewTransactionForm() {
                     {isSubmitting ? <Loader className="mr-2 h-4 w-4 animate-spin"/> : null}
                     Commit Transaction
                 </Button>
-                <Button type="button" variant="outline" onClick={() => router.push(`/home${projectQuery}`)}>Cancel</Button>
+                <LinkButton href={`/home${projectQuery}`} variant="outlined">Cancel</LinkButton>
             </div>
         </form>
     )
@@ -365,7 +368,7 @@ export default function ReviewTransactionPage() {
     return (
 
         <div className="mx-auto max-w-2xl space-y-4">
-            <Button variant="ghost" onClick={() => router.back()} className="-ml-4">
+            <Button variant="text" onClick={() => router.back()} className="-ml-4">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Back
             </Button>

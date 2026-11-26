@@ -19,7 +19,7 @@ export default function ImportTransactionsPage() {
   return (
     <main className="mx-auto w-full max-w-5xl space-y-6 p-4 md:p-6">
       <div>
-        <LinkButton href={accountHref} variant="ghost" className="mb-3 pl-0" preIcon={<ArrowLeft className="mr-2 h-4 w-4" />}>
+        <LinkButton href={accountHref} variant="text" className="mb-3 pl-0" preIcon={<ArrowLeft className="mr-2 h-4 w-4" />}>
           Back to account
         </LinkButton>
         <div className="flex items-center gap-3">

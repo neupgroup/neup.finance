@@ -503,7 +503,7 @@ export default function AddTransactionPage() {
 
       <div className="space-y-4">
         <div className="space-y-2">
-          <LinkButton href={backHref} variant="ghost" className="w-fit -ml-3 text-muted-foreground hover:text-foreground" preIcon={<ArrowLeft className="h-4 w-4" />}>{isSalesDocument ? 'Back to sales documents' : 'Back to transactions'}</LinkButton>
+          <LinkButton href={backHref} variant="text" className="w-fit -ml-3 text-muted-foreground hover:text-foreground" preIcon={<ArrowLeft className="h-4 w-4" />}>{isSalesDocument ? 'Back to sales documents' : 'Back to transactions'}</LinkButton>
           <div>
             <h1 className="text-3xl font-bold tracking-tight">{recordDetails ? `Record ${recordDetails.label}` : 'Add Transaction'}</h1>
             <p className="text-muted-foreground">{recordDetails ? `Enter the details for this ${recordDetails.label.toLowerCase()}.` : 'Fill in the essentials and save.'}</p>
@@ -537,7 +537,7 @@ export default function AddTransactionPage() {
               {!showDescription && (
                 <Button
                   type="button"
-                  variant="outline"
+                  variant="outlined"
                   className="w-fit gap-2"
                   onClick={() => setShowDescription(true)}
                 >
@@ -586,7 +586,7 @@ export default function AddTransactionPage() {
                     <Button
                       key={party.id}
                       type="button"
-                      variant={partyId === party.id ? 'default' : 'outline'}
+                      variant={partyId === party.id ? 'solid' : 'outlined'}
                       size="sm"
                       className="h-7 rounded-full px-3 text-xs"
                       onClick={() => setPartyId(party.id)}
@@ -619,9 +619,11 @@ export default function AddTransactionPage() {
                 {transactionDirections.map((item) => {
                   const isActive = direction === item.value;
                   return (
-                    <button
+                    <Button
                       key={item.value}
                       type="button"
+                      variant="text"
+                      alignment="left"
                       onKeyDown={(event) => {
                         if (event.key !== 'Enter' || event.nativeEvent.isComposing) return;
                         event.preventDefault();
@@ -635,7 +637,7 @@ export default function AddTransactionPage() {
                       }}
                       aria-pressed={isActive}
                       className={cn(
-                        "flex items-start gap-3 rounded-lg border p-4 text-left transition-colors",
+                        "h-auto w-full whitespace-normal flex items-start gap-3 rounded-lg border p-4 text-left transition-colors",
                         isActive
                           ? "border-primary bg-primary/5 ring-2 ring-primary/20"
                           : "border-border hover:border-primary/40 hover:bg-muted/40",
@@ -652,7 +654,7 @@ export default function AddTransactionPage() {
                         <div className="font-medium">{item.label}</div>
                         <div className="text-sm text-muted-foreground">{item.description}</div>
                       </div>
-                    </button>
+                    </Button>
                   );
                 })}
               </div>
@@ -737,7 +739,7 @@ export default function AddTransactionPage() {
                   <Button
                     key={template.templateLabel}
                     type="button"
-                    variant="outline"
+                    variant="outlined"
                     size="sm"
                     className="h-7 rounded-full px-3 text-xs"
                     onClick={() => addTransactionSubblock(template)}
@@ -857,7 +859,7 @@ export default function AddTransactionPage() {
                       </div>
                       <Button
                         type="button"
-                        variant="ghost"
+                        variant="text"
                         size="sm"
                         onClick={() =>
                           setTransactionSubblocks((current) =>
@@ -960,9 +962,7 @@ export default function AddTransactionPage() {
 
           <div className="flex flex-col-reverse gap-3 border-t pt-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex gap-2">
-              <Button type="button" variant="outline" onClick={() => router.push(backHref)}>
-                Cancel
-              </Button>
+              <LinkButton href={backHref} variant="outlined">Cancel</LinkButton>
               <Button type="submit" disabled={isSubmitting}>
                 {isSubmitting ? <Loader className="mr-2 h-4 w-4 animate-spin" /> : null}
                 Save transaction

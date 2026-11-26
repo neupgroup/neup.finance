@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@neup/components/ui/button';
+import { LinkButton } from '@neup/components/ui/link-button';
 import { Input } from '@neup/components/ui/input';
 import { Label } from '@neup/components/ui/label';
 import { useToast } from '@neup/core/hooks/useToast';
@@ -150,10 +151,10 @@ export default function AddPartyPage() {
                 </div>
               ) : null}
             </div>
-            <button type="button" onClick={handleExtractName} disabled={isExtracting || (!name.trim() && !nameInformation.trim())} className="inline-flex items-center gap-1 text-sm font-medium text-primary underline-offset-4 hover:underline disabled:cursor-not-allowed disabled:opacity-50">
+            <Button type="button" variant="text" className="h-auto justify-start px-0 py-0" onClick={handleExtractName} disabled={isExtracting || (!name.trim() && !nameInformation.trim())}>
               {isExtracting ? <Loader className="h-3.5 w-3.5 animate-spin" /> : <Sparkles className="h-3.5 w-3.5" />}
               {isExtracting ? 'Extracting…' : 'Extract from it'}
-            </button>
+            </Button>
             {extractError ? <p className="text-sm font-medium text-destructive" role="alert">{extractError}</p> : null}
           </div>
 
@@ -212,9 +213,7 @@ export default function AddPartyPage() {
               <PlusCircle className="mr-2 h-4 w-4" />
               Save Party
             </Button>
-            <Button type="button" variant="outline" onClick={() => router.push(`/party${projectQuery}`)}>
-              Cancel
-            </Button>
+            <LinkButton href={`/party${projectQuery}`} variant="outlined">Cancel</LinkButton>
           </div>
         </form>
       </div>

@@ -104,7 +104,7 @@ export function TransactionPrintPage({ id, type = 'invoice' }: { id: string; typ
 
             <div className="sticky top-0 z-10 border-b bg-background/95 px-4 py-3 shadow-sm backdrop-blur print:hidden">
                 <div className="mx-auto flex max-w-5xl items-center justify-between gap-3">
-                    <Button variant="ghost" onClick={() => router.back()}>
+                    <Button variant="text" onClick={() => router.back()}>
                         <ArrowLeft className="mr-2 h-4 w-4" /> Back to Transaction
                     </Button>
                     <Button onClick={handlePrint}>

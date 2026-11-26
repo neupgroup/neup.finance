@@ -698,13 +698,13 @@ export default function PaymentProfilesSettingsPage() {
                         </p>
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        <Button type="button" variant="outline" size="sm" onClick={() => addOperation('vat')}>
+                        <Button type="button" variant="outlined" size="sm" onClick={() => addOperation('vat')}>
                           + VAT rule
                         </Button>
-                        <Button type="button" variant="outline" size="sm" onClick={() => addOperation('tax')}>
+                        <Button type="button" variant="outlined" size="sm" onClick={() => addOperation('tax')}>
                           + Tax rule
                         </Button>
-                        <Button type="button" variant="outline" size="sm" onClick={() => addOperation('custom')}>
+                        <Button type="button" variant="outlined" size="sm" onClick={() => addOperation('custom')}>
                           + Custom rule
                         </Button>
                       </div>
@@ -720,7 +720,7 @@ export default function PaymentProfilesSettingsPage() {
                           <div key={operation.id} className="grid gap-3 rounded-md border p-3 md:grid-cols-2">
                             <div className="flex items-center justify-between md:col-span-2">
                               <p className="text-sm font-medium">Operation #{index + 1}</p>
-                              <Button type="button" size="sm" variant="ghost" onClick={() => removeOperation(operation.id)}>
+                              <Button type="button" size="sm" variant="text" onClick={() => removeOperation(operation.id)}>
                                 Remove
                               </Button>
                             </div>
@@ -808,7 +808,7 @@ export default function PaymentProfilesSettingsPage() {
         </CardContent>
         <CardFooter className="gap-2 border-t px-6 py-4">
           <Button onClick={handleSaveProfile}>{editingId ? 'Update Profile' : 'Save Profile'}</Button>
-          <Button variant="outline" onClick={clearForm}>Clear</Button>
+          <Button variant="outlined" onClick={clearForm}>Clear</Button>
         </CardFooter>
       </Card>
 
@@ -849,13 +849,13 @@ export default function PaymentProfilesSettingsPage() {
                     <TableCell className="hidden lg:table-cell">{profile.operations.length}</TableCell>
                     <TableCell>
                       <div className="flex justify-end gap-2">
-                        <Button variant="outline" size="sm" onClick={() => handleApplyToForm(profile)}>
+                        <Button variant="outlined" size="sm" onClick={() => handleApplyToForm(profile)}>
                           Apply
                         </Button>
-                        <Button variant="outline" size="sm" onClick={() => handleEditProfile(profile)}>
+                        <Button variant="outlined" size="sm" onClick={() => handleEditProfile(profile)}>
                           Edit
                         </Button>
-                        <Button variant="destructive" size="sm" onClick={() => handleDeleteProfile(profile.id)}>
+                        <Button variant="sem.danger" size="sm" onClick={() => handleDeleteProfile(profile.id)}>
                           Delete
                         </Button>
                       </div>

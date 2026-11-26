@@ -864,7 +864,7 @@ export default function TransactionBlocksSettingsPage() {
                   <Button
                     key={example.value}
                     type="button"
-                    variant="outline"
+                    variant="outlined"
                     size="sm"
                     className="h-7 rounded-full px-3 text-xs"
                     onClick={() =>
@@ -904,7 +904,7 @@ export default function TransactionBlocksSettingsPage() {
                   <Button
                     key={template.templateLabel}
                     type="button"
-                    variant="outline"
+                    variant="outlined"
                     size="sm"
                     className="h-7 rounded-full px-3 text-xs"
                     onClick={() => addTemplateSubblock(template)}
@@ -1045,7 +1045,7 @@ export default function TransactionBlocksSettingsPage() {
                         <TableCell className="text-right">
                           <Button
                             type="button"
-                            variant="ghost"
+                            variant="text"
                             size="sm"
                             onClick={() => removeSubblockFromForm(subblock.id)}
                           >
@@ -1139,7 +1139,7 @@ export default function TransactionBlocksSettingsPage() {
                         {formatCreatedAt(block.createdAt)}
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button variant="ghost" size="sm" onClick={() => handleDelete(block.id)}>
+                        <Button variant="text" size="sm" onClick={() => handleDelete(block.id)}>
                           Delete
                         </Button>
                       </TableCell>

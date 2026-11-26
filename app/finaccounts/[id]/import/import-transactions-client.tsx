@@ -214,13 +214,13 @@ export default function ImportTransactionsClient({ accountId, accountCurrency, a
                     <FileSpreadsheet className="h-8 w-8 text-primary" />
                     <p className="max-w-full truncate font-medium">{file.name}</p>
                     <p className="text-sm text-muted-foreground">{(file.size / (1024 * 1024)).toFixed(2)} MB</p>
-                    <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()}>Change file</Button>
+                    <Button type="button" variant="outlined" onClick={() => fileInputRef.current?.click()}>Change file</Button>
                   </>
                 ) : (
                   <>
                     <CloudUpload className="h-9 w-9 text-primary" />
                     <p className="text-muted-foreground">Drag and drop your file or{' '}
-                      <button type="button" className="font-medium text-primary underline underline-offset-4" onClick={() => fileInputRef.current?.click()}>Browse</button>
+                      <Button type="button" variant="text" className="h-auto px-0 py-0" onClick={() => fileInputRef.current?.click()}>Browse</Button>
                     </p>
                     <p className="text-sm text-muted-foreground">Supported formats: XLSX, XLS, PDF, DOC, DOCX, CSV, TSV, TSX, TXT · Maximum size: 15 MB</p>
                     <p className="text-sm text-muted-foreground">Or enter or paste transaction text instead.</p>
@@ -228,7 +228,7 @@ export default function ImportTransactionsClient({ accountId, accountCurrency, a
                 )}
               </div>
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <Button type="button" variant="link" className="px-0" onClick={() => setSourceMode('text')}>Enter or paste text instead</Button>
+                <Button type="button" variant="text" className="px-0" onClick={() => setSourceMode('text')}>Enter or paste text instead</Button>
                 <Button onClick={handleAnalyze} disabled={!file || isAnalyzing || isImporting}>
                   {isAnalyzing ? <Loader className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
                   {isAnalyzing ? 'Analyzing file…' : 'Analyze transactions'}
@@ -244,14 +244,14 @@ export default function ImportTransactionsClient({ accountId, accountCurrency, a
                 {isAnalyzing ? <Loader className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
                 {isAnalyzing ? 'Analyzing text…' : 'Analyze pasted text'}
               </Button>
-              <Button type="button" variant="link" className="px-0" onClick={() => { setSourceMode('file'); setSourceText(''); }}>Choose a file instead</Button>
+              <Button type="button" variant="text" className="px-0" onClick={() => { setSourceMode('file'); setSourceText(''); }}>Choose a file instead</Button>
             </div>
           ) : null}
-          <LinkButton href={accountHref} variant="outline">Cancel</LinkButton>
+          <LinkButton href={accountHref} variant="outlined">Cancel</LinkButton>
         </CardContent>
       </Card> : null}
 
-      {hasAnalyzed && !result ? <Button type="button" variant="outline" onClick={handleChooseAnotherSource}>Choose another source</Button> : null}
+      {hasAnalyzed && !result ? <Button type="button" variant="outlined" onClick={handleChooseAnotherSource}>Choose another source</Button> : null}
 
       {error ? <div role="alert" className="flex items-start gap-2 rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive"><AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />{error}</div> : null}
       {result ? (
@@ -261,7 +261,7 @@ export default function ImportTransactionsClient({ accountId, accountCurrency, a
             <div>
               <p className="font-medium">Import complete</p>
               <p className="text-sm text-muted-foreground">{result.imported} added; {result.skippedAsDuplicate} duplicate entries skipped.</p>
-              <a className="mt-2 inline-block text-sm text-primary underline" href={accountHref}>Return to transaction history</a>
+              <LinkButton href={accountHref} variant="text" className="mt-2 h-auto px-0 py-0">Return to transaction history</LinkButton>
             </div>
           </CardContent>
         </Card>

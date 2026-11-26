@@ -147,7 +147,7 @@ export default function FinAccountPage() {
       <div className="space-y-4">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <LinkButton href={accountsHref} variant="ghost" className="mb-3 pl-0 flex items-center gap-1 text-sm text-muted-foreground hover:text-primary" preIcon={<ArrowLeft className="mr-2 h-4 w-4" />}>Back to accounts</LinkButton>
+            <LinkButton href={accountsHref} variant="text" className="mb-3 pl-0 flex items-center gap-1 text-sm text-muted-foreground hover:text-primary" preIcon={<ArrowLeft className="mr-2 h-4 w-4" />}>Back to accounts</LinkButton>
             <h1 className="text-3xl font-bold tracking-tight">
               {finAccount?.name || 'Account'}
             </h1>
@@ -170,13 +170,13 @@ export default function FinAccountPage() {
               </Card>
             )}
             <div className="flex flex-wrap justify-end gap-2">
-              <LinkButton href={importHref} variant="outline" aria-disabled={!finAccount || isLoading} tabIndex={!finAccount || isLoading ? -1 : undefined} className={!finAccount || isLoading ? 'pointer-events-none opacity-50' : undefined} preIcon={<FileUp className="mr-2 h-4 w-4" />}>
+              <LinkButton href={importHref} variant="outlined" aria-disabled={!finAccount || isLoading} tabIndex={!finAccount || isLoading ? -1 : undefined} className={!finAccount || isLoading ? 'pointer-events-none opacity-50' : undefined} preIcon={<FileUp className="mr-2 h-4 w-4" />}>
                 Import transactions
               </LinkButton>
               {!hasOpeningBalance ? (
                 <Dialog open={isOpeningBalanceOpen} onOpenChange={setIsOpeningBalanceOpen}>
                   <DialogTrigger asChild>
-                    <Button variant="outline" disabled={!finAccount || isLoading}>Add Opening Balance</Button>
+                    <Button variant="outlined" disabled={!finAccount || isLoading}>Add Opening Balance</Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[480px]">
                     <DialogHeader>
@@ -206,7 +206,7 @@ export default function FinAccountPage() {
                   </DialogContent>
                 </Dialog>
               ) : null}
-              <LinkButton href={newTransactionHref} variant="default" aria-disabled={!finAccount || isLoading} tabIndex={!finAccount || isLoading ? -1 : undefined} className={!finAccount || isLoading ? 'pointer-events-none opacity-50' : undefined} preIcon={<PlusCircle className="mr-2 h-4 w-4" />}>
+              <LinkButton href={newTransactionHref} variant="solid" aria-disabled={!finAccount || isLoading} tabIndex={!finAccount || isLoading ? -1 : undefined} className={!finAccount || isLoading ? 'pointer-events-none opacity-50' : undefined} preIcon={<PlusCircle className="mr-2 h-4 w-4" />}>
                 Add Transaction
               </LinkButton>
             </div>

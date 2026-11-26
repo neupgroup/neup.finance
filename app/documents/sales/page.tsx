@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { ArrowLeft, ArrowUpRight, Plus, ReceiptText } from 'lucide-react';
 import { Badge } from '@neup/components/ui/badge';
-import { Button } from '@neup/components/ui/button';
+import { LinkButton } from '@neup/components/ui/link-button';
 import { useDocumentInvoices, useDocumentProformas, useDocumentQuotations, useTransactionsList } from '@/core/hooks/api';
 
 const salesDocumentTypes = [
@@ -51,7 +51,7 @@ export default function SalesDocumentsPage() {
             </div>
             <p className="text-muted-foreground">{selectedType ? `Review ${selectedType[1].toLowerCase()} records or create a new one.` : 'Choose a sales document type to get started.'}</p>
           </div>
-          {selectedType ? <Button asChild><Link href={newHref}><Plus className="mr-2 h-4 w-4" />New {selectedType[1]}</Link></Button> : null}
+          {selectedType ? <LinkButton href={newHref} preIcon={<Plus className="mr-2 h-4 w-4" />}>New {selectedType[1]}</LinkButton> : null}
         </div>
       </div>
 
@@ -79,7 +79,7 @@ export default function SalesDocumentsPage() {
           ))}
         </div>
       ) : (
-        <div className="rounded-lg border border-dashed px-6 py-12 text-center"><ReceiptText className="mx-auto h-8 w-8 text-muted-foreground" /><h2 className="mt-3 font-semibold">No quotations yet</h2><p className="mt-1 text-sm text-muted-foreground">Create a quotation to see it here.</p><Button asChild className="mt-4"><Link href={newHref}><Plus className="mr-2 h-4 w-4" />New Quotation</Link></Button></div>
+        <div className="rounded-lg border border-dashed px-6 py-12 text-center"><ReceiptText className="mx-auto h-8 w-8 text-muted-foreground" /><h2 className="mt-3 font-semibold">No quotations yet</h2><p className="mt-1 text-sm text-muted-foreground">Create a quotation to see it here.</p><LinkButton href={newHref} className="mt-4" preIcon={<Plus className="mr-2 h-4 w-4" />}>New Quotation</LinkButton></div>
       )) : type === 'invoice' ? (areInvoicesLoading ? (
         <p className="py-10 text-center text-sm text-muted-foreground">Loading invoices…</p>
       ) : invoices.length ? (
@@ -95,7 +95,7 @@ export default function SalesDocumentsPage() {
           ))}
         </div>
       ) : (
-        <div className="rounded-lg border border-dashed px-6 py-12 text-center"><ReceiptText className="mx-auto h-8 w-8 text-muted-foreground" /><h2 className="mt-3 font-semibold">No invoices yet</h2><p className="mt-1 text-sm text-muted-foreground">Create an invoice to see it here.</p><Button asChild className="mt-4"><Link href={newHref}><Plus className="mr-2 h-4 w-4" />New Invoice</Link></Button></div>
+        <div className="rounded-lg border border-dashed px-6 py-12 text-center"><ReceiptText className="mx-auto h-8 w-8 text-muted-foreground" /><h2 className="mt-3 font-semibold">No invoices yet</h2><p className="mt-1 text-sm text-muted-foreground">Create an invoice to see it here.</p><LinkButton href={newHref} className="mt-4" preIcon={<Plus className="mr-2 h-4 w-4" />}>New Invoice</LinkButton></div>
       )) : type === 'proforma-invoice' ? (areProformasLoading ? (
         <p className="py-10 text-center text-sm text-muted-foreground">Loading proforma invoices…</p>
       ) : proformas.length ? (
@@ -111,7 +111,7 @@ export default function SalesDocumentsPage() {
           ))}
         </div>
       ) : (
-        <div className="rounded-lg border border-dashed px-6 py-12 text-center"><ReceiptText className="mx-auto h-8 w-8 text-muted-foreground" /><h2 className="mt-3 font-semibold">No proforma invoices yet</h2><p className="mt-1 text-sm text-muted-foreground">Create a proforma invoice to see it here.</p><Button asChild className="mt-4"><Link href={newHref}><Plus className="mr-2 h-4 w-4" />New Proforma Invoice</Link></Button></div>
+        <div className="rounded-lg border border-dashed px-6 py-12 text-center"><ReceiptText className="mx-auto h-8 w-8 text-muted-foreground" /><h2 className="mt-3 font-semibold">No proforma invoices yet</h2><p className="mt-1 text-sm text-muted-foreground">Create a proforma invoice to see it here.</p><LinkButton href={newHref} className="mt-4" preIcon={<Plus className="mr-2 h-4 w-4" />}>New Proforma Invoice</LinkButton></div>
       )) : isLoading ? (
         <p className="py-10 text-center text-sm text-muted-foreground">Loading sales records…</p>
       ) : salesTransactions.length ? (
@@ -137,7 +137,7 @@ export default function SalesDocumentsPage() {
           <ReceiptText className="mx-auto h-8 w-8 text-muted-foreground" />
           <h2 className="mt-3 font-semibold">No sales records yet</h2>
           <p className="mt-1 text-sm text-muted-foreground">Create a {selectedType[1].toLowerCase()} to see it here.</p>
-          <Button asChild className="mt-4"><Link href={newHref}><Plus className="mr-2 h-4 w-4" />New {selectedType[1]}</Link></Button>
+          <LinkButton href={newHref} className="mt-4" preIcon={<Plus className="mr-2 h-4 w-4" />}>New {selectedType[1]}</LinkButton>
         </div>
       )}
     </main>

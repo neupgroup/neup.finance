@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { ArrowLeft, Loader, Printer } from 'lucide-react';
 import { Button } from '@neup/components/ui/button';
+import { LinkButton } from '@neup/components/ui/link-button';
 import { useDocumentInvoice, useDocumentProforma, useDocumentQuotation } from '@/core/hooks/api';
 
 function money(value: number | string, currency: string) {
@@ -28,7 +29,7 @@ export default function SalesDocumentView({ id, type }: { id: string; type: 'quo
   const listLabel = type === 'quotation' ? 'quotations' : type === 'invoice' ? 'invoices' : 'proforma invoices';
 
   if (isLoading) return <div className="flex min-h-72 items-center justify-center"><Loader className="h-7 w-7 animate-spin" /></div>;
-  if (error || !record) return <main className="mx-auto max-w-4xl py-12 text-center"><h1 className="text-2xl font-bold">{documentLabel} not found</h1><p className="mt-2 text-muted-foreground">This {documentLabel.toLowerCase()} could not be loaded for the current project.</p><Button asChild className="mt-5"><Link href={backHref}>Back to {listLabel}</Link></Button></main>;
+  if (error || !record) return <main className="mx-auto max-w-4xl py-12 text-center"><h1 className="text-2xl font-bold">{documentLabel} not found</h1><p className="mt-2 text-muted-foreground">This {documentLabel.toLowerCase()} could not be loaded for the current project.</p><LinkButton href={backHref} className="mt-5">Back to {listLabel}</LinkButton></main>;
 
   const details = record.details ?? {};
   const currency = record.currency;
@@ -37,7 +38,7 @@ export default function SalesDocumentView({ id, type }: { id: string; type: 'quo
   return (
     <main className="mx-auto max-w-5xl space-y-5">
       <div className="flex items-center justify-between gap-3 print:hidden">
-        <Button variant="ghost" asChild><Link href={backHref}><ArrowLeft className="mr-2 h-4 w-4" />Back to {listLabel}</Link></Button>
+        <LinkButton href={backHref} variant="text" preIcon={<ArrowLeft className="mr-2 h-4 w-4" />}>Back to {listLabel}</LinkButton>
         <Button onClick={() => window.print()}><Printer className="mr-2 h-4 w-4" />Print {documentLabel}</Button>
       </div>
       <article className="space-y-8 rounded-lg border bg-background p-6 shadow-sm md:p-10 print:border-0 print:shadow-none">

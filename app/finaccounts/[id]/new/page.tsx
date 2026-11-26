@@ -138,7 +138,7 @@ export default function NewFinAccountTransactionPage() {
   return (
     <main className="mx-auto w-full max-w-3xl space-y-6 p-4 md:p-6">
       <div>
-        <LinkButton href={accountHref} variant="ghost" className="mb-3 pl-0" preIcon={<ArrowLeft className="mr-2 h-4 w-4" />}>Back to account</LinkButton>
+        <LinkButton href={accountHref} variant="text" className="mb-3 pl-0" preIcon={<ArrowLeft className="mr-2 h-4 w-4" />}>Back to account</LinkButton>
         <h1 className="text-3xl font-bold tracking-tight">Add Transaction</h1>
         <p className="text-muted-foreground">{account?.name ?? 'Account'}{account ? ` · ${account.currency}` : ''}</p>
       </div>
@@ -189,10 +189,10 @@ export default function NewFinAccountTransactionPage() {
                 ) : null}
               </div>
               {errors.title ? <p className="text-sm font-medium text-destructive" role="alert">{errors.title}</p> : null}
-              <button type="button" onClick={handleExtract} disabled={isExtracting || !title.trim() && !description.trim() && !date && !currency && amount === '' && !direction && partyId === 'none'} className="inline-flex items-center gap-1 text-sm font-medium text-primary underline-offset-4 hover:underline disabled:cursor-not-allowed disabled:opacity-50">
+              <Button type="button" variant="text" className="h-auto justify-start px-0 py-0" onClick={handleExtract} disabled={isExtracting || !title.trim() && !description.trim() && !date && !currency && amount === '' && !direction && partyId === 'none'}>
                 {isExtracting ? <Loader className="h-3.5 w-3.5 animate-spin" /> : <Sparkles className="h-3.5 w-3.5" />}
                 {isExtracting ? 'Extracting…' : 'Extract from it'}
-              </button>
+              </Button>
               {extractError ? <p className="text-sm font-medium text-destructive" role="alert">{extractError}</p> : null}
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
@@ -206,7 +206,7 @@ export default function NewFinAccountTransactionPage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="date">Transaction date and time</Label>
-                <Button id="date" type="button" variant="outline" className="w-full justify-start text-left font-normal" aria-required="true" aria-invalid={Boolean(errors.date)} onClick={() => setIsDateTimePickerOpen(true)}>
+                <Button id="date" type="button" variant="outlined" className="w-full justify-start text-left font-normal" aria-required="true" aria-invalid={Boolean(errors.date)} onClick={() => setIsDateTimePickerOpen(true)}>
                   {date ? formatDate(new Date(date).toISOString()) : 'Choose date and time'}
                 </Button>
                 {isDateTimePickerOpen ? <DateTimePicker kind="when" initialDate={date ? date.slice(0, 10) : ''} initialTime={date ? date.slice(11, 16) : ''} onClose={() => setIsDateTimePickerOpen(false)} onComplete={(selectedDate, selectedTime) => {

@@ -51,7 +51,7 @@ export function PartyPageHeader({
   return (
     <div className="flex items-center justify-between gap-4">
       <div className="space-y-2">
-        <LinkButton href="/party" variant="ghost" className="px-0" preIcon={<ChevronLeft className="h-4 w-4" />}>Back to parties</LinkButton>
+        <LinkButton href="/party" variant="text" className="px-0" preIcon={<ChevronLeft className="h-4 w-4" />}>Back to parties</LinkButton>
         <div className="space-y-1">
           <h1 className="text-3xl font-bold tracking-tight">{party.name}</h1>
           {title ? <p className="text-sm font-medium text-foreground">{title}</p> : null}

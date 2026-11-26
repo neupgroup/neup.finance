@@ -85,7 +85,7 @@ export function DateChoiceInput({ value, onChange, className }: DateChoiceInputP
   return (
     <div className={cn("space-y-2", className)}>
       {!showOptions ? (
-        <Button type="button" variant="outline" className="w-fit gap-2" onClick={() => setMode("custom")}>
+        <Button type="button" variant="outlined" className="w-fit gap-2" onClick={() => setMode("custom")}>
           <Check className="h-4 w-4" />
           Not today
         </Button>
@@ -96,7 +96,7 @@ export function DateChoiceInput({ value, onChange, className }: DateChoiceInputP
           <div className="flex flex-wrap gap-2">
             <Button
               type="button"
-              variant={mode === "today" ? "secondary" : "outline"}
+              variant={mode === "today" ? "tinted" : "outlined"}
               size="sm"
               onClick={() => selectPreset("today")}
             >
@@ -104,7 +104,7 @@ export function DateChoiceInput({ value, onChange, className }: DateChoiceInputP
             </Button>
             <Button
               type="button"
-              variant={mode === "yesterday" ? "secondary" : "outline"}
+              variant={mode === "yesterday" ? "tinted" : "outlined"}
               size="sm"
               onClick={() => selectPreset("yesterday")}
             >
@@ -112,7 +112,7 @@ export function DateChoiceInput({ value, onChange, className }: DateChoiceInputP
             </Button>
             <Button
               type="button"
-              variant={mode === "tomorrow" ? "secondary" : "outline"}
+              variant={mode === "tomorrow" ? "tinted" : "outlined"}
               size="sm"
               onClick={() => selectPreset("tomorrow")}
             >
@@ -120,7 +120,7 @@ export function DateChoiceInput({ value, onChange, className }: DateChoiceInputP
             </Button>
             <Button
               type="button"
-              variant={mode === "custom" ? "secondary" : "outline"}
+              variant={mode === "custom" ? "tinted" : "outlined"}
               size="sm"
               onClick={() => {
                 setMode("custom");

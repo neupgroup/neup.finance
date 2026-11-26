@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowLeft, Plus, Save, Trash2, X } from 'lucide-react';
 import { Badge } from '@neup/components/ui/badge';
 import { Button } from '@neup/components/ui/button';
+import { LinkButton } from '@neup/components/ui/link-button';
 import { Input } from '@neup/components/ui/input';
 import { InputUnderlined } from '@/@neup/components/ui/input_underlined';
 import { CurrencyUnderlined } from '@/@neup/components/ui/currency_underlined';
@@ -241,7 +242,7 @@ export function SalesDocumentForm({ type }: { type: 'quotation' | 'invoice' | 'p
                     stepLineValue(line.id, 'tax', event.key === 'ArrowUp' ? 1 : -1);
                   }} /><span className="shrink-0 text-sm text-muted-foreground">%</span></div></td>
                   <td className="whitespace-nowrap px-3 py-2 text-right font-medium">{formatMoney(calculateQuotationLine(line).total)}</td>
-                  <td className="px-2 py-2"><Button type="button" variant="ghost" size="icon" aria-label="Remove item" disabled={lines.length === 1} onClick={() => setLines((current) => current.filter((item) => item.id !== line.id))}><Trash2 className="h-4 w-4" /></Button></td>
+                  <td className="px-2 py-2"><Button type="button" variant="text" size="icon" aria-label="Remove item" disabled={lines.length === 1} onClick={() => setLines((current) => current.filter((item) => item.id !== line.id))}><Trash2 className="h-4 w-4" /></Button></td>
                 </tr>
               ))}
               <tr
@@ -284,16 +285,16 @@ export function SalesDocumentForm({ type }: { type: 'quotation' | 'invoice' | 'p
         </div>
 
         <section className="space-y-3 border-t pt-5">
-          {showTerms ? <div className="space-y-2"><Label htmlFor="quotation-terms">Terms and Conditions</Label><Textarea id="quotation-terms" rows={3} value={terms} onChange={(event) => setTerms(event.target.value)} placeholder="Enter terms and conditions" /></div> : <Button type="button" variant="link" className="px-0" onClick={() => setShowTerms(true)}>+ Add Terms and Conditions</Button>}
+          {showTerms ? <div className="space-y-2"><Label htmlFor="quotation-terms">Terms and Conditions</Label><Textarea id="quotation-terms" rows={3} value={terms} onChange={(event) => setTerms(event.target.value)} placeholder="Enter terms and conditions" /></div> : <Button type="button" variant="text" className="px-0" onClick={() => setShowTerms(true)}>+ Add Terms and Conditions</Button>}
         </section>
         <section className="space-y-3 border-t pt-5">
           <div className="space-y-2"><Label htmlFor="quotation-tags">Reporting Tags</Label><Input id="quotation-tags" value={tags} onChange={(event) => setTags(event.target.value)} placeholder="Add tags separated by commas" /></div>
         </section>
         <div className="flex items-center justify-between border-t pt-4">
-          <Button type="button" variant="outline" asChild><Link href={backHref}><ArrowLeft className="mr-2 h-4 w-4" />Back</Link></Button>
+          <LinkButton href={backHref} variant="outlined" preIcon={<ArrowLeft className="mr-2 h-4 w-4" />}>Back</LinkButton>
           <div className="flex items-center gap-2">
             <Button type="submit" disabled={isSaving || !selectedParty}><Save className="mr-2 h-4 w-4" />{isSaving ? 'Saving…' : `Save ${documentLabel}`}</Button>
-            <Button type="button" variant="ghost" size="icon" asChild><Link href={backHref} aria-label={`Close ${documentLabel.toLowerCase()}`}><X className="h-5 w-5" /></Link></Button>
+            <LinkButton href={backHref} variant="text" size="icon" aria-label={`Close ${documentLabel.toLowerCase()}`}><X className="h-5 w-5" /></LinkButton>
           </div>
         </div>
       </div>

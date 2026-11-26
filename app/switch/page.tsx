@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowRight, Check, FolderKanban, Inbox, PlusCircle } from 'lucide-react';
 import { Skeleton } from '@neup/components/ui/skeleton';
+import { Button } from '@neup/components/ui/button';
+import { LinkButton } from '@neup/components/ui/link-button';
 import { getAccessibleProjects } from '@/core/hooks/api';
 import { withAppBasePathInUrl, withoutAppBasePath } from '@/core/helpers/app-path';
 import { stackedCardClassName } from '@/components/ui/stacked-card';
@@ -88,26 +90,29 @@ export default function SwitchPage() {
           </div>
         ) : (
           <div className="divide-y">
-            <button
-              type="button"
-              className={stackedCardClassName(0, projects.length + 1, 'flex w-full items-center justify-between p-4 text-left')}
-              onClick={() => router.push(`/switch/new${searchParams.toString() ? `?${searchParams.toString()}` : ''}`)}
+            <LinkButton
+              href={`/switch/new${searchParams.toString() ? `?${searchParams.toString()}` : ''}`}
+              variant="text"
+              alignment="left"
+              className={stackedCardClassName(0, projects.length + 1, 'flex h-auto w-full items-center justify-between p-4 text-left')}
             >
               <span className="flex items-center gap-4">
                 <span className="rounded-full bg-muted p-2"><PlusCircle className="h-5 w-5 text-muted-foreground" /></span>
                 <span><span className="block font-semibold">Create Project</span><span className="text-sm text-muted-foreground">Add a new project to organize your work.</span></span>
               </span>
               <ArrowRight className="h-5 w-5 shrink-0 text-muted-foreground" />
-            </button>
+            </LinkButton>
 
             {projects.length > 0 ? projects.map((project, index) => {
               const isSelected = project.id === selectedProjectId;
               return (
-                <button
+                <Button
                   key={project.id}
                   type="button"
+                  variant="text"
+                  alignment="left"
                   aria-current={isSelected ? 'true' : undefined}
-                  className={stackedCardClassName(index + 1, projects.length + 1, `flex w-full items-center justify-between p-4 text-left ${isSelected ? 'bg-primary/20 hover:bg-primary/30' : ''}`)}
+                  className={stackedCardClassName(index + 1, projects.length + 1, `flex h-auto w-full items-center justify-between p-4 text-left ${isSelected ? 'bg-primary/20 hover:bg-primary/30' : ''}`)}
                   onClick={() => chooseProject(project.id)}
                 >
                   <span className="flex items-center gap-4">
@@ -117,7 +122,7 @@ export default function SwitchPage() {
                   {isSelected
                     ? <span className="flex items-center gap-1 text-sm font-medium text-primary"><Check className="h-5 w-5" />Selected</span>
                     : <ArrowRight className="h-5 w-5 shrink-0 text-muted-foreground" />}
-                </button>
+                </Button>
               );
             }) : (
               <StackedEmptyStateRow

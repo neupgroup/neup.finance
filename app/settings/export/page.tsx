@@ -153,7 +153,7 @@ export default function ExportSettingsPage() {
                 </p>
               </CardContent>
               <CardFooter className="border-t px-6 py-4">
-                <Button variant="outline" onClick={() => handleExport(item.key)} disabled={isLoading || activeExport !== null}>
+                <Button variant="outlined" onClick={() => handleExport(item.key)} disabled={isLoading || activeExport !== null}>
                   {activeExport === item.key ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}
                   Export {item.title}
                 </Button>

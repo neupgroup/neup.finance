@@ -103,7 +103,7 @@ export default function AddFinAccountPage() {
   return (
 
       <div className="space-y-4">
-        <LinkButton href={accountListHref} variant="ghost" className="w-fit pl-0" preIcon={<ArrowLeft className="mr-2 h-4 w-4" />}>Back to accounts</LinkButton>
+        <LinkButton href={accountListHref} variant="text" className="w-fit pl-0" preIcon={<ArrowLeft className="mr-2 h-4 w-4" />}>Back to accounts</LinkButton>
 
         <div className="max-w-2xl space-y-4">
           <div className="space-y-1">

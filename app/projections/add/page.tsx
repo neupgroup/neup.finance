@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 import { Button } from '@neup/components/ui/button';
+import { LinkButton } from '@neup/components/ui/link-button';
 import { Input } from '@neup/components/ui/input';
 import { Label } from '@neup/components/ui/label';
 import { Combobox } from '@/components/ui/combobox';
@@ -202,7 +203,7 @@ export default function AddProjectionPage() {
                         {isSubmitting ? <Loader className="mr-2 h-4 w-4 animate-spin" /> : null}
                         Save Projection
                     </Button>
-                    <Button type="button" variant="outline" onClick={() => router.push(projectionsHref)}>Cancel</Button>
+                    <LinkButton href={projectionsHref} variant="outlined">Cancel</LinkButton>
                 </div>
             </form>
         </div>

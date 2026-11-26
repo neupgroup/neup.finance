@@ -96,7 +96,7 @@ export default function FinAccountsPage() {
                           <p className="text-sm text-muted-foreground">Add a new cash, bank, or investment account.</p>
                         </div>
                       </div>
-                      <Button variant="ghost" size="icon" className="shrink-0">
+                      <Button variant="text" size="icon" className="shrink-0">
                         <PlusCircle className="h-5 w-5" />
                       </Button>
                     </div>
@@ -118,7 +118,7 @@ export default function FinAccountsPage() {
                           <p className="text-sm text-muted-foreground">Add a new cash, bank, or investment account.</p>
                         </div>
                       </div>
-                      <Button variant="ghost" size="icon" className="shrink-0">
+                      <Button variant="text" size="icon" className="shrink-0">
                         <PlusCircle className="h-5 w-5" />
                       </Button>
                     </div>
@@ -146,7 +146,7 @@ export default function FinAccountsPage() {
                               </p>
                               <p className="text-sm text-muted-foreground">Current Balance</p>
                             </div>
-                            <Button variant="ghost" size="icon">
+                            <Button variant="text" size="icon">
                               <MoreVertical className="h-5 w-5" />
                             </Button>
                           </div>

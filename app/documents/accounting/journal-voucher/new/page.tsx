@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowLeft, Plus, Save, Trash2 } from 'lucide-react';
 import { Button } from '@neup/components/ui/button';
+import { LinkButton } from '@neup/components/ui/link-button';
 import { Input } from '@neup/components/ui/input';
 import { Label } from '@neup/components/ui/label';
 import { Textarea } from '@neup/components/ui/textarea';
@@ -135,7 +136,7 @@ export default function NewJournalVoucherPage() {
         </section>
 
         <section className="space-y-3">
-          <div className="flex items-center justify-between gap-3"><div><h2 className="text-lg font-semibold">Journal lines</h2><p className="text-sm text-muted-foreground">Each line can have a debit or a credit amount.</p></div><Button type="button" variant="outline" onClick={() => setLines((current) => [...current, createJournalVoucherLine()])}><Plus className="mr-2 h-4 w-4" />Add line</Button></div>
+          <div className="flex items-center justify-between gap-3"><div><h2 className="text-lg font-semibold">Journal lines</h2><p className="text-sm text-muted-foreground">Each line can have a debit or a credit amount.</p></div><Button type="button" variant="outlined" onClick={() => setLines((current) => [...current, createJournalVoucherLine()])}><Plus className="mr-2 h-4 w-4" />Add line</Button></div>
           <div className="overflow-x-auto rounded-lg border">
             <table className="w-full min-w-[760px] text-sm">
               <thead className="bg-muted/50"><tr><th className="px-3 py-3 text-left">Account</th><th className="px-3 py-3 text-left">Description</th><th className="w-36 px-3 py-3 text-right">Debit</th><th className="w-36 px-3 py-3 text-right">Credit</th><th className="w-12 px-2 py-3" /></tr></thead>
@@ -146,7 +147,7 @@ export default function NewJournalVoucherPage() {
                     <td className="min-w-56 px-3 py-2"><Input aria-label="Line description" value={line.description} onChange={(event) => updateLine(line.id, 'description', event.target.value)} placeholder="Description (optional)" /></td>
                     <td className="px-3 py-2"><Input aria-label="Debit amount" className="text-right tabular-nums" type="number" min="0" step="0.01" value={line.debit} onChange={(event) => updateLine(line.id, 'debit', event.target.value)} placeholder="0.00" /></td>
                     <td className="px-3 py-2"><Input aria-label="Credit amount" className="text-right tabular-nums" type="number" min="0" step="0.01" value={line.credit} onChange={(event) => updateLine(line.id, 'credit', event.target.value)} placeholder="0.00" /></td>
-                    <td className="px-2 py-2"><Button type="button" variant="ghost" size="icon" aria-label="Remove line" disabled={lines.length <= 2} onClick={() => setLines((current) => current.filter((item) => item.id !== line.id))}><Trash2 className="h-4 w-4" /></Button></td>
+                    <td className="px-2 py-2"><Button type="button" variant="text" size="icon" aria-label="Remove line" disabled={lines.length <= 2} onClick={() => setLines((current) => current.filter((item) => item.id !== line.id))}><Trash2 className="h-4 w-4" /></Button></td>
                   </tr>
                 ))}
               </tbody>
@@ -160,7 +161,7 @@ export default function NewJournalVoucherPage() {
         </section>
 
         <footer className="flex items-center justify-between border-t pt-4">
-          <Button type="button" variant="outline" asChild><Link href={backHref}><ArrowLeft className="mr-2 h-4 w-4" />Cancel</Link></Button>
+          <LinkButton href={backHref} variant="outlined" preIcon={<ArrowLeft className="mr-2 h-4 w-4" />}>Cancel</LinkButton>
           <Button type="submit" disabled={isSaving || !isBalanced}><Save className="mr-2 h-4 w-4" />{isSaving ? 'Saving…' : 'Save Journal Voucher'}</Button>
         </footer>
       </form>

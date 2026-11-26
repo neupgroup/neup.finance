@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useParams, useSearchParams } from 'next/navigation';
 import { ArrowDownLeft, ArrowLeft, ArrowUpRight, Loader, Pencil } from 'lucide-react';
 import { Button } from '@neup/components/ui/button';
+import { LinkButton } from '@neup/components/ui/link-button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@neup/components/ui/card';
 import { useFinAccountTransactions, useProjectBooks } from '@/core/hooks/api';
 
@@ -32,9 +33,7 @@ export default function FinAccountTransactionDetailPage() {
   return (
     <main className="mx-auto w-full max-w-3xl space-y-6 p-4 md:p-6">
       <div>
-        <Button asChild variant="ghost" className="mb-3 pl-0">
-          <Link href={accountHref}><ArrowLeft className="mr-2 h-4 w-4" />Back to account</Link>
-        </Button>
+        <LinkButton href={accountHref} variant="text" className="mb-3 pl-0" preIcon={<ArrowLeft className="mr-2 h-4 w-4" />}>Back to account</LinkButton>
         <p className="text-sm text-muted-foreground">{account?.name ?? 'Account'}</p>
         <h1 className="text-3xl font-bold tracking-tight">Transaction details</h1>
       </div>
@@ -53,7 +52,7 @@ export default function FinAccountTransactionDetailPage() {
                   {transaction.direction === 'in' ? <ArrowDownLeft className="h-4 w-4" /> : <ArrowUpRight className="h-4 w-4" />}
                   {transaction.direction === 'in' ? '+' : '-'}{formatCurrency(transaction.amount, transaction.currency)}
                 </div>
-                <Button asChild variant="outline" size="sm"><Link href={amendHref}><Pencil className="mr-2 h-4 w-4" />Amend</Link></Button>
+                <LinkButton href={amendHref} variant="outlined" size="sm" preIcon={<Pencil className="mr-2 h-4 w-4" />}>Amend</LinkButton>
               </div>
             </div>
           </CardHeader>
