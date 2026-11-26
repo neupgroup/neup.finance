@@ -127,7 +127,7 @@ export default function PartyPage() {
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <Link href={`/party/${party.id}`} className="font-semibold hover:underline">
+                          <Link href={`/party/${encodeURIComponent(party.id)}${project ? `?project=${encodeURIComponent(project)}` : ''}`} className="font-semibold hover:underline">
                             {party.name}
                           </Link>
                           <Badge variant="secondary" className="capitalize">{party.type}</Badge>

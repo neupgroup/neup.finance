@@ -3,6 +3,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { Button } from '@neup/components/ui/button';
 import { Input } from '@neup/components/ui/input';
 import { Label } from '@neup/components/ui/label';
@@ -26,6 +27,9 @@ import { Switch } from '@neup/components/ui/switch';
 
 export default function AddProjectionPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const projectId = searchParams.get('project')?.trim();
+  const projectionsHref = `/projections${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
   const { toast } = useToast();
   const { user } = useUser();
   const { data: parties } = useParties();
@@ -81,7 +85,7 @@ export default function AddProjectionPage() {
             description: `A new projection for ${currency} ${amount} has been successfully added.`,
         });
 
-        router.push('/projections');
+        router.push(projectionsHref);
     } catch (error) {
         console.error("Error creating projection:", error);
         toast({
@@ -198,7 +202,7 @@ export default function AddProjectionPage() {
                         {isSubmitting ? <Loader className="mr-2 h-4 w-4 animate-spin" /> : null}
                         Save Projection
                     </Button>
-                    <Button type="button" variant="outline" onClick={() => router.push('/projections')}>Cancel</Button>
+                    <Button type="button" variant="outline" onClick={() => router.push(projectionsHref)}>Cancel</Button>
                 </div>
             </form>
         </div>

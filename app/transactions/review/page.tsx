@@ -33,6 +33,8 @@ const transactionDirections: {value: TransactionDirection, label: string, descri
 function ReviewTransactionForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
+    const projectId = searchParams.get('project')?.trim();
+    const projectQuery = projectId ? `?project=${encodeURIComponent(projectId)}` : '';
     const { toast } = useToast();
     const { user } = useUser();
     const { data: parties } = useParties();
@@ -187,7 +189,7 @@ function ReviewTransactionForm() {
                 description: `A new transaction for ${currency} ${totalAmount} has been successfully created.`,
             });
 
-            router.push(`/transactions/${saved.id}`);
+            router.push(`/transactions/${encodeURIComponent(saved.id)}${projectQuery}`);
         } catch (error) {
             console.error("Error committing transaction: ", error);
             toast({
@@ -351,7 +353,7 @@ function ReviewTransactionForm() {
                     {isSubmitting ? <Loader className="mr-2 h-4 w-4 animate-spin"/> : null}
                     Commit Transaction
                 </Button>
-                <Button type="button" variant="outline" onClick={() => router.push('/')}>Cancel</Button>
+                <Button type="button" variant="outline" onClick={() => router.push(`/home${projectQuery}`)}>Cancel</Button>
             </div>
         </form>
     )

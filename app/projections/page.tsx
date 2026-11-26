@@ -2,6 +2,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@neup/components/ui/card';
 import { Button } from '@neup/components/ui/button';
 import { PlusCircle, ArrowUpRight, ArrowDownLeft, Inbox, XCircle, Repeat } from 'lucide-react';
@@ -34,6 +35,9 @@ const typeIcons = {
 const ITEMS_PER_PAGE = 10;
 
 export default function ProjectionsPage() {
+    const searchParams = useSearchParams();
+    const projectId = searchParams.get('project')?.trim();
+    const addProjectionHref = `/projections/add${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
     const { user, isUserLoading } = useUser();
     const { toast } = useToast();
     const { data: projections, isLoading: areProjectionsLoading } = useProjections();
@@ -142,7 +146,7 @@ export default function ProjectionsPage() {
                         </div>
                     ) : (
                         <div className="overflow-hidden rounded-lg border">
-                          <Link href="/projections/add" className="block">
+                          <Link href={addProjectionHref} className="block">
                             <div className={stackedCardClassName(0, stackedTotal, 'flex items-center justify-between p-4')}>
                               <div className="flex items-center gap-4">
                                 <div className="rounded-full bg-muted p-2">

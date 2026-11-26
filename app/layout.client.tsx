@@ -3,6 +3,7 @@
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 import HeaderSidebarLayout, { type SidebarLinkGroup } from '@neup/components/layout/headerSidebar.v1';
 import { ThemeProvider } from '@/components/theme-provider';
 import { AuthProvider } from '@/core/providers/auth';
@@ -54,16 +55,43 @@ function AppShell({ children, account }: {
   account: HeaderAccount | null;
 }) {
   const searchParams = useSearchParams();
+  const projectId = searchParams.get('project')?.trim();
+  const withCurrentQuery = (href: string) => {
+    const destination = new URL(href, 'https://ledger.local');
+    searchParams.forEach((value, key) => {
+      if (!destination.searchParams.has(key)) destination.searchParams.set(key, value);
+    });
+    return `${destination.pathname}${destination.search}${destination.hash}`;
+  };
+
+  const QueryAwareLink = ({ href, ...props }: React.ComponentProps<typeof Link>) => (
+    <Link href={withCurrentQuery(typeof href === 'string' ? href : href.pathname ?? '/')} {...props} />
+  );
+
+  useEffect(() => {
+    if (!projectId) return;
+
+    const preserveProject = (event: MouseEvent) => {
+      const target = event.target instanceof Element ? event.target.closest('a') : null;
+      if (!target || target.target === '_blank') return;
+      const href = target.getAttribute('href');
+      if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
+      const destination = new URL(href, window.location.origin);
+      if (destination.origin !== window.location.origin || destination.pathname.startsWith('/bridge/api.v1')) return;
+      if (!destination.searchParams.has('project')) destination.searchParams.set('project', projectId);
+      target.setAttribute('href', `${destination.pathname}${destination.search}${destination.hash}`);
+    };
+
+    document.addEventListener('click', preserveProject, true);
+    return () => document.removeEventListener('click', preserveProject, true);
+  }, [projectId]);
+
   const sidebarLinks = sidebarGroups.map(group => ({
     ...group,
     links: group.links.map(link => {
-      const destination = new URL(link.href, 'https://ledger.local');
-      searchParams.forEach((value, key) => {
-        if (!destination.searchParams.has(key)) destination.searchParams.set(key, value);
-      });
       return {
         ...link,
-        href: `${destination.pathname}${destination.search}${destination.hash}`,
+        href: withCurrentQuery(link.href),
       };
     }),
   }));
@@ -72,16 +100,16 @@ function AppShell({ children, account }: {
     <HeaderSidebarLayout
       sidebarlinks={sidebarLinks}
       pofileBarInfo={{
-        href: '/profile',
+        href: withCurrentQuery('/profile'),
         displayName: account?.displayName ?? null,
         displayImage: account?.displayImage ?? null,
         neupid: account?.neupid ?? null,
       }}
       headerLinks={[
-        <Link key="brand" href="/home" className="flex items-center gap-2 font-semibold text-foreground">
+        <QueryAwareLink key="brand" href="/home" className="flex items-center gap-2 font-semibold text-foreground">
           <Logo className="h-8 w-8" />
           <span>Neup.Ledger</span>
-        </Link>,
+        </QueryAwareLink>,
       ]}
     >
       {children}

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import '@neup/components/theme.css';
 import './globals.css';
 import { cn } from '@neup/core/utils';
 import { Outfit } from 'next/font/google';

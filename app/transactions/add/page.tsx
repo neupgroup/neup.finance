@@ -416,7 +416,7 @@ export default function AddTransactionPage() {
             description: `A new transaction for ${totalAmountCurrency} ${saved.final_amount ?? resolvedTransactionTotal} has been successfully added.`,
         });
 
-        router.push(`/transactions/${saved.id}`);
+        router.push(`/transactions/${encodeURIComponent(saved.id)}${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`);
 
     } catch (error) {
         console.error("Error adding transaction: ", error);
@@ -960,7 +960,7 @@ export default function AddTransactionPage() {
 
           <div className="flex flex-col-reverse gap-3 border-t pt-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex gap-2">
-              <Button type="button" variant="outline" onClick={() => router.push('/transactions')}>
+              <Button type="button" variant="outline" onClick={() => router.push(backHref)}>
                 Cancel
               </Button>
               <Button type="submit" disabled={isSubmitting}>
