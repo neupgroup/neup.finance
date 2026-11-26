@@ -147,6 +147,7 @@ export async function createTransactionForOwner(owner: TransactionOwner, payload
             currency: line.currency,
             amount: new Prisma.Decimal(Math.abs(signedAmount)),
             direction: signedAmount > 0 ? 'in' : 'out',
+            status: 'active',
             activityOn: transaction.transactionDate,
             details: {
               entryKind: 'ledger_transaction',

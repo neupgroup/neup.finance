@@ -253,6 +253,7 @@ exports.Prisma.FinAccountTransactionScalarFieldEnum = {
   currency: 'currency',
   amount: 'amount',
   direction: 'direction',
+  status: 'status',
   tags: 'tags',
   details: 'details',
   activityOn: 'activityOn'
@@ -486,6 +487,12 @@ exports.AccountType = exports.$Enums.AccountType = {
   Investment: 'Investment',
   Stock: 'Stock',
   Other: 'Other'
+};
+
+exports.FinAccountTransactionStatus = exports.$Enums.FinAccountTransactionStatus = {
+  draft: 'draft',
+  active: 'active',
+  reviewRequired: 'reviewRequired'
 };
 
 exports.ProjectionType = exports.$Enums.ProjectionType = {

@@ -4,7 +4,7 @@ import { Button } from '@neup/components/ui/button';
 import { LinkButton } from '@neup/components/ui/link-button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@neup/components/ui/card';
 import { Separator } from '@neup/components/ui/separator';
-import type { SerializedParty, SerializedPartyTransaction } from '@/services/parties';
+import type { SerializedParty, SerializedPartyActivity } from '@/services/parties';
 import { ArrowDownLeft, ArrowUpRight, Building, ChevronLeft, Inbox, Mail, MapPin, Phone, Wallet } from 'lucide-react';
 
 /*
@@ -201,7 +201,7 @@ export function PartyPaymentSection({ party }: { party: SerializedParty }) {
   );
 }
 
-export function PartyTransactionsSection({ transactions }: { transactions: SerializedPartyTransaction[] }) {
+export function PartyTransactionsSection({ activities }: { activities: SerializedPartyActivity[] }) {
   return (
     <section className="space-y-3">
       <div className="space-y-1">
@@ -209,15 +209,15 @@ export function PartyTransactionsSection({ transactions }: { transactions: Seria
         <p className="text-sm text-muted-foreground">Transactions already linked to this party.</p>
       </div>
 
-      {transactions.length > 0 ? (
+      {activities.length > 0 ? (
         <div className="space-y-3">
-          {transactions.map((transaction) => {
-            const incoming = isIncomingTransaction(transaction.transaction_type);
+          {activities.map((activity) => {
+            const incoming = activity.incoming;
 
             return (
               <Link
-                key={transaction.id}
-                href={`/transactions/${transaction.id}`}
+                key={`${activity.type}:${activity.id}`}
+                href={activity.href}
                 className="flex flex-col gap-4 rounded-lg border bg-card p-4 transition-colors hover:bg-muted/40 md:flex-row md:items-center md:justify-between"
               >
                 <div className="flex items-start gap-3">
@@ -230,32 +230,25 @@ export function PartyTransactionsSection({ transactions }: { transactions: Seria
                   </div>
                   <div className="space-y-2">
                     <div className="flex flex-wrap items-center gap-2">
-                      <p className="font-medium">{transaction.title}</p>
+                      <p className="font-medium">{activity.title}</p>
                       <Badge variant="outline" className="capitalize">
-                        {transaction.status.replaceAll('_', ' ')}
+                        {activity.status.replaceAll('_', ' ')}
                       </Badge>
-                      <Badge variant="secondary">{transaction.category}</Badge>
+                      <Badge variant="secondary">{activity.type.replaceAll('-', ' ')}</Badge>
                     </div>
                     <div className="flex flex-wrap gap-x-3 gap-y-1 text-sm text-muted-foreground">
-                      <span>{formatDate(transaction.date)}</span>
-                      <span>{transaction.assetGroupName ?? transaction.accountId}</span>
-                      {transaction.due_on ? <span>Due {formatDate(transaction.due_on)}</span> : null}
+                      <span>{formatDate(activity.date)}</span>
                     </div>
-                    {transaction.description ? (
-                      <p className="text-sm text-muted-foreground">{transaction.description}</p>
+                    {activity.description ? (
+                      <p className="text-sm text-muted-foreground">{activity.description}</p>
                     ) : null}
                   </div>
                 </div>
                 <div className="space-y-1 text-left md:text-right">
                   <p className={incoming ? 'font-semibold text-chart-2' : 'font-semibold text-foreground'}>
                     {incoming ? '+' : '-'}
-                    {formatCurrency(transaction.total_amount, transaction.currency)}
+                    {formatCurrency(activity.amount, activity.currency)}
                   </p>
-                  {transaction.balance_due > 0 ? (
-                    <p className="text-sm text-muted-foreground">
-                      Due {formatCurrency(transaction.balance_due, transaction.currency)}
-                    </p>
-                  ) : null}
                 </div>
               </Link>
             );

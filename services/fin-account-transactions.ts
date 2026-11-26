@@ -6,6 +6,7 @@ export type FinAccountTransactionInput = {
   currency: string;
   amount: number;
   direction: 'in' | 'out';
+  status?: 'draft' | 'active' | 'reviewRequired';
   activityOn: string;
   partyId?: string | null;
   tags?: unknown;
@@ -21,6 +22,7 @@ export function serializeFinAccountTransaction(transaction: {
   currency: string;
   amount: unknown;
   direction: string;
+  status: string;
   tags: unknown;
   details: unknown;
   activityOn: Date;
@@ -33,6 +35,7 @@ export function serializeFinAccountTransaction(transaction: {
     currency: transaction.currency,
     amount: Number(transaction.amount),
     direction: transaction.direction,
+    status: transaction.status,
     tags: transaction.tags,
     partyId: party?.id ?? null,
     party,
@@ -79,6 +82,7 @@ export async function updateFinAccountTransactionForProject(
       currency: normalizedCurrency,
       amount,
       direction: input.direction,
+      ...(input.status ? { status: input.status } : {}),
       activityOn,
       partyId: input.partyId ?? null,
       ...(input.tags == null ? {} : { tags: JSON.parse(JSON.stringify(input.tags)) as Prisma.InputJsonValue }),
@@ -144,6 +148,7 @@ export async function createFinAccountTransactionsForProject(
       currency: input.currency,
       amount: input.amount,
       direction: input.direction,
+      ...(input.status ? { status: input.status } : {}),
       partyId: input.partyId ?? null,
       tags: input.tags == null ? undefined : JSON.parse(JSON.stringify(input.tags)) as Prisma.InputJsonValue,
       details: input.details == null ? undefined : JSON.parse(JSON.stringify(input.details)) as Prisma.InputJsonValue,

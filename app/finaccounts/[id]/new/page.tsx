@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from 'react';
 import { useParams, useSearchParams, useRouter } from 'next/navigation';
-import { ArrowLeft, Loader, PlusCircle, Sparkles } from 'lucide-react';
+import { ArrowLeft, FileUp, Loader, PlusCircle, Sparkles } from 'lucide-react';
 import { Button } from '@neup/components/ui/button';
 import { LinkButton } from '@neup/components/ui/link-button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@neup/components/ui/card';
@@ -27,6 +27,7 @@ export default function NewFinAccountTransactionPage() {
   const accountId = params.id;
   const projectId = searchParams.get('project')?.trim();
   const accountHref = `/finaccounts/${encodeURIComponent(accountId)}${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
+  const importHref = `/finaccounts/${encodeURIComponent(accountId)}/import${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
   const { toast } = useToast();
   const { data: accounts, isLoading: isAccountsLoading } = useProjectBooks();
   const { data: parties } = useParties();
@@ -139,8 +140,13 @@ export default function NewFinAccountTransactionPage() {
     <main className="mx-auto w-full max-w-3xl space-y-6 p-4 md:p-6">
       <div>
         <LinkButton href={accountHref} variant="text" className="mb-3 pl-0" preIcon={<ArrowLeft className="mr-2 h-4 w-4" />}>Back to account</LinkButton>
-        <h1 className="text-3xl font-bold tracking-tight">Add Transaction</h1>
-        <p className="text-muted-foreground">{account?.name ?? 'Account'}{account ? ` · ${account.currency}` : ''}</p>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Add Transaction</h1>
+            <p className="text-muted-foreground">{account?.name ?? 'Account'}{account ? ` · ${account.currency}` : ''}</p>
+          </div>
+          <LinkButton href={importHref} variant="outlined" preIcon={<FileUp className="mr-2 h-4 w-4" />}>Import transactions</LinkButton>
+        </div>
       </div>
       <Card>
         <CardHeader>

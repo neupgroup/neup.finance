@@ -219,23 +219,30 @@ model TransactionLine {
 }
 
 model FinAccountTransaction {
-  id           String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id           String                      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title        String
   description  String?
-  finAccountId String     @map("fin_account_id")
-  partyId      String?    @map("party_id") @db.Uuid
+  finAccountId String                      @map("fin_account_id")
+  partyId      String?                     @map("party_id") @db.Uuid
   currency     String
-  amount       Decimal    @db.Decimal(18, 2)
+  amount       Decimal                     @db.Decimal(18, 2)
   direction    String
-  tags         Json?      @db.JsonB
-  details      Json?      @db.JsonB
-  activityOn   DateTime   @map("activity_on") @db.Timestamptz(3)
-  finAccount   AssetGroup @relation(fields: [finAccountId], references: [id], onDelete: Cascade)
-  party        Party?     @relation(fields: [partyId], references: [id], onDelete: SetNull)
+  status       FinAccountTransactionStatus @default(active)
+  tags         Json?                       @db.JsonB
+  details      Json?                       @db.JsonB
+  activityOn   DateTime                    @map("activity_on") @db.Timestamptz(3)
+  finAccount   AssetGroup                  @relation(fields: [finAccountId], references: [id], onDelete: Cascade)
+  party        Party?                      @relation(fields: [partyId], references: [id], onDelete: SetNull)
 
   @@index([finAccountId, activityOn])
   @@index([partyId])
   @@map("fin_accounts_transactions")
+}
+
+enum FinAccountTransactionStatus {
+  draft
+  active
+  reviewRequired @map("reviewRequired")
 }
 
 model Projection {

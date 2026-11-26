@@ -79,6 +79,7 @@ Fields:
 > currency: string;
 > amount: decimal(18,2);
 > direction: string, values: in, out;
+> status: enum(draft, active, reviewRequired), default: active;
 > tags: JSONB, nullable;
 > details: JSONB, nullable;
 > activity_on: timestamp with time zone;

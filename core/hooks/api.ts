@@ -76,6 +76,7 @@ export type FinAccountTransaction = {
   currency: string;
   amount: number;
   direction: 'in' | 'out';
+  status: 'draft' | 'active' | 'reviewRequired';
   partyId: string | null;
   party: { id: string; name: string; type: string; taxinfo?: unknown } | null;
   tags: unknown;

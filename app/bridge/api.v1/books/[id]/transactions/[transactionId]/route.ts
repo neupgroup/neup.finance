@@ -23,6 +23,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
       currency: body.currency,
       amount: Number(body.amount),
       direction: body.direction,
+      status: body.status,
       activityOn: body.activityOn,
       partyId: typeof body.partyId === 'string' && body.partyId ? body.partyId : null,
       tags: body.tags,

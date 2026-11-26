@@ -39,7 +39,7 @@ export default async function PartyDetailPage({ params, searchParams }: PartyDet
   if (!pageData) {
     notFound();
   }
-  const { party, transactions } = pageData;
+  const { party, activities } = pageData;
 
   return (
 
@@ -49,7 +49,7 @@ export default async function PartyDetailPage({ params, searchParams }: PartyDet
           description="Review this party and jump into contact details, payment methods, or related transactions."
         />
         <PartySubpageLinks partyId={party.id} />
-        <PartyTransactionsSection transactions={transactions} />
+        <PartyTransactionsSection activities={activities} />
       </div>
 
   );

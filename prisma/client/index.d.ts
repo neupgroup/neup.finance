@@ -138,7 +138,16 @@ export type ProformaItem = $Result.DefaultSelection<Prisma.$ProformaItemPayload>
  * Enums
  */
 export namespace $Enums {
-  export const AccountType: {
+  export const FinAccountTransactionStatus: {
+  draft: 'draft',
+  active: 'active',
+  reviewRequired: 'reviewRequired'
+};
+
+export type FinAccountTransactionStatus = (typeof FinAccountTransactionStatus)[keyof typeof FinAccountTransactionStatus]
+
+
+export const AccountType: {
   Bank: 'Bank',
   Cash: 'Cash',
   Investment: 'Investment',
@@ -198,6 +207,10 @@ export const ActivityStockType: {
 export type ActivityStockType = (typeof ActivityStockType)[keyof typeof ActivityStockType]
 
 }
+
+export type FinAccountTransactionStatus = $Enums.FinAccountTransactionStatus
+
+export const FinAccountTransactionStatus: typeof $Enums.FinAccountTransactionStatus
 
 export type AccountType = $Enums.AccountType
 
@@ -16388,6 +16401,7 @@ export namespace Prisma {
     currency: string | null
     amount: Decimal | null
     direction: string | null
+    status: $Enums.FinAccountTransactionStatus | null
     activityOn: Date | null
   }
 
@@ -16400,6 +16414,7 @@ export namespace Prisma {
     currency: string | null
     amount: Decimal | null
     direction: string | null
+    status: $Enums.FinAccountTransactionStatus | null
     activityOn: Date | null
   }
 
@@ -16412,6 +16427,7 @@ export namespace Prisma {
     currency: number
     amount: number
     direction: number
+    status: number
     tags: number
     details: number
     activityOn: number
@@ -16436,6 +16452,7 @@ export namespace Prisma {
     currency?: true
     amount?: true
     direction?: true
+    status?: true
     activityOn?: true
   }
 
@@ -16448,6 +16465,7 @@ export namespace Prisma {
     currency?: true
     amount?: true
     direction?: true
+    status?: true
     activityOn?: true
   }
 
@@ -16460,6 +16478,7 @@ export namespace Prisma {
     currency?: true
     amount?: true
     direction?: true
+    status?: true
     tags?: true
     details?: true
     activityOn?: true
@@ -16561,6 +16580,7 @@ export namespace Prisma {
     currency: string
     amount: Decimal
     direction: string
+    status: $Enums.FinAccountTransactionStatus
     tags: JsonValue | null
     details: JsonValue | null
     activityOn: Date
@@ -16594,6 +16614,7 @@ export namespace Prisma {
     currency?: boolean
     amount?: boolean
     direction?: boolean
+    status?: boolean
     tags?: boolean
     details?: boolean
     activityOn?: boolean
@@ -16610,6 +16631,7 @@ export namespace Prisma {
     currency?: boolean
     amount?: boolean
     direction?: boolean
+    status?: boolean
     tags?: boolean
     details?: boolean
     activityOn?: boolean
@@ -16626,6 +16648,7 @@ export namespace Prisma {
     currency?: boolean
     amount?: boolean
     direction?: boolean
+    status?: boolean
     tags?: boolean
     details?: boolean
     activityOn?: boolean
@@ -16642,12 +16665,13 @@ export namespace Prisma {
     currency?: boolean
     amount?: boolean
     direction?: boolean
+    status?: boolean
     tags?: boolean
     details?: boolean
     activityOn?: boolean
   }
 
-  export type FinAccountTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "finAccountId" | "partyId" | "currency" | "amount" | "direction" | "tags" | "details" | "activityOn", ExtArgs["result"]["finAccountTransaction"]>
+  export type FinAccountTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "finAccountId" | "partyId" | "currency" | "amount" | "direction" | "status" | "tags" | "details" | "activityOn", ExtArgs["result"]["finAccountTransaction"]>
   export type FinAccountTransactionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     finAccount?: boolean | AssetGroupDefaultArgs<ExtArgs>
     party?: boolean | FinAccountTransaction$partyArgs<ExtArgs>
@@ -16676,6 +16700,7 @@ export namespace Prisma {
       currency: string
       amount: Prisma.Decimal
       direction: string
+      status: $Enums.FinAccountTransactionStatus
       tags: Prisma.JsonValue | null
       details: Prisma.JsonValue | null
       activityOn: Date
@@ -17112,6 +17137,7 @@ export namespace Prisma {
     readonly currency: FieldRef<"FinAccountTransaction", 'String'>
     readonly amount: FieldRef<"FinAccountTransaction", 'Decimal'>
     readonly direction: FieldRef<"FinAccountTransaction", 'String'>
+    readonly status: FieldRef<"FinAccountTransaction", 'FinAccountTransactionStatus'>
     readonly tags: FieldRef<"FinAccountTransaction", 'Json'>
     readonly details: FieldRef<"FinAccountTransaction", 'Json'>
     readonly activityOn: FieldRef<"FinAccountTransaction", 'DateTime'>
@@ -32539,6 +32565,7 @@ export namespace Prisma {
     currency: 'currency',
     amount: 'amount',
     direction: 'direction',
+    status: 'status',
     tags: 'tags',
     details: 'details',
     activityOn: 'activityOn'
@@ -32918,6 +32945,20 @@ export namespace Prisma {
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
+
+
+  /**
+   * Reference to a field of type 'FinAccountTransactionStatus'
+   */
+  export type EnumFinAccountTransactionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FinAccountTransactionStatus'>
+
+
+
+  /**
+   * Reference to a field of type 'FinAccountTransactionStatus[]'
+   */
+  export type ListEnumFinAccountTransactionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FinAccountTransactionStatus[]'>
+
 
 
   /**
@@ -33884,6 +33925,7 @@ export namespace Prisma {
     currency?: StringFilter<"FinAccountTransaction"> | string
     amount?: DecimalFilter<"FinAccountTransaction"> | Decimal | DecimalJsLike | number | string
     direction?: StringFilter<"FinAccountTransaction"> | string
+    status?: EnumFinAccountTransactionStatusFilter<"FinAccountTransaction"> | $Enums.FinAccountTransactionStatus
     tags?: JsonNullableFilter<"FinAccountTransaction">
     details?: JsonNullableFilter<"FinAccountTransaction">
     activityOn?: DateTimeFilter<"FinAccountTransaction"> | Date | string
@@ -33900,6 +33942,7 @@ export namespace Prisma {
     currency?: SortOrder
     amount?: SortOrder
     direction?: SortOrder
+    status?: SortOrder
     tags?: SortOrderInput | SortOrder
     details?: SortOrderInput | SortOrder
     activityOn?: SortOrder
@@ -33919,6 +33962,7 @@ export namespace Prisma {
     currency?: StringFilter<"FinAccountTransaction"> | string
     amount?: DecimalFilter<"FinAccountTransaction"> | Decimal | DecimalJsLike | number | string
     direction?: StringFilter<"FinAccountTransaction"> | string
+    status?: EnumFinAccountTransactionStatusFilter<"FinAccountTransaction"> | $Enums.FinAccountTransactionStatus
     tags?: JsonNullableFilter<"FinAccountTransaction">
     details?: JsonNullableFilter<"FinAccountTransaction">
     activityOn?: DateTimeFilter<"FinAccountTransaction"> | Date | string
@@ -33935,6 +33979,7 @@ export namespace Prisma {
     currency?: SortOrder
     amount?: SortOrder
     direction?: SortOrder
+    status?: SortOrder
     tags?: SortOrderInput | SortOrder
     details?: SortOrderInput | SortOrder
     activityOn?: SortOrder
@@ -33957,6 +34002,7 @@ export namespace Prisma {
     currency?: StringWithAggregatesFilter<"FinAccountTransaction"> | string
     amount?: DecimalWithAggregatesFilter<"FinAccountTransaction"> | Decimal | DecimalJsLike | number | string
     direction?: StringWithAggregatesFilter<"FinAccountTransaction"> | string
+    status?: EnumFinAccountTransactionStatusWithAggregatesFilter<"FinAccountTransaction"> | $Enums.FinAccountTransactionStatus
     tags?: JsonNullableWithAggregatesFilter<"FinAccountTransaction">
     details?: JsonNullableWithAggregatesFilter<"FinAccountTransaction">
     activityOn?: DateTimeWithAggregatesFilter<"FinAccountTransaction"> | Date | string
@@ -36114,6 +36160,7 @@ export namespace Prisma {
     currency: string
     amount: Decimal | DecimalJsLike | number | string
     direction: string
+    status?: $Enums.FinAccountTransactionStatus
     tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn: Date | string
@@ -36130,6 +36177,7 @@ export namespace Prisma {
     currency: string
     amount: Decimal | DecimalJsLike | number | string
     direction: string
+    status?: $Enums.FinAccountTransactionStatus
     tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn: Date | string
@@ -36142,6 +36190,7 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     direction?: StringFieldUpdateOperationsInput | string
+    status?: EnumFinAccountTransactionStatusFieldUpdateOperationsInput | $Enums.FinAccountTransactionStatus
     tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36158,6 +36207,7 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     direction?: StringFieldUpdateOperationsInput | string
+    status?: EnumFinAccountTransactionStatusFieldUpdateOperationsInput | $Enums.FinAccountTransactionStatus
     tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36172,6 +36222,7 @@ export namespace Prisma {
     currency: string
     amount: Decimal | DecimalJsLike | number | string
     direction: string
+    status?: $Enums.FinAccountTransactionStatus
     tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn: Date | string
@@ -36184,6 +36235,7 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     direction?: StringFieldUpdateOperationsInput | string
+    status?: EnumFinAccountTransactionStatusFieldUpdateOperationsInput | $Enums.FinAccountTransactionStatus
     tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36198,6 +36250,7 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     direction?: StringFieldUpdateOperationsInput | string
+    status?: EnumFinAccountTransactionStatusFieldUpdateOperationsInput | $Enums.FinAccountTransactionStatus
     tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -38473,6 +38526,13 @@ export namespace Prisma {
     not?: NestedUuidNullableFilter<$PrismaModel> | string | null
   }
 
+  export type EnumFinAccountTransactionStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.FinAccountTransactionStatus | EnumFinAccountTransactionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.FinAccountTransactionStatus[] | ListEnumFinAccountTransactionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FinAccountTransactionStatus[] | ListEnumFinAccountTransactionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumFinAccountTransactionStatusFilter<$PrismaModel> | $Enums.FinAccountTransactionStatus
+  }
+
   export type AssetGroupScalarRelationFilter = {
     is?: AssetGroupWhereInput
     isNot?: AssetGroupWhereInput
@@ -38492,6 +38552,7 @@ export namespace Prisma {
     currency?: SortOrder
     amount?: SortOrder
     direction?: SortOrder
+    status?: SortOrder
     tags?: SortOrder
     details?: SortOrder
     activityOn?: SortOrder
@@ -38510,6 +38571,7 @@ export namespace Prisma {
     currency?: SortOrder
     amount?: SortOrder
     direction?: SortOrder
+    status?: SortOrder
     activityOn?: SortOrder
   }
 
@@ -38522,6 +38584,7 @@ export namespace Prisma {
     currency?: SortOrder
     amount?: SortOrder
     direction?: SortOrder
+    status?: SortOrder
     activityOn?: SortOrder
   }
 
@@ -38542,6 +38605,16 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type EnumFinAccountTransactionStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FinAccountTransactionStatus | EnumFinAccountTransactionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.FinAccountTransactionStatus[] | ListEnumFinAccountTransactionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FinAccountTransactionStatus[] | ListEnumFinAccountTransactionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumFinAccountTransactionStatusWithAggregatesFilter<$PrismaModel> | $Enums.FinAccountTransactionStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFinAccountTransactionStatusFilter<$PrismaModel>
+    _max?: NestedEnumFinAccountTransactionStatusFilter<$PrismaModel>
   }
 
   export type EnumProjectionTypeFilter<$PrismaModel = never> = {
@@ -40639,6 +40712,10 @@ export namespace Prisma {
     connect?: PartyWhereUniqueInput
   }
 
+  export type EnumFinAccountTransactionStatusFieldUpdateOperationsInput = {
+    set?: $Enums.FinAccountTransactionStatus
+  }
+
   export type AssetGroupUpdateOneRequiredWithoutAccountTransactionsNestedInput = {
     create?: XOR<AssetGroupCreateWithoutAccountTransactionsInput, AssetGroupUncheckedCreateWithoutAccountTransactionsInput>
     connectOrCreate?: AssetGroupCreateOrConnectWithoutAccountTransactionsInput
@@ -41535,6 +41612,13 @@ export namespace Prisma {
     not?: NestedUuidNullableFilter<$PrismaModel> | string | null
   }
 
+  export type NestedEnumFinAccountTransactionStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.FinAccountTransactionStatus | EnumFinAccountTransactionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.FinAccountTransactionStatus[] | ListEnumFinAccountTransactionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FinAccountTransactionStatus[] | ListEnumFinAccountTransactionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumFinAccountTransactionStatusFilter<$PrismaModel> | $Enums.FinAccountTransactionStatus
+  }
+
   export type NestedUuidNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -41547,6 +41631,16 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumFinAccountTransactionStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FinAccountTransactionStatus | EnumFinAccountTransactionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.FinAccountTransactionStatus[] | ListEnumFinAccountTransactionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FinAccountTransactionStatus[] | ListEnumFinAccountTransactionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumFinAccountTransactionStatusWithAggregatesFilter<$PrismaModel> | $Enums.FinAccountTransactionStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFinAccountTransactionStatusFilter<$PrismaModel>
+    _max?: NestedEnumFinAccountTransactionStatusFilter<$PrismaModel>
   }
 
   export type NestedEnumProjectionTypeFilter<$PrismaModel = never> = {
@@ -42848,6 +42942,7 @@ export namespace Prisma {
     currency: string
     amount: Decimal | DecimalJsLike | number | string
     direction: string
+    status?: $Enums.FinAccountTransactionStatus
     tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn: Date | string
@@ -42862,6 +42957,7 @@ export namespace Prisma {
     currency: string
     amount: Decimal | DecimalJsLike | number | string
     direction: string
+    status?: $Enums.FinAccountTransactionStatus
     tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn: Date | string
@@ -43157,6 +43253,7 @@ export namespace Prisma {
     currency?: StringFilter<"FinAccountTransaction"> | string
     amount?: DecimalFilter<"FinAccountTransaction"> | Decimal | DecimalJsLike | number | string
     direction?: StringFilter<"FinAccountTransaction"> | string
+    status?: EnumFinAccountTransactionStatusFilter<"FinAccountTransaction"> | $Enums.FinAccountTransactionStatus
     tags?: JsonNullableFilter<"FinAccountTransaction">
     details?: JsonNullableFilter<"FinAccountTransaction">
     activityOn?: DateTimeFilter<"FinAccountTransaction"> | Date | string
@@ -43445,6 +43542,7 @@ export namespace Prisma {
     currency: string
     amount: Decimal | DecimalJsLike | number | string
     direction: string
+    status?: $Enums.FinAccountTransactionStatus
     tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn: Date | string
@@ -43459,6 +43557,7 @@ export namespace Prisma {
     currency: string
     amount: Decimal | DecimalJsLike | number | string
     direction: string
+    status?: $Enums.FinAccountTransactionStatus
     tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn: Date | string
@@ -46926,6 +47025,7 @@ export namespace Prisma {
     currency: string
     amount: Decimal | DecimalJsLike | number | string
     direction: string
+    status?: $Enums.FinAccountTransactionStatus
     tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn: Date | string
@@ -47196,6 +47296,7 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     direction?: StringFieldUpdateOperationsInput | string
+    status?: EnumFinAccountTransactionStatusFieldUpdateOperationsInput | $Enums.FinAccountTransactionStatus
     tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -47210,6 +47311,7 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     direction?: StringFieldUpdateOperationsInput | string
+    status?: EnumFinAccountTransactionStatusFieldUpdateOperationsInput | $Enums.FinAccountTransactionStatus
     tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -47223,6 +47325,7 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     direction?: StringFieldUpdateOperationsInput | string
+    status?: EnumFinAccountTransactionStatusFieldUpdateOperationsInput | $Enums.FinAccountTransactionStatus
     tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -47263,6 +47366,7 @@ export namespace Prisma {
     currency: string
     amount: Decimal | DecimalJsLike | number | string
     direction: string
+    status?: $Enums.FinAccountTransactionStatus
     tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn: Date | string
@@ -47356,6 +47460,7 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     direction?: StringFieldUpdateOperationsInput | string
+    status?: EnumFinAccountTransactionStatusFieldUpdateOperationsInput | $Enums.FinAccountTransactionStatus
     tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -47370,6 +47475,7 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     direction?: StringFieldUpdateOperationsInput | string
+    status?: EnumFinAccountTransactionStatusFieldUpdateOperationsInput | $Enums.FinAccountTransactionStatus
     tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -47383,6 +47489,7 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     direction?: StringFieldUpdateOperationsInput | string
+    status?: EnumFinAccountTransactionStatusFieldUpdateOperationsInput | $Enums.FinAccountTransactionStatus
     tags?: NullableJsonNullValueInput | InputJsonValue
     details?: NullableJsonNullValueInput | InputJsonValue
     activityOn?: DateTimeFieldUpdateOperationsInput | Date | string

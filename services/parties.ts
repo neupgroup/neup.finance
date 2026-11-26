@@ -89,7 +89,20 @@ export type SerializedPartyTransaction = {
 export type SerializedPartyPageData = {
   accountId: string;
   party: SerializedParty;
-  transactions: SerializedPartyTransaction[];
+  activities: SerializedPartyActivity[];
+};
+
+export type SerializedPartyActivity = {
+  id: string;
+  type: 'transaction' | 'fin-account-transaction' | 'quotation' | 'invoice' | 'proforma-invoice';
+  title: string;
+  description?: string;
+  status: string;
+  amount: number;
+  currency: string;
+  date: string;
+  href: string;
+  incoming: boolean;
 };
 
 const partyInclude = {
@@ -209,6 +222,49 @@ export async function getPartyTransactions(projectId: string, partyId: string): 
   return transactions.map(serializePartyTransaction);
 }
 
+// Collect every project-scoped document and transaction attached to a party.
+async function getPartyActivities(projectId: string, partyId: string): Promise<SerializedPartyActivity[]> {
+  const [transactions, accountTransactions, quotations, invoices, proformas] = await Promise.all([
+    prisma.transaction.findMany({
+      where: { projectId, details: { path: ['partyId'], equals: partyId } },
+      orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+      include: { lines: { orderBy: [{ sortOrder: 'asc' }, { id: 'asc' }] } },
+    }),
+    prisma.finAccountTransaction.findMany({
+      where: { partyId, finAccount: { projectId } },
+      orderBy: [{ activityOn: 'asc' }, { id: 'asc' }],
+      include: { finAccount: { select: { name: true } } },
+    }),
+    prisma.documentQuotation.findMany({ where: { customerId: partyId, document: { projectId } }, include: { document: true }, orderBy: [{ document: { createdAt: 'asc' } }, { id: 'asc' }] }),
+    prisma.invoice.findMany({ where: { customerId: partyId, document: { projectId } }, include: { document: true }, orderBy: [{ document: { createdAt: 'asc' } }, { id: 'asc' }] }),
+    prisma.proforma.findMany({ where: { customerId: partyId, document: { projectId } }, include: { document: true }, orderBy: [{ document: { createdAt: 'asc' } }, { id: 'asc' }] }),
+  ]);
+
+  const items: Array<SerializedPartyActivity & { createdAt: number }> = [
+    ...transactions.map((transaction) => ({
+      id: transaction.id, type: 'transaction' as const, title: transaction.title,
+      description: transaction.description ?? undefined, status: transaction.status,
+      amount: Number(transaction.finalAmount), currency: transaction.currency,
+      date: transaction.createdAt.toISOString(), createdAt: transaction.createdAt.getTime(),
+      href: `/transactions/${transaction.id}?project=${encodeURIComponent(projectId)}`,
+      incoming: ['sale', 'refund', 'income'].includes(transaction.transactionTypeId),
+    })),
+    ...accountTransactions.map((transaction) => ({
+      id: transaction.id, type: 'fin-account-transaction' as const, title: transaction.title,
+      description: transaction.description ?? transaction.finAccount.name,
+      status: transaction.direction, amount: Number(transaction.amount), currency: transaction.currency,
+      date: transaction.activityOn.toISOString(), createdAt: transaction.activityOn.getTime(),
+      href: `/finaccounts/${transaction.finAccountId}/${transaction.id}?project=${encodeURIComponent(projectId)}`,
+      incoming: transaction.direction === 'in',
+    })),
+    ...quotations.map((document) => ({ id: document.id, type: 'quotation' as const, title: document.subject, status: document.status, amount: Number(document.total), currency: document.currency, date: document.document.createdAt.toISOString(), createdAt: document.document.createdAt.getTime(), href: `/documents/${document.id}?type=quotation&project=${encodeURIComponent(projectId)}`, incoming: true })),
+    ...invoices.map((document) => ({ id: document.id, type: 'invoice' as const, title: document.subject, status: document.status, amount: Number(document.total), currency: document.currency, date: document.document.createdAt.toISOString(), createdAt: document.document.createdAt.getTime(), href: `/documents/${document.id}?type=invoice&project=${encodeURIComponent(projectId)}`, incoming: true })),
+    ...proformas.map((document) => ({ id: document.id, type: 'proforma-invoice' as const, title: document.subject, status: document.status, amount: Number(document.total), currency: document.currency, date: document.document.createdAt.toISOString(), createdAt: document.document.createdAt.getTime(), href: `/documents/${document.id}?type=proforma-invoice&project=${encodeURIComponent(projectId)}`, incoming: true })),
+  ];
+
+  return items.sort((first, second) => first.createdAt - second.createdAt || first.id.localeCompare(second.id)).map(({ createdAt: _createdAt, ...activity }) => activity);
+}
+
 /*
 ::neup.documentation::party-page-data-service
 ::function getPartyPageData(authToken, projectId, partyId)
@@ -250,12 +306,12 @@ export async function getPartyPageData(authToken: string, projectId: string, par
     return null;
   }
 
-  const transactions = await getPartyTransactions(projectId, party.id);
+  const activities = await getPartyActivities(projectId, party.id);
 
   return {
     accountId,
     party,
-    transactions,
+    activities,
   };
 }
 

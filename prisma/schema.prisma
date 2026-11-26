@@ -227,6 +227,7 @@ model FinAccountTransaction {
   currency     String
   amount       Decimal    @db.Decimal(18, 2)
   direction    String
+  status       FinAccountTransactionStatus @default(active)
   tags         Json?      @db.JsonB
   details      Json?      @db.JsonB
   activityOn   DateTime   @map("activity_on") @db.Timestamptz(3)
@@ -236,6 +237,12 @@ model FinAccountTransaction {
   @@index([finAccountId, activityOn])
   @@index([partyId])
   @@map("fin_accounts_transactions")
+}
+
+enum FinAccountTransactionStatus {
+  draft
+  active
+  reviewRequired @map("reviewRequired")
 }
 
 model Projection {

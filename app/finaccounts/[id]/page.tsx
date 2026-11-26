@@ -10,20 +10,15 @@ transactions against that selected account.
 ::end
 */
 
-import { useState, type FormEvent } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { useParams, useSearchParams } from 'next/navigation';
-import { ArrowLeft, FileUp, GitCompareArrows, Loader, PlusCircle, Search, TrendingDown, TrendingUp } from 'lucide-react';
-import { Button } from '@neup/components/ui/button';
+import { ArrowLeft, GitCompareArrows, Loader, PlusCircle, Search, TrendingDown, TrendingUp } from 'lucide-react';
 import { LinkButton } from '@neup/components/ui/link-button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@neup/components/ui/card';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@neup/components/ui/dialog';
 import { Input } from '@neup/components/ui/input';
-import { Label } from '@neup/components/ui/label';
-import { Textarea } from '@neup/components/ui/textarea';
 import { useUser } from '@/core/providers/auth';
-import { createFinAccountTransaction, useFinAccountTransactions, useTransactionsList, useProjectBooks, type FinAccountTransaction } from '@/core/hooks/api';
-import { useToast } from '@neup/core/hooks/useToast';
+import { useFinAccountTransactions, useTransactionsList, useProjectBooks, type FinAccountTransaction } from '@/core/hooks/api';
 import { isCreditTransactionType, type Transaction } from '@/core/lib/ledger';
 
 function formatDate(value: string) {
@@ -88,7 +83,7 @@ function transactionDateValue(transaction: SearchableAccountTransaction, include
 
 // Apply the documented account search syntax, duplicate groups, and plain text terms.
 function searchAccountTransactions<T extends SearchableAccountTransaction>(transactions: T[], query: string) {
-  const expression = /duplicates\s*\{[^}]*\}|(?:recipient|receipent)\.(?:type|taxType)\s*=\s*[^\s]+|(?:amount|date|datetime)\s*(?:[<>]=?|=)\s*[^\s]+/gi;
+  const expression = /duplicates\s*\{[^}]*\}|(?:recipient|receipent)\.(?:type|taxType)\s*=\s*[^\s]+|(?:direction|sort|amount|date|datetime)\s*(?:[<>]=?|=)\s*[^\s]+/gi;
   const filters = query.match(expression) ?? [];
   const remainder = query.replace(expression, '').trim().toLowerCase();
   const parsed = filters.map((filter) => {
@@ -97,12 +92,22 @@ function searchAccountTransactions<T extends SearchableAccountTransaction>(trans
     }
     const recipient = filter.match(/^(?:recipient|receipent)\.(type|taxType)\s*=\s*(.+)$/i);
     if (recipient) return { type: recipient[1].toLowerCase(), operator: '=', value: recipient[2].toLowerCase() };
+    const direction = filter.match(/^direction\s*=\s*(in|out)$/i);
+    if (direction) return { type: 'direction', operator: '=', value: direction[1].toLowerCase() };
+    const sort = filter.match(/^sort\s*=\s*(asc|desc)$/i);
+    if (sort) return { type: 'sort', operator: '=', value: sort[1].toLowerCase() };
     const comparison = filter.match(/^(amount|date|datetime)\s*([<>]=?|=)\s*(.+)$/i);
     if (!comparison) return { type: 'invalid', value: filter };
     return { type: comparison[1].toLowerCase(), operator: comparison[2], value: comparison[3] };
   });
   for (const filter of parsed) {
     if (filter.type === 'invalid') return { transactions: [], error: `Invalid filter: ${filter.value}` };
+    if (filter.type === 'direction' && filter.value !== 'in' && filter.value !== 'out') {
+      return { transactions: [], error: `Invalid direction value: ${filter.value}. Use in or out.` };
+    }
+    if (filter.type === 'sort' && filter.value !== 'asc' && filter.value !== 'desc') {
+      return { transactions: [], error: `Invalid sort value: ${filter.value}. Use asc or desc.` };
+    }
     if (filter.type === 'duplicates') {
       const supported = ['direction', 'amount', 'currency', 'date', 'datetime'];
       if (!filter.fields?.length || filter.fields.some((field) => !supported.includes(field))) return { transactions: [], error: 'Duplicate filters support direction, amount, currency, date, and datetime.' };
@@ -126,6 +131,7 @@ function searchAccountTransactions<T extends SearchableAccountTransaction>(trans
         }));
         if (!duplicate) return false;
       } else if (filter.type === 'type' && party?.type?.toLowerCase() !== filter.value) return false;
+      else if (filter.type === 'direction' && transaction.direction !== filter.value) return false;
       else if (filter.type === 'taxtype' && String(taxinfo.taxType ?? '').toLowerCase() !== filter.value) return false;
       else if (filter.type === 'amount') {
         const actual = Math.abs(transaction.amount);
@@ -142,6 +148,8 @@ function searchAccountTransactions<T extends SearchableAccountTransaction>(trans
     const searchable = [transaction.title, transaction.description, transaction.currency, transaction.direction, transaction.activityOn, recipientName].join(' ').toLowerCase();
     return !remainder || searchable.includes(remainder);
   });
+  const sort = parsed.find((filter) => filter.type === 'sort')?.value;
+  if (sort) filtered.sort((first, second) => (new Date(first.activityOn).getTime() - new Date(second.activityOn).getTime()) * (sort === 'asc' ? 1 : -1));
   return { transactions: filtered, error: '' };
 }
 
@@ -151,33 +159,18 @@ export default function FinAccountPage() {
   const finAccountId = params.id;
   const projectId = searchParams.get('project')?.trim();
   const accountsHref = `/finaccounts${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
-  const importHref = `/finaccounts/${encodeURIComponent(finAccountId)}/import${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
   const reconcileHref = `/finaccounts/${encodeURIComponent(finAccountId)}/reconcile${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
   const newTransactionHref = `/finaccounts/${encodeURIComponent(finAccountId)}/new${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
 
-  const { user, isUserLoading } = useUser();
-  const { toast } = useToast();
+  const { isUserLoading } = useUser();
   const { data: accounts, isLoading: areAccountsLoading } = useProjectBooks();
   const { data: legacyTransactions, isLoading: areLegacyTransactionsLoading } = useTransactionsList(undefined, finAccountId);
   const { data: accountTransactions, isLoading: areAccountTransactionsLoading } = useFinAccountTransactions(finAccountId);
 
   const finAccount = accounts?.find((account) => account.id === finAccountId);
-  const [isOpeningBalanceOpen, setIsOpeningBalanceOpen] = useState(false);
-  const [openingBalance, setOpeningBalance] = useState('');
-  const [openingBalanceDate, setOpeningBalanceDate] = useState(() => {
-    const today = new Date();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    return `${today.getFullYear()}-${month}-${day}`;
-  });
-  const [openingBalanceNote, setOpeningBalanceNote] = useState('');
-  const [isSavingOpeningBalance, setIsSavingOpeningBalance] = useState(false);
-  const [openingBalanceSaved, setOpeningBalanceSaved] = useState(false);
   const [newTransactions, setNewTransactions] = useState<FinAccountTransaction[]>([]);
-  const [balanceAdjustment, setBalanceAdjustment] = useState(0);
   const [transactionSearch, setTransactionSearch] = useState('');
 
-  const hasOpeningBalance = openingBalanceSaved || Boolean(accountTransactions?.some(isOpeningBalanceTransaction)) || Boolean(legacyTransactions?.some(isOpeningBalanceTransaction));
   const mirroredLegacyLineIds = new Set((accountTransactions ?? []).flatMap((transaction) => {
     const details = transaction.details;
     if (!details || typeof details !== 'object' || Array.isArray(details)) return [];
@@ -198,42 +191,6 @@ export default function FinAccountPage() {
   ].sort((left, right) => new Date(right.activityOn).getTime() - new Date(left.activityOn).getTime());
   const { transactions: filteredTransactions, error: searchError } = searchAccountTransactions(visibleTransactions, transactionSearch);
   const calculatedBalance = visibleTransactions.reduce((balance, transaction) => balance + (transaction.direction === 'in' ? Math.abs(transaction.amount) : -Math.abs(transaction.amount)), 0);
-
-  // Save the initial balance as an opening entry in the account transaction table.
-  const handleAddOpeningBalance = async (event: FormEvent) => {
-    event.preventDefault();
-    const amount = Number(openingBalance);
-    if (!user || !finAccount || !openingBalanceDate || !Number.isFinite(amount) || amount <= 0) {
-      toast({ name: 'app', state: 'error', title: 'Opening balance required', description: 'Enter a positive opening balance and its date.' });
-      return;
-    }
-
-    setIsSavingOpeningBalance(true);
-    try {
-      const saved = await createFinAccountTransaction(finAccountId, {
-        title: 'Opening Balance',
-        description: openingBalanceNote.trim() || undefined,
-        currency: finAccount.currency,
-        amount,
-        direction: 'in',
-        activityOn: openingBalanceDate,
-        details: { entryKind: 'opening_balance' },
-      });
-
-      setNewTransactions((current) => [saved, ...current]);
-      setBalanceAdjustment((current) => current + amount);
-      setOpeningBalanceSaved(true);
-      setIsOpeningBalanceOpen(false);
-      setOpeningBalance('');
-      setOpeningBalanceNote('');
-      toast({ name: 'app', title: 'Opening balance added', description: `${formatCurrency(amount, finAccount.currency)} was added to ${finAccount.name}.` });
-    } catch (error) {
-      console.error('Error adding opening balance:', error);
-      toast({ name: 'app', state: 'error', title: 'Could not add opening balance', description: 'Please try again.' });
-    } finally {
-      setIsSavingOpeningBalance(false);
-    }
-  };
 
   const isLoading = isUserLoading || areAccountsLoading || areLegacyTransactionsLoading || areAccountTransactionsLoading;
 
@@ -259,53 +216,14 @@ export default function FinAccountPage() {
                 <CardHeader className="pb-2">
                   <CardDescription>Current balance</CardDescription>
                   <CardTitle className="text-2xl">
-                    {formatCurrency(calculatedBalance + balanceAdjustment, finAccount.currency)}
+                    {formatCurrency(calculatedBalance, finAccount.currency)}
                   </CardTitle>
                 </CardHeader>
               </Card>
             )}
             <div className="flex flex-wrap justify-end gap-2">
-              <LinkButton href={importHref} variant="outlined" aria-disabled={!finAccount || isLoading} tabIndex={!finAccount || isLoading ? -1 : undefined} className={!finAccount || isLoading ? 'pointer-events-none opacity-50' : undefined} preIcon={<FileUp className="mr-2 h-4 w-4" />}>
-                Import transactions
-              </LinkButton>
               <LinkButton href={reconcileHref} variant="outlined" aria-disabled={!finAccount || isLoading} tabIndex={!finAccount || isLoading ? -1 : undefined} className={!finAccount || isLoading ? 'pointer-events-none opacity-50' : undefined} preIcon={<GitCompareArrows className="mr-2 h-4 w-4" />}>
                 Reconcile
-              </LinkButton>
-              {!hasOpeningBalance ? (
-                <Dialog open={isOpeningBalanceOpen} onOpenChange={setIsOpeningBalanceOpen}>
-                  <DialogTrigger asChild>
-                    <Button variant="outlined" disabled={!finAccount || isLoading}>Add Opening Balance</Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[480px]">
-                    <DialogHeader>
-                      <DialogTitle>Add Opening Balance</DialogTitle>
-                      <DialogDescription>Enter the starting balance for {finAccount?.name ?? 'this account'}. This can only be added once.</DialogDescription>
-                    </DialogHeader>
-                    <form onSubmit={handleAddOpeningBalance} className="space-y-4 py-2">
-                      <div className="space-y-2">
-                        <Label htmlFor="opening-balance-amount">Opening balance ({finAccount?.currency ?? ''})</Label>
-                        <Input id="opening-balance-amount" type="number" min="0.01" step="0.01" value={openingBalance} onChange={(event) => setOpeningBalance(event.target.value)} placeholder="0.00" required />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="opening-balance-date">As of date</Label>
-                        <Input id="opening-balance-date" type="date" value={openingBalanceDate} onChange={(event) => setOpeningBalanceDate(event.target.value)} required />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="opening-balance-note">Note</Label>
-                        <Textarea id="opening-balance-note" value={openingBalanceNote} onChange={(event) => setOpeningBalanceNote(event.target.value)} placeholder="Optional note" rows={2} />
-                      </div>
-                      <DialogFooter>
-                        <Button type="submit" disabled={isSavingOpeningBalance}>
-                          {isSavingOpeningBalance ? <Loader className="mr-2 h-4 w-4 animate-spin" /> : null}
-                          Save Opening Balance
-                        </Button>
-                      </DialogFooter>
-                    </form>
-                  </DialogContent>
-                </Dialog>
-              ) : null}
-              <LinkButton href={newTransactionHref} variant="solid" aria-disabled={!finAccount || isLoading} tabIndex={!finAccount || isLoading ? -1 : undefined} className={!finAccount || isLoading ? 'pointer-events-none opacity-50' : undefined} preIcon={<PlusCircle className="mr-2 h-4 w-4" />}>
-                Add Transaction
               </LinkButton>
             </div>
           </div>
@@ -314,9 +232,27 @@ export default function FinAccountPage() {
         <h2 className="text-xl font-semibold tracking-tight">Transaction history</h2>
         <div className="relative w-full max-w-xl">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input value={transactionSearch} onChange={(event) => setTransactionSearch(event.target.value)} placeholder="Search or filter: duplicates{amount,date}, amount>20000, recipient.type=person, date>20250201" aria-label="Search transactions" className="pl-9" />
+          <Input value={transactionSearch} onChange={(event) => setTransactionSearch(event.target.value)} placeholder="Search or filter: direction=in, direction=out, sort=asc, sort=desc, duplicates{amount,date}, amount>20000, recipient.type=person, date>20250201" aria-label="Search transactions" className="pl-9" />
         </div>
         {searchError ? <p role="alert" className="text-sm text-destructive">{searchError}</p> : null}
+        <Link
+          href={newTransactionHref}
+          aria-disabled={!finAccount || isLoading}
+          tabIndex={!finAccount || isLoading ? -1 : undefined}
+          className={`block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${!finAccount || isLoading ? 'pointer-events-none opacity-50' : ''}`}
+        >
+          <Card className="border-dashed transition-colors hover:bg-muted/40">
+            <CardContent className="flex items-center gap-4 p-4">
+              <div className="rounded-full bg-primary/10 p-2 text-primary">
+                <PlusCircle className="h-4 w-4" />
+              </div>
+              <div>
+                <p className="font-semibold">Add Transaction</p>
+                <p className="text-sm text-muted-foreground">Record a transaction for this account.</p>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
         {isLoading ? (
           <div className="flex items-center justify-center py-16 text-muted-foreground">
             <Loader className="mr-3 h-6 w-6 animate-spin" />
@@ -329,9 +265,9 @@ export default function FinAccountPage() {
               const isCredit = transaction.direction === 'in';
               const amount = Math.abs(transaction.amount);
               const details = transaction.details && typeof transaction.details === 'object' ? transaction.details as Record<string, unknown> : {};
-              const activityLabel = isOpeningBalance ? 'Opening Balance' : String(details.transactionType ?? (transaction as FinAccountTransaction).direction ?? 'transaction');
               const activityCategory = String(details.category ?? (isOpeningBalance ? 'general' : ''));
               const recipientName = transaction.party?.name ?? (typeof details.recipient === 'string' ? details.recipient : '');
+              const hasRecipient = Boolean(recipientName);
               const transactionHref = `/finaccounts/${encodeURIComponent(finAccountId)}/${encodeURIComponent(transaction.id)}${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
 
               return (
@@ -345,17 +281,15 @@ export default function FinAccountPage() {
                         <div>
                           <p className="font-semibold">{transaction.title}</p>
                           <p className="text-sm text-muted-foreground">
-                            {formatDate(transaction.activityOn)}{activityCategory ? ` · ${activityCategory}` : ''}
+                            {hasRecipient ? `${isCredit ? 'from' : 'to'} ${recipientName} at ${formatDate(transaction.activityOn)}` : formatDate(transaction.activityOn)}{activityCategory ? ` · ${activityCategory}` : ''}{'status' in transaction && transaction.status ? ` · ${transaction.status}` : ''}
                           </p>
-                          {transaction.description ? <p className="text-sm text-muted-foreground">{transaction.description}</p> : null}
-                          {recipientName ? <p className="text-xs text-muted-foreground">Recipient: {recipientName}</p> : null}
+                          {isCredit && !hasRecipient && transaction.description ? <p className="text-sm text-muted-foreground">{transaction.description}</p> : null}
                         </div>
                       </div>
                       <div className="text-right">
                         <p className={`font-semibold ${isCredit ? 'text-green-600' : 'text-red-600'}`}>
                           {isCredit ? '+' : '-'}{formatCurrency(amount, transaction.currency)}
                         </p>
-                        <p className="text-xs text-muted-foreground capitalize">{activityLabel}</p>
                       </div>
                     </CardContent>
                   </Card>
