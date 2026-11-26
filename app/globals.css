@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.bg-primary-1000 {
+  background-color: #000000;
+}
+
 @layer base {
   :root {
     --site-header-height: 4rem;
