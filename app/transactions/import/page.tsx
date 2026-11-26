@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, FileJson, Loader2, Upload } from 'lucide-react';
 import { Button } from '@neup/components/ui/button';
@@ -39,6 +40,9 @@ const sampleCsvPlaceholder = [
 ].join('\n');
 
 export default function ImportTransactionsPage() {
+  const searchParams = useSearchParams();
+  const projectId = searchParams.get('project')?.trim();
+  const transactionsHref = `/transactions${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
   const { user } = useUser();
   const { toast } = useToast();
   const [format, setFormat] = useState<ImportFormat>('csv');
@@ -128,7 +132,7 @@ export default function ImportTransactionsPage() {
 
       <div className="space-y-4">
         <div className="space-y-2">
-          <LinkButton href="/transactions" variant="ghost" className="w-fit -ml-3 text-muted-foreground hover:text-foreground" preIcon={<ArrowLeft className="h-4 w-4" />}>Back to transactions</LinkButton>
+          <LinkButton href={transactionsHref} variant="ghost" className="w-fit -ml-3 text-muted-foreground hover:text-foreground" preIcon={<ArrowLeft className="h-4 w-4" />}>Back to transactions</LinkButton>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div className="space-y-1">
               <h1 className="text-3xl font-bold tracking-tight">Import Transactions</h1>
@@ -239,7 +243,7 @@ export default function ImportTransactionsPage() {
           ) : null}
 
           <div className="flex flex-col-reverse gap-3 border-t pt-4 sm:flex-row sm:items-center sm:justify-between">
-            <LinkButton href="/transactions" variant="outline">Cancel</LinkButton>
+            <LinkButton href={transactionsHref} variant="outline">Cancel</LinkButton>
             <Button type="submit" disabled={isSubmitting || rowCount === 0}>
               {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
               Import transactions

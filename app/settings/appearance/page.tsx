@@ -19,8 +19,10 @@ import { SHADOW_LEVEL_STORAGE_KEY, type ShadowLevel } from '@/components/theme-p
 export default function AppearanceSettingsPage() {
   const { theme, setTheme } = useTheme();
   const [shadowLevel, setShadowLevel] = useState<ShadowLevel>('medium');
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
     const savedLevel = window.localStorage.getItem(SHADOW_LEVEL_STORAGE_KEY);
     if (savedLevel === 'light' || savedLevel === 'medium' || savedLevel === 'heavy') setShadowLevel(savedLevel);
   }, []);
@@ -46,7 +48,7 @@ export default function AppearanceSettingsPage() {
           <CardContent>
             <div className="space-y-4">
               <h3 className="font-semibold">Theme</h3>
-              <RadioGroup
+              {isMounted ? <RadioGroup
                 value={theme}
                 onValueChange={setTheme}
                 className="grid grid-cols-1 gap-4 sm:grid-cols-3"
@@ -93,7 +95,9 @@ export default function AppearanceSettingsPage() {
                     System
                   </Label>
                 </div>
-              </RadioGroup>
+              </RadioGroup> : <div className="grid grid-cols-1 gap-4 sm:grid-cols-3" aria-hidden="true">
+                {['Light', 'Dark', 'System'].map((label) => <div key={label} className="h-[74px] rounded-md border-2 border-muted bg-popover p-4" />)}
+              </div>}
             </div>
           </CardContent>
         </Card>
@@ -106,7 +110,7 @@ export default function AppearanceSettingsPage() {
           <CardContent>
             <div className="space-y-4">
               <h3 className="font-semibold">Shadow level</h3>
-              <RadioGroup
+              {isMounted ? <RadioGroup
                 value={shadowLevel}
                 onValueChange={updateShadowLevel}
                 className="grid grid-cols-1 gap-4 sm:grid-cols-3"
@@ -128,7 +132,9 @@ export default function AppearanceSettingsPage() {
                     </Label>
                   </div>
                 ))}
-              </RadioGroup>
+              </RadioGroup> : <div className="grid grid-cols-1 gap-4 sm:grid-cols-3" aria-hidden="true">
+                {['Light', 'Medium', 'Heavy'].map((label) => <div key={label} className="h-[92px] rounded-md border-2 border-muted bg-popover p-4" />)}
+              </div>}
             </div>
           </CardContent>
         </Card>

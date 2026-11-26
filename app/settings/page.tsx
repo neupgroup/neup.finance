@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { ArrowRight, Search } from 'lucide-react';
 import { Input } from '@neup/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@neup/components/ui/card';
@@ -101,6 +102,14 @@ const settingsSections: { title: string; description: string; items: SettingsIte
 
 export default function SettingsPage() {
   const [query, setQuery] = useState('');
+  const searchParams = useSearchParams();
+  const settingsHref = (href: string) => {
+    const destination = new URL(href, 'https://settings.local');
+    searchParams.forEach((value, key) => {
+      if (!destination.searchParams.has(key)) destination.searchParams.set(key, value);
+    });
+    return `${destination.pathname}${destination.search}${destination.hash}`;
+  };
 
   const filteredSections = useMemo(() => {
     const search = query.trim().toLowerCase();
@@ -157,7 +166,7 @@ export default function SettingsPage() {
                   {section.items.map((item) => (
                     <Link
                       key={item.title}
-                      href={item.href}
+                      href={settingsHref(item.href)}
                       className="group flex items-center justify-between px-5 py-4 transition-colors hover:bg-muted/50"
                     >
                       <div className="space-y-1">
