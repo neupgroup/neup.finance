@@ -10,6 +10,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, Pagi
 import { cn } from '@neup/core/utils';
 import { useUser } from '@/core/providers/auth';
 import { useTransactionsList } from '@/core/hooks/api';
+import { getApiPath } from '@/core/helpers/app-path';
 
 type JournalEntry = {
     transaction: Transaction;
@@ -41,7 +42,7 @@ export default function JournalPage() {
         setIsLoadingJournal(true);
         const entries = await Promise.all(
           transactions.map(async (transaction) => {
-            const response = await fetch(`/bridge/api.v1/transactions/${transaction.id}/lines`, { cache: 'no-store' });
+            const response = await fetch(getApiPath(`/bridge/api.v1/transactions/${transaction.id}/lines`), { cache: 'no-store' });
             if (!response.ok) {
               throw new Error(`Failed to load lines for transaction ${transaction.id}`);
             }

@@ -11,6 +11,7 @@ import { cn } from '@neup/core/utils';
 import { Skeleton } from '@neup/components/ui/skeleton';
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationLink } from '@/components/ui/pagination';
 import { useUser } from '@/core/providers/auth';
+import { getApiPath } from '@/core/helpers/app-path';
 import { useProjections } from '@/core/hooks/api';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@neup/components/ui/alert-dialog';
 import { useToast } from '@neup/core/hooks/useToast';
@@ -61,7 +62,7 @@ export default function ProjectionsPage() {
     const handleCancelProjection = async (projectionId: string) => {
         if (!user?.uid) return;
         try {
-            const res = await fetch('/bridge/api.v1/projections', {
+            const res = await fetch(getApiPath('/bridge/api.v1/projections'), {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id: projectionId, status: 'Canceled' }),

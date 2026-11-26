@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@neup/components/ui/button';
 import { Input } from '@neup/components/ui/input';
 import { Label } from '@neup/components/ui/label';
+import { getApiPath, withAppBasePath } from '@/core/helpers/app-path';
 
 export default function NewProjectPage() {
   const router = useRouter();
@@ -17,7 +18,7 @@ export default function NewProjectPage() {
     setSaving(true);
     setError('');
     try {
-      const response = await fetch('/bridge/api.v1/projects', {
+      const response = await fetch(getApiPath('/bridge/api.v1/projects'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -27,7 +28,7 @@ export default function NewProjectPage() {
         const body = await response.json().catch(() => null);
         throw new Error(body?.error || 'Could not create project');
       }
-      window.location.assign('/');
+      window.location.assign(withAppBasePath('/'));
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'Could not create project');
       setSaving(false);

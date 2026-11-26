@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getApiPath } from '@/core/helpers/app-path';
 
 type QueryResult<T> = { data: T | undefined; isLoading: boolean; error: Error | null };
-const basePath = process.env.NEXT_PUBLIC_APP_BASEPATH ?? '';
 
 async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
   const url = new URL(path, typeof window === 'undefined' ? 'http://localhost' : window.location.origin);
@@ -11,9 +11,7 @@ async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
     const projectId = new URLSearchParams(window.location.search).get('project');
     if (projectId && !url.searchParams.has('project')) url.searchParams.set('project', projectId);
   }
-  const requestPath = typeof window === 'undefined'
-    ? `${basePath}${path}`
-    : `${basePath}${url.pathname}${url.search}`;
+  const requestPath = getApiPath(`${url.pathname}${url.search}`);
   const response = await fetch(requestPath, {
     ...init,
     credentials: "include",
@@ -144,6 +142,12 @@ export async function ensureAccount() {
   return requestJson<AccountProfile>('/bridge/api.v1/account', {
     method: "PUT",
   });
+}
+
+// Ensure the current account exists, then load its accessible project list.
+export async function getAccessibleProjects() {
+  await ensureAccount();
+  return requestJson<ProjectOption[]>('/bridge/api.v1/projects');
 }
 
 export async function createProject(name: string) {

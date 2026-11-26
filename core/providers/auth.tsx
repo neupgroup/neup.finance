@@ -13,6 +13,7 @@ import {
   useSession,
   type SessionUser,
 } from "@neup/core/providers/session";
+import { getApiPath } from '@/core/helpers/app-path';
 
 type AppUser = SessionUser & {
   uid: string;
@@ -53,14 +54,14 @@ function AuthActionsProvider({ children }: { children: ReactNode }) {
   const signOut = useCallback(async () => {
     setUser(null);
     try {
-      await fetch("/bridge/api.v1/auth/logout", {
+      await fetch(getApiPath("/bridge/api.v1/auth/logout"), {
         method: "POST",
         credentials: "include",
       });
     } catch {
       // Clear the local session even if the remote logout endpoint is unavailable.
     }
-    await fetch('/bridge/api.v1/session/logout', { method: 'POST', credentials: 'include' });
+    await fetch(getApiPath('/bridge/api.v1/session/logout'), { method: 'POST', credentials: 'include' });
   }, [setUser]);
 
   const actions = useMemo(() => ({ signInAnonymous, signOut }), [signInAnonymous, signOut]);

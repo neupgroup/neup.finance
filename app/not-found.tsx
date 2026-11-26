@@ -11,7 +11,7 @@ import {
 
 export default function NotFound() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
+    <div className="flex min-h-[calc(100vh-9rem)] items-center justify-center px-4 py-12">
       <Card className="w-full max-w-xl">
         <CardHeader className="text-center">
           <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
@@ -32,6 +32,6 @@ export default function NotFound() {
           <LinkButton href="/transactions" variant="outline" preIcon={<ReceiptText className="mr-2 h-4 w-4" />}>View transactions</LinkButton>
         </CardFooter>
       </Card>
-    </main>
+    </div>
   );
 }

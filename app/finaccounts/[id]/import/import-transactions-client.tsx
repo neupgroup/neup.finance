@@ -10,9 +10,9 @@ import { LinkButton } from '@neup/components/ui/link-button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@neup/components/ui/select';
 import { Textarea } from '@neup/components/ui/textarea';
 import { useParties } from '@/core/hooks/api';
+import { getApiPath } from '@/core/helpers/app-path';
 import type { ImportedAccountTransaction } from '@/services/transactions/account-file-import';
 
-const basePath = process.env.NEXT_PUBLIC_APP_BASEPATH ?? '';
 const supportedExtensions = ['xlsx', 'xls', 'pdf', 'doc', 'docx', 'csv', 'tsv', 'tsx', 'txt'];
 
 type ImportTransactionsClientProps = {
@@ -27,7 +27,7 @@ type ImportResult = { imported: number; skippedAsDuplicate: number; error?: stri
 // Build the account-specific import API path while preserving selected project context.
 function getImportApiPath(accountId: string, projectId: string | null) {
   const query = projectId ? `?project=${encodeURIComponent(projectId)}` : '';
-  return `${basePath}/bridge/api.v1/books/${encodeURIComponent(accountId)}/transactions/import${query}`;
+  return getApiPath(`/bridge/api.v1/books/${encodeURIComponent(accountId)}/transactions/import${query}`);
 }
 
 // Upload, review, and import AI-extracted transactions for one account.

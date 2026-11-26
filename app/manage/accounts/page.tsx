@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { AlertCircle, Users } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@neup/components/ui/avatar';
 import { Skeleton } from '@neup/components/ui/skeleton';
+import { getApiPath } from '@/core/helpers/app-path';
 
 type PlatformAccount = {
   id: string;
@@ -21,7 +22,7 @@ export default function ManageAccountsPage() {
   useEffect(() => {
     let active = true;
 
-    fetch('/bridge/api.v1/manage/accounts', { credentials: 'include' })
+    fetch(getApiPath('/bridge/api.v1/manage/accounts'), { credentials: 'include' })
       .then(async (response) => {
         const data = await response.json();
         if (!response.ok) throw new Error(data.error || `Request failed (${response.status})`);

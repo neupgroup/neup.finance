@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowRight, Check, FolderKanban, Inbox, PlusCircle } from 'lucide-react';
 import { Skeleton } from '@neup/components/ui/skeleton';
-import { ensureAccount } from '@/core/hooks/api';
+import { getAccessibleProjects } from '@/core/hooks/api';
+import { withAppBasePathInUrl, withoutAppBasePath } from '@/core/helpers/app-path';
 import { stackedCardClassName } from '@/components/ui/stacked-card';
 import { StackedEmptyStateRow } from '@/components/ui/stacked-empty-state';
 
@@ -16,6 +17,7 @@ function buildProjectDestination(destination: string, projectId: string, origin:
   if (url.protocol !== 'http:' && url.protocol !== 'https:') {
     return new URL('/', origin);
   }
+  url.searchParams.delete('redirectsTo');
   url.searchParams.set('project', projectId);
   return url;
 }
@@ -31,10 +33,7 @@ export default function SwitchPage() {
     let active = true;
     async function loadProjects() {
       try {
-        await ensureAccount();
-        const response = await fetch('/bridge/api.v1/projects', { credentials: 'include' });
-        if (!response.ok) throw new Error('Could not load projects.');
-        const items = await response.json() as Project[];
+        const items = await getAccessibleProjects();
         if (active) setProjects(items);
       } catch (cause) {
         if (active) setError(cause instanceof Error ? cause.message : 'Could not load projects.');
@@ -56,11 +55,11 @@ export default function SwitchPage() {
     }
 
     if (url.origin !== window.location.origin) {
-      window.location.assign(url.toString());
+      window.location.assign(withAppBasePathInUrl(url).toString());
       return;
     }
 
-    router.push(`${url.pathname}${url.search}${url.hash}`);
+    router.push(`${withoutAppBasePath(url.pathname)}${url.search}${url.hash}`);
   };
   const selectedProjectId = searchParams.get('project');
 

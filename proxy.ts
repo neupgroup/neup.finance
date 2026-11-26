@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import logica from '@neup/logica';
 import { ensureAccountRecord } from '@/server/account';
+import { withAppBasePath } from '@/core/helpers/app-path';
 
 export async function proxy(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
@@ -40,11 +41,13 @@ export async function proxy(request: NextRequest) {
   const project = searchParams.get('project')?.trim();
 
   if (!project) {
-    const switchUrl = new URL('/switch', request.url);
+    const switchUrl = new URL(withAppBasePath('/switch'), request.url);
+    const destination = request.nextUrl.clone();
+    destination.searchParams.delete('redirectsTo');
 
     switchUrl.searchParams.set(
       'redirectsTo',
-      request.nextUrl.href,
+      `${destination.pathname}${destination.search}`,
     );
 
     return NextResponse.redirect(switchUrl);
