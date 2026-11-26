@@ -10,6 +10,16 @@ import { StackedEmptyStateRow } from '@/components/ui/stacked-empty-state';
 
 type Project = { id: string; name: string; roles: string[] };
 
+// Return the requested destination with the selected project in its query string.
+function buildProjectDestination(destination: string, projectId: string, origin: string) {
+  const url = new URL(destination, origin);
+  if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+    return new URL('/', origin);
+  }
+  url.searchParams.set('project', projectId);
+  return url;
+}
+
 export default function SwitchPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -38,9 +48,19 @@ export default function SwitchPage() {
 
   const chooseProject = (projectId: string) => {
     const destination = searchParams.get('redirectsTo') || searchParams.get('returnTo') || '/';
-    const url = new URL(destination, window.location.origin);
-    url.searchParams.set('project', projectId);
-    router.push(`${url.pathname}${url.search}`);
+    let url: URL;
+    try {
+      url = buildProjectDestination(destination, projectId, window.location.origin);
+    } catch {
+      url = buildProjectDestination('/', projectId, window.location.origin);
+    }
+
+    if (url.origin !== window.location.origin) {
+      window.location.assign(url.toString());
+      return;
+    }
+
+    router.push(`${url.pathname}${url.search}${url.hash}`);
   };
   const selectedProjectId = searchParams.get('project');
 
