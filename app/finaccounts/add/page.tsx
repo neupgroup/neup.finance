@@ -24,7 +24,7 @@ import { useToast } from '@neup/core/hooks/useToast';
 
 type AccountType = 'Bank' | 'Cash';
 type BankAccountType = 'saving' | 'current' | 'fixed';
-type CurrencyCode = 'USD' | 'EUR' | 'GBP' | 'JPY' | 'INR' | 'NPR';
+type CurrencyCode = 'ALL' | 'USD' | 'EUR' | 'GBP' | 'JPY' | 'INR' | 'NPR';
 
 const accountTypeSuggestions: SnappyCardSelectOption<AccountType>[] = [
   { value: 'Bank', label: 'Bank', description: 'A bank account for your business.' },
@@ -38,6 +38,7 @@ const bankAccountTypeOptions: SnappyCardSelectOption<BankAccountType>[] = [
 ];
 
 const currencies: SnappyCardSelectOption<CurrencyCode>[] = [
+  { value: 'ALL', label: 'ALL - Any currency', description: 'Accept transactions in any currency.' },
   { value: 'USD', label: 'USD - US Dollar' },
   { value: 'EUR', label: 'EUR - Euro' },
   { value: 'GBP', label: 'GBP - British Pound' },
@@ -45,6 +46,9 @@ const currencies: SnappyCardSelectOption<CurrencyCode>[] = [
   { value: 'INR', label: 'INR - Indian Rupee' },
   { value: 'NPR', label: 'NPR - Nepali Rupee' },
 ];
+
+const accountNameSuggestions = ['Petty Cash'];
+
 
 export default function AddFinAccountPage() {
   const { toast } = useToast();
@@ -72,7 +76,7 @@ export default function AddFinAccountPage() {
       await createFinBook({
         name: accountName,
         type: selectedAccountType.value,
-        currency: selectedCurrency.value,
+        currency: selectedCurrency?.value ?? null,
         ...(isBank ? {
           bankName: bankName.trim(),
           branch: branch.trim() || undefined,
@@ -119,9 +123,18 @@ export default function AddFinAccountPage() {
                   id="accountName"
                   value={accountName}
                   onChange={(e) => setAccountName(e.target.value)}
-                  placeholder="e.g., My Savings"
+                  placeholder={selectedAccountType?.value === 'Cash' ? 'e.g., Petty Cash' : 'e.g., My Savings'}
                   required
                 />
+                {selectedAccountType?.value === 'Cash' ? (
+                  <div className="flex flex-wrap gap-2" aria-label="Suggested cash account names">
+                    {accountNameSuggestions.map((suggestion) => (
+                      <Button key={suggestion} type="button" variant="outlined" size="sm" onClick={() => setAccountName(suggestion)}>
+                        {suggestion}
+                      </Button>
+                    ))}
+                  </div>
+                ) : null}
               </div>
               <SnappyCardSelect
                 inputId="accountType"
@@ -134,6 +147,7 @@ export default function AddFinAccountPage() {
                     setBankName('');
                     setBranch('');
                     setSelectedBankAccountType(null);
+                    setSelectedCurrency(null);
                   }
                 }}
                 placeholder="Type to search account types"
@@ -165,17 +179,34 @@ export default function AddFinAccountPage() {
                   </div>
                 </div>
               ) : null}
-              <SnappyCardSelect
-                inputId="currency"
-                label="Currency"
-                options={currencies}
-                value={selectedCurrency}
-                onChange={setSelectedCurrency}
-                placeholder="Type to search currencies"
-                maxCards={0}
-                snappy
-                required
-              />
+              {selectedAccountType?.value === 'Bank' ? (
+                <SnappyCardSelect
+                  inputId="currency"
+                  label="Currency"
+                  options={currencies}
+                  value={selectedCurrency}
+                  onChange={setSelectedCurrency}
+                  placeholder="Type to search currencies"
+                  maxCards={0}
+                  snappy
+                  required
+                />
+              ) : selectedAccountType?.value === 'Cash' ? (
+                <>
+                  <SnappyCardSelect
+                    inputId="currency"
+                    label="Default Currency"
+                    options={currencies}
+                    value={selectedCurrency}
+                    onChange={setSelectedCurrency}
+                    placeholder="Choose account currency"
+                    maxCards={0}
+                    snappy
+                    required
+                  />
+                  <p className="text-sm text-muted-foreground">ALL accepts any currency and keeps each balance separate. Choose a specific default currency to convert transactions into it using the exchange rate you enter.</p>
+                </>
+              ) : null}
             </div>
 
             <div className="flex items-center justify-end">

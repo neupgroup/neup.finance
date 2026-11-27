@@ -64,7 +64,7 @@ Fields:
 > bank_name: string, nullable;
 > branch: string, nullable;
 > account_type: string, nullable;
-> currency: string;
+> currency: string, account default currency or ALL for any currency;
 > accountId: string, references accounts.id;
 > projectId: UUID, references projects.id;
 > createdAt: timestamp, default: current timestamp;

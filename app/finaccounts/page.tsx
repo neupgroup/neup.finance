@@ -33,16 +33,28 @@ const accountTypeIcons = {
 const ITEMS_PER_PAGE = 10;
 
 // Load account transactions so list balances reflect the account history shown on detail pages.
-function AccountBalance({ accountId, currency, fallbackBalance }: { accountId: string; currency: string; fallbackBalance: number }) {
+function AccountBalance({ accountId, currency, fallbackBalance }: { accountId: string; currency: string | null; fallbackBalance: number }) {
   const { data: transactions, isLoading } = useFinAccountTransactions(accountId);
-  const balance = transactions
-    ? transactions.reduce((total, transaction) => total + (transaction.direction === 'in' ? transaction.amount : -transaction.amount), 0)
-    : fallbackBalance;
+  const balances = transactions
+    ? transactions.reduce<Record<string, number>>((totals, transaction) => {
+      const details = transaction.details && typeof transaction.details === 'object' ? transaction.details as Record<string, unknown> : null;
+      const convertedAmount = Number(details?.accountAmount ?? transaction.amount);
+      const amount = transaction.direction === 'in' ? convertedAmount : -convertedAmount;
+      const displayCurrency = currency && currency !== 'ALL' ? currency : transaction.currency;
+      totals[displayCurrency] = (totals[displayCurrency] ?? 0) + amount;
+      return totals;
+    }, {})
+    : null;
+  const balance = transactions ? null : fallbackBalance;
   return (
     <div className="min-w-36 rounded-lg border bg-muted/30 px-4 py-2 text-right">
       <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Current balance</p>
       <p className="font-bold text-xl tabular-nums">
-        {isLoading ? 'Loading…' : new Intl.NumberFormat('en-US', { style: 'currency', currency, minimumFractionDigits: 2 }).format(balance)}
+        {isLoading ? 'Loading…' : balances
+          ? Object.entries(balances).length
+            ? Object.entries(balances).map(([code, amount]) => new Intl.NumberFormat('en-US', { style: 'currency', currency: code, minimumFractionDigits: 2 }).format(amount)).join(' · ')
+            : new Intl.NumberFormat('en-US', { style: 'currency', currency: currency ?? 'USD', minimumFractionDigits: 2 }).format(0)
+          : new Intl.NumberFormat('en-US', { style: 'currency', currency: currency && currency !== 'ALL' ? currency : 'USD', minimumFractionDigits: 2 }).format(balance ?? 0)}
       </p>
     </div>
   );
@@ -149,10 +161,11 @@ export default function FinAccountsPage() {
                             </div>
                             <div>
                               <p className="font-semibold">{account.name}</p>
-                              <p className="text-sm text-muted-foreground">{account.type} Account</p>
-                              {account.type === 'Bank' && account.bankName ? (
-                                <p className="text-xs text-muted-foreground">{account.bankName}{account.branch ? ` · ${account.branch}` : ''}{account.accountType ? ` · ${account.accountType}` : ''}</p>
-                              ) : null}
+                              <p className="text-sm text-muted-foreground">
+                                {account.type === 'Bank' && account.bankName
+                                  ? `${account.accountType === 'current' ? 'Current Account · ' : ''}${account.bankName}${account.branch ? ` · ${account.branch}` : ''}`
+                                  : ''}
+                              </p>
                             </div>
                           </div>
                           <div className="flex items-center gap-4">

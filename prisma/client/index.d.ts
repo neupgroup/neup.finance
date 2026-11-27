@@ -11641,7 +11641,7 @@ export namespace Prisma {
     bankName: string | null
     branch: string | null
     accountType: string | null
-    currency: string
+    currency: string | null
     accountId: string
     projectId: string
     createdAt: Date
@@ -11760,7 +11760,7 @@ export namespace Prisma {
       bankName: string | null
       branch: string | null
       accountType: string | null
-      currency: string
+      currency: string | null
       accountId: string
       projectId: string
       createdAt: Date
@@ -32951,14 +32951,14 @@ export namespace Prisma {
    * Reference to a field of type 'FinAccountTransactionStatus'
    */
   export type EnumFinAccountTransactionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FinAccountTransactionStatus'>
-
+    
 
 
   /**
    * Reference to a field of type 'FinAccountTransactionStatus[]'
    */
   export type ListEnumFinAccountTransactionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FinAccountTransactionStatus[]'>
-
+    
 
 
   /**
@@ -33508,7 +33508,7 @@ export namespace Prisma {
     bankName?: StringNullableFilter<"AssetGroup"> | string | null
     branch?: StringNullableFilter<"AssetGroup"> | string | null
     accountType?: StringNullableFilter<"AssetGroup"> | string | null
-    currency?: StringFilter<"AssetGroup"> | string
+    currency?: StringNullableFilter<"AssetGroup"> | string | null
     accountId?: StringFilter<"AssetGroup"> | string
     projectId?: UuidFilter<"AssetGroup"> | string
     createdAt?: DateTimeFilter<"AssetGroup"> | Date | string
@@ -33526,7 +33526,7 @@ export namespace Prisma {
     bankName?: SortOrderInput | SortOrder
     branch?: SortOrderInput | SortOrder
     accountType?: SortOrderInput | SortOrder
-    currency?: SortOrder
+    currency?: SortOrderInput | SortOrder
     accountId?: SortOrder
     projectId?: SortOrder
     createdAt?: SortOrder
@@ -33547,7 +33547,7 @@ export namespace Prisma {
     bankName?: StringNullableFilter<"AssetGroup"> | string | null
     branch?: StringNullableFilter<"AssetGroup"> | string | null
     accountType?: StringNullableFilter<"AssetGroup"> | string | null
-    currency?: StringFilter<"AssetGroup"> | string
+    currency?: StringNullableFilter<"AssetGroup"> | string | null
     accountId?: StringFilter<"AssetGroup"> | string
     projectId?: UuidFilter<"AssetGroup"> | string
     createdAt?: DateTimeFilter<"AssetGroup"> | Date | string
@@ -33565,7 +33565,7 @@ export namespace Prisma {
     bankName?: SortOrderInput | SortOrder
     branch?: SortOrderInput | SortOrder
     accountType?: SortOrderInput | SortOrder
-    currency?: SortOrder
+    currency?: SortOrderInput | SortOrder
     accountId?: SortOrder
     projectId?: SortOrder
     createdAt?: SortOrder
@@ -33584,7 +33584,7 @@ export namespace Prisma {
     bankName?: StringNullableWithAggregatesFilter<"AssetGroup"> | string | null
     branch?: StringNullableWithAggregatesFilter<"AssetGroup"> | string | null
     accountType?: StringNullableWithAggregatesFilter<"AssetGroup"> | string | null
-    currency?: StringWithAggregatesFilter<"AssetGroup"> | string
+    currency?: StringNullableWithAggregatesFilter<"AssetGroup"> | string | null
     accountId?: StringWithAggregatesFilter<"AssetGroup"> | string
     projectId?: UuidWithAggregatesFilter<"AssetGroup"> | string
     createdAt?: DateTimeWithAggregatesFilter<"AssetGroup"> | Date | string
@@ -35689,7 +35689,7 @@ export namespace Prisma {
     bankName?: string | null
     branch?: string | null
     accountType?: string | null
-    currency: string
+    currency?: string | null
     createdAt?: Date | string
     account: AccountCreateNestedOneWithoutAssetGroupsInput
     project: ProjectCreateNestedOneWithoutBooksInput
@@ -35705,7 +35705,7 @@ export namespace Prisma {
     bankName?: string | null
     branch?: string | null
     accountType?: string | null
-    currency: string
+    currency?: string | null
     accountId: string
     projectId: string
     createdAt?: Date | string
@@ -35721,7 +35721,7 @@ export namespace Prisma {
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     branch?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: NullableStringFieldUpdateOperationsInput | string | null
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     account?: AccountUpdateOneRequiredWithoutAssetGroupsNestedInput
     project?: ProjectUpdateOneRequiredWithoutBooksNestedInput
@@ -35737,7 +35737,7 @@ export namespace Prisma {
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     branch?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: NullableStringFieldUpdateOperationsInput | string | null
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: NullableStringFieldUpdateOperationsInput | string | null
     accountId?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35753,7 +35753,7 @@ export namespace Prisma {
     bankName?: string | null
     branch?: string | null
     accountType?: string | null
-    currency: string
+    currency?: string | null
     accountId: string
     projectId: string
     createdAt?: Date | string
@@ -35766,7 +35766,7 @@ export namespace Prisma {
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     branch?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: NullableStringFieldUpdateOperationsInput | string | null
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -35777,7 +35777,7 @@ export namespace Prisma {
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     branch?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: NullableStringFieldUpdateOperationsInput | string | null
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: NullableStringFieldUpdateOperationsInput | string | null
     accountId?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -41735,7 +41735,7 @@ export namespace Prisma {
     bankName?: string | null
     branch?: string | null
     accountType?: string | null
-    currency: string
+    currency?: string | null
     createdAt?: Date | string
     project: ProjectCreateNestedOneWithoutBooksInput
     activityStock?: ActivityStockCreateNestedManyWithoutAssetGroupInput
@@ -41750,7 +41750,7 @@ export namespace Prisma {
     bankName?: string | null
     branch?: string | null
     accountType?: string | null
-    currency: string
+    currency?: string | null
     projectId: string
     createdAt?: Date | string
     activityStock?: ActivityStockUncheckedCreateNestedManyWithoutAssetGroupInput
@@ -41908,7 +41908,7 @@ export namespace Prisma {
     bankName?: StringNullableFilter<"AssetGroup"> | string | null
     branch?: StringNullableFilter<"AssetGroup"> | string | null
     accountType?: StringNullableFilter<"AssetGroup"> | string | null
-    currency?: StringFilter<"AssetGroup"> | string
+    currency?: StringNullableFilter<"AssetGroup"> | string | null
     accountId?: StringFilter<"AssetGroup"> | string
     projectId?: UuidFilter<"AssetGroup"> | string
     createdAt?: DateTimeFilter<"AssetGroup"> | Date | string
@@ -42080,7 +42080,7 @@ export namespace Prisma {
     bankName?: string | null
     branch?: string | null
     accountType?: string | null
-    currency: string
+    currency?: string | null
     createdAt?: Date | string
     account: AccountCreateNestedOneWithoutAssetGroupsInput
     activityStock?: ActivityStockCreateNestedManyWithoutAssetGroupInput
@@ -42095,7 +42095,7 @@ export namespace Prisma {
     bankName?: string | null
     branch?: string | null
     accountType?: string | null
-    currency: string
+    currency?: string | null
     accountId: string
     createdAt?: Date | string
     activityStock?: ActivityStockUncheckedCreateNestedManyWithoutAssetGroupInput
@@ -44034,7 +44034,7 @@ export namespace Prisma {
     bankName?: string | null
     branch?: string | null
     accountType?: string | null
-    currency: string
+    currency?: string | null
     createdAt?: Date | string
     account: AccountCreateNestedOneWithoutAssetGroupsInput
     project: ProjectCreateNestedOneWithoutBooksInput
@@ -44049,7 +44049,7 @@ export namespace Prisma {
     bankName?: string | null
     branch?: string | null
     accountType?: string | null
-    currency: string
+    currency?: string | null
     accountId: string
     projectId: string
     createdAt?: Date | string
@@ -44131,7 +44131,7 @@ export namespace Prisma {
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     branch?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: NullableStringFieldUpdateOperationsInput | string | null
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     account?: AccountUpdateOneRequiredWithoutAssetGroupsNestedInput
     project?: ProjectUpdateOneRequiredWithoutBooksNestedInput
@@ -44146,7 +44146,7 @@ export namespace Prisma {
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     branch?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: NullableStringFieldUpdateOperationsInput | string | null
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: NullableStringFieldUpdateOperationsInput | string | null
     accountId?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -44161,7 +44161,7 @@ export namespace Prisma {
     bankName?: string | null
     branch?: string | null
     accountType?: string | null
-    currency: string
+    currency?: string | null
     createdAt?: Date | string
     account: AccountCreateNestedOneWithoutAssetGroupsInput
     project: ProjectCreateNestedOneWithoutBooksInput
@@ -44176,7 +44176,7 @@ export namespace Prisma {
     bankName?: string | null
     branch?: string | null
     accountType?: string | null
-    currency: string
+    currency?: string | null
     accountId: string
     projectId: string
     createdAt?: Date | string
@@ -44240,7 +44240,7 @@ export namespace Prisma {
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     branch?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: NullableStringFieldUpdateOperationsInput | string | null
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     account?: AccountUpdateOneRequiredWithoutAssetGroupsNestedInput
     project?: ProjectUpdateOneRequiredWithoutBooksNestedInput
@@ -44255,7 +44255,7 @@ export namespace Prisma {
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     branch?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: NullableStringFieldUpdateOperationsInput | string | null
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: NullableStringFieldUpdateOperationsInput | string | null
     accountId?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -44377,7 +44377,7 @@ export namespace Prisma {
     bankName?: string | null
     branch?: string | null
     accountType?: string | null
-    currency: string
+    currency?: string | null
     createdAt?: Date | string
     account: AccountCreateNestedOneWithoutAssetGroupsInput
     project: ProjectCreateNestedOneWithoutBooksInput
@@ -44392,7 +44392,7 @@ export namespace Prisma {
     bankName?: string | null
     branch?: string | null
     accountType?: string | null
-    currency: string
+    currency?: string | null
     accountId: string
     projectId: string
     createdAt?: Date | string
@@ -44423,7 +44423,7 @@ export namespace Prisma {
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     branch?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: NullableStringFieldUpdateOperationsInput | string | null
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     account?: AccountUpdateOneRequiredWithoutAssetGroupsNestedInput
     project?: ProjectUpdateOneRequiredWithoutBooksNestedInput
@@ -44438,7 +44438,7 @@ export namespace Prisma {
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     branch?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: NullableStringFieldUpdateOperationsInput | string | null
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: NullableStringFieldUpdateOperationsInput | string | null
     accountId?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -46336,7 +46336,7 @@ export namespace Prisma {
     bankName?: string | null
     branch?: string | null
     accountType?: string | null
-    currency: string
+    currency?: string | null
     projectId: string
     createdAt?: Date | string
   }
@@ -46383,7 +46383,7 @@ export namespace Prisma {
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     branch?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: NullableStringFieldUpdateOperationsInput | string | null
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutBooksNestedInput
     activityStock?: ActivityStockUpdateManyWithoutAssetGroupNestedInput
@@ -46398,7 +46398,7 @@ export namespace Prisma {
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     branch?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: NullableStringFieldUpdateOperationsInput | string | null
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: NullableStringFieldUpdateOperationsInput | string | null
     projectId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     activityStock?: ActivityStockUncheckedUpdateManyWithoutAssetGroupNestedInput
@@ -46413,7 +46413,7 @@ export namespace Prisma {
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     branch?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: NullableStringFieldUpdateOperationsInput | string | null
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: NullableStringFieldUpdateOperationsInput | string | null
     projectId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -46560,7 +46560,7 @@ export namespace Prisma {
     bankName?: string | null
     branch?: string | null
     accountType?: string | null
-    currency: string
+    currency?: string | null
     accountId: string
     createdAt?: Date | string
   }
@@ -46689,7 +46689,7 @@ export namespace Prisma {
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     branch?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: NullableStringFieldUpdateOperationsInput | string | null
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     account?: AccountUpdateOneRequiredWithoutAssetGroupsNestedInput
     activityStock?: ActivityStockUpdateManyWithoutAssetGroupNestedInput
@@ -46704,7 +46704,7 @@ export namespace Prisma {
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     branch?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: NullableStringFieldUpdateOperationsInput | string | null
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: NullableStringFieldUpdateOperationsInput | string | null
     accountId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     activityStock?: ActivityStockUncheckedUpdateManyWithoutAssetGroupNestedInput
@@ -46719,7 +46719,7 @@ export namespace Prisma {
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     branch?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: NullableStringFieldUpdateOperationsInput | string | null
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: NullableStringFieldUpdateOperationsInput | string | null
     accountId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

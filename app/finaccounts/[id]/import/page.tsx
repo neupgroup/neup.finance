@@ -26,11 +26,11 @@ export default function ImportTransactionsPage() {
           <FileUp className="h-7 w-7 text-primary" />
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Import transactions</h1>
-            <p className="text-muted-foreground">{account?.name ?? 'Account'}{account ? ` · ${account.currency}` : ''}</p>
+            <p className="text-muted-foreground">{account?.name ?? 'Account'}{account?.currency ? ` · ${account.currency}` : account?.type === 'Cash' ? ' · Multiple currencies' : ''}</p>
           </div>
         </div>
       </div>
-      <ImportTransactionsClient accountId={accountId} accountCurrency={account?.currency ?? 'USD'} accountHref={accountHref} />
+      <ImportTransactionsClient accountId={accountId} accountCurrency={account?.currency && account.currency !== 'ALL' ? account.currency : 'NPR'} accountHref={accountHref} />
     </main>
   );
 }

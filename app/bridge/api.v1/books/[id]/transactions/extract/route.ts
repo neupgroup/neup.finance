@@ -27,7 +27,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
 
   try {
     const parties = await prisma.party.findMany({ where: { projectId: access.projectId }, select: { name: true } });
-    const extracted = await extractAccountTransaction(enteredFields, account.currency, parties.map((party) => party.name));
+    const extracted = await extractAccountTransaction(enteredFields, account.currency && account.currency !== 'ALL' ? account.currency : 'NPR', parties.map((party) => party.name));
     return NextResponse.json({ status: true, result: extracted });
   } catch (error) {
     return NextResponse.json({ error: { code: 'extraction_failed', description: error instanceof Error ? error.message : 'Could not extract transaction details.' } }, { status: 422 });

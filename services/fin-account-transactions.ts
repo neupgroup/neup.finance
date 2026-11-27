@@ -11,6 +11,7 @@ export type FinAccountTransactionInput = {
   partyId?: string | null;
   tags?: unknown;
   details?: unknown;
+  exchangeRate?: number;
 };
 
 // Convert database values to the API shape used by account transaction history.
@@ -66,14 +67,16 @@ export async function updateFinAccountTransactionForProject(
   const normalizedTitle = input.title.trim();
   const normalizedCurrency = input.currency.trim().toUpperCase();
   const amount = Number(input.amount);
+  const exchangeRate = input.exchangeRate == null ? null : Number(input.exchangeRate);
   const activityOn = new Date(input.activityOn);
-  if (!normalizedTitle || !normalizedCurrency || !Number.isFinite(amount) || amount <= 0 || !['in', 'out'].includes(input.direction) || Number.isNaN(activityOn.getTime())) {
+  if (!normalizedTitle || !normalizedCurrency || !Number.isFinite(amount) || amount <= 0 || (exchangeRate != null && (!Number.isFinite(exchangeRate) || exchangeRate <= 0)) || !['in', 'out'].includes(input.direction) || Number.isNaN(activityOn.getTime())) {
     throw new Error('Invalid transaction details');
   }
   if (input.partyId) {
     const party = await prisma.party.findFirst({ where: { id: input.partyId, projectId }, select: { id: true } });
     if (!party) throw new Error('Recipient party is outside the current project');
   }
+  const appliedExchangeRate = exchangeRate ?? 1;
   const updated = await prisma.finAccountTransaction.updateMany({
     where: { id: transactionId, finAccountId: accountId, finAccount: { projectId } },
     data: {
@@ -86,6 +89,11 @@ export async function updateFinAccountTransactionForProject(
       activityOn,
       partyId: input.partyId ?? null,
       ...(input.tags == null ? {} : { tags: JSON.parse(JSON.stringify(input.tags)) as Prisma.InputJsonValue }),
+      details: {
+        ...(input.details && typeof input.details === 'object' && !Array.isArray(input.details) ? input.details as Record<string, unknown> : {}),
+        exchangeRate: appliedExchangeRate,
+        accountAmount: amount * appliedExchangeRate,
+      } as Prisma.InputJsonValue,
     },
   });
   if (!updated.count) return null;
@@ -116,6 +124,7 @@ export async function createFinAccountTransactionsForProject(
     const title = input.title.trim();
     const currency = input.currency.trim().toUpperCase();
     const amount = Number(input.amount);
+    const exchangeRate = input.exchangeRate == null ? null : Number(input.exchangeRate);
     const isDateOnly = /^\d{4}-\d{2}-\d{2}$/.test(input.activityOn);
     const activityOn = new Date(isDateOnly ? `${input.activityOn}T00:00:00.000Z` : input.activityOn);
     if (
@@ -123,24 +132,35 @@ export async function createFinAccountTransactionsForProject(
       || !currency
       || !Number.isFinite(amount)
       || amount <= 0
+      || (exchangeRate != null && (!Number.isFinite(exchangeRate) || exchangeRate <= 0))
       || !['in', 'out'].includes(input.direction)
       || Number.isNaN(activityOn.getTime())
       || (isDateOnly && activityOn.toISOString().slice(0, 10) !== input.activityOn)
     ) {
       throw new Error('Invalid transaction details');
     }
-    return { ...input, title, currency, amount, activityOn };
+    const details = input.details && typeof input.details === 'object' && !Array.isArray(input.details)
+      ? input.details as Record<string, unknown>
+      : {};
+    return { ...input, title, currency, amount, activityOn, exchangeRate, details: { ...details } };
   });
 
-  const account = await prisma.assetGroup.findFirst({ where: { id: accountId, projectId }, select: { id: true } });
+  const account = await prisma.assetGroup.findFirst({ where: { id: accountId, projectId }, select: { id: true, currency: true } });
   if (!account) return null;
+  const validatedInputs = normalizedInputs.map((input) => {
+    const isDifferentCurrency = account.currency !== input.currency;
+    if (account.currency === 'ALL') return { ...input, exchangeRate: 1, details: { ...(input.details as Record<string, unknown>), accountAmount: input.amount, exchangeRate: 1 } };
+    if (isDifferentCurrency && input.exchangeRate == null) throw new Error('Enter the exchange rate into the account currency');
+    const exchangeRate = input.exchangeRate ?? 1;
+    return { ...input, exchangeRate, details: { ...(input.details as Record<string, unknown>), accountAmount: input.amount * exchangeRate, exchangeRate } };
+  });
   const partyIds = [...new Set(normalizedInputs.map((input) => input.partyId).filter((partyId): partyId is string => Boolean(partyId)))];
   if (partyIds.length > 0) {
     const parties = await prisma.party.findMany({ where: { id: { in: partyIds }, projectId }, select: { id: true } });
     if (parties.length !== partyIds.length) throw new Error('Recipient party is outside the current project');
   }
 
-  const transactions = await prisma.$transaction(async (tx) => Promise.all(normalizedInputs.map((input) => tx.finAccountTransaction.create({
+  const transactions = await prisma.$transaction(async (tx) => Promise.all(validatedInputs.map((input) => tx.finAccountTransaction.create({
     data: {
       title: input.title,
       description: input.description?.trim() || null,
@@ -151,7 +171,7 @@ export async function createFinAccountTransactionsForProject(
       ...(input.status ? { status: input.status } : {}),
       partyId: input.partyId ?? null,
       tags: input.tags == null ? undefined : JSON.parse(JSON.stringify(input.tags)) as Prisma.InputJsonValue,
-      details: input.details == null ? undefined : JSON.parse(JSON.stringify(input.details)) as Prisma.InputJsonValue,
+      details: JSON.parse(JSON.stringify(input.details)) as Prisma.InputJsonValue,
       activityOn: input.activityOn,
     }, include: { party: { select: { id: true, name: true, type: true, taxinfo: true } } },
   }))));

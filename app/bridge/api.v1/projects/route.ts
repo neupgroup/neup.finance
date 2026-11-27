@@ -38,6 +38,15 @@ export async function POST(req: NextRequest) {
       status: 'active',
       permittedOn: new Date(),
     } });
+    await tx.assetGroup.create({
+      data: {
+        name: 'Cash Account',
+        type: 'Cash',
+        currency: 'ALL',
+        accountId: account.id,
+        projectId: created.id,
+      },
+    });
     return created;
   });
 

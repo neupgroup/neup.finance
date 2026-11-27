@@ -8,7 +8,7 @@ import { getTransactionsForProject } from '@/services/transactions/list';
 type RouteContext = { params: Promise<{ id: string }> };
 
 // Load current account and ledger entries for AI duplicate comparison.
-async function getAccountHistory(projectId: string, accountId: string, includeLedgerTransactions: boolean): Promise<{ currency: string; history: ExistingAccountTransaction[] } | null> {
+async function getAccountHistory(projectId: string, accountId: string, includeLedgerTransactions: boolean): Promise<{ currency: string | null; history: ExistingAccountTransaction[] } | null> {
   const account = await prisma.assetGroup.findFirst({ where: { id: accountId, projectId }, select: { id: true, currency: true } });
   if (!account) return null;
 
@@ -34,7 +34,7 @@ async function getAccountHistory(projectId: string, accountId: string, includeLe
       currency: transaction.currency,
     })),
   ].sort((left, right) => right.date.localeCompare(left.date));
-  return { currency: account.currency, history };
+  return { currency: account.currency === 'ALL' ? null : account.currency, history };
 }
 
 // Analyze a document or create the reviewed, non-duplicate account entries.
@@ -54,13 +54,13 @@ export async function POST(request: NextRequest, context: RouteContext) {
     const mode = String(formData.get('mode') ?? 'analyze');
     try {
       if (mode === 'direct') {
-        const transactions = parseDirectAccountTransactions(file.name, Buffer.from(await file.arrayBuffer()), accountHistory.currency);
+        const transactions = parseDirectAccountTransactions(file.name, Buffer.from(await file.arrayBuffer()), accountHistory.currency ?? 'NPR');
         return NextResponse.json({ transactions });
       }
       const transactions = await analyzeAccountTransactionFile(
         file.name,
         Buffer.from(await file.arrayBuffer()),
-        accountHistory.currency,
+        accountHistory.currency ?? 'NPR',
         accountHistory.history,
       );
       return NextResponse.json({ transactions });
@@ -77,7 +77,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
       const transactions = await analyzeAccountTransactionFile(
         'pasted-transactions.txt',
         Buffer.from(sourceText, 'utf8'),
-        accountHistory.currency,
+        accountHistory.currency ?? 'NPR',
         accountHistory.history,
       );
       return NextResponse.json({ transactions });
@@ -101,7 +101,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
     const savedTransaction = await createFinAccountTransactionForProject(access.projectId, id, {
       title: transaction.title,
       description: transaction.description ?? undefined,
-      currency: transaction.currency || accountHistory.currency,
+        currency: transaction.currency || accountHistory.currency || 'NPR',
       amount: transaction.amount,
       direction: transaction.direction,
       activityOn: transaction.date,

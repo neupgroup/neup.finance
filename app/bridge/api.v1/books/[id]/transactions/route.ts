@@ -31,8 +31,9 @@ export async function POST(request: NextRequest, context: RouteContext) {
   const requestedAmount = Number(body?.amount);
   const direction = body?.direction;
   const activityOn = typeof body?.activityOn === 'string' ? body.activityOn : '';
+  const exchangeRate = typeof body?.exchangeRate === 'number' ? body.exchangeRate : undefined;
 
-  if (!title || !currency || !Number.isFinite(requestedAmount) || requestedAmount <= 0 || !['in', 'out'].includes(direction) || !activityOn) {
+  if (!title || !currency || currency === 'ALL' || !Number.isFinite(requestedAmount) || requestedAmount <= 0 || (exchangeRate != null && (!Number.isFinite(exchangeRate) || exchangeRate <= 0)) || !['in', 'out'].includes(direction) || !activityOn) {
     return NextResponse.json({ error: 'Invalid transaction details' }, { status: 400 });
   }
 
@@ -47,6 +48,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
       partyId: typeof body.partyId === 'string' && body.partyId ? body.partyId : null,
       tags: body.tags,
       details: body.details,
+      ...(exchangeRate == null ? {} : { exchangeRate }),
     });
     if (!transaction) return NextResponse.json({ error: 'Account not found' }, { status: 404 });
     return NextResponse.json(transaction, { status: 201 });

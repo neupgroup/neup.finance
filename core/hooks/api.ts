@@ -64,7 +64,7 @@ export type FinBook = {
   branch?: string | null;
   accountType?: string | null;
   balance: number;
-  currency: string;
+  currency: string | null;
   projectId: string;
 };
 
@@ -165,7 +165,7 @@ export async function createFinBook(data: Pick<FinBook, "name" | "type" | "curre
   });
 }
 
-export async function createFinAccountTransaction(accountId: string, data: Pick<FinAccountTransaction, 'title' | 'currency' | 'amount' | 'direction' | 'activityOn'> & Partial<Pick<FinAccountTransaction, 'description' | 'partyId' | 'tags' | 'details'>>) {
+export async function createFinAccountTransaction(accountId: string, data: Pick<FinAccountTransaction, 'title' | 'currency' | 'amount' | 'direction' | 'activityOn'> & Partial<Pick<FinAccountTransaction, 'description' | 'partyId' | 'tags' | 'details'>> & { exchangeRate?: number }) {
   return requestJson<FinAccountTransaction>(`/bridge/api.v1/books/${encodeURIComponent(accountId)}/transactions`, {
     method: 'POST',
     body: JSON.stringify(data),

@@ -38,6 +38,7 @@ export default function NewFinAccountTransactionPage() {
   const [date, setDate] = useState('');
   const [isDateTimePickerOpen, setIsDateTimePickerOpen] = useState(false);
   const [currency, setCurrency] = useState('');
+  const [exchangeRate, setExchangeRate] = useState('1');
   const [amount, setAmount] = useState<number | ''>('');
   const [direction, setDirection] = useState<'in' | 'out' | ''>('');
   const [partyId, setPartyId] = useState('none');
@@ -46,7 +47,9 @@ export default function NewFinAccountTransactionPage() {
   const [isExtracting, setIsExtracting] = useState(false);
   const [extractError, setExtractError] = useState('');
   const [errors, setErrors] = useState<{ title?: string; date?: string; currency?: string; amount?: string; direction?: string }>({});
-  const selectedCurrency = currency || account?.currency || '';
+  const selectedCurrency = currency || (account?.currency && account.currency !== 'ALL' ? account.currency : '');
+  const isMultiCurrency = account?.currency === 'ALL';
+  const isConvertedCurrency = Boolean(account?.currency && account.currency !== 'ALL' && currency && currency !== account.currency);
 
   // Send only non-empty form values and apply the structured extraction to matching controls.
   const handleExtract = async () => {
@@ -56,7 +59,7 @@ export default function NewFinAccountTransactionPage() {
       description,
       direction,
       datetime: date,
-      currency: selectedCurrency,
+      currency: currency || (account?.currency === 'ALL' ? '' : selectedCurrency),
       amount: amount === '' ? '' : String(amount),
       receipent: selectedParty?.name ?? '',
       tags: tags.length ? JSON.stringify(tags) : '',
@@ -81,7 +84,7 @@ export default function NewFinAccountTransactionPage() {
         const pad = (part: number) => String(part).padStart(2, '0');
         setDate(`${extractedDate.getFullYear()}-${pad(extractedDate.getMonth() + 1)}-${pad(extractedDate.getDate())}T${pad(extractedDate.getHours())}:${pad(extractedDate.getMinutes())}`);
       }
-      if (result.currency) setCurrency(result.currency.toUpperCase());
+      if (result.currency && result.currency.toUpperCase() !== 'ALL') setCurrency(result.currency.toUpperCase());
       if (typeof result.amount === 'number' && result.amount > 0) setAmount(result.amount);
       if (result.receipent) {
         const match = (parties ?? []).find((party: { id: string; name: string }) => party.name.toLowerCase() === result.receipent?.trim().toLowerCase());
@@ -103,7 +106,8 @@ export default function NewFinAccountTransactionPage() {
     const nextErrors = {
       ...(!title.trim() ? { title: 'Enter a title.' } : {}),
       ...(!date || !Number.isFinite(new Date(date).getTime()) ? { date: 'Choose a valid date and time.' } : {}),
-      ...(!selectedCurrency ? { currency: 'Select a currency.' } : {}),
+      ...(!selectedCurrency || selectedCurrency === 'ALL' ? { currency: 'Select the transaction currency.' } : {}),
+      ...(isConvertedCurrency && (!Number.isFinite(Number(exchangeRate)) || Number(exchangeRate) <= 0) ? { currency: 'Enter a valid exchange rate.' } : {}),
       ...(amount === '' || !Number.isFinite(amount) || amount <= 0 ? { amount: 'Enter an amount greater than zero.' } : {}),
       ...(!direction ? { direction: 'Select a transaction direction.' } : {}),
     };
@@ -120,8 +124,9 @@ export default function NewFinAccountTransactionPage() {
         title: title.trim(),
         description: description.trim() || undefined,
         currency: selectedCurrency,
+        ...(isConvertedCurrency ? { exchangeRate: Number(exchangeRate) } : {}),
         amount: Number(amount),
-        direction,
+        direction: direction as 'in' | 'out',
         activityOn: new Date(date).toISOString(),
         partyId: partyId === 'none' ? null : partyId,
         tags,
@@ -143,7 +148,7 @@ export default function NewFinAccountTransactionPage() {
         <div className="flex items-start justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Add Transaction</h1>
-            <p className="text-muted-foreground">{account?.name ?? 'Account'}{account ? ` · ${account.currency}` : ''}</p>
+            <p className="text-muted-foreground">{account?.name ?? 'Account'}{account?.currency && account.currency !== 'ALL' ? ` · ${account.currency}` : account?.currency === 'ALL' ? ' · Any currency' : ''}</p>
           </div>
           <LinkButton href={importHref} variant="outlined" preIcon={<FileUp className="mr-2 h-4 w-4" />}>Import transactions</LinkButton>
         </div>
@@ -225,13 +230,23 @@ export default function NewFinAccountTransactionPage() {
                 {errors.date ? <p className="text-sm font-medium text-destructive" role="alert">{errors.date}</p> : null}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="currency">Currency</Label>
-                <Select value={selectedCurrency} onValueChange={(value) => { setCurrency(value); setErrors((current) => ({ ...current, currency: undefined })); }}>
+                <Label htmlFor="currency">{isMultiCurrency ? 'Currency received' : `Currency received${account?.currency ? ` (${account.currency} default)` : ''}`}</Label>
+                <Select value={currency || selectedCurrency} onValueChange={(value) => { setCurrency(value); setErrors((current) => ({ ...current, currency: undefined })); }}>
                   <SelectTrigger id="currency" aria-invalid={Boolean(errors.currency)}><SelectValue placeholder="Select currency" /></SelectTrigger>
                   <SelectContent>{currencyOptions.map((option) => <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>)}</SelectContent>
                 </Select>
                 {errors.currency ? <p className="text-sm font-medium text-destructive" role="alert">{errors.currency}</p> : null}
               </div>
+              {isConvertedCurrency ? (
+                <div className="space-y-2">
+                  <Label htmlFor="exchange-rate">Exchange rate</Label>
+                  <Input id="exchange-rate" type="number" min="0.000001" step="any" value={exchangeRate} onChange={(event) => setExchangeRate(event.target.value)} />
+                  <p className="text-xs text-muted-foreground">Account currency per 1 {selectedCurrency}.</p>
+                </div>
+              ) : null}
+              {account?.currency && account.currency !== 'ALL' ? (
+                <p className="text-sm text-muted-foreground sm:col-span-2">This account balance is kept in {account.currency}; the received amount and currency are retained on each transaction.</p>
+              ) : null}
               <div className="space-y-2">
                 <Label htmlFor="amount">Amount</Label>
                 <Input id="amount" type="number" min="0.01" step="0.01" value={amount} onChange={(event) => { setAmount(event.target.value === '' ? '' : parseFloat(event.target.value)); setErrors((current) => ({ ...current, amount: undefined })); }} placeholder="0.00" aria-invalid={Boolean(errors.amount)} />

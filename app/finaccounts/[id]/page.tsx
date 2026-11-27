@@ -31,7 +31,8 @@ function formatDate(value: string) {
   });
 }
 
-function formatCurrency(value: number, currency: string) {
+function formatCurrency(value: number, currency: string | null) {
+  if (!currency) return value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency,
@@ -190,7 +191,18 @@ export default function FinAccountPage() {
     })),
   ].sort((left, right) => new Date(right.activityOn).getTime() - new Date(left.activityOn).getTime());
   const { transactions: filteredTransactions, error: searchError } = searchAccountTransactions(visibleTransactions, transactionSearch);
-  const calculatedBalance = visibleTransactions.reduce((balance, transaction) => balance + (transaction.direction === 'in' ? Math.abs(transaction.amount) : -Math.abs(transaction.amount)), 0);
+  const calculatedBalance = visibleTransactions.reduce((balance, transaction) => {
+    const details = transaction.details && typeof transaction.details === 'object' ? transaction.details as Record<string, unknown> : null;
+    const amount = Number(details?.accountAmount ?? transaction.amount);
+    return balance + (transaction.direction === 'in' ? Math.abs(amount) : -Math.abs(amount));
+  }, 0);
+  const multiCurrencyBalances = visibleTransactions.reduce<Record<string, number>>((totals, transaction) => {
+    const details = transaction.details && typeof transaction.details === 'object' ? transaction.details as Record<string, unknown> : null;
+    const amount = Number(details?.accountAmount ?? transaction.amount);
+    const displayCurrency = finAccount?.currency && finAccount.currency !== 'ALL' ? finAccount.currency : transaction.currency;
+    totals[displayCurrency] = (totals[displayCurrency] ?? 0) + (transaction.direction === 'in' ? Math.abs(amount) : -Math.abs(amount));
+    return totals;
+  }, {});
 
   const isLoading = isUserLoading || areAccountsLoading || areLegacyTransactionsLoading || areAccountTransactionsLoading;
 
@@ -216,7 +228,7 @@ export default function FinAccountPage() {
                 <CardHeader className="pb-2">
                   <CardDescription>Current balance</CardDescription>
                   <CardTitle className="text-2xl">
-                    {formatCurrency(calculatedBalance, finAccount.currency)}
+                    {finAccount.currency === 'ALL' ? Object.entries(multiCurrencyBalances).map(([currency, amount]) => formatCurrency(amount, currency)).join(' · ') || '0.00' : formatCurrency(calculatedBalance, finAccount.currency)}
                   </CardTitle>
                 </CardHeader>
               </Card>
@@ -288,7 +300,7 @@ export default function FinAccountPage() {
                       </div>
                       <div className="text-right">
                         <p className={`font-semibold ${isCredit ? 'text-green-600' : 'text-red-600'}`}>
-                          {isCredit ? '+' : '-'}{formatCurrency(amount, transaction.currency)}
+                          {isCredit ? '+' : '-'}{formatCurrency(amount, transaction.currency)}{typeof transaction.details?.exchangeRate === 'number' && transaction.details.exchangeRate !== 1 && finAccount?.currency !== 'ALL' ? ` (${formatCurrency(amount * transaction.details.exchangeRate, finAccount?.currency ?? null)} account value)` : ''}
                         </p>
                       </div>
                     </CardContent>
