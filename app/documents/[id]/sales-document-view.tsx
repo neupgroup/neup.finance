@@ -80,7 +80,7 @@ export default function SalesDocumentView({ id, type }: { id: string; type: 'quo
         {typeof details.notes === 'string' && details.notes ? <section><h2 className="font-semibold">Notes</h2><p className="mt-1 whitespace-pre-wrap text-sm text-muted-foreground">{details.notes}</p></section> : null}
         {typeof details.terms === 'string' && details.terms ? <section><h2 className="font-semibold">Terms and Conditions</h2><p className="mt-1 whitespace-pre-wrap text-sm text-muted-foreground">{details.terms}</p></section> : null}
       </article>
-      <div className="flex justify-start border-t pt-4"><LinkButton href={printHref} preIcon={<Printer className="mr-2 h-4 w-4" />}>View {documentLabel}</LinkButton></div>
+      <div className="flex justify-start border-t pt-4"><LinkButton href={printHref} target="_blank" preIcon={<Printer className="mr-2 h-4 w-4" />}>View {documentLabel}</LinkButton></div>
     </main>
   );
 }

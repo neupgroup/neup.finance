@@ -3,7 +3,7 @@
 import { ArrowLeft, Loader, Pencil, Printer, Mail, Phone } from 'lucide-react';
 import { Button } from '@neup/components/ui/button';
 import { LinkButton } from '@neup/components/ui/link-button';
-import { useFinAccountTransactions, useParties, useSelectedProject } from '@/core/hooks/api';
+import { useAccountProfile, useFinAccountTransactions, useParties, useProjectBooks, useSelectedProject } from '@/core/hooks/api';
 
 type DocumentParty = {
   id: string;
@@ -81,6 +81,8 @@ export function FinAccountTransactionDocument({ accountId, transactionId, projec
   const { data: transactions, isLoading: areTransactionsLoading } = useFinAccountTransactions(accountId, projectId);
   const { project, isLoading: isProjectLoading } = useSelectedProject(projectId);
   const { data: parties, isLoading: arePartiesLoading } = useParties(projectId);
+  const { data: books } = useProjectBooks(projectId);
+  const { data: accountProfile } = useAccountProfile();
   const transaction = transactions?.find((entry) => entry.id === transactionId);
   const recipient = (parties as DocumentParty[] | undefined)?.find((entry) => entry.id === transaction?.partyId);
   const recipientName = recipient?.name?.trim() || transaction?.party?.name?.trim() || '';
@@ -97,6 +99,9 @@ export function FinAccountTransactionDocument({ accountId, transactionId, projec
   const recipientTaxType = getText(recipientTaxInfo, 'taxType') || 'PAN';
   const contact = (type: string) => recipient?.contacts?.find((entry) => entry.type === type)?.value;
   const isLoading = areTransactionsLoading || isProjectLoading || arePartiesLoading;
+  const paymentAccount = books?.find((book) => book.id === accountId);
+  const paymentMethod = paymentAccount?.type?.toLowerCase() === 'bank' ? 'Bank Payment' : paymentAccount?.type?.toLowerCase() === 'cash' ? 'Cash' : paymentAccount?.type ?? transaction?.finAccountId ?? '—';
+  const isCashAccount = paymentAccount?.type?.toLowerCase() === 'cash';
   const documentTitles: Record<string, string> = {
     'bank-transaction': 'Bank Transaction Document',
     payment_advise: 'Payment Advice',
@@ -122,7 +127,7 @@ export function FinAccountTransactionDocument({ accountId, transactionId, projec
       <style jsx global>{`
         @page { size: A4 portrait; margin: 14mm; }
         .transaction-document-sheet { width: min(100%, 210mm); min-height: 265mm; margin: 0 auto; background: hsl(var(--card)); color: hsl(var(--card-foreground)); }
-        .transaction-document-company-logo { width: 76px; height: 76px; object-fit: contain; }
+.transaction-document-company-logo { width: 52px; height: 52px; object-fit: contain; }
         @media print {
           @page { size: A4 portrait; margin: 14mm; }
           html, body { background: white !important; }
@@ -181,7 +186,7 @@ export function FinAccountTransactionDocument({ accountId, transactionId, projec
               </div>
               <div className="pt-8 text-base leading-7">
                 <p className="font-semibold">From:</p>
-                <p><span className="border-b border-dotted border-foreground/70">{recipientName || '—'}</span></p>
+                <p><span className="border-b border-dotted border-foreground/70">{recipientName || '—'}</span> by <span className="border-b border-dotted border-foreground/70">{paymentMethod}</span></p>
                 {recipientTaxNumber ? <p>{recipientTaxType}: <span className="border-b border-dotted border-foreground/70">{recipientTaxNumber}</span></p> : null}
                 {contact('address') ? <p><span className="border-b border-dotted border-foreground/70">{contact('address')}</span></p> : null}
                 <div className="flex flex-wrap gap-x-5 gap-y-1">
@@ -190,7 +195,10 @@ export function FinAccountTransactionDocument({ accountId, transactionId, projec
                 </div>
               </div>
               {transaction.description ? <div><p className="text-xs uppercase tracking-wide text-muted-foreground">Notes</p><p className="mt-2 whitespace-pre-wrap text-sm leading-6">{transaction.description}</p></div> : null}
-              <div className="mt-auto grid grid-cols-2 gap-12 pt-20 text-left text-sm"><div className="border-t border-border pt-2">Received and Verified by</div><div className="border-t border-border pt-2">Signature</div></div>
+              <div className={`mt-auto pt-36 text-sm ${isCashAccount ? 'grid grid-cols-2 items-end' : 'flex justify-start'}`}>
+                {isCashAccount ? <div className="w-fit border-t border-border pt-2"><p className="font-semibold">Received by:</p><p>{accountProfile?.displayName || '________________'}</p></div> : null}
+                <div className={`w-fit border-t border-border pt-2 ${isCashAccount ? 'ml-auto text-right' : 'text-left'}`}><p className="font-semibold">Verified by:</p><p>{accountProfile?.displayName || '________________'}</p></div>
+              </div>
             </section>
           ) : (
             <section className="transaction-document-keep mt-7 rounded-sm border border-border p-5 sm:p-6">
@@ -200,7 +208,7 @@ export function FinAccountTransactionDocument({ accountId, transactionId, projec
             </section>
           )}
 
-          {recipientName ? <section className="transaction-document-keep mt-6 border border-border p-5">
+          {recipientName && !isReceiptVoucher ? <section className="transaction-document-keep mt-6 border border-border p-5">
               <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{isIncoming ? 'Received from' : documentType === 'payment_advise' ? 'Payment to' : 'Pay to'}</p>
               <p className="mt-2 text-base font-semibold">{recipientName}</p>
               {recipientTaxNumber ? <p className="mt-2 text-xs">{recipientTaxType}: {recipientTaxNumber}</p> : null}
@@ -211,9 +219,9 @@ export function FinAccountTransactionDocument({ accountId, transactionId, projec
 
           {transaction.description ? <section className="mt-7 border-t border-border pt-5"><h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Description</h3><p className="mt-2 whitespace-pre-wrap text-sm leading-6">{transaction.description}</p></section> : null}
 
-          <footer className="mt-auto border-t border-border pt-3">
-            <p className="text-xs text-muted-foreground">{documentType === 'payment_advise' ? 'Please use this advice as the payment reference.' : documentType === 'payment_voucher' ? 'Authorized payment voucher.' : documentType === 'payment_receipt' ? 'Received with thanks.' : documentType === 'receipt_voucher' ? 'Official receipt voucher.' : 'This document records the bank transaction.'}</p>
-          </footer>
+          {documentType !== 'receipt_voucher' ? <footer className="mt-auto border-t border-border pt-3">
+            <p className="text-xs text-muted-foreground">{documentType === 'payment_advise' ? 'Please use this advice as the payment reference.' : documentType === 'payment_voucher' ? 'Authorized payment voucher.' : documentType === 'payment_receipt' ? 'Received with thanks.' : 'This document records the bank transaction.'}</p>
+          </footer> : null}
         </div>
       </article>
 

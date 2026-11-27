@@ -198,6 +198,11 @@ export async function createParty(data: Record<string, unknown>) {
   return requestJson<any>("/bridge/api.v1/parties", { method: "POST", body: JSON.stringify(data) });
 }
 
+// Save edits to a party and its related contact/payment details.
+export async function updateParty(id: string, data: Record<string, unknown>) {
+  return requestJson<any>(`/bridge/api.v1/parties/${encodeURIComponent(id)}`, { method: 'PUT', body: JSON.stringify(data) });
+}
+
 // Extract a party name from name and optional context without saving the context.
 export async function extractPartyName(data: { name?: string; information?: string }) {
   return requestJson<{ status: boolean; result: { name: string } }>("/bridge/api.v1/parties/extract", {

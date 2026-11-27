@@ -351,3 +351,43 @@ export async function createPartyForAccount(accountId: string, projectId: string
 
   return serializeParty(created);
 }
+
+// Replace a party profile and its editable contact/payment details within one project.
+export async function updatePartyForProject(projectId: string, partyId: string, input: CreatePartyInput): Promise<SerializedParty | null> {
+  const existing = await prisma.party.findFirst({ where: { id: partyId, projectId }, select: { id: true } });
+  if (!existing) return null;
+
+  const contacts = (input.contacts ?? []).filter((item) => item?.type?.trim() && item?.value?.trim());
+  const paymentMethods = (input.paymentMethods ?? []).filter((item) => item?.type?.trim() && item?.value?.trim());
+  const updated = await prisma.$transaction(async (tx) => {
+    await tx.party.update({
+      where: { id: partyId },
+      data: {
+        name: input.name.trim(),
+        type: input.type.trim(),
+        taxinfo: input.taxinfo == null ? Prisma.JsonNull : input.taxinfo as Prisma.InputJsonValue,
+      },
+    });
+    await tx.partyContact.deleteMany({ where: { partyId } });
+    await tx.partyPaymentMethod.deleteMany({ where: { partyId } });
+    if (contacts.length) {
+      await tx.partyContact.createMany({ data: contacts.map((item) => ({
+        partyId,
+        type: item.type.trim(),
+        value: item.value.trim(),
+        details: item.details == null ? Prisma.JsonNull : item.details as Prisma.InputJsonValue,
+      })) });
+    }
+    if (paymentMethods.length) {
+      await tx.partyPaymentMethod.createMany({ data: paymentMethods.map((item) => ({
+        partyId,
+        type: item.type.trim(),
+        value: item.value.trim(),
+        details: item.details == null ? Prisma.JsonNull : item.details as Prisma.InputJsonValue,
+      })) });
+    }
+    return tx.party.findUniqueOrThrow({ where: { id: partyId }, include: partyInclude });
+  });
+
+  return serializeParty(updated);
+}

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useParams, useSearchParams } from 'next/navigation';
-import { ArrowLeft, Printer } from 'lucide-react';
+import { ArrowLeft, Pencil, Printer } from 'lucide-react';
 import { Button } from '@neup/components/ui/button';
 import { LinkButton } from '@neup/components/ui/link-button';
 import { useFinAccountTransactions } from '@/core/hooks/api';
@@ -15,9 +15,7 @@ export default function FinAccountTransactionDetailPage() {
   const { data: transactions, isLoading } = useFinAccountTransactions(params.id, projectId);
   const transaction = transactions?.find((entry) => entry.id === params.transactionId);
   const accountHref = `/finaccounts/${encodeURIComponent(params.id)}${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
-  const documentTypes = transaction?.direction === 'in'
-    ? [['payment_receipt', 'Payment Receipt'], ['receipt_voucher', 'Receipt Voucher'], ['payment_advise', 'Payment Advice']]
-    : [['payment_voucher', 'Payment Voucher'], ['payment_advise', 'Payment Advice']];
+  const amendHref = `/finaccounts/${encodeURIComponent(params.id)}/${encodeURIComponent(params.transactionId)}/ammend${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
   const makePrintHref = (type: string) => `/print/${encodeURIComponent(params.transactionId)}?source=banktransaction&id=${encodeURIComponent(params.transactionId)}&type=${type}&accountId=${encodeURIComponent(params.id)}${projectId ? `&project=${encodeURIComponent(projectId)}` : ''}`;
 
   if (isLoading) return <div className="p-8 text-center">Loading transaction…</div>;
@@ -33,8 +31,8 @@ export default function FinAccountTransactionDetailPage() {
       {transaction.description ? <div className="sm:col-span-2"><p className="text-sm text-muted-foreground">Description</p><p className="whitespace-pre-wrap">{transaction.description}</p></div> : null}
     </section>
     <div className="flex flex-wrap justify-start gap-2 border-t pt-4">
-      <Link href={makePrintHref(transaction.direction === 'in' ? 'payment_receipt' : 'payment_voucher')}><Button><Printer className="mr-2 h-4 w-4" />Print document</Button></Link>
-      {documentTypes.map(([type, label]) => <Link key={type} href={makePrintHref(type)}><Button variant="outlined"><Printer className="mr-2 h-4 w-4" />{label}</Button></Link>)}
+      <Link href={amendHref}><Button variant="outlined"><Pencil className="mr-2 h-4 w-4" />Amend transaction</Button></Link>
+      <Link href={makePrintHref('bank-transaction')} target="_blank"><Button><Printer className="mr-2 h-4 w-4" />Print document</Button></Link>
     </div>
   </main>;
 }
