@@ -3,7 +3,6 @@
 
 import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@neup/components/ui/card';
 import { Button } from '@neup/components/ui/button';
 import { PlusCircle, ArrowUpRight, ArrowDownLeft, Inbox, XCircle, Repeat } from 'lucide-react';
 import Link from 'next/link';
@@ -19,6 +18,7 @@ import { useToast } from '@neup/core/hooks/useToast';
 import { YearlyProjectionChart } from '@/components/charts/yearly-projection-chart';
 import { stackedCardClassName } from '@/components/ui/stacked-card';
 import { StackedEmptyStateRow } from '@/components/ui/stacked-empty-state';
+import { addMonths, endOfMonth, startOfMonth } from 'date-fns';
 
 
 const certaintyColors = {
@@ -44,7 +44,16 @@ export default function ProjectionsPage() {
 
     const [currentPage, setCurrentPage] = useState(1);
 
-    const sortedProjections = projections?.sort((a, b) => {
+    const rangeStart = startOfMonth(addMonths(new Date(), -6));
+    const rangeEnd = endOfMonth(addMonths(new Date(), 12));
+    const visibleProjections = (projections ?? []).filter((projection) => {
+        const projectionStart = new Date(projection.date);
+        const projectionEnd = projection.endsOn ? new Date(projection.endsOn) : null;
+        if (projection.isRecurring) return projectionStart <= rangeEnd && (!projectionEnd || projectionEnd >= rangeStart);
+        return projectionStart >= rangeStart && projectionStart <= rangeEnd;
+    });
+
+    const sortedProjections = visibleProjections.sort((a, b) => {
         if (a.status === 'Canceled' && b.status !== 'Canceled') return 1;
         if (a.status !== 'Canceled' && b.status === 'Canceled') return -1;
         return new Date(b.date).getTime() - new Date(a.date).getTime();
@@ -255,14 +264,10 @@ export default function ProjectionsPage() {
             </div>
 
             <section className="space-y-1">
-                <h2 className="text-2xl font-bold tracking-tight">Yearly Financial Projection</h2>
-                <p className="text-sm text-muted-foreground">Estimated balance over the next 12 months.</p>
+                <h2 className="text-2xl font-bold tracking-tight">Cash Flow</h2>
+                <p className="text-sm text-muted-foreground">Revenue and expenses by actual transaction dates and scheduled projection dates.</p>
             </section>
-            <Card>
-                <CardContent>
-                    <YearlyProjectionChart />
-                </CardContent>
-            </Card>
+            <YearlyProjectionChart />
 
         </div>
 

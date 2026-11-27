@@ -111,6 +111,10 @@ export function useFinAccountTransactions(accountId?: string, projectId?: string
   return useQuery<FinAccountTransaction[]>(endpoint);
 }
 
+export function useProjectFinAccountTransactions() {
+  return useQuery<FinAccountTransaction[]>('/bridge/api.v1/books/transactions');
+}
+
 export function useAccountProfile(enabled = true) {
   return useQuery<AccountProfile>(enabled ? '/bridge/api.v1/account' : null);
 }
