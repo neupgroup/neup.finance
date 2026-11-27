@@ -7,11 +7,11 @@ export async function getProjectsForAccount(accountId: string) {
     include: { project: true, role: true },
     orderBy: { permittedOn: 'asc' },
   });
-  const projects = new Map<string, { id: string; name: string; roles: string[]; selected?: boolean }>();
+  const projects = new Map<string, { id: string; name: string; status: string; roles: string[]; selected?: boolean }>();
   for (const grant of grants) {
     const project = projects.get(grant.projectId);
     if (project) project.roles.push(grant.role.name);
-    else projects.set(grant.projectId, { id: grant.projectId, name: grant.project.name, roles: [grant.role.name] });
+    else projects.set(grant.projectId, { id: grant.projectId, name: grant.project.name, status: grant.project.status, roles: [grant.role.name] });
   }
   return [...projects.values()];
 }

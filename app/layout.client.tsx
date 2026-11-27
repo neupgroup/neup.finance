@@ -17,6 +17,8 @@ import {
   Home,
   Landmark,
   ListTree,
+  Building2,
+  ContactRound,
   Repeat2,
   PlusCircle,
   Settings,
@@ -38,6 +40,14 @@ const sidebarGroups: SidebarLinkGroup[] = [
       { href: '/projections', label: 'Projections', icon: BarChart },
       { href: '/report', label: 'Reports', icon: FileText },
       { href: '/journal', label: 'Journal', icon: BookText },
+    ],
+  },
+  {
+    label: 'Projects',
+    links: [
+      { href: '/projects', label: 'Home', icon: Building2 },
+      { href: '/projects/profile', label: 'Profile', icon: ContactRound },
+      { href: '/projects/teams', label: 'Teams', icon: Users },
     ],
   },
   {

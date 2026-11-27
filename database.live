@@ -11,6 +11,7 @@ Fields:
 > id: UUID, primary key, default: gen_random_uuid();
 > name: string;
 > status: string;
+> details: JSONB, nullable;
 > createdOn: timestamp, default: current timestamp;
 
 Table: roles, Model: Role

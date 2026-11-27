@@ -4725,6 +4725,7 @@ export namespace Prisma {
     id: number
     name: number
     status: number
+    details: number
     createdOn: number
     _all: number
   }
@@ -4748,6 +4749,7 @@ export namespace Prisma {
     id?: true
     name?: true
     status?: true
+    details?: true
     createdOn?: true
     _all?: true
   }
@@ -4828,6 +4830,7 @@ export namespace Prisma {
     id: string
     name: string
     status: string
+    details: JsonValue | null
     createdOn: Date
     _count: ProjectCountAggregateOutputType | null
     _min: ProjectMinAggregateOutputType | null
@@ -4852,6 +4855,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     status?: boolean
+    details?: boolean
     createdOn?: boolean
     accesses?: boolean | Project$accessesArgs<ExtArgs>
     parties?: boolean | Project$partiesArgs<ExtArgs>
@@ -4867,6 +4871,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     status?: boolean
+    details?: boolean
     createdOn?: boolean
   }, ExtArgs["result"]["project"]>
 
@@ -4874,6 +4879,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     status?: boolean
+    details?: boolean
     createdOn?: boolean
   }, ExtArgs["result"]["project"]>
 
@@ -4881,10 +4887,11 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     status?: boolean
+    details?: boolean
     createdOn?: boolean
   }
 
-  export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "status" | "createdOn", ExtArgs["result"]["project"]>
+  export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "status" | "details" | "createdOn", ExtArgs["result"]["project"]>
   export type ProjectInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     accesses?: boolean | Project$accessesArgs<ExtArgs>
     parties?: boolean | Project$partiesArgs<ExtArgs>
@@ -4913,6 +4920,7 @@ export namespace Prisma {
       id: string
       name: string
       status: string
+      details: Prisma.JsonValue | null
       createdOn: Date
     }, ExtArgs["result"]["project"]>
     composites: {}
@@ -5347,6 +5355,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Project", 'String'>
     readonly name: FieldRef<"Project", 'String'>
     readonly status: FieldRef<"Project", 'String'>
+    readonly details: FieldRef<"Project", 'Json'>
     readonly createdOn: FieldRef<"Project", 'DateTime'>
   }
     
@@ -32414,6 +32423,7 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     status: 'status',
+    details: 'details',
     createdOn: 'createdOn'
   };
 
@@ -32811,19 +32821,19 @@ export namespace Prisma {
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
-  export const JsonNullValueInput: {
-    JsonNull: typeof JsonNull
-  };
-
-  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
-
-
   export const NullableJsonNullValueInput: {
     DbNull: typeof DbNull,
     JsonNull: typeof JsonNull
   };
 
   export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+  export const JsonNullValueInput: {
+    JsonNull: typeof JsonNull
+  };
+
+  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
   export const QueryMode: {
@@ -32871,20 +32881,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'DateTime'
-   */
-  export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
-    
-
-
-  /**
-   * Reference to a field of type 'DateTime[]'
-   */
-  export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
-    
-
-
-  /**
    * Reference to a field of type 'Json'
    */
   export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
@@ -32895,6 +32891,20 @@ export namespace Prisma {
    * Reference to a field of type 'QueryMode'
    */
   export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+  /**
+   * Reference to a field of type 'DateTime'
+   */
+  export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+  /**
+   * Reference to a field of type 'DateTime[]'
+   */
+  export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
     
 
 
@@ -33119,6 +33129,7 @@ export namespace Prisma {
     id?: UuidFilter<"Project"> | string
     name?: StringFilter<"Project"> | string
     status?: StringFilter<"Project"> | string
+    details?: JsonNullableFilter<"Project">
     createdOn?: DateTimeFilter<"Project"> | Date | string
     accesses?: AccessListRelationFilter
     parties?: PartyListRelationFilter
@@ -33133,6 +33144,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     status?: SortOrder
+    details?: SortOrderInput | SortOrder
     createdOn?: SortOrder
     accesses?: AccessOrderByRelationAggregateInput
     parties?: PartyOrderByRelationAggregateInput
@@ -33150,6 +33162,7 @@ export namespace Prisma {
     NOT?: ProjectWhereInput | ProjectWhereInput[]
     name?: StringFilter<"Project"> | string
     status?: StringFilter<"Project"> | string
+    details?: JsonNullableFilter<"Project">
     createdOn?: DateTimeFilter<"Project"> | Date | string
     accesses?: AccessListRelationFilter
     parties?: PartyListRelationFilter
@@ -33164,6 +33177,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     status?: SortOrder
+    details?: SortOrderInput | SortOrder
     createdOn?: SortOrder
     _count?: ProjectCountOrderByAggregateInput
     _max?: ProjectMaxOrderByAggregateInput
@@ -33177,6 +33191,7 @@ export namespace Prisma {
     id?: UuidWithAggregatesFilter<"Project"> | string
     name?: StringWithAggregatesFilter<"Project"> | string
     status?: StringWithAggregatesFilter<"Project"> | string
+    details?: JsonNullableWithAggregatesFilter<"Project">
     createdOn?: DateTimeWithAggregatesFilter<"Project"> | Date | string
   }
 
@@ -35287,6 +35302,7 @@ export namespace Prisma {
     id?: string
     name: string
     status: string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: Date | string
     accesses?: AccessCreateNestedManyWithoutProjectInput
     parties?: PartyCreateNestedManyWithoutProjectInput
@@ -35301,6 +35317,7 @@ export namespace Prisma {
     id?: string
     name: string
     status: string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: Date | string
     accesses?: AccessUncheckedCreateNestedManyWithoutProjectInput
     parties?: PartyUncheckedCreateNestedManyWithoutProjectInput
@@ -35315,6 +35332,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: DateTimeFieldUpdateOperationsInput | Date | string
     accesses?: AccessUpdateManyWithoutProjectNestedInput
     parties?: PartyUpdateManyWithoutProjectNestedInput
@@ -35329,6 +35347,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: DateTimeFieldUpdateOperationsInput | Date | string
     accesses?: AccessUncheckedUpdateManyWithoutProjectNestedInput
     parties?: PartyUncheckedUpdateManyWithoutProjectNestedInput
@@ -35343,6 +35362,7 @@ export namespace Prisma {
     id?: string
     name: string
     status: string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: Date | string
   }
 
@@ -35350,6 +35370,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -35357,6 +35378,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -37774,6 +37796,29 @@ export namespace Prisma {
     mode?: QueryMode
     not?: NestedUuidFilter<$PrismaModel> | string
   }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
@@ -37820,6 +37865,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     status?: SortOrder
+    details?: SortOrder
     createdOn?: SortOrder
   }
 
@@ -37850,6 +37896,32 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -37981,29 +38053,6 @@ export namespace Prisma {
     status?: SortOrder
     permittedOn?: SortOrder
   }
-  export type JsonNullableFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonNullableFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
 
   export type PartyContactListRelationFilter = {
     every?: PartyContactWhereInput
@@ -38088,32 +38137,6 @@ export namespace Prisma {
     projectId?: SortOrder
     name?: SortOrder
     type?: SortOrder
-  }
-  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedJsonNullableFilter<$PrismaModel>
-    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type PartyScalarRelationFilter = {
@@ -41431,6 +41454,29 @@ export namespace Prisma {
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
   }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
@@ -41453,29 +41499,6 @@ export namespace Prisma {
     | OptionalFlat<Omit<Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>
 
   export type NestedJsonFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
-  export type NestedJsonNullableFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
-        Required<NestedJsonNullableFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
-
-  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
     equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
     path?: string[]
     mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
@@ -42529,6 +42552,7 @@ export namespace Prisma {
     id?: string
     name: string
     status: string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: Date | string
     parties?: PartyCreateNestedManyWithoutProjectInput
     books?: AssetGroupCreateNestedManyWithoutProjectInput
@@ -42542,6 +42566,7 @@ export namespace Prisma {
     id?: string
     name: string
     status: string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: Date | string
     parties?: PartyUncheckedCreateNestedManyWithoutProjectInput
     books?: AssetGroupUncheckedCreateNestedManyWithoutProjectInput
@@ -42629,6 +42654,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: DateTimeFieldUpdateOperationsInput | Date | string
     parties?: PartyUpdateManyWithoutProjectNestedInput
     books?: AssetGroupUpdateManyWithoutProjectNestedInput
@@ -42642,6 +42668,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: DateTimeFieldUpdateOperationsInput | Date | string
     parties?: PartyUncheckedUpdateManyWithoutProjectNestedInput
     books?: AssetGroupUncheckedUpdateManyWithoutProjectNestedInput
@@ -42682,6 +42709,7 @@ export namespace Prisma {
     id?: string
     name: string
     status: string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: Date | string
     accesses?: AccessCreateNestedManyWithoutProjectInput
     books?: AssetGroupCreateNestedManyWithoutProjectInput
@@ -42695,6 +42723,7 @@ export namespace Prisma {
     id?: string
     name: string
     status: string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: Date | string
     accesses?: AccessUncheckedCreateNestedManyWithoutProjectInput
     books?: AssetGroupUncheckedCreateNestedManyWithoutProjectInput
@@ -43021,6 +43050,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: DateTimeFieldUpdateOperationsInput | Date | string
     accesses?: AccessUpdateManyWithoutProjectNestedInput
     books?: AssetGroupUpdateManyWithoutProjectNestedInput
@@ -43034,6 +43064,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: DateTimeFieldUpdateOperationsInput | Date | string
     accesses?: AccessUncheckedUpdateManyWithoutProjectNestedInput
     books?: AssetGroupUncheckedUpdateManyWithoutProjectNestedInput
@@ -43434,6 +43465,7 @@ export namespace Prisma {
     id?: string
     name: string
     status: string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: Date | string
     accesses?: AccessCreateNestedManyWithoutProjectInput
     parties?: PartyCreateNestedManyWithoutProjectInput
@@ -43447,6 +43479,7 @@ export namespace Prisma {
     id?: string
     name: string
     status: string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: Date | string
     accesses?: AccessUncheckedCreateNestedManyWithoutProjectInput
     parties?: PartyUncheckedCreateNestedManyWithoutProjectInput
@@ -43621,6 +43654,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: DateTimeFieldUpdateOperationsInput | Date | string
     accesses?: AccessUpdateManyWithoutProjectNestedInput
     parties?: PartyUpdateManyWithoutProjectNestedInput
@@ -43634,6 +43668,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: DateTimeFieldUpdateOperationsInput | Date | string
     accesses?: AccessUncheckedUpdateManyWithoutProjectNestedInput
     parties?: PartyUncheckedUpdateManyWithoutProjectNestedInput
@@ -43730,6 +43765,7 @@ export namespace Prisma {
     id?: string
     name: string
     status: string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: Date | string
     accesses?: AccessCreateNestedManyWithoutProjectInput
     parties?: PartyCreateNestedManyWithoutProjectInput
@@ -43743,6 +43779,7 @@ export namespace Prisma {
     id?: string
     name: string
     status: string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: Date | string
     accesses?: AccessUncheckedCreateNestedManyWithoutProjectInput
     parties?: PartyUncheckedCreateNestedManyWithoutProjectInput
@@ -43772,6 +43809,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: DateTimeFieldUpdateOperationsInput | Date | string
     accesses?: AccessUpdateManyWithoutProjectNestedInput
     parties?: PartyUpdateManyWithoutProjectNestedInput
@@ -43785,6 +43823,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: DateTimeFieldUpdateOperationsInput | Date | string
     accesses?: AccessUncheckedUpdateManyWithoutProjectNestedInput
     parties?: PartyUncheckedUpdateManyWithoutProjectNestedInput
@@ -43825,6 +43864,7 @@ export namespace Prisma {
     id?: string
     name: string
     status: string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: Date | string
     accesses?: AccessCreateNestedManyWithoutProjectInput
     parties?: PartyCreateNestedManyWithoutProjectInput
@@ -43838,6 +43878,7 @@ export namespace Prisma {
     id?: string
     name: string
     status: string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: Date | string
     accesses?: AccessUncheckedCreateNestedManyWithoutProjectInput
     parties?: PartyUncheckedCreateNestedManyWithoutProjectInput
@@ -43944,6 +43985,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: DateTimeFieldUpdateOperationsInput | Date | string
     accesses?: AccessUpdateManyWithoutProjectNestedInput
     parties?: PartyUpdateManyWithoutProjectNestedInput
@@ -43957,6 +43999,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: DateTimeFieldUpdateOperationsInput | Date | string
     accesses?: AccessUncheckedUpdateManyWithoutProjectNestedInput
     parties?: PartyUncheckedUpdateManyWithoutProjectNestedInput
@@ -44306,6 +44349,7 @@ export namespace Prisma {
     id?: string
     name: string
     status: string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: Date | string
     accesses?: AccessCreateNestedManyWithoutProjectInput
     parties?: PartyCreateNestedManyWithoutProjectInput
@@ -44319,6 +44363,7 @@ export namespace Prisma {
     id?: string
     name: string
     status: string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: Date | string
     accesses?: AccessUncheckedCreateNestedManyWithoutProjectInput
     parties?: PartyUncheckedCreateNestedManyWithoutProjectInput
@@ -44348,6 +44393,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: DateTimeFieldUpdateOperationsInput | Date | string
     accesses?: AccessUpdateManyWithoutProjectNestedInput
     parties?: PartyUpdateManyWithoutProjectNestedInput
@@ -44361,6 +44407,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: DateTimeFieldUpdateOperationsInput | Date | string
     accesses?: AccessUncheckedUpdateManyWithoutProjectNestedInput
     parties?: PartyUncheckedUpdateManyWithoutProjectNestedInput
@@ -44450,6 +44497,7 @@ export namespace Prisma {
     id?: string
     name: string
     status: string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: Date | string
     accesses?: AccessCreateNestedManyWithoutProjectInput
     parties?: PartyCreateNestedManyWithoutProjectInput
@@ -44463,6 +44511,7 @@ export namespace Prisma {
     id?: string
     name: string
     status: string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: Date | string
     accesses?: AccessUncheckedCreateNestedManyWithoutProjectInput
     parties?: PartyUncheckedCreateNestedManyWithoutProjectInput
@@ -44651,6 +44700,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: DateTimeFieldUpdateOperationsInput | Date | string
     accesses?: AccessUpdateManyWithoutProjectNestedInput
     parties?: PartyUpdateManyWithoutProjectNestedInput
@@ -44664,6 +44714,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
     createdOn?: DateTimeFieldUpdateOperationsInput | Date | string
     accesses?: AccessUncheckedUpdateManyWithoutProjectNestedInput
     parties?: PartyUncheckedUpdateManyWithoutProjectNestedInput
