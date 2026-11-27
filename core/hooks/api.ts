@@ -84,11 +84,12 @@ export type FinAccountTransaction = {
   activityOn: string;
 };
 
-export type ProjectOption = { id: string; name: string; roles: string[]; selected: boolean };
+export type ProjectOption = { id: string; name: string; roles: string[]; selected: boolean; details?: unknown; account?: { displayName?: string | null; neupid?: string | null } | null };
 
-export function useSelectedProject() {
-  const query = useQuery<ProjectOption[]>('/bridge/api.v1/projects');
-  return { ...query, project: query.data?.find((project) => project.selected) };
+export function useSelectedProject(projectId?: string) {
+  const endpoint = `/bridge/api.v1/projects${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
+  const query = useQuery<ProjectOption[]>(endpoint);
+  return { ...query, project: query.data?.find((project) => project.selected) ?? (projectId ? query.data?.[0] : undefined) };
 }
 
 export function useTransactionsList(limit?: number, assetGroupId?: string) {
@@ -98,20 +99,25 @@ export function useTransactionsList(limit?: number, assetGroupId?: string) {
   return useQuery<any[]>(`/bridge/api.v1/transactions?${params}`);
 }
 
-export function useProjectBooks() {
-  return useQuery<FinBook[]>('/bridge/api.v1/books');
+export function useProjectBooks(projectId?: string) {
+  const endpoint = `/bridge/api.v1/books${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
+  return useQuery<FinBook[]>(endpoint);
 }
 
-export function useFinAccountTransactions(accountId?: string) {
-  return useQuery<FinAccountTransaction[]>(accountId ? `/bridge/api.v1/books/${encodeURIComponent(accountId)}/transactions` : null);
+export function useFinAccountTransactions(accountId?: string, projectId?: string) {
+  const endpoint = accountId
+    ? `/bridge/api.v1/books/${encodeURIComponent(accountId)}/transactions${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`
+    : null;
+  return useQuery<FinAccountTransaction[]>(endpoint);
 }
 
 export function useAccountProfile(enabled = true) {
   return useQuery<AccountProfile>(enabled ? '/bridge/api.v1/account' : null);
 }
 
-export function useParties() {
-  return useQuery<any[]>("/bridge/api.v1/parties");
+export function useParties(projectId?: string) {
+  const endpoint = `/bridge/api.v1/parties${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
+  return useQuery<any[]>(endpoint);
 }
 
 export function useProjections(status?: string) {
