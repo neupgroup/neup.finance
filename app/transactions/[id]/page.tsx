@@ -10,7 +10,7 @@ import {
   type TransactionLineCategory,
 } from '@/core/lib/ledger';
 import { Badge } from '@neup/components/ui/badge';
-import { ArrowLeft, Paperclip, PlusCircle, Loader } from 'lucide-react';
+import { ArrowLeft, Paperclip, PlusCircle, Loader, Printer } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@neup/components/ui/button';
 import { LinkButton } from '@neup/components/ui/link-button';
@@ -218,11 +218,11 @@ export default function TransactionDetailPage() {
             </div>
 
             <div className="space-y-4">
-                <div>
+                  <div>
                     <p className="text-sm text-muted-foreground">{formatDate(transaction.date)}</p>
                     <h1 className="text-3xl font-bold tracking-tight">{transaction.title}</h1>
                     {transaction.description && <p className="text-muted-foreground mt-1">{transaction.description}</p>}
-                </div>
+                  </div>
 
                 <p className={cn("text-4xl font-bold tracking-tight", isCredit(transaction.transaction_type) ? 'text-chart-2' : 'text-foreground')}>{formatCurrency(transaction.total_amount, transaction.currency)}</p>
 
@@ -302,6 +302,19 @@ export default function TransactionDetailPage() {
                             </TableBody>
                         </Table>
                     </div>
+                </div>
+                <div className="flex flex-wrap justify-start gap-2 border-t pt-4">
+                    <Link href={`/print/${encodeURIComponent(id)}?type=${isCredit(transaction.transaction_type) ? 'payment_receipt' : 'payment_voucher'}`} target="_blank">
+                      <Button><Printer className="mr-2 h-4 w-4" />Print document</Button>
+                    </Link>
+                    {(isCredit(transaction.transaction_type)
+                      ? [['payment_receipt', 'Payment Receipt'], ['receipt_voucher', 'Receipt Voucher'], ['payment_advise', 'Payment Advice']]
+                      : [['payment_voucher', 'Payment Voucher'], ['payment_advise', 'Payment Advice']]
+                    ).map(([type, label]) => (
+                      <Link key={type} href={`/print/${encodeURIComponent(id)}?type=${type}`} target="_blank">
+                        <Button variant="outlined"><Printer className="mr-2 h-4 w-4" />{label}</Button>
+                      </Link>
+                    ))}
                 </div>
             </div>
         </div>

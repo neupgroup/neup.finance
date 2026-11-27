@@ -17,6 +17,7 @@ export default function SalesDocumentView({ id, type }: { id: string; type: 'quo
   const projectId = searchParams.get('project')?.trim();
   const documentLabel = type === 'quotation' ? 'Quotation' : type === 'invoice' ? 'Invoice' : 'Proforma Invoice';
   const backHref = `/documents/sales?type=${type}${projectId ? `&project=${encodeURIComponent(projectId)}` : ''}`;
+  const printHref = `/print/${encodeURIComponent(id)}?type=${type}${projectId ? `&project=${encodeURIComponent(projectId)}` : ''}`;
   const quotationQuery = useDocumentQuotation(type === 'quotation' ? id : null);
   const invoiceQuery = useDocumentInvoice(type === 'invoice' ? id : null);
   const proformaQuery = useDocumentProforma(type === 'proforma-invoice' ? id : null);
@@ -39,7 +40,6 @@ export default function SalesDocumentView({ id, type }: { id: string; type: 'quo
     <main className="mx-auto max-w-5xl space-y-5">
       <div className="flex items-center justify-between gap-3 print:hidden">
         <LinkButton href={backHref} variant="text" preIcon={<ArrowLeft className="mr-2 h-4 w-4" />}>Back to {listLabel}</LinkButton>
-        <Button onClick={() => window.print()}><Printer className="mr-2 h-4 w-4" />Print {documentLabel}</Button>
       </div>
       <article className="space-y-8 rounded-lg border bg-background p-6 shadow-sm md:p-10 print:border-0 print:shadow-none">
         <header className="flex flex-wrap justify-between gap-5 border-b pb-6">
@@ -80,6 +80,7 @@ export default function SalesDocumentView({ id, type }: { id: string; type: 'quo
         {typeof details.notes === 'string' && details.notes ? <section><h2 className="font-semibold">Notes</h2><p className="mt-1 whitespace-pre-wrap text-sm text-muted-foreground">{details.notes}</p></section> : null}
         {typeof details.terms === 'string' && details.terms ? <section><h2 className="font-semibold">Terms and Conditions</h2><p className="mt-1 whitespace-pre-wrap text-sm text-muted-foreground">{details.terms}</p></section> : null}
       </article>
+      <div className="flex justify-start border-t pt-4"><LinkButton href={printHref} preIcon={<Printer className="mr-2 h-4 w-4" />}>View {documentLabel}</LinkButton></div>
     </main>
   );
 }

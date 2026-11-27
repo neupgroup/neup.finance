@@ -1,7 +1,6 @@
 
 import { notFound } from 'next/navigation';
-import { TransactionPrintPage } from './transaction-print-page';
-import { FinAccountTransactionDocument } from './fin-account-transaction-document';
+import { redirect } from 'next/navigation';
 
 /*
 ::neup.documentation::print-page
@@ -21,13 +20,12 @@ The printable page for transaction documents selected through `/print` query par
 
 ::end
 */
-const PrintPage = ({ searchParams }: { searchParams?: { type?: string; id?: string; accountId?: string; transactionId?: string; project?: string } }) => {
-    if (searchParams?.type === 'bank-transaction' && searchParams.accountId && searchParams.transactionId) {
-        return <FinAccountTransactionDocument accountId={searchParams.accountId} transactionId={searchParams.transactionId} projectId={searchParams.project} mode="print" />;
+const PrintPage = async ({ searchParams }: { searchParams: Promise<{ type?: string; id?: string; accountId?: string; transactionId?: string; project?: string }> }) => {
+    const query = await searchParams;
+    if (query.type === 'bank-transaction' && query.transactionId) {
+        redirect(`/print/${encodeURIComponent(query.transactionId)}?type=bank-transaction&accountId=${encodeURIComponent(query.accountId ?? '')}${query.project ? `&project=${encodeURIComponent(query.project)}` : ''}`);
     }
-    if (searchParams?.type === 'transaction' && searchParams.id) {
-        return <TransactionPrintPage id={searchParams.id} />;
-    }
+    if (query.type === 'transaction' && query.id) redirect(`/print/${encodeURIComponent(query.id)}?type=invoice`);
     notFound();
 };
 

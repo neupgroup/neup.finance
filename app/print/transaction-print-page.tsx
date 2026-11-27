@@ -40,6 +40,11 @@ const documentLabels: Record<string, string> = {
     invoice: 'Invoice',
     'customer-payment': 'Customer Payment',
     'credit-note': 'Credit Note',
+    payment_advise: 'Payment Advice',
+    payment_receipt: 'Payment Receipt',
+    payment_voucher: 'Payment Voucher',
+    receipt_voucher: 'Receipt Voucher',
+    remittance_advise: 'Remittance Advice',
 };
 
 export function TransactionPrintPage({ id, type = 'invoice' }: { id: string; type?: string }) {
@@ -128,12 +133,18 @@ export function TransactionPrintPage({ id, type = 'invoice' }: { id: string; typ
                             </div>
 
                             <div>
-                                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500">{documentLabel} for</p>
+                                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500">{documentLabel} {['payment_voucher', 'receipt_voucher'].includes(type) ? 'for' : 'to'}</p>
                                 <p className="mt-2 text-xl font-semibold">{recipientName}</p>
                                 <p className="mt-1 max-w-sm text-sm leading-6 text-slate-500">
                                     {transaction.description || `${documentLabel} generated from your finance ledger.`}
                                 </p>
                             </div>
+                            <dl className="grid grid-cols-2 gap-4 rounded-xl bg-slate-50 p-5 text-sm">
+                                <div><dt className="text-slate-500">Document date</dt><dd className="mt-1 font-semibold">{new Date(transaction.date).toLocaleDateString()}</dd></div>
+                                <div><dt className="text-slate-500">Reference</dt><dd className="mt-1 font-semibold">{transaction.id}</dd></div>
+                                <div><dt className="text-slate-500">Payment status</dt><dd className="mt-1 font-semibold capitalize">{transaction.status.replaceAll('_', ' ')}</dd></div>
+                                <div><dt className="text-slate-500">Payment method / account</dt><dd className="mt-1 font-semibold">{transaction.accountId || '—'}</dd></div>
+                            </dl>
                         </div>
                     </header>
 
@@ -174,9 +185,7 @@ export function TransactionPrintPage({ id, type = 'invoice' }: { id: string; typ
                     <section className="grid grid-cols-[1fr_280px] gap-10 border-t border-slate-200 pt-8">
                         <div className="rounded-2xl bg-slate-50 p-5">
                             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Notes</p>
-                            <p className="mt-3 text-sm leading-6 text-slate-600">
-                                Thank you for your business. Please reference invoice #{transaction.id} when making payment.
-                            </p>
+                            <p className="mt-3 text-sm leading-6 text-slate-600">{transaction.description || `${documentLabel} for ${transaction.title}.`}</p>
                         </div>
 
                         <dl className="space-y-3 text-sm">
