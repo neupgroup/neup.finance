@@ -45,6 +45,13 @@ export async function proxy(request: NextRequest) {
     const destination = request.nextUrl.clone();
     destination.searchParams.delete('redirectsTo');
 
+    // Keep embedding context on /switch itself so its shell stays embedded.
+    for (const key of ['embedded', 'app']) {
+      const value = searchParams.get(key);
+      if (value) switchUrl.searchParams.set(key, value);
+      destination.searchParams.delete(key);
+    }
+
     switchUrl.searchParams.set(
       'redirectsTo',
       `${destination.pathname}${destination.search}`,
