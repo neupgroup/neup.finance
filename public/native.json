@@ -1,0 +1,63 @@
+{
+  "version": "1.0.0",
+  "name": "Neup.Ledger",
+  "description": "The first surreal-AI financial universe that simplifies accounts for everyone.",
+  "start_url": "/",
+  "scope": "/",
+  "design": {
+    "color_scheme": "system",
+    "colors": {
+      "light": {
+        "primary": "#47596F",
+        "on_primary": "#FAFAFA",
+        "background": "#FFFFFF",
+        "foreground": "#020817",
+        "surface": "#FFFFFF",
+        "muted": "#64748B",
+        "border": "#E2E8F0",
+        "success": "#198A45",
+        "warning": "#AA5A08",
+        "error": "#C91F1F"
+      },
+      "dark": {
+        "primary": "#9CC6F2",
+        "on_primary": "#0F172A",
+        "background": "#191A1F",
+        "foreground": "#FAFAFA",
+        "surface": "#26272E",
+        "muted": "#B8B8C0",
+        "border": "#2B303B",
+        "success": "#198A45",
+        "warning": "#AA5A08",
+        "error": "#C91F1F"
+      }
+    },
+    "border_radius": 8
+  },
+  "navigation": {
+    "mobile": [
+      { "icon": "layout-dashboard", "title": "Dashboard", "href": "/home" },
+      { "icon": "landmark", "title": "Accounts", "href": "/finaccounts" },
+      { "icon": "arrow-left-right", "title": "Transactions", "href": "/transactions" },
+      { "icon": "file-text", "title": "Documents", "href": "/documents" }
+    ],
+    "bigscreen": [
+      { "group": "Workspace", "icon": "layout-dashboard", "title": "Dashboard", "href": "/home" },
+      { "group": "Workspace", "icon": "landmark", "title": "Accounts", "href": "/finaccounts" },
+      { "group": "Workspace", "icon": "list-tree", "title": "Chart of Accounts", "href": "/chart-of-accounts" },
+      { "group": "Workspace", "icon": "users", "title": "Party", "href": "/party" },
+      { "group": "Workspace", "icon": "plus-circle", "title": "Documents", "href": "/documents" },
+      { "group": "Workspace", "icon": "arrow-left-right", "title": "Transactions", "href": "/transactions" },
+      { "group": "Workspace", "icon": "chart-bar", "title": "Projections", "href": "/projections" },
+      { "group": "Workspace", "icon": "file-text", "title": "Reports", "href": "/report" },
+      { "group": "Workspace", "icon": "book-text", "title": "Journal", "href": "/journal" },
+      { "group": "Projects", "icon": "building-2", "title": "Home", "href": "/projects" },
+      { "group": "Projects", "icon": "contact-round", "title": "Profile", "href": "/projects/profile" },
+      { "group": "Projects", "icon": "users", "title": "Teams", "href": "/projects/teams" },
+      { "group": "Manage", "icon": "repeat-2", "title": "Switch project", "href": "/switch" },
+      { "group": "Manage", "icon": "folder-kanban", "title": "Projects", "href": "/projects" },
+      { "group": "Manage", "icon": "briefcase-business", "title": "Accounts", "href": "/manage/accounts" },
+      { "group": "Manage", "icon": "settings", "title": "Settings", "href": "/settings" }
+    ]
+  }
+}
