@@ -67,6 +67,8 @@ function AppShell({ children, account }: {
   account: HeaderAccount | null;
 }) {
   const searchParams = useSearchParams();
+  const isEmbedded = searchParams.get('embedded') === 'true'
+    && Boolean(searchParams.get('app')?.trim());
   const projectId = searchParams.get('project')?.trim();
   const withCurrentQuery = (href: string) => {
     const destination = new URL(href, 'https://ledger.local');
@@ -107,6 +109,10 @@ function AppShell({ children, account }: {
       };
     }),
   }));
+
+  if (isEmbedded) {
+    return <>{children}</>;
+  }
 
   return (
     <HeaderSidebarLayout

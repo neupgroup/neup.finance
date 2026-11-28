@@ -6,7 +6,7 @@ import { Badge } from '@neup/components/ui/badge';
 import { Skeleton } from '@neup/components/ui/skeleton';
 import { cn } from '@neup/core/utils';
 import { useParties } from '@/core/hooks/api';
-import { ArrowDownLeft, ArrowUpRight, Building, Inbox, Mail, MapPin, MoreVertical, Phone, PlusCircle, User, Wallet } from 'lucide-react';
+import { ArrowDownLeft, ArrowUpRight, Building, ChevronRight, Inbox, MapPin, Phone, PlusCircle, User, Wallet } from 'lucide-react';
 import { stackedCardClassName } from '@/components/ui/stacked-card';
 import { StackedEmptyStateRow } from '@/components/ui/stacked-empty-state';
 
@@ -125,82 +125,35 @@ export default function PartyPage() {
                       <div className="mt-1 rounded-full bg-muted p-2">
                         {party.type === 'person' ? <User className="h-5 w-5 text-muted-foreground" /> : <Building className="h-5 w-5 text-muted-foreground" />}
                       </div>
-                      <div>
+                      <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
                           <Link href={`/party/${encodeURIComponent(party.id)}${project ? `?project=${encodeURIComponent(project)}` : ''}`} className="font-semibold hover:underline">
                             {party.name}
                           </Link>
-                          <Badge variant="secondary" className="capitalize">{party.type}</Badge>
                         </div>
-                        <div className="mt-2 flex flex-col gap-1 text-sm text-muted-foreground">
-                          {party.contacts?.find((contact) => contact.type === 'email')?.value ? (
-                            <div className="flex items-center gap-1.5">
-                              <Mail className="h-3.5 w-3.5" />
-                              <a
-                                href={`mailto:${party.contacts?.find((contact) => contact.type === 'email')?.value}`}
-                                className="hover:underline"
-                              >
-                                {party.contacts?.find((contact) => contact.type === 'email')?.value}
-                              </a>
+                        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
+                          {party.contacts?.find((contact) => contact.type === 'address')?.value ? (
+                            <div className="flex min-w-0 items-center gap-1.5">
+                              <MapPin className="h-3.5 w-3.5 shrink-0" />
+                              <span className="break-words">{party.contacts?.find((contact) => contact.type === 'address')?.value}</span>
                             </div>
                           ) : null}
                           {party.contacts?.find((contact) => contact.type === 'phone')?.value ? (
                             <div className="flex items-center gap-1.5">
-                              <Phone className="h-3.5 w-3.5" />
+                              <Phone className="h-3.5 w-3.5 shrink-0" />
                               <span>{party.contacts?.find((contact) => contact.type === 'phone')?.value}</span>
                             </div>
                           ) : null}
-                          {party.contacts?.find((contact) => contact.type === 'address')?.value ? (
-                            <div className="flex items-center gap-1.5">
-                              <MapPin className="h-3.5 w-3.5" />
-                              <span>{party.contacts?.find((contact) => contact.type === 'address')?.value}</span>
-                            </div>
-                          ) : null}
                         </div>
-                        {party.taxinfo ? (
-                          <div className="mt-2">
-                            <Badge variant="outline" className={cn('border-dashed')}>
-                              {String((party.taxinfo as any)?.taxType ?? 'tax').toUpperCase()}: {(party.taxinfo as any)?.taxNumber ?? 'N/A'}
-                            </Badge>
-                          </div>
-                        ) : null}
-                        {party.paymentMethods?.length ? (
-                          <div className="mt-2 flex flex-wrap gap-2">
-                            {party.paymentMethods.map((method) => (
-                              <Badge key={method.id} variant="secondary" className="gap-1">
-                                <Wallet className="h-3 w-3" />
-                                {method.type}: {method.value}
-                              </Badge>
-                            ))}
-                          </div>
-                        ) : null}
-                        {party.totals?.received?.length || party.totals?.sent?.length ? (
-                          <div className="mt-3 flex flex-col gap-1.5 text-sm text-muted-foreground">
-                            {party.totals?.received?.length ? (
-                              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                                <ArrowUpRight className="h-3.5 w-3.5 text-chart-2" />
-                                <span>Amount received</span>
-                                <span className="font-medium text-foreground">
-                                  {party.totals.received.map((item) => formatCurrency(item.amount, item.currency)).join(', ')}
-                                </span>
-                              </div>
-                            ) : null}
-                            {party.totals?.sent?.length ? (
-                              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                                <ArrowDownLeft className="h-3.5 w-3.5 text-foreground" />
-                                <span>Amount sent</span>
-                                <span className="font-medium text-foreground">
-                                  {party.totals.sent.map((item) => formatCurrency(item.amount, item.currency)).join(', ')}
-                                </span>
-                              </div>
-                            ) : null}
-                          </div>
-                        ) : null}
                       </div>
                     </div>
-                    <div className="inline-flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground">
-                      <MoreVertical className="h-5 w-5" />
-                    </div>
+                    <Link
+                      href={`/party/${encodeURIComponent(party.id)}${project ? `?project=${encodeURIComponent(project)}` : ''}`}
+                      aria-label={`View ${party.name}`}
+                      className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-muted-foreground"
+                    >
+                      <ChevronRight className="h-5 w-5" />
+                    </Link>
                   </div>
                 )) : (
                   <StackedEmptyStateRow
