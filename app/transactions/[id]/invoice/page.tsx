@@ -19,7 +19,7 @@ The route parameters provided by Next.js.
 */
 const InvoicePage = async ({ params }: { params: Promise<{ id: string }> }) => {
     const { id } = await params;
-    redirect(`/documents/sales?type=invoice&legacyTransaction=${encodeURIComponent(id)}`);
+    redirect(`/documents?type=invoice&legacyTransaction=${encodeURIComponent(id)}`);
 };
 
 export default InvoicePage;

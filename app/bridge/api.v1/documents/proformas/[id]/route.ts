@@ -13,7 +13,11 @@ export async function GET(request: NextRequest, context: { params: Promise<{ id:
   const proforma = await prisma.proforma.findFirst({
     where: { id, document: { projectId: access.projectId, type: 'proforma-invoice' } },
     include: {
-      document: true,
+      document: { include: {
+        events: { orderBy: { createdAt: 'asc' } },
+        sourceRelationships: { include: { sourceDocument: { select: { id: true, type: true } } } },
+        targetRelationships: { include: { targetDocument: { include: { events: true } } } },
+      } },
       customer: { select: { id: true, name: true, type: true } },
       items: { orderBy: { sortIndex: 'asc' } },
       adjustments: true,

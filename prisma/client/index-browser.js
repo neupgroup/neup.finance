@@ -297,6 +297,66 @@ exports.Prisma.DocumentScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.DocumentRelationshipScalarFieldEnum = {
+  id: 'id',
+  sourceDocumentId: 'sourceDocumentId',
+  targetDocumentId: 'targetDocumentId',
+  type: 'type',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.DocumentEventScalarFieldEnum = {
+  id: 'id',
+  documentId: 'documentId',
+  type: 'type',
+  performedBy: 'performedBy',
+  data: 'data',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.SalesOrderScalarFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  counter: 'counter',
+  referenceNumber: 'referenceNumber',
+  subject: 'subject',
+  currency: 'currency',
+  exchangeRate: 'exchangeRate',
+  subtotal: 'subtotal',
+  discountType: 'discountType',
+  discountValue: 'discountValue',
+  discountAmount: 'discountAmount',
+  taxTotal: 'taxTotal',
+  hasAdjustments: 'hasAdjustments',
+  total: 'total',
+  status: 'status',
+  date: 'date',
+  dueDate: 'dueDate',
+  details: 'details',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SalesOrderItemScalarFieldEnum = {
+  id: 'id',
+  salesOrderId: 'salesOrderId',
+  name: 'name',
+  description: 'description',
+  quantity: 'quantity',
+  unit: 'unit',
+  rate: 'rate',
+  discountType: 'discountType',
+  discountValue: 'discountValue',
+  discountAmount: 'discountAmount',
+  taxRate: 'taxRate',
+  taxAmount: 'taxAmount',
+  amount: 'amount',
+  sortIndex: 'sortIndex',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.DocumentQuotationScalarFieldEnum = {
   id: 'id',
   customerId: 'customerId',
@@ -546,6 +606,10 @@ exports.Prisma.ModelName = {
   Projection: 'Projection',
   ActivityStock: 'ActivityStock',
   Document: 'Document',
+  DocumentRelationship: 'DocumentRelationship',
+  DocumentEvent: 'DocumentEvent',
+  SalesOrder: 'SalesOrder',
+  SalesOrderItem: 'SalesOrderItem',
   DocumentQuotation: 'DocumentQuotation',
   DocumentQuotationAdjustment: 'DocumentQuotationAdjustment',
   DocumentAdjustmentItem: 'DocumentAdjustmentItem',

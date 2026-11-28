@@ -153,6 +153,10 @@ export function YearlyProjectionChart() {
             legacyTransactions.forEach((transaction) => {
                 if (transaction.status === 'canceled' || transaction.status === 'Canceled') return;
                 if (transaction.lines?.some((line) => line.id && mirroredLineIds.has(line.id))) return;
+                const transactionDetails = transaction.details && typeof transaction.details === 'object' && !Array.isArray(transaction.details)
+                    ? transaction.details as Record<string, unknown>
+                    : {};
+                if (transactionDetails.entryKind === 'invoice_revenue') return;
                 const transactionDate = new Date(transaction.transaction_date ?? transaction.date);
                 if (transactionDate < bucket.start || transactionDate > bucket.end || transactionDate > now) return;
                 const amount = Number(transaction.final_amount ?? transaction.total_amount ?? 0);

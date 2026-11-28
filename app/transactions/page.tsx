@@ -166,7 +166,7 @@ export default function TransactionsPage() {
             </div>
           ) : items.length > 0 ? (
             <div className="overflow-hidden rounded-lg border">
-              <Link href={withProject('/transactions/add')} className="block">
+              <Link href={withProject('/transactions/new')} className="block">
                 <div className={stackedCardClassName(0, stackedTotal, 'flex items-center justify-between p-4')}>
                   <div className="flex items-center gap-4">
                     <div className="rounded-full bg-muted p-2">
@@ -188,7 +188,7 @@ export default function TransactionsPage() {
             </div>
           ) : (
             <div className="overflow-hidden rounded-lg border">
-              <Link href={withProject('/transactions/add')} className="block">
+              <Link href={withProject('/transactions/new')} className="block">
                 <div className={stackedCardClassName(0, 2, 'flex items-center justify-between p-4')}>
                   <div className="flex items-center gap-4">
                     <div className="rounded-full bg-muted p-2">

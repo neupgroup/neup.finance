@@ -23,7 +23,7 @@ import {
 import { useToast } from '@neup/core/hooks/useToast';
 import { Textarea } from '@neup/components/ui/textarea';
 import { useUser } from '@/core/providers/auth';
-import { createTransaction, useParties, useTransactionsList, useProjectBooks, useSelectedProject } from '@/core/hooks/api';
+import { createTransaction, updateDocumentLifecycle, useDocumentProforma, useParties, useTransactionsList, useProjectBooks, useSelectedProject } from '@/core/hooks/api';
 import { ArrowLeft, ArrowDownLeft, ArrowUpRight, Check, Loader } from 'lucide-react';
 import { cn } from '@neup/core/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@neup/components/ui/select';
@@ -80,6 +80,15 @@ const baseTransactionSubblock: TransactionSubblock = {
 
 const nonLedgerSubblockKeys = new Set(['amount', 'final_amount', 'quantity', 'rate']);
 
+// Return today's date in the browser's local timezone for date inputs.
+function getLocalDateInputValue() {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 function isPersistableTransactionSubblock(subblock: CalculatedTransactionSubblock) {
   const key = normalizeTransactionBlockKey(subblock.key);
   const haystack = `${key} ${subblock.label}`.toLowerCase();
@@ -128,12 +137,15 @@ export default function AddTransactionPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const recordType = searchParams.get('record') ?? searchParams.get('type') ?? '';
+  const sourceDocumentId = searchParams.get('sourceDocumentId')?.trim() ?? '';
   const recordDetails = recordTypeDetails[recordType];
   const isSalesDocument = salesDocumentTypes.has(recordType);
   const isProformaInvoice = recordType === 'proforma-invoice';
   const projectId = searchParams.get('project')?.trim();
-  const backHref = isSalesDocument
-    ? `/documents/sales?type=${encodeURIComponent(recordType)}${projectId ? `&project=${encodeURIComponent(projectId)}` : ''}`
+  const backHref = recordType === 'customer-payment' && sourceDocumentId
+    ? `/documents/${encodeURIComponent(sourceDocumentId)}?type=proforma-invoice${projectId ? `&project=${encodeURIComponent(projectId)}` : ''}`
+    : isSalesDocument
+    ? `/documents?type=${encodeURIComponent(recordType)}${projectId ? `&project=${encodeURIComponent(projectId)}` : ''}`
     : `/transactions${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
   const { toast } = useToast();
   const { user } = useUser();
@@ -141,6 +153,7 @@ export default function AddTransactionPage() {
   const { data: accounts } = useProjectBooks();
   const { project } = useSelectedProject();
   const { data: transactions } = useTransactionsList();
+  const { proforma: paymentProforma } = useDocumentProforma(recordType === 'customer-payment' && sourceDocumentId ? sourceDocumentId : null);
   const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
   const titleRef = useRef<HTMLInputElement | null>(null);
   const partyFieldRef = useRef<HTMLDivElement | null>(null);
@@ -250,6 +263,16 @@ export default function AddTransactionPage() {
         setSavedTransactionBlocks([]);
       }
     }, [project?.id]);
+
+    useEffect(() => {
+      if (!paymentProforma) return;
+      setTitle(`Customer Payment for ${paymentProforma.referenceNumber}`);
+      setDate(getLocalDateInputValue());
+      setPartyId(paymentProforma.customer.id);
+      setTotalAmountCurrency(paymentProforma.currency);
+      setTotalAmount(Number(paymentProforma.total));
+      setDescription(`Payment for ${paymentProforma.subject}`);
+    }, [paymentProforma]);
 
     useEffect(() => {
       if (showDescription) {
@@ -370,6 +393,7 @@ export default function AddTransactionPage() {
             currency: totalAmountCurrency,
             recipient: selectedParty?.name,
             due_on: dueOn || undefined,
+            details: recordType ? { documentType: recordType } : undefined,
             userId: user.uid,
         };
         const monetarySubblocks = transactionSubblockRows.filter(isPersistableTransactionSubblock);
@@ -416,7 +440,12 @@ export default function AddTransactionPage() {
             description: `A new transaction for ${totalAmountCurrency} ${saved.final_amount ?? resolvedTransactionTotal} has been successfully added.`,
         });
 
-        router.push(`/transactions/${encodeURIComponent(saved.id)}${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`);
+        if (recordType === 'customer-payment' && sourceDocumentId) {
+          await updateDocumentLifecycle(sourceDocumentId, { action: 'record-payment', transactionId: saved.id });
+          router.push(`/documents/${encodeURIComponent(sourceDocumentId)}?type=proforma-invoice${projectId ? `&project=${encodeURIComponent(projectId)}` : ''}`);
+        } else {
+          router.push(`/transactions/${encodeURIComponent(saved.id)}${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`);
+        }
 
     } catch (error) {
         console.error("Error adding transaction: ", error);

@@ -14,7 +14,7 @@ import { QuantityUnitUnderlined } from '@/@neup/components/ui/quantity_unit_unde
 import { Label } from '@neup/components/ui/label';
 import { Textarea } from '@neup/components/ui/textarea';
 import { Combobox } from '@/components/ui/combobox';
-import { createDocumentInvoice, createDocumentProforma, createDocumentQuotation, useParties } from '@/core/hooks/api';
+import { createDocumentInvoice, createDocumentProforma, createDocumentQuotation, createDocumentSalesOrder, useParties } from '@/core/hooks/api';
 import { useToast } from '@neup/core/hooks/useToast';
 
 type QuotationLine = { id: string; product: string; quantity: string; unit: string; rate: string; discount: string; tax: string };
@@ -49,14 +49,14 @@ function calculateQuotationLine(line: QuotationLine) {
 }
 
 // Render and save a quotation or invoice using the shared sales-document layout.
-export function SalesDocumentForm({ type }: { type: 'quotation' | 'invoice' | 'proforma-invoice' }) {
+export function SalesDocumentForm({ type }: { type: 'quotation' | 'sales-order' | 'invoice' | 'proforma-invoice' }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { toast } = useToast();
   const { data: parties } = useParties();
   const projectId = searchParams.get('project')?.trim();
   const isQuotation = type === 'quotation';
-  const documentLabel = isQuotation ? 'Quotation' : type === 'invoice' ? 'Invoice' : 'Proforma Invoice';
+  const documentLabel = isQuotation ? 'Quotation' : type === 'sales-order' ? 'Sales Order' : type === 'invoice' ? 'Invoice' : 'Proforma Invoice';
   const dateLabel = isQuotation ? 'Expiry Date' : 'Due Date';
   const [partyId, setPartyId] = useState('');
   const [date, setDate] = useState(() => toLocalDate(new Date()));
@@ -85,7 +85,7 @@ export function SalesDocumentForm({ type }: { type: 'quotation' | 'invoice' | 'p
     };
   }, { subtotal: 0, discount: 0, taxable: 0, tax: 0, total: 0 }), [lines]);
   const selectedParty = parties?.find((party) => party.id === partyId);
-  const backHref = `/documents/sales?type=${type}${projectId ? `&project=${encodeURIComponent(projectId)}` : ''}`;
+  const backHref = `/documents?type=${type}${projectId ? `&project=${encodeURIComponent(projectId)}` : ''}`;
 
   const updateLine = (lineId: string, field: keyof Omit<QuotationLine, 'id'>, value: string) => {
     setLines((current) => current.map((line) => line.id === lineId ? { ...line, [field]: value } : line));
@@ -168,6 +168,8 @@ export function SalesDocumentForm({ type }: { type: 'quotation' | 'invoice' | 'p
       };
       const saved = isQuotation
         ? await createDocumentQuotation({ ...documentData, expires: expiryDate })
+        : type === 'sales-order'
+          ? await createDocumentSalesOrder({ ...documentData, dueDate: expiryDate, status: 'confirmed' })
         : type === 'invoice'
           ? await createDocumentInvoice({ ...documentData, dueDate: expiryDate })
           : await createDocumentProforma({ ...documentData, dueDate: expiryDate });
@@ -213,7 +215,7 @@ export function SalesDocumentForm({ type }: { type: 'quotation' | 'invoice' | 'p
         ) : null}
         <div className="flex items-center gap-2 text-sm">
           <span className="text-muted-foreground">Status</span>
-          <Badge variant="outline">Draft</Badge>
+          <Badge variant="outline">{type === 'sales-order' ? 'Confirmed' : 'Draft'}</Badge>
         </div>
         </div>
 

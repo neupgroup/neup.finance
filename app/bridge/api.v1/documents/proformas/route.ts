@@ -146,6 +146,9 @@ export async function POST(request: NextRequest) {
         sortIndex: item.sortIndex,
       })),
     });
+    await tx.documentEvent.create({
+      data: { documentId: document.id, type: 'created', performedBy: access.accountId, data: { status: typeof body?.status === 'string' ? body.status : 'draft' } },
+    });
 
     return tx.proforma.findUnique({
       where: { id: document.id },

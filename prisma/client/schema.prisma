@@ -88,6 +88,7 @@ model Party {
   quotations             DocumentQuotation[]
   invoices               Invoice[]
   proformas              Proforma[]
+  salesOrders            SalesOrder[]
   finAccountTransactions FinAccountTransaction[]
 
   @@index([accountId])
@@ -293,18 +294,102 @@ model ActivityStock {
 }
 
 model Document {
-  id        String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  projectId String             @map("project_id") @db.Uuid
-  type      String             @db.VarChar
-  createdAt DateTime           @default(now()) @map("created_at")
-  updatedAt DateTime           @default(now()) @updatedAt @map("updated_at")
-  project   Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  quotation DocumentQuotation?
-  invoice   Invoice?
-  proforma  Proforma?
+  id                  String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projectId           String                 @map("project_id") @db.Uuid
+  type                String                 @db.VarChar
+  createdAt           DateTime               @default(now()) @map("created_at")
+  updatedAt           DateTime               @default(now()) @updatedAt @map("updated_at")
+  project             Project                @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  quotation           DocumentQuotation?
+  invoice             Invoice?
+  proforma            Proforma?
+  salesOrder          SalesOrder?
+  sourceRelationships DocumentRelationship[] @relation("DocumentRelationshipSource")
+  targetRelationships DocumentRelationship[] @relation("DocumentRelationshipTarget")
+  events              DocumentEvent[]
 
   @@index([projectId, type])
   @@map("documents")
+}
+
+model DocumentRelationship {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sourceDocumentId String   @map("source_document_id") @db.Uuid
+  targetDocumentId String   @map("target_document_id") @db.Uuid
+  type             String   @db.VarChar
+  createdBy        String   @map("created_by") @db.Uuid
+  createdAt        DateTime @default(now()) @map("created_at")
+  sourceDocument   Document @relation("DocumentRelationshipSource", fields: [sourceDocumentId], references: [id], onDelete: Cascade)
+  targetDocument   Document @relation("DocumentRelationshipTarget", fields: [targetDocumentId], references: [id], onDelete: Cascade)
+
+  @@index([sourceDocumentId])
+  @@index([targetDocumentId])
+  @@map("documents_relationships")
+}
+
+model DocumentEvent {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  documentId  String   @map("document_id") @db.Uuid
+  type        String   @db.VarChar
+  performedBy String   @map("performed_by") @db.Uuid
+  data        Json     @db.JsonB
+  createdAt   DateTime @default(now()) @map("created_at")
+  document    Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId, createdAt])
+  @@map("documents_events")
+}
+
+model SalesOrder {
+  id              String           @id @db.Uuid
+  customerId      String           @map("customer_id") @db.Uuid
+  counter         Int
+  referenceNumber String           @map("reference_number") @db.VarChar
+  subject         String           @db.VarChar
+  currency        String           @db.VarChar
+  exchangeRate    Decimal          @map("exchange_rate") @db.Decimal(18, 6)
+  subtotal        Decimal          @db.Decimal(18, 2)
+  discountType    String           @map("discount_type") @db.VarChar
+  discountValue   Decimal          @map("discount_value") @db.Decimal(18, 2)
+  discountAmount  Decimal          @map("discount_amount") @db.Decimal(18, 2)
+  taxTotal        Decimal          @map("tax_total") @db.Decimal(18, 2)
+  hasAdjustments  Boolean          @default(false) @map("has_adjustments")
+  total           Decimal          @db.Decimal(18, 2)
+  status          String           @db.VarChar
+  date            DateTime         @db.Date
+  dueDate         DateTime         @map("due_date") @db.Date
+  details         Json?
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @default(now()) @updatedAt @map("updated_at")
+  document        Document         @relation(fields: [id], references: [id], onDelete: Cascade)
+  customer        Party            @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  items           SalesOrderItem[]
+
+  @@index([customerId, date])
+  @@map("documents_sales_orders")
+}
+
+model SalesOrderItem {
+  id             String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  salesOrderId   String     @map("sales_order_id") @db.Uuid
+  name           String     @db.VarChar
+  description    String?    @db.VarChar(128)
+  quantity       Decimal    @db.Decimal(18, 2)
+  unit           String     @db.VarChar
+  rate           Decimal    @db.Decimal(18, 2)
+  discountType   String     @map("discount_type") @db.VarChar
+  discountValue  Decimal    @map("discount_value") @db.Decimal(18, 2)
+  discountAmount Decimal    @map("discount_amount") @db.Decimal(18, 2)
+  taxRate        Decimal    @map("tax_rate") @db.Decimal(8, 4)
+  taxAmount      Decimal    @map("tax_amount") @db.Decimal(18, 2)
+  amount         Decimal    @db.Decimal(18, 2)
+  sortIndex      Int        @map("sort_index")
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @default(now()) @updatedAt @map("updated_at")
+  salesOrder     SalesOrder @relation(fields: [salesOrderId], references: [id], onDelete: Cascade)
+
+  @@index([salesOrderId, sortIndex])
+  @@map("documents_sales_orders_items")
 }
 
 model DocumentQuotation {

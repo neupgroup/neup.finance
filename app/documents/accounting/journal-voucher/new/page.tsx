@@ -42,7 +42,7 @@ export default function NewJournalVoucherPage() {
   const { toast } = useToast();
   const { data: books } = useProjectBooks();
   const projectId = searchParams.get('project')?.trim();
-  const backHref = `/documents${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
+  const backHref = `/documents/add${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
   const [title, setTitle] = useState('');
   const [date, setDate] = useState(() => getLocalDateValue(new Date()));
   const [reference, setReference] = useState('');

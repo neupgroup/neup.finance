@@ -13,7 +13,11 @@ export async function GET(request: NextRequest, context: { params: Promise<{ id:
   const quotation = await prisma.documentQuotation.findFirst({
     where: { id, document: { projectId: access.projectId, type: 'quotation' } },
     include: {
-      document: true,
+      document: { include: {
+        events: { orderBy: { createdAt: 'asc' } },
+        sourceRelationships: { include: { sourceDocument: { select: { id: true, type: true } } } },
+        targetRelationships: { include: { targetDocument: { include: { events: true } } } },
+      } },
       customer: { select: { id: true, name: true, type: true } },
       items: { orderBy: { sortIndex: 'asc' } },
       adjustments: true,

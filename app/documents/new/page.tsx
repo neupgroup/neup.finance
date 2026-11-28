@@ -1,6 +1,6 @@
 'use client';
 
-import AddTransactionPage from '@/app/transactions/add/page';
+import AddTransactionPage from '@/app/transactions/new/page';
 import { useSearchParams } from 'next/navigation';
 import QuotationForm, { SalesDocumentForm } from './quotation-form';
 
@@ -8,6 +8,7 @@ import QuotationForm, { SalesDocumentForm } from './quotation-form';
 export default function NewSalesDocumentPage() {
   const searchParams = useSearchParams();
   if (searchParams.get('type') === 'quotation') return <QuotationForm />;
+  if (searchParams.get('type') === 'sales-order') return <SalesDocumentForm type="sales-order" />;
   if (searchParams.get('type') === 'invoice') return <SalesDocumentForm type="invoice" />;
   if (searchParams.get('type') === 'proforma-invoice') return <SalesDocumentForm type="proforma-invoice" />;
   return <AddTransactionPage />;

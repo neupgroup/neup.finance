@@ -81,6 +81,11 @@ export type FinAccountTransaction = {
   party: { id: string; name: string; type: string; taxinfo?: unknown } | null;
   tags: unknown;
   details: Record<string, unknown> | null;
+  document?: {
+    events: Array<{ id: string; type: string; data: Record<string, unknown>; createdAt: string }>;
+    sourceRelationships: Array<{ id: string; type: string; sourceDocument: { id: string; type: string } }>;
+    targetRelationships: Array<{ id: string; type: string; targetDocument: { id: string; type: string; events?: Array<{ type: string; data: Record<string, unknown> }> } }>;
+  };
   activityOn: string;
 };
 
@@ -261,6 +266,7 @@ export type DocumentQuotationRecord = {
 
 export type DocumentInvoiceRecord = Omit<DocumentQuotationRecord, 'expires'> & { dueDate: string };
 export type DocumentProformaRecord = Omit<DocumentQuotationRecord, 'expires'> & { dueDate: string };
+export type DocumentSalesOrderRecord = Omit<DocumentQuotationRecord, 'expires'> & { dueDate: string };
 
 type DocumentQuotationResponse = {
   status: boolean;
@@ -285,6 +291,38 @@ export function useDocumentQuotation(id: string | null) {
 export function useDocumentQuotations(enabled = true) {
   const query = useQuery<{ status: boolean; result?: DocumentQuotationRecord[] }>(enabled ? '/bridge/api.v1/documents/quotations' : null);
   return { ...query, quotations: query.data?.result ?? [] };
+}
+
+// Create a confirmed sales order through the authenticated documents API.
+export async function createDocumentSalesOrder(data: Record<string, unknown>) {
+  const response = await requestJson<{ status: boolean; result?: DocumentSalesOrderRecord; error?: { code: string; description: string } }>('/bridge/api.v1/documents/sales-orders', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+  if (!response.status || !response.result) throw new Error(response.error?.description ?? 'Could not save sales order.');
+  return response.result;
+}
+
+// Load one sales order and its lifecycle relationships when an ID is available.
+export function useDocumentSalesOrder(id: string | null) {
+  const query = useQuery<{ status: boolean; result?: DocumentSalesOrderRecord }>(id ? `/bridge/api.v1/documents/sales-orders/${encodeURIComponent(id)}` : null);
+  return { ...query, salesOrder: query.data?.result };
+}
+
+// Load the current project's sales order list when the selected view needs it.
+export function useDocumentSalesOrders(enabled = true) {
+  const query = useQuery<{ status: boolean; result?: DocumentSalesOrderRecord[] }>(enabled ? '/bridge/api.v1/documents/sales-orders' : null);
+  return { ...query, salesOrders: query.data?.result ?? [] };
+}
+
+// Run a lifecycle action against a document and surface API errors to the caller.
+export async function updateDocumentLifecycle(id: string, data: Record<string, unknown>) {
+  const response = await requestJson<{ status: boolean; result?: { targetId?: string; targetType?: string }; error?: { code: string; description: string } }>(`/bridge/api.v1/documents/${encodeURIComponent(id)}/lifecycle`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+  if (!response.status || !response.result) throw new Error(response.error?.description ?? 'Could not update document lifecycle.');
+  return response.result;
 }
 
 export async function createDocumentInvoice(data: Record<string, unknown>) {
