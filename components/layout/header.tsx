@@ -24,7 +24,7 @@ import {
 import { useAuthActions } from '@/core/providers/auth';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Userbar } from '@neup/components/element/userbar';
+import { Userbar } from '@/@neup/components/elements/userbar';
 import { Logo } from '../icons';
 
 export type HeaderAccount = {

@@ -67,6 +67,8 @@ function AppShell({ children, account }: {
   account: HeaderAccount | null;
 }) {
   const searchParams = useSearchParams();
+  const isEmbedded = searchParams.get('embedded') === 'true';
+  const embeddedApp = searchParams.get('app')?.trim();
   const projectId = searchParams.get('project')?.trim();
   const withCurrentQuery = (href: string) => {
     const destination = new URL(href, 'https://ledger.local');
@@ -81,22 +83,58 @@ function AppShell({ children, account }: {
   );
 
   useEffect(() => {
-    if (!projectId) return;
+    if (!projectId && !isEmbedded) return;
 
-    const preserveProject = (event: MouseEvent) => {
+    const preserveAppContext = (value: string | URL) => {
+      const destination = new URL(value.toString(), window.location.origin);
+      if (destination.origin !== window.location.origin
+        || destination.pathname.startsWith('/bridge/api.v1')
+        || destination.pathname.startsWith('/api')
+        || destination.pathname.startsWith('/_next')) {
+        return value.toString();
+      }
+      if (projectId && !destination.searchParams.has('project')) {
+        destination.searchParams.set('project', projectId);
+      }
+      if (isEmbedded) {
+        destination.searchParams.set('embedded', 'true');
+        if (embeddedApp && !destination.searchParams.has('app')) {
+          destination.searchParams.set('app', embeddedApp);
+        }
+      }
+      return `${destination.pathname}${destination.search}${destination.hash}`;
+    };
+
+    const currentUrl = preserveAppContext(window.location.href);
+    if (currentUrl !== `${window.location.pathname}${window.location.search}${window.location.hash}`) {
+      window.history.replaceState(window.history.state, '', currentUrl);
+    }
+
+    const originalPushState = window.history.pushState.bind(window.history);
+    const originalReplaceState = window.history.replaceState.bind(window.history);
+    window.history.pushState = (state, unused, url) => {
+      originalPushState(state, unused, url == null ? url : preserveAppContext(url.toString()));
+    };
+    window.history.replaceState = (state, unused, url) => {
+      originalReplaceState(state, unused, url == null ? url : preserveAppContext(url.toString()));
+    };
+
+    const preserveAppContextOnLink = (event: MouseEvent) => {
       const target = event.target instanceof Element ? event.target.closest('a') : null;
       if (!target || target.target === '_blank') return;
       const href = target.getAttribute('href');
       if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
-      const destination = new URL(href, window.location.origin);
-      if (destination.origin !== window.location.origin || destination.pathname.startsWith('/bridge/api.v1')) return;
-      if (!destination.searchParams.has('project')) destination.searchParams.set('project', projectId);
-      target.setAttribute('href', `${destination.pathname}${destination.search}${destination.hash}`);
+      const nextHref = preserveAppContext(href);
+      if (nextHref !== href) target.setAttribute('href', nextHref);
     };
 
-    document.addEventListener('click', preserveProject, true);
-    return () => document.removeEventListener('click', preserveProject, true);
-  }, [projectId]);
+    document.addEventListener('click', preserveAppContextOnLink, true);
+    return () => {
+      document.removeEventListener('click', preserveAppContextOnLink, true);
+      window.history.pushState = originalPushState;
+      window.history.replaceState = originalReplaceState;
+    };
+  }, [embeddedApp, isEmbedded, projectId]);
 
   const sidebarLinks = sidebarGroups.map(group => ({
     ...group,
@@ -109,23 +147,29 @@ function AppShell({ children, account }: {
   }));
 
   return (
-    <HeaderSidebarLayout
-      sidebarlinks={sidebarLinks}
-      pofileBarInfo={{
-        href: withCurrentQuery('/profile'),
-        displayName: account?.displayName ?? null,
-        displayImage: account?.displayImage ?? null,
-        neupid: account?.neupid ?? null,
-      }}
-      headerLinks={[
-        <QueryAwareLink key="brand" href="/home" className="flex items-center gap-2 font-semibold text-foreground">
-          <Logo className="h-8 w-8" />
-          <span>Neup.Ledger</span>
-        </QueryAwareLink>,
-      ]}
-    >
-      {children}
-    </HeaderSidebarLayout>
+    isEmbedded ? (
+      <main className="min-h-screen min-w-0 bg-background p-6 text-foreground md:p-10">
+        <div className="min-w-0 w-full">{children}</div>
+      </main>
+    ) : (
+      <HeaderSidebarLayout
+        sidebarlinks={sidebarLinks}
+        pofileBarInfo={{
+          href: withCurrentQuery('/profile'),
+          displayName: account?.displayName ?? null,
+          displayImage: account?.displayImage ?? null,
+          neupid: account?.neupid ?? null,
+        }}
+        headerLinks={[
+          <QueryAwareLink key="brand" href="/home" className="flex items-center gap-2 font-semibold text-foreground">
+            <Logo className="h-8 w-8" />
+            <span>Neup.Ledger</span>
+          </QueryAwareLink>,
+        ]}
+      >
+        {children}
+      </HeaderSidebarLayout>
+    )
   );
 }
 
