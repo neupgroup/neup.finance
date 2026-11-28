@@ -302,9 +302,40 @@ model Document {
   quotation DocumentQuotation?
   invoice   Invoice?
   proforma  Proforma?
+  sourceRelationships DocumentRelationship[] @relation("DocumentRelationshipSource")
+  targetRelationships DocumentRelationship[] @relation("DocumentRelationshipTarget")
+  events    DocumentEvent[]
 
   @@index([projectId, type])
   @@map("documents")
+}
+
+model DocumentRelationship {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sourceDocumentId String   @map("source_document_id") @db.Uuid
+  targetDocumentId String   @map("target_document_id") @db.Uuid
+  type             String   @db.VarChar
+  createdBy        String   @map("created_by") @db.Uuid
+  createdAt        DateTime @default(now()) @map("created_at")
+  sourceDocument   Document @relation("DocumentRelationshipSource", fields: [sourceDocumentId], references: [id], onDelete: Cascade)
+  targetDocument   Document @relation("DocumentRelationshipTarget", fields: [targetDocumentId], references: [id], onDelete: Cascade)
+
+  @@index([sourceDocumentId])
+  @@index([targetDocumentId])
+  @@map("documents_relationships")
+}
+
+model DocumentEvent {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  documentId  String   @map("document_id") @db.Uuid
+  type        String   @db.VarChar
+  performedBy String   @map("performed_by") @db.Uuid
+  data        Json     @db.JsonB
+  createdAt   DateTime @default(now()) @map("created_at")
+  document    Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId, createdAt])
+  @@map("documents_events")
 }
 
 model DocumentQuotation {

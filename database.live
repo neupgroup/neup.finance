@@ -175,6 +175,24 @@ Fields:
 > created_at: timestamp, default: current timestamp;
 > updated_at: timestamp, automatically updated;
 
+Table: documents_relationships, Model: DocumentRelationship
+Fields:
+> id: UUID, primary key, default: gen_random_uuid();
+> source_document_id: UUID, references documents.id;
+> target_document_id: UUID, references documents.id;
+> type: varchar;
+> created_by: UUID;
+> created_at: timestamp, default: current timestamp;
+
+Table: documents_events, Model: DocumentEvent
+Fields:
+> id: UUID, primary key, default: gen_random_uuid();
+> document_id: UUID, references documents.id;
+> type: varchar;
+> performed_by: UUID;
+> data: JSONB;
+> created_at: timestamp, default: current timestamp;
+
 Table: documents_quotations, Model: DocumentQuotation
 Fields:
 > id: UUID, primary key, references documents.id;
