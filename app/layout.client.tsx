@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import HeaderSidebarLayout, { type SidebarLinkGroup } from '@neup/components/layout/headerSidebar.v1';
 import { ThemeProvider } from '@/components/theme-provider';
 import { AuthProvider } from '@/core/providers/auth';
@@ -67,9 +67,15 @@ function AppShell({ children, account }: {
   account: HeaderAccount | null;
 }) {
   const searchParams = useSearchParams();
-  const isEmbedded = searchParams.get('embedded') === 'true';
+  const hasEmbeddedQuery = searchParams.get('embedded') === 'true';
+  const [embeddedSession, setEmbeddedSession] = useState(hasEmbeddedQuery);
+  const isEmbedded = hasEmbeddedQuery || embeddedSession;
   const embeddedApp = searchParams.get('app')?.trim();
   const projectId = searchParams.get('project')?.trim();
+
+  useEffect(() => {
+    if (hasEmbeddedQuery) setEmbeddedSession(true);
+  }, [hasEmbeddedQuery]);
   const withCurrentQuery = (href: string) => {
     const destination = new URL(href, 'https://ledger.local');
     searchParams.forEach((value, key) => {
