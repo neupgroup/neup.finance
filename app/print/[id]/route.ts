@@ -12,6 +12,7 @@ const runFile = promisify(execFile);
 
 // Load Next's generated Outfit font asset so headless Chrome embeds the app font in PDFs.
 async function getOutfitFontDataUrl() {
+  if (process.env.NODE_ENV !== 'development') return null;
   const cwd = process.cwd();
   for (const manifestPath of ['.next/dev/server/next-font-manifest.json', '.next/server/next-font-manifest.json']) {
     try {
@@ -20,7 +21,7 @@ async function getOutfitFontDataUrl() {
       if (!fontAsset) continue;
       for (const assetPath of [path.join(cwd, '.next/dev', fontAsset), path.join(cwd, '.next', fontAsset)]) {
         try {
-          const font = await readFile(assetPath);
+          const font = await readFile(/*turbopackIgnore: true*/ assetPath);
           return `data:font/woff2;base64,${font.toString('base64')}`;
         } catch {
           // Try the next build output location.
